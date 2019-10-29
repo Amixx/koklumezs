@@ -13,7 +13,7 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
-        'request' => [
+        'request' => [            
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'q6hzujS3q73rs42dJYgBWOpNGOOtXf9E',
         ],
@@ -55,6 +55,7 @@ $config = [
         ],        
     ],
     'params' => $params,
+    'defaultRoute' => 'site/index'
 ];
 
 if (YII_ENV_DEV) {

@@ -62,6 +62,7 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $email = isset(Yii::$app->user->identity->email) ? Yii::$app->user->identity->email : null;        
+        
         if ( User::isUserAdmin($email)) {
             return $this->redirect(['/panel']);
         }elseif(User::isExpert($email)){
