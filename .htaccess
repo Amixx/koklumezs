@@ -3,23 +3,23 @@
     #RewriteEngine On
     #RewriteBase /
     #RewriteCond %{REQUEST_URI} ^/.*
-    #RewriteRule ^(.*)$ basic/web/$1 [L]
+    #RewriteRule ^(.*)$ sys/web/$1 [L]
     #RewriteCond %{REQUEST_URI} !^/web/
     #RewriteCond %{REQUEST_FILENAME} !-f [OR]
     #RewriteCond %{REQUEST_FILENAME} !-d
-    #RewriteRule ^.*$ basic/web/index.php
+    #RewriteRule ^.*$ sys/web/index.php
     Options +FollowSymLinks
     IndexIgnore */*
     RewriteEngine On
     
     RewriteCond %{REQUEST_URI} !^/(web)
-    RewriteRule ^assets/(.*)$ basic/web/assets/$1 [L]
-    RewriteRule ^css/(.*)$ basic/web/css/$1 [L]
-    RewriteRule ^js/(.*)$ basic/web/js/$1 [L]
-    RewriteRule ^images/(.*)$ basic/web/images/$1 [L]
-    RewriteRule (.*) basic/web/$1
+    RewriteRule ^assets/(.*)$ sys/web/assets/$1 [L]
+    RewriteRule ^css/(.*)$ sys/web/css/$1 [L]
+    RewriteRule ^js/(.*)$ sys/web/js/$1 [L]
+    RewriteRule ^images/(.*)$ sys/web/images/$1 [L]
+    RewriteRule (.*) sys/web/$1
     
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^.*$ basic/web/index.php
+    RewriteRule ^.*$ sys/web/index.php
 </IfModule>
