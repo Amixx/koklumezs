@@ -92,7 +92,8 @@ AppAsset::register($this);
     }
     elseif(Yii::$app->user->identity->user_level == 'Admin')
     {
-        $navItems[] = ['label' => 'Panelis', 'url' => ['/panel']];       
+        $navItems[] = ['label' => 'Panelis', 'url' => ['/panel']];
+        $navItems[] = ['label' => 'Lietotāji', 'url' => ['/user']];      
         $navItems[] = $navEnd;
     }
     elseif(Yii::$app->user->identity->user_level == 'Student')
