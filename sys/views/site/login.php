@@ -1,4 +1,4 @@
-<?php
+<?php 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
  
@@ -7,6 +7,7 @@ use yii\bootstrap\ActiveForm;
 /* @var $model \common\models\LoginForm */
  
 $this->title = 'Pierakstītes';
+$this->params['breadcrumbs'][] = $this->title;
  
 $fieldOptions1 = [
     'options' => ['class' => 'form-group has-feedback'],
@@ -41,6 +42,9 @@ $fieldOptions2 = [
             <div class="col-xs-4">
                 <?= Html::submitButton('Pierakstīties', ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button']) ?>
             </div>
+        </div>
+        <div style="color:#999;margin:1em 0">
+            <?= Html::a('Aizmirsi paroli?', ['site/request-password-reset']) ?>            
         </div>
  
         <?php ActiveForm::end(); ?>

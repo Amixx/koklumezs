@@ -73,22 +73,37 @@ AppAsset::register($this);
     ?>
     
     <?php
+    $navItems = [];
+    if(Yii::$app->user->isGuest){
+
+    }
+    else{
+        $navEnd = '<li>'
+        . Html::beginForm(['/site/logout'], 'post')
+        . Html::submitButton(
+            'Logout (' . Yii::$app->user->identity->first_name . ' ' . Yii::$app->user->identity->last_name . ')',
+            ['class' => 'btn btn-link logout']
+        )
+        . Html::endForm()
+        . '</li>';
+    }
+    if(Yii::$app->user->isGuest){
+        $navItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+    }
+    elseif(Yii::$app->user->identity->user_level == 'Admin')
+    {
+        $navItems[] = ['label' => 'Panelis', 'url' => ['/panel']];       
+        $navItems[] = $navEnd;
+    }
+    elseif(Yii::$app->user->identity->user_level == 'Student')
+    {
+        $navItems[] = ['label' => 'Lekcijas', 'url' => ['/lectures']];
+        $navItems[] = $navEnd;
+    }
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->first_name . ' ' . Yii::$app->user->identity->last_name . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
+        'items' => $navItems        
     ]);
     NavBar::end();
     ?>
