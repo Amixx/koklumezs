@@ -1,8 +1,17 @@
 #logo {
-    width: 40px;
-    height: 40px;
+    width: 70px;
+    height: 70px;
     display: inline-block;
-    margin: 5px;
+    margin: 5px 15px;
+}
+
+.navbar {
+    min-height: 90px;
+    padding-top: 20px;
+}
+
+.navbar-header {
+    margin-top: -20px;
 }
 
 .navbar-brand {
@@ -22,7 +31,7 @@ body {
 }
 
 .wrap>.container {
-    padding: 70px 15px 20px;
+    padding: 110px 15px 20px;
 }
 
 .footer {
@@ -115,6 +124,23 @@ a.desc:after {
 }
 
 @media(max-width:767px) {
+    #logo {
+        width: 60px;
+        height: 60px;
+    }
+    .navbar {
+        min-height: 80px;
+        padding-top: 10px;
+    }
+    .navbar-header {
+        margin-top: -10px;
+    }
+    .navbar-toggle {
+        margin-top: 18px;
+    }
+    .navbar-collapse {
+        margin-top: 12px;
+    }
     .nav li>form>button.logout {
         display: block;
         text-align: left;
