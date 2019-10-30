@@ -1,3 +1,5 @@
+stats/*
+error/*
 vendor/*
 assets/*
 !assets/.gitignore
