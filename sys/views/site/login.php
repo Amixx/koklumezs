@@ -39,7 +39,7 @@ $fieldOptions2 = [
             <div class="col-xs-8">
                 <?= $form->field($model, 'rememberMe')->label('Atcerēties mani')->checkbox() ?>
             </div>
-            <div class="col-xs-12">
+            <div class="col-xs-12 col-md-4">
                 <?= Html::submitButton('Pierakstīties', ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button']) ?>
             </div>
         </div>

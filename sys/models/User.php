@@ -1,24 +1,26 @@
 <?php
- 
+
 namespace app\models;
+
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
- 
+
 class User extends ActiveRecord implements IdentityInterface
 {
     const ROLE_USER = 'Student';
-    const ROLE_ADMIN = 'Admin';    
-    const STATUS_DELETED = 0;
+    const ROLE_ADMIN = 'Admin';
+
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
-    public static function tableName() { return 'users'; }
- 
-   /**
-    * @inheritdoc
-    */
+    public static function tableName()
+    {return 'users';}
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
@@ -27,16 +29,16 @@ class User extends ActiveRecord implements IdentityInterface
             [['email'], 'required'],
             [['user_level'], 'string'],
             ['user_level', 'default', 'value' => self::ROLE_USER],
-            ['user_level', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN]],	
+            ['user_level', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN]],
             [['email'], 'email'],
             [['email'], 'unique'],
- 			[['phone_number'],'string','max' => 30],
-		    [['password','first_name','last_name'], 'string', 'max' => 250],
-            [['email'], 'string', 'max' => 500],            		            
+            [['phone_number'], 'string', 'max' => 30],
+            [['password', 'first_name', 'last_name'], 'string', 'max' => 250],
+            [['email'], 'string', 'max' => 500],
         ];
     }
 
-     /**
+    /**
      * {@inheritdoc}
      */
     public function attributeLabels()
@@ -47,8 +49,8 @@ class User extends ActiveRecord implements IdentityInterface
             'email' => 'E-pasts',
             'phone_number' => 'Telefona numurs',
             'first_name' => 'Vārds',
-            'last_name' => 'Uzvārds',  
-            'password' => 'Parole',            
+            'last_name' => 'Uzvārds',
+            'password' => 'Parole',
         ];
     }
 
@@ -62,14 +64,14 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-   
-  /**
+    /**
      * {@inheritdoc}
      */
-    public static function findIdentity($id) {
+    public static function findIdentity($id)
+    {
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -77,46 +79,50 @@ class User extends ActiveRecord implements IdentityInterface
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
-    
+
     /**
      * Finds user by username
      *
      * @param  string      $username
      * @return static|null
      */
-    public static function findByEmail($email) {
+    public static function findByEmail($email)
+    {
         $user = self::find()
-                ->where([
-                    "email" => $email
-                ])
-                ->one();
+            ->where([
+                "email" => $email,
+            ])
+            ->one();
         if (empty($user)) {
             return null;
         }
         return new static($user);
     }
-    
+
     /**
      * @inheritdoc
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
-    
+
     /**
      * @inheritdoc
      */
-    public function getAuthKey() {
+    public function getAuthKey()
+    {
         return $this->authKey;
     }
-    
+
     /**
      * @inheritdoc
      */
-    public function validateAuthKey($authKey) {
+    public function validateAuthKey($authKey)
+    {
         return $this->authKey === $authKey;
     }
-    
+
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
@@ -138,13 +144,13 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return Yii::$app->getSecurity()->validatePassword($password, $this->password);
     }
- 
+
 /**
-     * Finds user by password reset token
-     *
-     * @param string $token password reset token
-     * @return static|null
-     */
+ * Finds user by password reset token
+ *
+ * @param string $token password reset token
+ * @return static|null
+ */
     public static function findByPasswordResetToken($token)
     {
         if (!static::isPasswordResetTokenValid($token)) {
@@ -161,10 +167,11 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $token verify email token
      * @return static|null
      */
-    public static function findByVerificationToken($token) {
+    public static function findByVerificationToken($token)
+    {
         return static::findOne([
             'verification_token' => $token,
-            'status' => self::STATUS_INACTIVE
+            'status' => self::STATUS_INACTIVE,
         ]);
     }
     /**
@@ -210,8 +217,7 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password_reset_token = null;
     }
 
-
-     /**
+    /**
      * Generates password hash from password and sets it to the model
      *
      * @param string $password
@@ -221,22 +227,38 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password = Yii::$app->security->generatePasswordHash($password);
     }
 
-    public static function isUserAdmin($username)
+    public static function isUserAdmin($email)
     {
-        if (static::findOne(['email' => $username, 'user_level' => self::ROLE_ADMIN])){                            
+        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN])) {
             return true;
-        } else {                            
+        } else {
             return false;
-        }            
+        }
     }
 
-    public static function isExpert($username)
+    public static function isStudent($email)
     {
-        if (static::findOne(['email' => $username, 'user_level' => self::ROLE_USER])){                            
+        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_USER])) {
             return true;
-        } else {                            
+        } else {
             return false;
-        }            
+        }
+    }
+
+    public static function getStatus()
+    {
+        return [
+            self::STATUS_INACTIVE => 'Nav aktīvs',
+            self::STATUS_ACTIVE => 'Aktīvs',
+        ];
+    }
+
+    public static function getLevels()
+    {
+        return [
+            self::ROLE_USER => 'Students',
+            self::ROLE_ADMIN => 'Administrators',
+        ];
     }
 
     public function getAuthors()
@@ -248,7 +270,5 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->hasMany(Projects::className(), ['change_by' => 'id']);
     }
-
-    
 
 }

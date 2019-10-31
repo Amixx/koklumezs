@@ -1,3 +1,4 @@
+
 <?php
 
 use yii\helpers\Html;
@@ -31,9 +32,9 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'password_reset_token') ?>
 
-    <?php // echo $form->field($model, 'user_image') ?>
+    <?php  echo $form->field($model, 'status') ?>
 
-    <?php // echo $form->field($model, 'user_level') ?>
+    <?php  echo $form->field($model, 'user_level') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

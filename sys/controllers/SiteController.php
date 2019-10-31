@@ -69,7 +69,7 @@ class SiteController extends Controller
         
         if ( User::isUserAdmin($email)) {
             return $this->redirect(['/panel']);
-        }elseif(User::isExpert($email)){
+        }elseif(User::isStudent($email)){
             return $this->redirect(['/lectures']);
         }
         else{

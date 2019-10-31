@@ -92,13 +92,13 @@ AppAsset::register($this);
     }
     elseif(Yii::$app->user->identity->user_level == 'Admin')
     {
-        $navItems[] = ['label' => 'Panelis', 'url' => ['/panel']];
-        $navItems[] = ['label' => 'Lietotāji', 'url' => ['/user']];      
+        $navItems[] = ['label' => 'Panelis', 'url' => ['/panel'],'active' =>  in_array(\Yii::$app->controller->id,['panel']),];
+        $navItems[] = ['label' => 'Lietotāji', 'url' => ['/user'],'active' =>  in_array(\Yii::$app->controller->id,['user'])];      
         $navItems[] = $navEnd;
     }
     elseif(Yii::$app->user->identity->user_level == 'Student')
     {
-        $navItems[] = ['label' => 'Lekcijas', 'url' => ['/lectures']];
+        $navItems[] = ['label' => 'Lekcijas', 'url' => ['/lectures'],'active' =>  in_array(\Yii::$app->controller->id,['lectures'])];
         $navItems[] = $navEnd;
     }
 

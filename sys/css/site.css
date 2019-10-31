@@ -127,6 +127,7 @@ a.desc:after {
     #logo {
         width: 60px;
         height: 60px;
+        margin: 10px 15px;
     }
     .navbar {
         min-height: 80px;

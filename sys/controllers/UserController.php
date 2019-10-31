@@ -49,11 +49,13 @@ class UserController extends Controller
         if (Yii::$app->user->isGuest OR Yii::$app->user->identity->user_level == 'Expert')
            return false; 
         $searchModel = new UserSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
- 
+        $get = Yii::$app->request->queryParams;
+        $dataProvider = $searchModel->search($get);
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'get' => $get 
         ]);
     }
  

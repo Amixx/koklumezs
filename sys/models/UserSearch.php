@@ -18,7 +18,7 @@ class UserSearch extends User
     {
         return [
             [['id'], 'integer'],
-            [['first_name', 'last_name', 'phone_number', 'email', 'user_level'], 'safe'],
+            [['first_name', 'last_name', 'phone_number', 'email', 'user_level','status','user_level'], 'safe'],
         ];
     }
  
@@ -47,7 +47,7 @@ class UserSearch extends User
         ]);
  
         $this->load($params);
- 
+
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
@@ -62,7 +62,8 @@ class UserSearch extends User
             ->andFilterWhere(['like', 'last_name', $this->last_name])
             ->andFilterWhere(['like', 'phone_number', $this->phone_number])            
             ->andFilterWhere(['like', 'email', $this->email])                    
-            ->andFilterWhere(['like', 'user_level', $this->user_level]);
+            ->andFilterWhere(['like', 'user_level', $this->user_level])
+            ->andFilterWhere(['like', 'status', $this->status]);
  
         return $dataProvider;
     }
