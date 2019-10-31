@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Users;
 use app\models\UserSearch;
+use app\models\Lectures;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -51,11 +52,12 @@ class UserController extends Controller
         $searchModel = new UserSearch();
         $get = Yii::$app->request->queryParams;
         $dataProvider = $searchModel->search($get);
-        
+        $lectures = Lectures::getLectures();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'get' => $get 
+            'get' => $get,
+            'lectures' => $lectures, 
         ]);
     }
  
@@ -79,9 +81,11 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new Users();
- 
-        if ($model->load(Yii::$app->request->post())) {
+        $post = Yii::$app->request->post();
+        if ($model->load($post)) {
             $model->password = \Yii::$app->security->generatePasswordHash($model->password);
+            $model->created_at = date('Y-m-d H:i:s', time());
+            $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
             $created = $model->save();
             if($created){
                 Yii::$app->session->setFlash('success', "User created successfully!");               
@@ -107,11 +111,12 @@ class UserController extends Controller
         $post = Yii::$app->request->post();
         
         if ($model->load($post)) {
-            if(!empty($post['User']['password'])){
-                $model->password = \Yii::$app->security->generatePasswordHash($post['User']['password']);
+            if(!empty($post['Users']['password'])){
+                $model->password = \Yii::$app->security->generatePasswordHash($post['Users']['password']);
             }else{
                 unset($model->password);
             }
+            $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
             $model->update();              
             return $this->redirect(['update', 'id' => $model->id]);
         } else {

@@ -5,10 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\UserLectures */
 
-$this->title = 'Update User Lectures: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'User Lectures', 'url' => ['index']];
+$this->title = 'Rediģēt lekciju: ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Piešķirtās lekcijas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Rediģēt';
 ?>
 <div class="user-lectures-update">
 
@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'students' => $students,
+        'lectures' => $lectures
     ]) ?>
 
 </div>

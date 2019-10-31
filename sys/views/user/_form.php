@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\models\Users;
+use  yii\jui\DatePicker;
 /* @var $this yii\web\View */
 /* @var $model app\models\Users */
 /* @var $form yii\widgets\ActiveForm */
@@ -28,6 +29,7 @@ use app\models\Users;
 
     <?= $form->field($model, 'status')->dropDownList([ Users::STATUS_INACTIVE => 'Nav aktīvs', Users::STATUS_ACTIVE => 'Aktīvs'], ['prompt' => '']) ?>
 
+    <?= $form->field($model, 'dont_bother')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd','language' => 'lv']) ?>    
     
     <div class="form-group">
         <?= Html::submitButton('Saglabāt', ['class' => 'btn btn-success']) ?>

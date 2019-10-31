@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use  yii\jui\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\UserSearch */
@@ -45,6 +46,34 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $dataProvider->status == '10' ? '<span style="color:green;">Aktīvs</span>' : '<span style="color:red;">Nav aktīvs</span>';
                 },
                 'filter'=> Html::dropDownList('UserSearch[status]',isset($get['UserSearch']['status']) ? $get['UserSearch']['status'] : '' ,app\models\Users::getStatus(),['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
+            ], 
+            [
+                'attribute' => 'last_login',
+                'value' => 'last_login',
+                'filter' => DatePicker::widget([
+                        'model'=>$searchModel,
+                        'attribute'=>'last_login',
+                        'language' => 'lv',
+                        'dateFormat' => 'yyyy-MM-dd',
+                    ]),
+                'format' => ['date', 'php:Y-m-d H:i:s']
+            ],
+            [
+                'attribute' => 'last_lecture',
+                'format' => 'raw',
+                'value' => 'lecture.title',
+                'filter'=> Html::dropDownList('UserSearch[last_lecture]',isset($get['UserSearch']['last_lecture']) ? $get['UserSearch']['last_lecture'] : '' ,$lectures,['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
+            ],
+            [
+                'attribute' => 'dont_bother',
+                'value' => 'dont_bother',
+                'filter' => DatePicker::widget([
+                        'model'=>$searchModel,
+                        'attribute'=>'dont_bother',
+                        'language' => 'lv',
+                        'dateFormat' => 'yyyy-MM-dd',
+                    ]),
+                'format' => ['date', 'php:Y-m-d H:i:s']
             ],           
             ['class' => 'yii\grid\ActionColumn'],
         ],

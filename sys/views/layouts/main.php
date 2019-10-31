@@ -94,6 +94,7 @@ AppAsset::register($this);
     {
         $navItems[] = ['label' => 'Piešķirtās lekcijas', 'url' => ['/user-lectures'],'active' =>  in_array(\Yii::$app->controller->id,['user-lectures']),];
         $navItems[] = ['label' => 'Lekcijas', 'url' => ['/lectures'],'active' =>  in_array(\Yii::$app->controller->id,['lectures']),];
+        $navItems[] = ['label' => 'Parametri', 'url' => ['/difficulties'],'active' =>  in_array(\Yii::$app->controller->id,['difficulties']),];
         $navItems[] = ['label' => 'Lietotāji', 'url' => ['/user'],'active' =>  in_array(\Yii::$app->controller->id,['user'])];      
         $navItems[] = $navEnd;
     }

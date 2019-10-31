@@ -19,7 +19,6 @@ class LoginForm extends Model
 
     private $_user = false;
 
-
     /**
      * @return array the validation rules.
      */
@@ -59,7 +58,15 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+            $logged = Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            if ($logged) {
+                $model = Users::findOne($this->_user->id);
+                if ($model) {
+                    $model->last_login = date('Y-m-d H:i:s', time());
+                    $model->update();
+                }
+            }
+            return $logged;
         }
         return false;
     }

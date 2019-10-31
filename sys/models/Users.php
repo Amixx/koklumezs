@@ -52,6 +52,9 @@ class Users extends ActiveRecord implements IdentityInterface
             'first_name' => 'Vārds',
             'last_name' => 'Uzvārds',
             'password' => 'Parole',
+            'last_login' => 'Pierakstījies',
+            'last_lecture' => 'Pēdējā lekcija',
+            'dont_bother' => 'Netraucēt'
         ];
     }
 
@@ -279,14 +282,12 @@ class Users extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    public function getAuthors()
+     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLecture()
     {
-        return $this->hasMany(Projects::className(), ['created_by' => 'id']);
-    }
-
-    public function getChanges()
-    {
-        return $this->hasMany(Projects::className(), ['change_by' => 'id']);
+        return $this->hasOne(Lectures::className(), ['id' => 'last_lecture']);
     }
 
 }

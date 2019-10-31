@@ -7,18 +7,19 @@ use yii\data\ActiveDataProvider;
 use app\models\Users;
  
 /**
- * UserSearch represents the model behind the search form about `app\models\User`.
+ * UserSearch represents the model behind the search form about `app\models\Users`.
  */
 class UserSearch extends Users
 {
+    public $lecture;
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['first_name', 'last_name', 'phone_number', 'email', 'user_level','status','user_level'], 'safe'],
+            [['id','last_lecture'], 'integer'],
+            [['first_name', 'last_name', 'phone_number', 'email', 'user_level','status','user_level','last_login','last_lecture','dont_bother'], 'safe'],
         ];
     }
  
@@ -46,6 +47,15 @@ class UserSearch extends Users
             'query' => $query,
         ]);
  
+        //relations
+        $query->joinWith(['lecture']);
+                
+        $dataProvider->sort->attributes['lecture'] = [
+            // The tables are the ones our relation are configured to
+            'asc' => ['lecture.title' => SORT_ASC],
+            'desc' => ['lecture.title' => SORT_DESC],
+        ];
+
         $this->load($params);
 
         if (!$this->validate()) {
@@ -56,6 +66,7 @@ class UserSearch extends Users
  
         $query->andFilterWhere([
             'id' => $this->id,
+            'last_lecture' => $this->last_lecture
         ]);
  
         $query->andFilterWhere(['like', 'first_name', $this->first_name])
@@ -63,7 +74,10 @@ class UserSearch extends Users
             ->andFilterWhere(['like', 'phone_number', $this->phone_number])            
             ->andFilterWhere(['like', 'email', $this->email])                    
             ->andFilterWhere(['like', 'user_level', $this->user_level])
-            ->andFilterWhere(['like', 'status', $this->status]);
+            ->andFilterWhere(['like', 'status', $this->status])
+            ->andFilterWhere(['like', 'last_login', $this->last_login])
+            ->andFilterWhere(['like', 'dont_bother', $this->dont_bother])
+            ;
  
         return $dataProvider;
     }
