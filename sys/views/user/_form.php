@@ -2,9 +2,9 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use app\models\User;
+use app\models\Users;
 /* @var $this yii\web\View */
-/* @var $model app\models\User */
+/* @var $model app\models\Users */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -26,8 +26,9 @@ use app\models\User;
     
     <?= $form->field($model, 'user_level')->dropDownList([ 'Admin' => 'Admin', 'Student' => 'Students', ], ['prompt' => '']) ?>
 
-    <?= $form->field($model, 'status')->dropDownList([ User::STATUS_INACTIVE => 'Nav aktīvs', User::STATUS_ACTIVE => 'Aktīvs', User::STATUS_DELETED => 'Dzēsts'], ['prompt' => '']) ?>
+    <?= $form->field($model, 'status')->dropDownList([ Users::STATUS_INACTIVE => 'Nav aktīvs', Users::STATUS_ACTIVE => 'Aktīvs'], ['prompt' => '']) ?>
 
+    
     <div class="form-group">
         <?= Html::submitButton('Saglabāt', ['class' => 'btn btn-success']) ?>
     </div>

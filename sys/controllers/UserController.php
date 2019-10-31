@@ -3,14 +3,14 @@
 namespace app\controllers;
  
 use Yii;
-use app\models\User;
+use app\models\Users;
 use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
  
 /**
- * UserController implements the CRUD actions for User model.
+ * UserController implements the CRUD actions for Users model.
  */
 class UserController extends Controller
 {
@@ -25,7 +25,7 @@ class UserController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return User::isUserAdmin(Yii::$app->user->identity->email);
+                            return Users::isUserAdmin(Yii::$app->user->identity->email);
                         }
                     ],
                     // everything else is denied
@@ -41,7 +41,7 @@ class UserController extends Controller
     }
  
     /**
-     * Lists all User models.
+     * Lists all Users models.
      * @return mixed
      */
     public function actionIndex()
@@ -72,13 +72,13 @@ class UserController extends Controller
     }
  
     /**
-     * Creates a new User model.
+     * Creates a new Users model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new User();
+        $model = new Users();
  
         if ($model->load(Yii::$app->request->post())) {
             $model->password = \Yii::$app->security->generatePasswordHash($model->password);
@@ -135,15 +135,15 @@ class UserController extends Controller
     }
  
     /**
-     * Finds the User model based on its primary key value.
+     * Finds the Users model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return User the loaded model
+     * @return Users the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = User::findOne($id)) !== null) {
+        if (($model = Users::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

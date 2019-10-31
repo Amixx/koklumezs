@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\User */
+/* @var $model app\models\Users */
 
 $this->title = 'Lietotāja rediģēšana: ' . $model->email;
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];

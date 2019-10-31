@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $user app\models\User */
+/* @var $user app\models\Users */
 
 $this->title = 'Lietotāji';
 $this->params['breadcrumbs'][] = $this->title;
@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($dataProvider) {
                     return $dataProvider->user_level == 'Student' ? 'Students' : 'Administrators';
                 },
-                'filter'=> Html::dropDownList('UserSearch[user_level]',isset($get['UserSearch']['user_level']) ? $get['UserSearch']['user_level'] : '' ,app\models\User::getLevels(),['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
+                'filter'=> Html::dropDownList('UserSearch[user_level]',isset($get['UserSearch']['user_level']) ? $get['UserSearch']['user_level'] : '' ,app\models\Users::getLevels(),['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
             ],     
             [
                 'attribute' => 'status',
@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($dataProvider) {
                     return $dataProvider->status == '10' ? '<span style="color:green;">Aktīvs</span>' : '<span style="color:red;">Nav aktīvs</span>';
                 },
-                'filter'=> Html::dropDownList('UserSearch[status]',isset($get['UserSearch']['status']) ? $get['UserSearch']['status'] : '' ,app\models\User::getStatus(),['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
+                'filter'=> Html::dropDownList('UserSearch[status]',isset($get['UserSearch']['status']) ? $get['UserSearch']['status'] : '' ,app\models\Users::getStatus(),['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
             ],           
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\User */
+/* @var $model app\models\Users */
 
 $this->title = 'Izveidot lietotāju';
 $this->params['breadcrumbs'][] = ['label' => 'Lietotāji', 'url' => ['index']];

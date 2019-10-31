@@ -8,7 +8,7 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\User;
+use app\models\Users;
 use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
 use app\models\ResendVerificationEmailForm;
@@ -67,9 +67,9 @@ class SiteController extends Controller
     {
         $email = isset(Yii::$app->user->identity->email) ? Yii::$app->user->identity->email : null;        
         
-        if ( User::isUserAdmin($email)) {
-            return $this->redirect(['/panel']);
-        }elseif(User::isStudent($email)){
+        if ( Users::isUserAdmin($email)) {
+            return $this->redirect(['/lectures']);
+        }elseif(Users::isStudent($email)){
             return $this->redirect(['/lectures']);
         }
         else{
