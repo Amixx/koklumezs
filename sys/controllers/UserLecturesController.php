@@ -2,18 +2,19 @@
 
 namespace app\controllers;
 
-use Yii;
-use app\models\Users;
 use app\models\Lectures;
-use app\models\LecturesSearch;
+use Yii;
+use app\models\UserLectures;
+use app\models\UserLecturesSearch;
+use app\models\Users;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * LecturesController implements the CRUD actions for Lectures model.
+ * UserLecturesController implements the CRUD actions for UserLectures model.
  */
-class LecturesController extends Controller
+class UserLecturesController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -21,20 +22,6 @@ class LecturesController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => \yii\filters\AccessControl::className(),
-                'rules' => [
-                    // allow authenticated users
-                    [                            
-                        'allow' => true,
-                        'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
-                            return Users::isUserAdmin(Yii::$app->user->identity->email);
-                        }
-                    ],
-                    // everything else is denied
-                ],
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -45,25 +32,28 @@ class LecturesController extends Controller
     }
 
     /**
-     * Lists all Lectures models.
+     * Lists all UserLectures models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new LecturesSearch();
+        $searchModel = new UserLecturesSearch();
+        $students = Users::getActiveStudents();
+        $admins = Users::getAdmins();
+        $lectures = Lectures::getLectures();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $get = Yii::$app->request->queryParams;
-        $admins = Users::getAdmins(); 
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'get' => $get,
+            'students' => $students,
             'admins' => $admins,
+            'lectures' => $lectures
         ]);
     }
 
     /**
-     * Displays a single Lectures model.
+     * Displays a single UserLectures model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -76,25 +66,29 @@ class LecturesController extends Controller
     }
 
     /**
-     * Creates a new Lectures model.
+     * Creates a new UserLectures model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Lectures();
-        $model->author = Yii::$app->user->identity->id;
+        $model = new UserLectures();
+        $model->assigned = Yii::$app->user->identity->id;
         $model->created = date('Y-m-d H:i:s',time());
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
+        $students = Users::getActiveStudents();
+        $lectures = Lectures::getLectures();
         return $this->render('create', [
             'model' => $model,
+            'students' => $students,
+            'lectures' => $lectures
         ]);
     }
 
     /**
-     * Updates an existing Lectures model.
+     * Updates an existing UserLectures model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -103,18 +97,18 @@ class LecturesController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $model->updated = date('Y-m-d H:i:s',time());
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);        
-            //return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
+
         return $this->render('update', [
-             'model' => $model,
+            'model' => $model,
         ]);
     }
 
     /**
-     * Deletes an existing Lectures model.
+     * Deletes an existing UserLectures model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -128,15 +122,15 @@ class LecturesController extends Controller
     }
 
     /**
-     * Finds the Lectures model based on its primary key value.
+     * Finds the UserLectures model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Lectures the loaded model
+     * @return UserLectures the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Lectures::findOne($id)) !== null) {
+        if (($model = UserLectures::findOne($id)) !== null) {
             return $model;
         }
 

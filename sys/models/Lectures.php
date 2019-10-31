@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "lectures".
@@ -83,6 +84,14 @@ class Lectures extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Users::className(), ['id' => 'author'])
         ->from(['u2' => Users::tableName()]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLectures()
+    {    
+        return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'title');        
     }
 
 }

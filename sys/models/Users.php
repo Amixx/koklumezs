@@ -81,6 +81,15 @@ class Users extends ActiveRecord implements IdentityInterface
         return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_ADMIN])->asArray()->all(), 'id', 'email');        
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getActiveStudents()
+    {
+        return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_USER,'status' => self::STATUS_ACTIVE])->asArray()->all(), 'id', 'email');        
+    }
+
     /**
      * {@inheritdoc}
      */
