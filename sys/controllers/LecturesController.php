@@ -2,13 +2,15 @@
 
 namespace app\controllers;
 
-use Yii;
-use app\models\Users;
+use app\models\Difficulties;
+use app\models\LecturesDifficulties;
 use app\models\Lectures;
 use app\models\LecturesSearch;
+use app\models\Users;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * LecturesController implements the CRUD actions for Lectures model.
@@ -25,12 +27,12 @@ class LecturesController extends Controller
                 'class' => \yii\filters\AccessControl::className(),
                 'rules' => [
                     // allow authenticated users
-                    [                            
+                    [
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
                             return Users::isUserAdmin(Yii::$app->user->identity->email);
-                        }
+                        },
                     ],
                     // everything else is denied
                 ],
@@ -53,12 +55,14 @@ class LecturesController extends Controller
         $searchModel = new LecturesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $get = Yii::$app->request->queryParams;
-        $admins = Users::getAdmins(); 
+        $admins = Users::getAdmins();
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'get' => $get,
             'admins' => $admins,
+            
         ]);
     }
 
@@ -82,14 +86,27 @@ class LecturesController extends Controller
      */
     public function actionCreate()
     {
+        $difficulties = Difficulties::getDifficulties();
+        $post = Yii::$app->request->post();
         $model = new Lectures();
         $model->author = Yii::$app->user->identity->id;
-        $model->created = date('Y-m-d H:i:s',time());
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $model->created = date('Y-m-d H:i:s', time());
+        if ($model->load($post) && $model->save()) {
+            if($post['difficulties'])
+            {   
+                foreach($post['difficulties'] as $id => $value){
+                    $difficulty = new LecturesDifficulties();
+                    $difficulty->diff_id = $id;
+                    $difficulty->lecture_id = $model->id;
+                    $difficulty->value = $value ?? 0;
+                    $difficulty->save();
+                }
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         }
         return $this->render('create', [
             'model' => $model,
+            'difficulties' => $difficulties,
         ]);
     }
 
@@ -102,14 +119,30 @@ class LecturesController extends Controller
      */
     public function actionUpdate($id)
     {
+        $post = Yii::$app->request->post();
+        $difficulties = Difficulties::getDifficulties();
+        $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
         $model = $this->findModel($id);
-        $model->updated = date('Y-m-d H:i:s',time());
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);        
+        $model->updated = date('Y-m-d H:i:s', time());
+        if ($model->load($post) && $model->save()) {
+            if($post['difficulties'])
+            {   
+                LecturesDifficulties::removeLectureDifficulties($id);
+                foreach($post['difficulties'] as $id => $value){
+                    $difficulty = new LecturesDifficulties();
+                    $difficulty->diff_id = $id;
+                    $difficulty->lecture_id = $model->id;
+                    $difficulty->value = $value ?? 0;
+                    $difficulty->save();
+                }
+            }
+            return $this->redirect(['index']);
             //return $this->redirect(['view', 'id' => $model->id]);
         }
         return $this->render('update', [
-             'model' => $model,
+            'model' => $model,
+            'difficulties' => $difficulties,
+            'lectureDifficulties' => $lectureDifficulties
         ]);
     }
 
