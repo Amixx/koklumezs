@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\Users;
 use app\models\Difficulties;
 use app\models\DifficultiesSearch;
 use yii\web\Controller;
