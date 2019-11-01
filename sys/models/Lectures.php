@@ -94,4 +94,5 @@ class Lectures extends \yii\db\ActiveRecord
         return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'title');        
     }
 
+
 }

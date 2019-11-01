@@ -1,7 +1,7 @@
 <?php
 
 namespace app\models;
-
+use yii\helpers\ArrayHelper;
 use Yii;
 
 /**
@@ -81,5 +81,13 @@ class UserLectures extends \yii\db\ActiveRecord
     public function getLecture()
     {
         return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserLectures($id)
+    {
+        return ArrayHelper::map(self::find()->where(['user_id' => $id])->asArray()->all(), 'id', 'lecture_id');        
     }
 }
