@@ -2,28 +2,26 @@
 
 namespace app\models;
 use yii\helpers\ArrayHelper;
-
 use Yii;
 
 /**
- * This is the model class for table "lecturesdifficulties".
+ * This is the model class for table "lectureshanddifficulties".
  *
  * @property int $id
- * @property int $diff_id Parametrs
  * @property int $lecture_id Lekcija
- * @property string $value Vērtība
+ * @property int $category_id Kategorija
  *
  * @property Lectures $lecture
- * @property Difficulties $diff
+ * @property Handdifficulties $category
  */
-class LecturesDifficulties extends \yii\db\ActiveRecord
+class Lectureshanddifficulties extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'lecturesdifficulties';
+        return 'lectureshanddifficulties';
     }
 
     /**
@@ -32,11 +30,10 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['diff_id', 'lecture_id', 'value'], 'required'],
-            [['diff_id', 'lecture_id'], 'integer'],
-            [['value'], 'string', 'max' => 50],
+            [['lecture_id', 'category_id'], 'required'],
+            [['lecture_id', 'category_id'], 'integer'],
             [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
-            [['diff_id'], 'exist', 'skipOnError' => true, 'targetClass' => Difficulties::className(), 'targetAttribute' => ['diff_id' => 'id']],
+            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Handdifficulties::className(), 'targetAttribute' => ['category_id' => 'id']],
         ];
     }
 
@@ -47,9 +44,8 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'diff_id' => 'Parametrs',
             'lecture_id' => 'Lekcija',
-            'value' => 'Vērtība',
+            'category_id' => 'Kategorija',
         ];
     }
 
@@ -64,17 +60,17 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getDiff()
+    public function getCategory()
     {
-        return $this->hasOne(Difficulties::className(), ['id' => 'diff_id']);
+        return $this->hasOne(Handdifficulties::className(), ['id' => 'category_id']);
     }
 
-    /**
+     /**
      * @return \yii\db\ActiveQuery
      */
     public function getLectureDifficulties($id)
     {
-        return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'diff_id', 'value');
+        return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'category_id', 'id');
     }
 
     /**

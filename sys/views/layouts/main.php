@@ -81,20 +81,21 @@ AppAsset::register($this);
         $navEnd = '<li>'
         . Html::beginForm(['/site/logout'], 'post')
         . Html::submitButton(
-            'Logout (' . Yii::$app->user->identity->first_name . ' ' . Yii::$app->user->identity->last_name . ')',
+            'Izrakstīties (' . Yii::$app->user->identity->first_name . ' ' . Yii::$app->user->identity->last_name . ')',
             ['class' => 'btn btn-link logout']
         )
         . Html::endForm()
         . '</li>';
     }
     if(Yii::$app->user->isGuest){
-        $navItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $navItems[] = ['label' => 'Pierakstīties', 'url' => ['/site/login']];
     }
     elseif(Yii::$app->user->identity->user_level == 'Admin')
     {
         $navItems[] = ['label' => 'Piešķirtās lekcijas', 'url' => ['/user-lectures'],'active' =>  in_array(\Yii::$app->controller->id,['user-lectures']),];
         $navItems[] = ['label' => 'Lekcijas', 'url' => ['/lectures'],'active' =>  in_array(\Yii::$app->controller->id,['lectures']),];
         $navItems[] = ['label' => 'Parametri', 'url' => ['/difficulties'],'active' =>  in_array(\Yii::$app->controller->id,['difficulties']),];
+        $navItems[] = ['label' => 'Kategorijas', 'url' => ['/handdifficulties'],'active' =>  in_array(\Yii::$app->controller->id,['handdifficulties']),];        
         $navItems[] = ['label' => 'Lietotāji', 'url' => ['/user'],'active' =>  in_array(\Yii::$app->controller->id,['user'])];      
         $navItems[] = $navEnd;
     }

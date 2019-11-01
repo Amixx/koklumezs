@@ -3,7 +3,9 @@
 namespace app\controllers;
 
 use app\models\Difficulties;
+use app\models\Handdifficulties;
 use app\models\LecturesDifficulties;
+use app\models\Lectureshanddifficulties;
 use app\models\Lectures;
 use app\models\LecturesSearch;
 use app\models\Users;
@@ -87,6 +89,7 @@ class LecturesController extends Controller
     public function actionCreate()
     {
         $difficulties = Difficulties::getDifficulties();
+        $handdifficulties = Handdifficulties::getDifficulties();
         $post = Yii::$app->request->post();
         $model = new Lectures();
         $model->author = Yii::$app->user->identity->id;
@@ -102,11 +105,21 @@ class LecturesController extends Controller
                     $difficulty->save();
                 }
             }
+            if($post['handdifficulties'])
+            {   
+                foreach($post['handdifficulties'] as $id => $value){
+                    $handdifficulty = new Lectureshanddifficulties();
+                    $handdifficulty->category_id = $id;
+                    $handdifficulty->lecture_id = $model->id;
+                    $handdifficulty->save();
+                }
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         }
         return $this->render('create', [
             'model' => $model,
             'difficulties' => $difficulties,
+            'handdifficulties' => $handdifficulties
         ]);
     }
 
@@ -121,19 +134,31 @@ class LecturesController extends Controller
     {
         $post = Yii::$app->request->post();
         $difficulties = Difficulties::getDifficulties();
+        $handdifficulties = Handdifficulties::getDifficulties();
         $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
+        $lectureHandDifficulties = Lectureshanddifficulties::getLectureDifficulties($id);
         $model = $this->findModel($id);
         $model->updated = date('Y-m-d H:i:s', time());
         if ($model->load($post) && $model->save()) {
             if($post['difficulties'])
             {   
                 LecturesDifficulties::removeLectureDifficulties($id);
-                foreach($post['difficulties'] as $id => $value){
+                foreach($post['difficulties'] as $pid => $value){
                     $difficulty = new LecturesDifficulties();
-                    $difficulty->diff_id = $id;
+                    $difficulty->diff_id = $pid;
                     $difficulty->lecture_id = $model->id;
                     $difficulty->value = $value ?? 0;
                     $difficulty->save();
+                }
+            }
+            if($post['handdifficulties'])
+            {   
+                Lectureshanddifficulties::removeLectureDifficulties($id);
+                foreach($post['handdifficulties'] as $pid => $value){
+                    $handdifficulty = new Lectureshanddifficulties();
+                    $handdifficulty->category_id = $pid;
+                    $handdifficulty->lecture_id = $model->id;
+                    $handdifficulty->save();
                 }
             }
             return $this->redirect(['index']);
@@ -142,7 +167,9 @@ class LecturesController extends Controller
         return $this->render('update', [
             'model' => $model,
             'difficulties' => $difficulties,
-            'lectureDifficulties' => $lectureDifficulties
+            'handdifficulties' => $handdifficulties,
+            'lectureDifficulties' => $lectureDifficulties,
+            'lectureHandDifficulties' => $lectureHandDifficulties,
         ]);
     }
 
