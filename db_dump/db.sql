@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 31, 2019 at 03:17 PM
+-- Generation Time: Nov 01, 2019 at 11:16 AM
 -- Server version: 5.5.64-MariaDB
 -- PHP Version: 5.4.16
 
@@ -45,6 +45,29 @@ INSERT INTO `difficulties` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `handdifficulties`
+--
+
+CREATE TABLE IF NOT EXISTS `handdifficulties` (
+  `id` int(11) NOT NULL,
+  `hand` enum('left','right') COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Roka',
+  `category` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Kategorija'
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `handdifficulties`
+--
+
+INSERT INTO `handdifficulties` (`id`, `hand`, `category`) VALUES
+(1, 'left', 'Kreisās rokas kategorija 1'),
+(2, 'left', 'Kreisā roka 2'),
+(3, 'right', 'Labā roka 1'),
+(4, 'right', 'Labā roka 2'),
+(5, 'right', 'Labā roka 3');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `lectures`
 --
 
@@ -56,16 +79,66 @@ CREATE TABLE IF NOT EXISTS `lectures` (
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Atjaunota',
   `author` int(11) NOT NULL COMMENT 'Autors',
   `complexity` enum('1','2','3','4','5','6','7','8','9','10') COLLATE utf8_unicode_ci NOT NULL COMMENT 'Sarežģītība'
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `lectures`
 --
 
 INSERT INTO `lectures` (`id`, `title`, `description`, `created`, `updated`, `author`, `complexity`) VALUES
-(1, 'Lekcija 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.', NULL, '2019-10-31 08:53:19', 1, '1'),
+(1, 'Lekcija 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.', NULL, '2019-11-01 07:12:34', 1, '1'),
 (3, 'Lekcija 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.', NULL, '2019-10-31 08:53:30', 2, '6'),
-(4, 'Lekcija 3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.', '2019-10-31 07:49:29', '2019-10-31 08:53:41', 1, '7');
+(4, 'Lekcija 3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.', '2019-10-31 07:49:29', '2019-10-31 08:53:41', 1, '7'),
+(5, 'Lekcija atkal', 'apraksts', '2019-11-01 07:16:22', '2019-11-01 09:16:22', 1, '7');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lecturesdifficulties`
+--
+
+CREATE TABLE IF NOT EXISTS `lecturesdifficulties` (
+  `id` int(11) NOT NULL,
+  `diff_id` int(11) NOT NULL COMMENT 'Parametrs',
+  `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
+  `value` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Vērtība'
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `lecturesdifficulties`
+--
+
+INSERT INTO `lecturesdifficulties` (`id`, `diff_id`, `lecture_id`, `value`) VALUES
+(18, 1, 1, '1'),
+(19, 2, 1, '2'),
+(20, 3, 1, '3'),
+(21, 4, 1, '6'),
+(22, 5, 1, '7'),
+(23, 1, 5, '1'),
+(24, 2, 5, '3'),
+(25, 3, 5, '4');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lectureshanddifficulties`
+--
+
+CREATE TABLE IF NOT EXISTS `lectureshanddifficulties` (
+  `id` int(11) NOT NULL,
+  `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
+  `category_id` int(11) NOT NULL COMMENT 'Kategorija'
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `lectureshanddifficulties`
+--
+
+INSERT INTO `lectureshanddifficulties` (`id`, `lecture_id`, `category_id`) VALUES
+(2, 1, 1),
+(3, 1, 3),
+(4, 5, 2),
+(5, 5, 4);
 
 -- --------------------------------------------------------
 
@@ -80,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `userlectures` (
   `assigned` int(11) NOT NULL COMMENT 'Administrators',
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Izveidots',
   `opened` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Atvērta',
-  `opentime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Atvēršanas laiks'
+  `opentime` timestamp NULL DEFAULT NULL COMMENT 'Atvēršanas laiks'
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -141,11 +214,33 @@ ALTER TABLE `difficulties`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `handdifficulties`
+--
+ALTER TABLE `handdifficulties`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `lectures`
 --
 ALTER TABLE `lectures`
   ADD PRIMARY KEY (`id`),
   ADD KEY `author` (`author`) USING BTREE;
+
+--
+-- Indexes for table `lecturesdifficulties`
+--
+ALTER TABLE `lecturesdifficulties`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `lecture_id` (`lecture_id`),
+  ADD KEY `diff_id` (`diff_id`);
+
+--
+-- Indexes for table `lectureshanddifficulties`
+--
+ALTER TABLE `lectureshanddifficulties`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `lecture` (`lecture_id`),
+  ADD KEY `category` (`category_id`) USING BTREE;
 
 --
 -- Indexes for table `userlectures`
@@ -172,10 +267,25 @@ ALTER TABLE `users`
 ALTER TABLE `difficulties`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
+-- AUTO_INCREMENT for table `handdifficulties`
+--
+ALTER TABLE `handdifficulties`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+--
 -- AUTO_INCREMENT for table `lectures`
 --
 ALTER TABLE `lectures`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `lecturesdifficulties`
+--
+ALTER TABLE `lecturesdifficulties`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
+--
+-- AUTO_INCREMENT for table `lectureshanddifficulties`
+--
+ALTER TABLE `lectureshanddifficulties`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `userlectures`
 --
@@ -195,6 +305,20 @@ ALTER TABLE `users`
 --
 ALTER TABLE `lectures`
   ADD CONSTRAINT `lectures_ibfk_1` FOREIGN KEY (`author`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `lecturesdifficulties`
+--
+ALTER TABLE `lecturesdifficulties`
+  ADD CONSTRAINT `lecturesdifficulties_ibfk_1` FOREIGN KEY (`diff_id`) REFERENCES `difficulties` (`id`),
+  ADD CONSTRAINT `lecturesdifficulties_ibfk_2` FOREIGN KEY (`lecture_id`) REFERENCES `lectures` (`id`);
+
+--
+-- Constraints for table `lectureshanddifficulties`
+--
+ALTER TABLE `lectureshanddifficulties`
+  ADD CONSTRAINT `lectureshanddifficulties_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `handdifficulties` (`id`),
+  ADD CONSTRAINT `lectureshanddifficulties_ibfk_2` FOREIGN KEY (`lecture_id`) REFERENCES `lectures` (`id`);
 
 --
 -- Constraints for table `userlectures`

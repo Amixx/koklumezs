@@ -17,9 +17,11 @@ $this->params['breadcrumbs'][] = 'Rediģēt';
     <?= $this->render('_form', [
         'model' => $model,
         'difficulties' =>$difficulties,
-        'lectureDifficulties' => $lectureDifficulties,
         'handdifficulties' => $handdifficulties,
-        'lectureHandDifficulties' => $lectureHandDifficulties
+        'evaluations' => $evaluations,
+        'lectureDifficulties' => $lectureDifficulties,        
+        'lectureHandDifficulties' => $lectureHandDifficulties,
+        'lectureEvaluations' => $lectureEvaluations
     ]) ?>
 
 </div>
