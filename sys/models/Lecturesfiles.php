@@ -56,4 +56,11 @@ class Lecturesfiles extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLectureFiles($id){
+       return self::find()->where(['lecture_id' => $id])->asArray()->all();
+    }
 }

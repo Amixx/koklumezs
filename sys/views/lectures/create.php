@@ -20,7 +20,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'evaluations' => $evaluations,
         'lectureDifficulties' => [],
         'lectureHandDifficulties' => [],
-        'lectureEvaluations' => []        
+        'lectureEvaluations' => [],
+        'lecturefiles' => []        
     ]) ?>
 
 </div>

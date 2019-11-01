@@ -6,11 +6,13 @@ use app\models\Users;
 use app\models\Lectures;
 use app\models\Evaluations;
 use app\models\Difficulties;
+use app\models\Lecturesfiles;
 use app\models\LecturesSearch;
 use app\models\Handdifficulties;
 use app\models\Lecturesevaluations;
 use app\models\LecturesDifficulties;
 use app\models\Lectureshanddifficulties;
+
 
 use Yii;
 use yii\filters\VerbFilter;
@@ -153,6 +155,7 @@ class LecturesController extends Controller
         $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
         $lectureHandDifficulties = Lectureshanddifficulties::getLectureDifficulties($id);
         $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
+        $lecturefiles = Lecturesfiles::getLectureFiles($id);
         $model = $this->findModel($id);
         $model->updated = date('Y-m-d H:i:s', time());
         if ($model->load($post) && $model->save()) {
@@ -197,7 +200,8 @@ class LecturesController extends Controller
             'evaluations' => $evaluations,
             'lectureDifficulties' => $lectureDifficulties,
             'lectureHandDifficulties' => $lectureHandDifficulties,
-            'lectureEvaluations' => $lectureEvaluations
+            'lectureEvaluations' => $lectureEvaluations,
+            'lecturefiles' => $lecturefiles
         ]);
     }
 

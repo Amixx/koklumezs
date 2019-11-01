@@ -1,11 +1,18 @@
 <?php
-
+use mihaildev\ckeditor\CKEditor;
+use mihaildev\elfinder\ElFinder;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\models\Lectures;
 /* @var $this yii\web\View */
 /* @var $model app\models\Lectures */
 /* @var $form yii\widgets\ActiveForm */
+$ckeditorOptions = ElFinder::ckeditorOptions('elfinder',
+[
+    'preset' => 'full', //разработанны стандартные настройки basic, standard, full данную возможность не обязательно использовать
+    'inline' => false, //по умолчанию false
+    'filter'        => ['image', 'application/pdf', 'text', 'video'] ,    // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
+]);
 ?>
 
 <div class="lectures-form">
@@ -14,7 +21,11 @@ use app\models\Lectures;
 
     <?= $form->field($model, 'title')->textInput() ?>
 
-    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'description')->widget(CKEditor::className(),[
+        'editorOptions' => $ckeditorOptions,
+    ]) ?>
+     
+    
 
     <?= $form->field($model, 'complexity')->dropDownList(Lectures::getComplexity(), ['prompt' => '']) ?>
 
@@ -69,6 +80,25 @@ use app\models\Lectures;
                 <div class="help-block"></div> 
             </div>         
         <?php } ?>       
+    <?php } ?>
+    <hr />
+    <h2>Pievienotie faili</h2>
+    <p>
+        <a target="_blank" class="btn btn-success" href="/sys/lecturesfiles/create?lecture_id=<?=$model->id?>">Pievienot failu</a>
+    </p>       
+    <?php if($lecturefiles){  ?>        
+        <table class="table table-striped table-bordered">
+        <?php foreach($lecturefiles as $id => $file){ ?>
+            <tr> 
+                <td><?=$file['title']?></td>       
+                <td>
+                    <a target="_blank" href="/sys/lecturesfiles/<?=$file['id']?>" title="Skatīt" aria-label="Skatīt" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a> 
+                    <a target="_blank" href="/sys/lecturesfiles/update/<?=$file['id']?>" title="Rediģēt" aria-label="Rediģēt" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a> 
+                    <a href="/sys/lecturesfiles/delete/<?=$file['id']?>" title="Dzēst" aria-label="Dzēst" data-pjax="0" data-confirm="Vai Jūs tiešām vēlaties dzēst šo failu?" data-method="post"><span class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>            
+        <?php } ?>
+        </table>
     <?php } ?>
 
     <div class="form-group">

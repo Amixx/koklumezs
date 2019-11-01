@@ -83,13 +83,18 @@ class LecturesfilesController extends Controller
     {
         $model = new Lecturesfiles();
         $lectures = Lectures::getLectures();
+        $get = Yii::$app->request->queryParams;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
-
+        if(isset($get['lecture_id']) AND is_numeric($get['lecture_id']))
+        {
+            $model->lecture_id = (int)$get['lecture_id'];
+        }
         return $this->render('create', [
             'model' => $model,
-            'lectures' => $lectures
+            'lectures' => $lectures,
+            'get' => $get
         ]);
     }
 
