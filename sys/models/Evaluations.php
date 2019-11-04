@@ -1,7 +1,7 @@
 <?php
 
 namespace app\models;
-
+use yii\helpers\ArrayHelper;
 use Yii;
 
 /**
@@ -70,4 +70,12 @@ class Evaluations extends \yii\db\ActiveRecord
    {
        return self::find()->asArray()->all();        
    }
+
+   /**
+     * {@inheritdoc}
+     */
+    public function getEvaluationsTitles()
+    {
+        return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'title');        
+    }
 }

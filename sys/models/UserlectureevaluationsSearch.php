@@ -85,15 +85,15 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
             // $query->where('0=1');
             return $dataProvider;
         }
-        $query->andFilterWhere(
-            ['like', 'student.email', $this->user_id]
-        );
-        $query->andFilterWhere(
-            ['like', 'lecture.title', $this->lecture_id]
-        );
-        $query->andFilterWhere(
-            ['like', 'evaluation.title', $this->evaluation_id]
-        );
+        // $query->andFilterWhere(
+        //     ['like', 'student.email', $this->user_id]
+        // );
+        // $query->andFilterWhere(
+        //     ['like', 'lecture.title', $this->lecture_id]
+        // );
+        // $query->andFilterWhere(
+        //     ['like', 'evaluation.title', $this->evaluation_id]
+        // );
         
         // grid filtering conditions
         $query->andFilterWhere([

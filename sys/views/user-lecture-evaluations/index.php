@@ -35,12 +35,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter'=> Html::dropDownList('UserlectureevaluationsSearch[lecture_id]',isset($get['UserlectureevaluationsSearch']['lecture_id']) ? $get['UserlectureevaluationsSearch']['lecture_id'] : '' ,$lectures,['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
             ], 
             //'evaluation_id',
-            /*[
+            [
                 'attribute' => 'evaluation_id',
                 'format' => 'raw',
                 'value' => 'evaluation.title',
                 'filter'=> Html::dropDownList('UserlectureevaluationsSearch[evaluation_id]',isset($get['UserlectureevaluationsSearch']['evaluation_id']) ? $get['UserlectureevaluationsSearch']['evaluation_id'] : '' ,$evaluations,['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
-            ],*/ 
+            ], 
             [
                 'attribute' => 'user_id',
                 'format' => 'raw',

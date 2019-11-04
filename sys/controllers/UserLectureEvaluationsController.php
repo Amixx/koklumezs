@@ -42,7 +42,7 @@ class UserLectureEvaluationsController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $students = Users::getActiveStudents();
         $lectures = Lectures::getLectures();
-        $evaluations = Evaluations::getEvaluations();
+        $evaluations = Evaluations::getEvaluationsTitles();
         $get = Yii::$app->request->queryParams;
         return $this->render('index', [
             'searchModel' => $searchModel,

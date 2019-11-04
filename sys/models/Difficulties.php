@@ -43,7 +43,7 @@ class Difficulties extends \yii\db\ActiveRecord
         ];
     }
 
-     /**
+    /**
      * {@inheritdoc}
      */
     public function getDifficulties()
