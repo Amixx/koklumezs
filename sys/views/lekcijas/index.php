@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td><a href="<?=Url::to(['lekcijas/lekcija', 'id' => $model->id]);?>"><?=$model->title?></a></td>
                 <td><?=$model->created?></td>
                 <td><?=isset($opened[$model->id]) ? 'Jā' : 'Nē'?></td>
-                <td></td>
+                <td><?=isset($userLectureEvaluations[$model->id]) ? 'Jā' : 'Nē'?></td>
             </tr>
             <?php } ?>
         </tbody>

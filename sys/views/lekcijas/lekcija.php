@@ -149,7 +149,7 @@ $this->params['breadcrumbs'][] = $model->title;
           
             <?php if($evaluations){  ?>
                 <hr />
-                <h3>Novērtējumi</h3>
+                <h3>Novērtē lekciju</h3>
                 <?php $form = ActiveForm::begin(); ?>
                 <?php      
                 foreach($evaluations as $id => $evaluation){ 

@@ -108,4 +108,12 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
     {
         return ArrayHelper::map(self::find()->where(['user_id' => $user_id,'lecture_id' => $id])->orderBy(['id' => SORT_ASC])->asArray()->all(), 'evaluation_id', 'evaluation');
     }
+
+     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function hasLectureEvaluations($user_id)
+    {
+        return ArrayHelper::map(self::find()->where(['user_id' => $user_id])->orderBy(['id' => SORT_ASC])->asArray()->all(), 'lecture_id', 'evaluation_id');
+    }
 }

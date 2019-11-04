@@ -75,11 +75,14 @@ class LekcijasController extends Controller
                 ->limit($pages->limit)
                 ->all();
             $opened = UserLectures::getOpened($user->id);
+            $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
+            
             return $this->render('index', [
                 'models' => $models,
                 'userLectures' => $userLectures,
                 'opened' => $opened,
                 'pages' => $pages,
+                'userLectureEvaluations' => $userLectureEvaluations,
             ]);
         }
         
