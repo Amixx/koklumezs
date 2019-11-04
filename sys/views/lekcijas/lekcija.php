@@ -20,10 +20,20 @@ $this->params['breadcrumbs'][] = $model->title;
     </div>
     <div class="border-left col-md-9">
         <h2 class="text-center"><?=$model->title?></h2>
+        <?php if($lecturefiles){
+            $hasFiles = false;
+            foreach($lecturefiles as $id => $file){ 
+                $path_info = pathinfo($file['file']);
+                if(in_array($path_info['extension'],$videos)){
+                    $hasFiles = true;
+                }
+            }    
+            if($hasFiles){ 
+            ?>
         <div class="row">
         <?php foreach($lecturefiles as $id => $file){ 
             $path_info = pathinfo($file['file']);
-                if(in_array($path_info['extension'],$docs)){
+                if(!in_array($path_info['extension'],$videos)){
                     continue;
                 }
                 ?>
@@ -53,9 +63,12 @@ $this->params['breadcrumbs'][] = $model->title;
                             
             <?php } ?>
         </div>
-        <?=$model->description?>
-        <hr />        
-        <?php if($difficulties){  ?>
+        <hr /> 
+        <?php }
+        } ?>
+        <?=$model->description?>            
+        <?php if($difficulties AND $lectureDifficulties){  ?>
+            <hr />   
             <h3>Lekcijas sarežģītība:</h3> 
             <div class="row">   
                 <?php      
@@ -72,7 +85,7 @@ $this->params['breadcrumbs'][] = $model->title;
             </div> 
             <?php } ?>
         
-            <?php if($handdifficulties){  ?>
+            <?php if($handdifficulties AND $lectureHandDifficulties){  ?>
                 <hr />
                 <?php      
                 if($handdifficulties['left']){ ?>
@@ -107,7 +120,16 @@ $this->params['breadcrumbs'][] = $model->title;
                 </div>  
                 <?php } ?>       
             <?php } ?>
-            <?php if($lecturefiles){  ?>  
+            <?php if($lecturefiles){  
+                $hasFiles = false;
+                foreach($lecturefiles as $id => $file){ 
+                    $path_info = pathinfo($file['file']);
+                    if(in_array($path_info['extension'],$docs)){
+                        $hasFiles = true;
+                    }
+                }    
+                if($hasFiles){       
+                ?>  
                 <hr />
                 <h3>Ar lekciju saistītie materiāli:</h3>      
                 <div class="row">
@@ -122,7 +144,8 @@ $this->params['breadcrumbs'][] = $model->title;
                     </div>            
                 <?php } ?>
                 </div>
-            <?php } ?>
+            <?php }
+        } ?>
           
             <?php if($evaluations){  ?>
                 <hr />
