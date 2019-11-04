@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 01, 2019 at 11:16 AM
+-- Generation Time: Nov 04, 2019 at 03:17 PM
 -- Server version: 5.5.64-MariaDB
 -- PHP Version: 5.4.16
 
@@ -41,6 +41,27 @@ INSERT INTO `difficulties` (`id`, `name`) VALUES
 (3, 'Ātrums'),
 (4, 'Tehnika'),
 (5, 'Akordi');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `evaluations`
+--
+
+CREATE TABLE IF NOT EXISTS `evaluations` (
+  `id` int(11) NOT NULL,
+  `title` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Virsraksts',
+  `type` enum('zvaigznes','teksts') COLLATE utf8_unicode_ci NOT NULL COMMENT 'Tips'
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `evaluations`
+--
+
+INSERT INTO `evaluations` (`id`, `title`, `type`) VALUES
+(1, 'Uzraksti komentāru, kā patika lekcija ', 'teksts'),
+(2, 'Novērtē cik labi saprati akustiku', 'zvaigznes'),
+(3, 'Novērtē cik labi izprati ritmu', 'zvaigznes');
 
 -- --------------------------------------------------------
 
@@ -86,10 +107,10 @@ CREATE TABLE IF NOT EXISTS `lectures` (
 --
 
 INSERT INTO `lectures` (`id`, `title`, `description`, `created`, `updated`, `author`, `complexity`) VALUES
-(1, 'Lekcija 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.', NULL, '2019-11-01 07:12:34', 1, '1'),
-(3, 'Lekcija 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.', NULL, '2019-10-31 08:53:30', 2, '6'),
-(4, 'Lekcija 3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.', '2019-10-31 07:49:29', '2019-10-31 08:53:41', 1, '7'),
-(5, 'Lekcija atkal', 'apraksts', '2019-11-01 07:16:22', '2019-11-01 09:16:22', 1, '7');
+(1, 'Lekcija 1', '<h2><strong>Lorem ipsum dolor sit amet,</strong></h2>\r\n\r\n<p>consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, <span style="background-color:#FF0000">faucibus justo</span>. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.</p>\r\n', '2019-10-31 07:49:29', '2019-11-04 09:51:17', 1, '1'),
+(3, 'Lekcija 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.', '2019-10-31 07:49:29', '2019-11-01 12:39:02', 2, '6'),
+(4, 'Lekcija 3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.', '2019-10-31 07:49:29', '2019-11-01 08:16:01', 1, '7'),
+(5, 'Lekcija atkal', 'apraksts', '2019-11-01 07:16:22', '2019-11-01 08:09:57', 1, '7');
 
 -- --------------------------------------------------------
 
@@ -102,21 +123,67 @@ CREATE TABLE IF NOT EXISTS `lecturesdifficulties` (
   `diff_id` int(11) NOT NULL COMMENT 'Parametrs',
   `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
   `value` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Vērtība'
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `lecturesdifficulties`
 --
 
 INSERT INTO `lecturesdifficulties` (`id`, `diff_id`, `lecture_id`, `value`) VALUES
-(18, 1, 1, '1'),
-(19, 2, 1, '2'),
-(20, 3, 1, '3'),
-(21, 4, 1, '6'),
-(22, 5, 1, '7'),
-(23, 1, 5, '1'),
-(24, 2, 5, '3'),
-(25, 3, 5, '4');
+(26, 1, 5, '1'),
+(27, 2, 5, '3'),
+(28, 3, 5, '4'),
+(63, 2, 1, '2'),
+(64, 3, 1, '3'),
+(65, 4, 1, '6'),
+(66, 5, 1, '7');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lecturesevaluations`
+--
+
+CREATE TABLE IF NOT EXISTS `lecturesevaluations` (
+  `id` int(11) NOT NULL,
+  `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
+  `evaluation_id` int(11) NOT NULL COMMENT 'Novērtējums'
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `lecturesevaluations`
+--
+
+INSERT INTO `lecturesevaluations` (`id`, `lecture_id`, `evaluation_id`) VALUES
+(9, 3, 3),
+(10, 4, 2),
+(19, 1, 1),
+(20, 1, 2),
+(21, 1, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lecturesfiles`
+--
+
+CREATE TABLE IF NOT EXISTS `lecturesfiles` (
+  `id` int(11) NOT NULL,
+  `title` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Virsraksts',
+  `file` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Fails',
+  `lecture_id` int(11) NOT NULL COMMENT 'Lekcija'
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `lecturesfiles`
+--
+
+INSERT INTO `lecturesfiles` (`id`, `title`, `file`, `lecture_id`) VALUES
+(1, 'Video lekcija 1', '/sys/files/global/video/BEWARE%20of%20Boris.mp4', 1),
+(2, 'Video lekcija 2', '/sys/files/global/video/y2mate.com%20-%20this_is_getting_out_of_hand_fan_mail_unboxing_c5byF_jaMEw_1080p.mp4', 3),
+(3, 'Video lekcija 3', '/sys/files/global/video/This%20is%20getting%20out%20of%20hand..%20(fan%20mail%20unboxing).mp4', 4),
+(4, 'Video lekcija cita', '/sys/files/global/video/Top%2019%20reasons%20you%20should%20get%20a%20Lada.mp4', 1),
+(5, 'PDF fails ar notīm', '/sys/files/global/pdf/sample.pdf', 1);
 
 -- --------------------------------------------------------
 
@@ -128,17 +195,95 @@ CREATE TABLE IF NOT EXISTS `lectureshanddifficulties` (
   `id` int(11) NOT NULL,
   `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
   `category_id` int(11) NOT NULL COMMENT 'Kategorija'
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `lectureshanddifficulties`
 --
 
 INSERT INTO `lectureshanddifficulties` (`id`, `lecture_id`, `category_id`) VALUES
-(2, 1, 1),
-(3, 1, 3),
-(4, 5, 2),
-(5, 5, 4);
+(6, 5, 2),
+(7, 5, 4),
+(22, 1, 1),
+(23, 1, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `studentgoals`
+--
+
+CREATE TABLE IF NOT EXISTS `studentgoals` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL COMMENT 'Lietotājs',
+  `type` enum('Šobrīd','Vēlamais') COLLATE utf8_unicode_ci NOT NULL COMMENT 'Veids',
+  `diff_id` int(11) NOT NULL COMMENT 'Parametrs',
+  `value` int(11) NOT NULL COMMENT 'Vērtība'
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `studentgoals`
+--
+
+INSERT INTO `studentgoals` (`id`, `user_id`, `type`, `diff_id`, `value`) VALUES
+(66, 2, 'Šobrīd', 1, 1),
+(67, 2, 'Šobrīd', 2, 1),
+(68, 2, 'Šobrīd', 3, 4),
+(69, 2, 'Vēlamais', 2, 5),
+(70, 2, 'Vēlamais', 4, 8);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `studenthandgoals`
+--
+
+CREATE TABLE IF NOT EXISTS `studenthandgoals` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL COMMENT 'Students',
+  `category_id` int(11) NOT NULL COMMENT 'Kategorija'
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `studenthandgoals`
+--
+
+INSERT INTO `studenthandgoals` (`id`, `user_id`, `category_id`) VALUES
+(25, 2, 1),
+(26, 2, 4);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `userlectureevaluations`
+--
+
+CREATE TABLE IF NOT EXISTS `userlectureevaluations` (
+  `id` int(11) NOT NULL,
+  `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
+  `evaluation_id` int(11) NOT NULL COMMENT 'Novērtējums',
+  `user_id` int(11) NOT NULL COMMENT 'Students',
+  `evaluation` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Vērtējums',
+  `created` datetime NOT NULL COMMENT 'Izveidots'
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `userlectureevaluations`
+--
+
+INSERT INTO `userlectureevaluations` (`id`, `lecture_id`, `evaluation_id`, `user_id`, `evaluation`, `created`) VALUES
+(1, 1, 1, 2, 'cfjh', '0000-00-00 00:00:00'),
+(2, 1, 2, 2, '3', '0000-00-00 00:00:00'),
+(3, 1, 3, 2, '5', '0000-00-00 00:00:00'),
+(4, 1, 1, 2, 'cfjh', '0000-00-00 00:00:00'),
+(5, 1, 2, 2, '3', '0000-00-00 00:00:00'),
+(6, 1, 3, 2, '5', '0000-00-00 00:00:00'),
+(7, 1, 1, 2, 'cfjh', '0000-00-00 00:00:00'),
+(8, 1, 2, 2, '3', '0000-00-00 00:00:00'),
+(9, 1, 3, 2, '5', '0000-00-00 00:00:00'),
+(10, 1, 1, 2, 'Baigi labs bija', '2019-11-04 12:54:51'),
+(11, 1, 2, 2, '4', '2019-11-04 12:54:51'),
+(12, 1, 3, 2, '5', '2019-11-04 12:54:51');
 
 -- --------------------------------------------------------
 
@@ -161,9 +306,9 @@ CREATE TABLE IF NOT EXISTS `userlectures` (
 --
 
 INSERT INTO `userlectures` (`id`, `lecture_id`, `user_id`, `assigned`, `created`, `opened`, `opentime`) VALUES
-(1, 3, 2, 1, '2019-10-31 09:41:26', 0, '0000-00-00 00:00:00'),
-(2, 1, 2, 1, '2019-10-31 09:41:41', 0, '0000-00-00 00:00:00'),
-(3, 4, 2, 1, '2019-10-31 09:41:48', 0, '0000-00-00 00:00:00'),
+(1, 3, 2, 1, '2019-11-04 10:17:05', 1, '2019-11-04 08:17:05'),
+(2, 1, 2, 1, '2019-11-04 10:01:43', 1, '2019-11-04 08:01:43'),
+(3, 4, 2, 1, '2019-11-04 10:01:50', 1, '2019-11-04 08:01:50'),
 (4, 4, 4, 1, '2019-10-31 10:09:43', 0, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
@@ -189,19 +334,20 @@ CREATE TABLE IF NOT EXISTS `users` (
   `passwordResetTokenExpire` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `last_login` datetime DEFAULT NULL,
-  `last_lecture` int(11) NOT NULL COMMENT 'Pēdējā atvērtā lekcija',
-  `dont_bother` datetime DEFAULT NULL COMMENT 'līdz kuram datumam viņu netraucēt'
+  `last_lecture` int(11) DEFAULT NULL COMMENT 'Pēdējā atvērtā lekcija',
+  `dont_bother` datetime DEFAULT NULL COMMENT 'līdz kuram datumam viņu netraucēt',
+  `goal` mediumtext NOT NULL COMMENT 'Mērķis'
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `first_name`, `last_name`, `phone_number`, `email`, `password`, `user_level`, `password_hash`, `password_reset_token`, `verification_token`, `auth_key`, `status`, `updated_at`, `passwordResetTokenExpire`, `created_at`, `last_login`, `last_lecture`, `dont_bother`) VALUES
-(1, 'test', 'tester', '112', 'test@test.lv', '$2y$13$Q6qwbz72XUw4acnoTQsl7eHA5SugtEmxynv08ScuyVmeV0SGuf45C', 'Admin', '', '', '', '', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2019-10-31 12:28:44', 0, '2019-11-14 23:59:59'),
-(2, 'Students', 'Studentiņš', '112', 'student@test.lv', '$2y$13$Q6qwbz72XUw4acnoTQsl7eHA5SugtEmxynv08ScuyVmeV0SGuf45C', 'Student', '', '', '', 'tjI7VodU51a8pA-Qng971MFVzehC9dBp', 10, '2019-10-31 07:15:26', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, NULL),
-(3, 'Cits', 'Students', '112', 'student@student.lv', '$2y$13$NHRuxo0M.5KuK58JwVNOCew6WcZxKEoO1ev5oE00c1V.aEAN7zY4K', 'Student', '', '', '', 'eQeIfL_xqWz44ILGMEHp6JOMasD0OWPJ', 9, '2019-10-31 12:40:31', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, NULL),
-(4, 'Jauns', 'Students', '1242', 'students@jauns.lv', '$2y$13$SqB.4oPTqEKKiJiN50JZ7.wr4iJoApYkZM.wljUjcj3z8p2akpjaW', 'Student', '', '', '', 'QJzeNchYlrafPiZ_YZ9u51NlLd9w5IIC', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, NULL);
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `phone_number`, `email`, `password`, `user_level`, `password_hash`, `password_reset_token`, `verification_token`, `auth_key`, `status`, `updated_at`, `passwordResetTokenExpire`, `created_at`, `last_login`, `last_lecture`, `dont_bother`, `goal`) VALUES
+(1, 'test', 'tester', '112', 'test@test.lv', '$2y$13$Q6qwbz72XUw4acnoTQsl7eHA5SugtEmxynv08ScuyVmeV0SGuf45C', 'Admin', '', '', '', '', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2019-11-04 13:00:24', 0, '2019-11-14 23:59:59', ''),
+(2, 'Students', 'Studentiņš', '112', 'student@test.lv', '$2y$13$Q6qwbz72XUw4acnoTQsl7eHA5SugtEmxynv08ScuyVmeV0SGuf45C', 'Student', '', '', '', 'tjI7VodU51a8pA-Qng971MFVzehC9dBp', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2019-11-04 10:00:30', 0, NULL, 'tetsts'),
+(3, 'Cits', 'Students', '112', 'student@student.lv', '$2y$13$NHRuxo0M.5KuK58JwVNOCew6WcZxKEoO1ev5oE00c1V.aEAN7zY4K', 'Student', '', '', '', 'eQeIfL_xqWz44ILGMEHp6JOMasD0OWPJ', 9, '2019-10-31 12:40:31', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, NULL, ''),
+(4, 'Jauns', 'Students', '1242', 'students@jauns.lv', '$2y$13$SqB.4oPTqEKKiJiN50JZ7.wr4iJoApYkZM.wljUjcj3z8p2akpjaW', 'Student', '', '', '', 'QJzeNchYlrafPiZ_YZ9u51NlLd9w5IIC', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, NULL, '');
 
 --
 -- Indexes for dumped tables
@@ -211,6 +357,12 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `phone_number`, `email`, `
 -- Indexes for table `difficulties`
 --
 ALTER TABLE `difficulties`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `evaluations`
+--
+ALTER TABLE `evaluations`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -235,12 +387,52 @@ ALTER TABLE `lecturesdifficulties`
   ADD KEY `diff_id` (`diff_id`);
 
 --
+-- Indexes for table `lecturesevaluations`
+--
+ALTER TABLE `lecturesevaluations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `lecture` (`lecture_id`),
+  ADD KEY `evaluation` (`evaluation_id`);
+
+--
+-- Indexes for table `lecturesfiles`
+--
+ALTER TABLE `lecturesfiles`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `lecture` (`lecture_id`);
+
+--
 -- Indexes for table `lectureshanddifficulties`
 --
 ALTER TABLE `lectureshanddifficulties`
   ADD PRIMARY KEY (`id`),
   ADD KEY `lecture` (`lecture_id`),
   ADD KEY `category` (`category_id`) USING BTREE;
+
+--
+-- Indexes for table `studentgoals`
+--
+ALTER TABLE `studentgoals`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `diff` (`diff_id`),
+  ADD KEY `user` (`user_id`);
+
+--
+-- Indexes for table `studenthandgoals`
+--
+ALTER TABLE `studenthandgoals`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user` (`user_id`),
+  ADD KEY `category_id` (`category_id`);
+
+--
+-- Indexes for table `userlectureevaluations`
+--
+ALTER TABLE `userlectureevaluations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `lecture` (`lecture_id`),
+  ADD KEY `evaluation` (`evaluation_id`),
+  ADD KEY `student` (`user_id`);
 
 --
 -- Indexes for table `userlectures`
@@ -267,6 +459,11 @@ ALTER TABLE `users`
 ALTER TABLE `difficulties`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
+-- AUTO_INCREMENT for table `evaluations`
+--
+ALTER TABLE `evaluations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
 -- AUTO_INCREMENT for table `handdifficulties`
 --
 ALTER TABLE `handdifficulties`
@@ -280,12 +477,37 @@ ALTER TABLE `lectures`
 -- AUTO_INCREMENT for table `lecturesdifficulties`
 --
 ALTER TABLE `lecturesdifficulties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=67;
+--
+-- AUTO_INCREMENT for table `lecturesevaluations`
+--
+ALTER TABLE `lecturesevaluations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+--
+-- AUTO_INCREMENT for table `lecturesfiles`
+--
+ALTER TABLE `lecturesfiles`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `lectureshanddifficulties`
 --
 ALTER TABLE `lectureshanddifficulties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
+--
+-- AUTO_INCREMENT for table `studentgoals`
+--
+ALTER TABLE `studentgoals`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=71;
+--
+-- AUTO_INCREMENT for table `studenthandgoals`
+--
+ALTER TABLE `studenthandgoals`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=27;
+--
+-- AUTO_INCREMENT for table `userlectureevaluations`
+--
+ALTER TABLE `userlectureevaluations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `userlectures`
 --
@@ -314,11 +536,46 @@ ALTER TABLE `lecturesdifficulties`
   ADD CONSTRAINT `lecturesdifficulties_ibfk_2` FOREIGN KEY (`lecture_id`) REFERENCES `lectures` (`id`);
 
 --
+-- Constraints for table `lecturesevaluations`
+--
+ALTER TABLE `lecturesevaluations`
+  ADD CONSTRAINT `lecturesevaluations_ibfk_1` FOREIGN KEY (`evaluation_id`) REFERENCES `evaluations` (`id`),
+  ADD CONSTRAINT `lecturesevaluations_ibfk_2` FOREIGN KEY (`lecture_id`) REFERENCES `lectures` (`id`);
+
+--
+-- Constraints for table `lecturesfiles`
+--
+ALTER TABLE `lecturesfiles`
+  ADD CONSTRAINT `lecturesfiles_ibfk_1` FOREIGN KEY (`lecture_id`) REFERENCES `lectures` (`id`);
+
+--
 -- Constraints for table `lectureshanddifficulties`
 --
 ALTER TABLE `lectureshanddifficulties`
   ADD CONSTRAINT `lectureshanddifficulties_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `handdifficulties` (`id`),
   ADD CONSTRAINT `lectureshanddifficulties_ibfk_2` FOREIGN KEY (`lecture_id`) REFERENCES `lectures` (`id`);
+
+--
+-- Constraints for table `studentgoals`
+--
+ALTER TABLE `studentgoals`
+  ADD CONSTRAINT `studentgoals_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `studentgoals_ibfk_2` FOREIGN KEY (`diff_id`) REFERENCES `difficulties` (`id`);
+
+--
+-- Constraints for table `studenthandgoals`
+--
+ALTER TABLE `studenthandgoals`
+  ADD CONSTRAINT `studenthandgoals_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `studenthandgoals_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `handdifficulties` (`id`);
+
+--
+-- Constraints for table `userlectureevaluations`
+--
+ALTER TABLE `userlectureevaluations`
+  ADD CONSTRAINT `userlectureevaluations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `userlectureevaluations_ibfk_2` FOREIGN KEY (`lecture_id`) REFERENCES `lectures` (`id`),
+  ADD CONSTRAINT `userlectureevaluations_ibfk_3` FOREIGN KEY (`evaluation_id`) REFERENCES `evaluations` (`id`);
 
 --
 -- Constraints for table `userlectures`
