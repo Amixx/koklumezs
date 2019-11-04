@@ -65,7 +65,7 @@ class Lectureshanddifficulties extends \yii\db\ActiveRecord
         return $this->hasOne(Handdifficulties::className(), ['id' => 'category_id']);
     }
 
-     /**
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getLectureDifficulties($id)

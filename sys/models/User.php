@@ -50,7 +50,7 @@ class User extends ActiveRecord implements IdentityInterface
             'phone_number' => 'Telefona numurs',
             'first_name' => 'Vārds',
             'last_name' => 'Uzvārds',
-            'password' => 'Parole',
+            'password' => 'Parole',            
         ];
     }
 

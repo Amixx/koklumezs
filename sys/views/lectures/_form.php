@@ -47,13 +47,18 @@ $ckeditorOptions = ElFinder::ckeditorOptions('elfinder',
             <?php if($difficulties){  ?>
                 <h2>Parametri</h2>      
                 <?php      
-                foreach($difficulties as $id => $name){ ?>
-                <div class="form-group field-difficulties-title">
-                    <label class="control-label" for="difficulties-title-<?=$id?>"><?=$name?></label>
-                    <input type="number" min="0" max="10" id="difficulties-title-<?=$id?>" class="form-control" name="difficulties[<?=$id?>]" value="<?=isset($lectureDifficulties[$id]) ? $lectureDifficulties[$id] : ''?>" aria-required="false" aria-invalid="false" />
+                foreach($difficulties as $id => $name){  ?>
+                <div class="form-group field-studentgoals">
+                    <label class="control-label"for="difficulties-title<?=$id?>"><?=$name?></label>
+                    <select id="difficulties-title<?=$id?>" class="form-control" name="difficulties[<?=$id?>]" aria-required="true" aria-invalid="false">
+                        <option value=""></option>
+                        <?php for($a=1;$a<=10;$a++){ ?>
+                        <option value="<?=$a?>" <?=(isset($lectureDifficulties[$id]) AND ($lectureDifficulties[$id] == $a)) ? 'selected' : ''?>><?=$a?></option>
+                        <?php } ?>
+                    </select>
                     <div class="help-block"></div>
-                </div>        
-            <?php } ?>       
+                </div>                       
+            <?php } ?>    
             <?php } ?>
         </div>
         <div class="tab-pane fade" id="hands" role="tabpanel" aria-labelledby="hands-tab">

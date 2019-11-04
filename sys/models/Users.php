@@ -28,7 +28,7 @@ class Users extends ActiveRecord implements IdentityInterface
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
             [['email'], 'required'],
-            [['user_level'], 'string'],
+            [['user_level','goal'], 'string'],
             ['user_level', 'default', 'value' => self::ROLE_USER],
             ['user_level', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN]],
             [['email'], 'email'],
@@ -54,7 +54,9 @@ class Users extends ActiveRecord implements IdentityInterface
             'password' => 'Parole',
             'last_login' => 'Pierakstījies',
             'last_lecture' => 'Pēdējā lekcija',
-            'dont_bother' => 'Netraucēt'
+            'dont_bother' => 'Netraucēt',
+            'status' => 'Statuss',
+            'goal' => 'Mērķis'
         ];
     }
 

@@ -4,8 +4,12 @@ namespace app\controllers;
  
 use Yii;
 use app\models\Users;
-use app\models\UserSearch;
 use app\models\Lectures;
+use app\models\UserSearch;
+use app\models\Studentgoals;
+use app\models\Difficulties;
+use app\models\Handdifficulties;
+use app\models\Studenthandgoals;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -81,6 +85,8 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new Users();
+        $difficulties = Difficulties::getDifficulties();
+        $handdifficulties = Handdifficulties::getDifficulties();
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
             $model->password = \Yii::$app->security->generatePasswordHash($model->password);
@@ -96,6 +102,10 @@ class UserController extends Controller
         } 
         return $this->render('create', [
             'model' => $model,
+            'studentGoals' => [],
+            'studentHandGoals' => [],
+            'difficulties' => $difficulties,
+            'handdifficulties' => $handdifficulties,
         ]);    
     }
  
@@ -109,12 +119,48 @@ class UserController extends Controller
     {
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
-        
+        $studentGoals = Studentgoals::getUserGoals($id);
+        $studentHandGoals = Studenthandgoals::getUserGoals($id);
+        $difficulties = Difficulties::getDifficulties();
+        $handdifficulties = Handdifficulties::getDifficulties();
         if ($model->load($post)) {
             if(!empty($post['Users']['password'])){
                 $model->password = \Yii::$app->security->generatePasswordHash($post['Users']['password']);
             }else{
                 unset($model->password);
+            }
+            if(isset($post['studentgoals'])){
+                Studentgoals::removeUserGoals($id);
+                if(isset($post['studentgoals']['now'])){
+                    
+                    foreach($post['studentgoals']['now'] as $pid => $value){
+                        $goal = new Studentgoals();
+                        $goal->user_id = $model->id;
+                        $goal->diff_id = $pid;                    
+                        $goal->type = Studentgoals::NOW;
+                        $goal->value = $value ?? 0;
+                        $goal->save();
+                    }
+                }
+                if(isset($post['studentgoals']['future'])){
+                    foreach($post['studentgoals']['future'] as $pid => $value){
+                        $goal = new Studentgoals();
+                        $goal->user_id = $model->id;
+                        $goal->diff_id = $pid;                    
+                        $goal->type = Studentgoals::FUTURE;
+                        $goal->value = $value ?? 0;
+                        $goal->save();
+                    }
+                }
+            }
+            if(isset($post['studenthandgoals'])){
+                Studenthandgoals::removeUserGoals($id);
+                foreach($post['studenthandgoals'] as $pid => $value){
+                    $goal = new Studenthandgoals();
+                    $goal->user_id = $model->id;
+                    $goal->category_id = $pid;                    
+                    $goal->save();
+                }
             }
             $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
             $model->update();              
@@ -122,6 +168,10 @@ class UserController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'studentGoals' => $studentGoals,
+                'studentHandGoals' => $studentHandGoals,
+                'difficulties' => $difficulties,
+                'handdifficulties' => $handdifficulties,
             ]);
         }
     }
