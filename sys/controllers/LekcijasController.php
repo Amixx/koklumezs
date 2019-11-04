@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Difficulties;
+use app\models\Handdifficulties;
 use app\models\Evaluations;
 use app\models\Lectures;
 use app\models\LecturesDifficulties;
@@ -10,6 +11,8 @@ use app\models\Lecturesevaluations;
 use app\models\Lecturesfiles;
 use app\models\Lectureshanddifficulties;
 use app\models\UserLectures;
+use app\models\Studenthandgoals;
+use app\models\Studentgoals;
 use app\models\Users;
 use Yii;
 use yii\filters\VerbFilter;
@@ -22,6 +25,8 @@ use yii\data\Pagination;
  */
 class LekcijasController extends Controller
 {
+    const VIDEOS = ['mp4','mov','ogv','webm','flv','avi','f4v'];
+    const DOCS = ['doc','docx','pdf'];
     /**
      * {@inheritdoc}
      */
@@ -61,15 +66,18 @@ class LekcijasController extends Controller
         $user = Yii::$app->user->identity;
         $modelsIds = UserLectures::getUserLectures($user->id);
         if ($modelsIds) {
+            $userLectures = UserLectures::getLectures($user->id);
             $query = Lectures::find()->where(['in', 'id', $modelsIds]);
             $countQuery = clone $query;
             $pages = new Pagination(['totalCount' => $countQuery->count()]);
             $models = $query->offset($pages->offset)
                 ->limit($pages->limit)
                 ->all();
-
+            $opened = UserLectures::getOpened($user->id);
             return $this->render('index', [
                 'models' => $models,
+                'userLectures' => $userLectures,
+                'opened' => $opened,
                 'pages' => $pages,
             ]);
         }
@@ -88,24 +96,35 @@ class LekcijasController extends Controller
      */
     public function actionLekcija($id)
     {
-        $difficulties = Difficulties::getDifficulties();
-        $evaluations = Evaluations::getEvaluations();
-        $handdifficulties = Handdifficulties::getDifficulties();
-        $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
-        $lectureHandDifficulties = Lectureshanddifficulties::getLectureDifficulties($id);
-        $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
-        $lecturefiles = Lecturesfiles::getLectureFiles($id);
         $model = $this->findModel($id);
-        return $this->render('lekcija', [
-            'model' => $model,
-            'difficulties' => $difficulties,
-            'handdifficulties' => $handdifficulties,
-            'evaluations' => $evaluations,
-            'lectureDifficulties' => $lectureDifficulties,
-            'lectureHandDifficulties' => $lectureHandDifficulties,
-            'lectureEvaluations' => $lectureEvaluations,
-            'lecturefiles' => $lecturefiles,
-        ]);
+        $user = Yii::$app->user->identity;
+        $modelsIds = UserLectures::getUserLectures($user->id);
+        $check = in_array($id,$modelsIds);
+        $userLectures = UserLectures::getLectures($user->id);
+        if($check){
+            UserLectures::setSeenByUser($user->id,$id);            
+            $difficulties = Difficulties::getDifficulties();
+            $evaluations = Evaluations::getEvaluations();
+            $handdifficulties = Handdifficulties::getDifficulties();
+            $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
+            $lectureHandDifficulties = Lectureshanddifficulties::getLectureDifficulties($id);
+            $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
+            $lecturefiles = Lecturesfiles::getLectureFiles($id);        
+            return $this->render('lekcija', [
+                'model' => $model,
+                'difficulties' => $difficulties,
+                'handdifficulties' => $handdifficulties,
+                'evaluations' => $evaluations,
+                'lectureDifficulties' => $lectureDifficulties,
+                'lectureHandDifficulties' => $lectureHandDifficulties,
+                'lectureEvaluations' => $lectureEvaluations,
+                'lecturefiles' => $lecturefiles,
+                'userLectures' => $userLectures,
+                'videos' => self::VIDEOS,
+                'docs' => self::DOCS,
+            ]);
+        }
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 
     /**

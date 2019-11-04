@@ -86,8 +86,32 @@ class UserLectures extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUserLectures($id)
+    public function getUserLectures($id): array
     {
         return ArrayHelper::map(self::find()->where(['user_id' => $id])->asArray()->all(), 'id', 'lecture_id');        
+    }
+
+    public function getLectures($id)
+    {
+        return self::find()->where(['user_id' => $id])->orderBy(['lecture_id' => SORT_ASC])->all();        
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function setSeenByUser($user_id,$id)
+    {
+        $model = self::find()->where(['opened' => 0,'user_id' => $user_id,'lecture_id' => $id])->one();
+        if($model){
+            $model->opened = 1;
+            $model->opentime = date('Y-m-d H:i:s',time());
+            $model->update();
+        }
+        return true;        
+    }
+
+    public function getOpened($id)
+    {
+        return ArrayHelper::map(self::find()->where(['user_id' => $id,'opened' => 1,])->asArray()->all(), 'lecture_id', 'id');
     }
 }

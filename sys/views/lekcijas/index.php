@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use  yii\jui\DatePicker;
 use yii\widgets\LinkPager;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\LecturesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -17,13 +18,17 @@ $this->params['breadcrumbs'][] = $this->title;
         <thead>
             <tr>
                 <th>Nosaukums</th>
-                <th></th>
+                <th>Datums</th>
+                <th>Apskatīta</th>
+                <th>Novērtēta</th>
             </tr>        
         </thead>
         <tbody>
             <?php foreach($models as $model){ ?>
             <tr>
-                <td><?=$model->title?></td>
+                <td><a href="<?=Url::to(['lekcijas/lekcija', 'id' => $model->id]);?>"><?=$model->title?></a></td>
+                <td><?=$model->created?></td>
+                <td><?=isset($opened[$model->id]) ? 'Jā' : 'Nē'?></td>
                 <td></td>
             </tr>
             <?php } ?>
