@@ -1,6 +1,9 @@
 <?php
 use yii\helpers\Url;
 use \yii2mod\rating\StarRating;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+
 $this->title = 'Lekcija: ' . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Lekcijas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->title;
@@ -16,7 +19,7 @@ $this->params['breadcrumbs'][] = $model->title;
         <?php } ?>
     </div>
     <div class="border-left col-md-9">
-        <h3 class="text-center"><?=$model->title?></h3>
+        <h2 class="text-center"><?=$model->title?></h2>
         <div class="row">
         <?php foreach($lecturefiles as $id => $file){ 
             $path_info = pathinfo($file['file']);
@@ -53,7 +56,7 @@ $this->params['breadcrumbs'][] = $model->title;
         <?=$model->description?>
         <hr />        
         <?php if($difficulties){  ?>
-            <h4>Lekcijas sarežģītība:</h4> 
+            <h3>Lekcijas sarežģītība:</h3> 
             <div class="row">   
                 <?php      
                 foreach($difficulties as $id => $name){  
@@ -71,11 +74,10 @@ $this->params['breadcrumbs'][] = $model->title;
         
             <?php if($handdifficulties){  ?>
                 <hr />
-                <h4>Roku kategorijas</h4>
                 <?php      
                 if($handdifficulties['left']){ ?>
                 <div class="row">   
-                <h5>Kreisās rokas kategorijas</h5>      
+                <h3>Kreisās rokas kategorijas</h3>      
                 <?php foreach($handdifficulties['left'] as $id => $name){ 
                      $continue = !isset($lectureHandDifficulties[$id]);
                      if($continue){
@@ -88,9 +90,9 @@ $this->params['breadcrumbs'][] = $model->title;
                 <?php } ?>
                 </div>
                 <?php }
-                if($handdifficulties['right']){ ?>
-                    <h5>Labās rokas kategorijas</h5>    
+                if($handdifficulties['right']){ ?>                    
                     <div class="row">
+                    <h3>Labās rokas kategorijas</h3>    
                     <?php
                     foreach($handdifficulties['right'] as $id => $name){ 
                         $continue = !isset($lectureHandDifficulties[$id]);
@@ -107,7 +109,7 @@ $this->params['breadcrumbs'][] = $model->title;
             <?php } ?>
             <?php if($lecturefiles){  ?>  
                 <hr />
-                <h4>Ar lekciju saistītie materiāli:</h4>      
+                <h3>Ar lekciju saistītie materiāli:</h3>      
                 <div class="row">
                 <?php foreach($lecturefiles as $id => $file){ 
                     $path_info = pathinfo($file['file']);
@@ -121,9 +123,11 @@ $this->params['breadcrumbs'][] = $model->title;
                 <?php } ?>
                 </div>
             <?php } ?>
+          
             <?php if($evaluations){  ?>
                 <hr />
-                <h4>Novērtējumi</h4>
+                <h3>Novērtējumi</h3>
+                <?php $form = ActiveForm::begin(); ?>
                 <?php      
                 foreach($evaluations as $id => $evaluation){ 
                     $continue = !isset($lectureEvaluations[$evaluation['id']]);
@@ -133,7 +137,7 @@ $this->params['breadcrumbs'][] = $model->title;
                     if($evaluation['type'] == 'teksts') { ?>
                     <div class="form-group field-election-election_description">
                         <label class="control-label" for="election-<?=$evaluation['id']?>"><?=$evaluation['title']?></label>
-                        <textarea id="evaluations-title-<?=$evaluation['id']?>" class="form-control" rows="6" name="evaluations[<?=$evaluation['id']?>]"></textarea>    
+                        <textarea id="evaluations-title-<?=$evaluation['id']?>" class="form-control" rows="6" name="evaluations[<?=$evaluation['id']?>]"><?=isset($userLectureEvaluations[$evaluation['id']]) ? $userLectureEvaluations[$evaluation['id']] : ''?></textarea>    
                         <div class="help-block"></div>
                     </div>
                     <?php } else { ?>
@@ -141,7 +145,7 @@ $this->params['breadcrumbs'][] = $model->title;
                         <label class="control-label" for="election-<?=$evaluation['id']?>"><?=$evaluation['title']?></label>
                         <?=StarRating::widget([
                             'name' => 'evaluations[' . $evaluation['id'] . ']',
-                            'value' => 0,
+                            'value' => isset($userLectureEvaluations[$evaluation['id']]) ? $userLectureEvaluations[$evaluation['id']] : 0,
                             'clientOptions' => [
                                 // Your client options
                                 'id' => 'election-' . $evaluation['id'],
@@ -153,7 +157,14 @@ $this->params['breadcrumbs'][] = $model->title;
                     </div>
                     <?php } ?>                                                 
                 <?php } ?>   
+                <div class="form-group">
+                    <?= Html::submitButton('Iesniegt', ['class' => 'btn btn-success']) ?>
+                </div>
                 </div>      
+
+                
+
+                <?php ActiveForm::end(); ?>
             <?php } ?>
         </div>
     </div>

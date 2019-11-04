@@ -5,6 +5,9 @@ namespace app\controllers;
 use Yii;
 use app\models\Userlectureevaluations;
 use app\models\UserlectureevaluationsSearch;
+use app\models\Users;
+use app\models\Lectures;
+use app\models\Evaluations;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -37,10 +40,17 @@ class UserLectureEvaluationsController extends Controller
     {
         $searchModel = new UserlectureevaluationsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $students = Users::getActiveStudents();
+        $lectures = Lectures::getLectures();
+        $evaluations = Evaluations::getEvaluations();
+        $get = Yii::$app->request->queryParams;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'students' => $students,
+            'lectures' => $lectures,
+            'evaluations' => $evaluations,
+            'get' => $get
         ]);
     }
 

@@ -13,6 +13,7 @@ use app\models\Lectureshanddifficulties;
 use app\models\UserLectures;
 use app\models\Studenthandgoals;
 use app\models\Studentgoals;
+use app\models\Userlectureevaluations;
 use app\models\Users;
 use Yii;
 use yii\filters\VerbFilter;
@@ -102,6 +103,19 @@ class LekcijasController extends Controller
         $check = in_array($id,$modelsIds);
         $userLectures = UserLectures::getLectures($user->id);
         if($check){
+            $post = Yii::$app->request->post();
+            if(isset($post['evaluations']))
+            {   
+                foreach($post['evaluations'] as $pid => $value){
+                    $evaluation = new Userlectureevaluations();
+                    $evaluation->evaluation_id = $pid;
+                    $evaluation->lecture_id = $model->id;
+                    $evaluation->user_id = $user->id;
+                    $evaluation->created = date('Y-m-d H:i:s',time());
+                    $evaluation->evaluation = $value ?? 0;
+                    $evaluation->save();
+                }
+            }
             UserLectures::setSeenByUser($user->id,$id);            
             $difficulties = Difficulties::getDifficulties();
             $evaluations = Evaluations::getEvaluations();
@@ -109,7 +123,8 @@ class LekcijasController extends Controller
             $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
             $lectureHandDifficulties = Lectureshanddifficulties::getLectureDifficulties($id);
             $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
-            $lecturefiles = Lecturesfiles::getLectureFiles($id);        
+            $lecturefiles = Lecturesfiles::getLectureFiles($id); 
+            $userLectureEvaluations = Userlectureevaluations::getLectureEvaluations($user->id,$id);       
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,
@@ -120,6 +135,7 @@ class LekcijasController extends Controller
                 'lectureEvaluations' => $lectureEvaluations,
                 'lecturefiles' => $lecturefiles,
                 'userLectures' => $userLectures,
+                'userLectureEvaluations' => $userLectureEvaluations,
                 'videos' => self::VIDEOS,
                 'docs' => self::DOCS,
             ]);
