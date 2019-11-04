@@ -44,6 +44,7 @@ class Lecturesfiles extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'title' => 'Nosaukums',
             'file' => 'Fails',
             'lecture_id' => 'Lekcija',
         ];

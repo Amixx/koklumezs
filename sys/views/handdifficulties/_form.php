@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'hand')->dropDownList([ 'left' => 'Left', 'right' => 'Right', ], ['prompt' => '']) ?>
 
-    <?= $form->field($model, 'category')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'category')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Saglabāt', ['class' => 'btn btn-success']) ?>
