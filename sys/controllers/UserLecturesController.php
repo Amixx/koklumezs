@@ -57,13 +57,14 @@ class UserLecturesController extends Controller
         $admins = Users::getAdmins();
         $lectures = Lectures::getLectures();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $get = Yii::$app->request->queryParams;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'students' => $students,
             'admins' => $admins,
-            'lectures' => $lectures
+            'lectures' => $lectures,
+            'get' => $get,
         ]);
     }
 

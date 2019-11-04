@@ -85,15 +85,15 @@ class UserLecturesSearch extends UserLectures
             return $dataProvider;
         }
 
-        $query->andFilterWhere(
-            ['like', 'admin.email', $this->assigned]
-        );
-        $query->andFilterWhere(
-            ['like', 'student.email', $this->user_id]
-        );
-        $query->andFilterWhere(
-            ['like', 'lecture.title', $this->lecture_id]
-        );
+        // $query->andFilterWhere(
+        //     ['like', 'admin.email', $this->assigned]
+        // );
+        // $query->andFilterWhere(
+        //     ['like', 'student.email', $this->user_id]
+        // );
+        // $query->andFilterWhere(
+        //     ['like', 'lecture.title', $this->lecture_id]
+        // );
         $query->andFilterWhere(
             ['like', self::tableName() . '.created', $this->created]
         );

@@ -60,7 +60,9 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'opened',
                 'format' => 'raw',
-                'value' => 'opened',
+                'value' => function ($dataProvider) {
+                    return $dataProvider->opened == 1 ? 'Jā' : 'Nē';
+                },
                 'filter'=> Html::dropDownList('UserLecturesSearch[opened]',isset($get['UserLecturesSearch']['opened']) ? $get['UserLecturesSearch']['opened'] : '' ,[0 => 'Nav atvērta',1 => 'Atvērta'],['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
             ], 
             [
