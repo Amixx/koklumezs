@@ -67,9 +67,17 @@ $this->params['breadcrumbs'][] = $model->title;
         <?php }
         } ?>
         <?=$model->description?>            
-        <?php if($difficulties AND $lectureDifficulties){  ?>
+        <?php if($difficulties AND $lectureDifficulties){ 
+                $sum = 0;
+                foreach($difficulties as $id => $name){  
+                    $continue = !isset($lectureDifficulties[$id]);
+                    if($continue){
+                        continue;
+                    }
+                    $sum += $lectureDifficulties[$id];
+                } ?>
             <hr />   
-            <h3>Lekcijas sarežģītība:</h3> 
+            <h3>Lekcijas sarežģītība: <?=$sum?></h3> 
             <div class="row">   
                 <?php      
                 foreach($difficulties as $id => $name){  

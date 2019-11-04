@@ -62,7 +62,7 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEvaluation0()
+    public function getEvalua()
     {
         return $this->hasOne(Evaluations::className(), ['id' => 'evaluation_id']);
     }

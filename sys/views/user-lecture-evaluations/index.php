@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'evaluation_id',
                 'format' => 'raw',
-                'value' => 'evaluation.title',
+                'value' => 'evalua.title',
                 'filter'=> Html::dropDownList('UserlectureevaluationsSearch[evaluation_id]',isset($get['UserlectureevaluationsSearch']['evaluation_id']) ? $get['UserlectureevaluationsSearch']['evaluation_id'] : '' ,$evaluations,['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
             ], 
             [

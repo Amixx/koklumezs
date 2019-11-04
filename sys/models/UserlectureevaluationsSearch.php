@@ -13,7 +13,7 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
 {
     public $student;
     public $lecture;
-    public $evaluation;
+    public $evalua;
     
     /**
      * {@inheritdoc}
@@ -70,12 +70,12 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
             'desc' => ['lecture.title' => SORT_DESC],
         ];
 
-        $query->joinWith(['evaluation']);
+        $query->joinWith(['evalua']);
                 
-        $dataProvider->sort->attributes['evaluation'] = [
+        $dataProvider->sort->attributes['evalua'] = [
             // The tables are the ones our relation are configured to
-            'asc' => ['evaluation.title' => SORT_ASC],
-            'desc' => ['evaluation.title' => SORT_DESC],
+            'asc' => ['evalua.title' => SORT_ASC],
+            'desc' => ['evalua.title' => SORT_DESC],
         ];
 
         $this->load($params);
@@ -92,7 +92,7 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
         //     ['like', 'lecture.title', $this->lecture_id]
         // );
         // $query->andFilterWhere(
-        //     ['like', 'evaluation.title', $this->evaluation_id]
+        //      ['like', 'evalua.title', $this->evaluation_id]
         // );
         
         // grid filtering conditions
@@ -103,7 +103,7 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
             'user_id' => $this->user_id,
         ]);
 
-        $query->andFilterWhere(['like', 'evaluation', $this->evaluation]);
+        $query->andFilterWhere(['like', 'evalua', $this->evalua]);
 
         return $dataProvider;
     }
