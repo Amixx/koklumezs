@@ -5,6 +5,6 @@ return [
     'adminEmail' => 'info@koklumezs.lv',
     'senderEmail' => 'noreply@koklumezs.lv',
     'senderName' => 'Kokļu mežs',
-    'supportEmail' => 'support@demo55.izstrade.eu',
+    'supportEmail' => 'support@koklumezs.lv',
     'user.passwordResetTokenExpire' => 3600,
 ];
