@@ -26,74 +26,12 @@ $this->params['breadcrumbs'][] = $model->title;
             <?php } ?>
             
         <?=$model->description?>            
-        <?php if($difficulties AND $lectureDifficulties){ 
-                $sum = 0;
-                foreach($difficulties as $id => $name){  
-                    $continue = !isset($lectureDifficulties[$id]);
-                    if($continue){
-                        continue;
-                    }
-                    $sum += $lectureDifficulties[$id];
-                } ?>
-            <hr />               
-            <div class="row">   
-            <div class="col-md-12"><h3>Lekcijas sarežģītība: <?=$sum?></h3></div>
-                <?php      
-                foreach($difficulties as $id => $name){  
-                    $continue = !isset($lectureDifficulties[$id]);
-                    if($continue){
-                        continue;
-                    }
-                    ?>
-                <div class="col-md-3 text-center">
-                   <?=$name?>: <?=$lectureDifficulties[$id]?>
-                </div>                        
-            <?php } ?>    
-            </div> 
+        <?php if($difficulties AND $lectureDifficulties){ ?>
+            <?= $this->render('difficulties',['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>    
             <?php } ?>
         
             <?php if($handdifficulties AND $lectureHandDifficulties){  ?>
-                <hr />
-                <?php      
-                if($handdifficulties['left']){ ?>
-                <div class="row">  
-                    <div class="col-md-12"> 
-                        <h3>Kreisās rokas kategorijas</h3>                       
-                    <ul>     
-                    <?php foreach($handdifficulties['left'] as $id => $name){ 
-                        $continue = !isset($lectureHandDifficulties[$id]);
-                        if($continue){
-                            continue;
-                        }
-                        ?>
-                        <li>
-                            <?=$name?>
-                        </li>            
-                    <?php } ?>
-                    </ul>
-                    </div>
-                </div>
-                <?php }
-                if($handdifficulties['right']){ ?>                    
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>Labās rokas kategorijas</h3>                      
-                    <ul>  
-                    <?php
-                    foreach($handdifficulties['right'] as $id => $name){ 
-                        $continue = !isset($lectureHandDifficulties[$id]);
-                        if($continue){
-                            continue;
-                        }
-                        ?>
-                        <li>
-                            <?=$name?>
-                        </li>      
-                    <?php } ?>
-                    </ul>
-                    </div>
-                </div>  
-                <?php } ?>       
+              <?= $this->render('handdifficulties',['handdifficulties' => $handdifficulties, 'lectureHandDifficulties' => $lectureHandDifficulties]) ?>      
             <?php } ?>
             <?php if($lecturefiles){ ?>
                 <?= $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]); ?> 
