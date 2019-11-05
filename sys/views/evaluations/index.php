@@ -31,7 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'type',
                 'format' => 'raw',
-                'value' => 'type',
+                'value' => function ($dataProvider) {
+                    return $dataProvider->type == 'zvaigznes' ? 'Zvaigznes' : 'Teksts';
+                },
                 'filter'=> Html::dropDownList('EvaluationsSearch[type]',isset($get['EvaluationsSearch']['type']) ? $get['EvaluationsSearch']['type'] : '' ,['zvaigznes' => 'Zvaigznes','teksts' => 'Teksts'],['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
             ], 
 
