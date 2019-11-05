@@ -1,4 +1,5 @@
 <?php
+use Yii;
 use mihaildev\ckeditor\CKEditor;
 use mihaildev\elfinder\ElFinder;
 use yii\helpers\Html;
@@ -45,85 +46,22 @@ $ckeditorOptions = ElFinder::ckeditorOptions('elfinder',
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
             <?php if($difficulties){  ?>
-                <h2>Parametri</h2>      
-                <?php      
-                foreach($difficulties as $id => $name){  ?>
-                <div class="form-group field-studentgoals">
-                    <label class="control-label"for="difficulties-title<?=$id?>"><?=$name?></label>
-                    <select id="difficulties-title<?=$id?>" class="form-control" name="difficulties[<?=$id?>]" aria-required="true" aria-invalid="false">
-                        <option value=""></option>
-                        <?php for($a=1;$a<=10;$a++){ ?>
-                        <option value="<?=$a?>" <?=(isset($lectureDifficulties[$id]) AND ($lectureDifficulties[$id] == $a)) ? 'selected' : ''?>><?=$a?></option>
-                        <?php } ?>
-                    </select>
-                    <div class="help-block"></div>
-                </div>                       
-            <?php } ?>    
+                <?= $this->render('difficulties',['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>
             <?php } ?>
         </div>
         <div class="tab-pane fade" id="hands" role="tabpanel" aria-labelledby="hands-tab">
             <?php if($handdifficulties){  ?>
-                <h2>Roku kategorijas</h2>      
-                <?php      
-                if($handdifficulties['left']){ ?>
-                <hr />
-                <h3>Kreisās rokas kategorijas</h3>      
-                <?php foreach($handdifficulties['left'] as $id => $name){ ?>
-                    <div class="form-group field-handdifficulties-title custom-control custom-checkbox mr-sm-2">
-                        <input type="checkbox" class="custom-control-input" id="handdifficulties-title-<?=$id?>" name="handdifficulties[<?=$id?>]" <?=isset($lectureHandDifficulties[$id]) ? 'checked' : ''?> value="1" aria-required="false" aria-invalid="false" />
-                        <label class="custom-control-label" for="handdifficulties-title-<?=$id?>"><?=$name?></label>
-                        <div class="help-block"></div> 
-                    </div>                  
-                <?php }
-                }
-                if($handdifficulties['right']){ ?>
-                    <h3>Labās rokas kategorijas</h3>    
-                    <hr />  
-                    <?php
-                    foreach($handdifficulties['right'] as $id => $name){ ?>
-                    <div class="form-group field-handdifficulties-title custom-control custom-checkbox mr-sm-2">
-                        <input type="checkbox" class="custom-control-input" id="handdifficulties-title-<?=$id?>" name="handdifficulties[<?=$id?>]" <?=isset($lectureHandDifficulties[$id]) ? 'checked' : ''?> value="1" aria-required="false" aria-invalid="false" />
-                        <label class="custom-control-label" for="handdifficulties-title-<?=$id?>"><?=$name?></label>
-                        <div class="help-block"></div> 
-                    </div>         
-                <?php }
-                } ?>       
+               <?= $this->render('handdifficulties',['handdifficulties' => $handdifficulties,'lectureHandDifficulties' => $lectureHandDifficulties]) ?> 
             <?php } ?>
         </div>
         <div class="tab-pane fade" id="evaluations" role="tabpanel" aria-labelledby="evaluations-tab">
             <?php if($evaluations){  ?>
-                <h2>Novērtējumi</h2>
-                <hr />      
-                <?php      
-                foreach($evaluations as $id => $evaluation){ ?>
-                    <div class="form-group field-evaluations-title custom-control custom-checkbox mr-sm-2">
-                        <input type="checkbox" class="custom-control-input" id="evaluations-title-<?=$evaluation['id']?>" name="evaluations[<?=$evaluation['id']?>]" <?=isset($lectureEvaluations[$evaluation['id']]) ? 'checked' : ''?> value="1" aria-required="false" aria-invalid="false" />
-                        <label class="custom-control-label" for="evaluations-title-<?=$evaluation['id']?>"><?=$evaluation['title']?> <small>[<?=$evaluation['type']?>]</small></label>
-                        <div class="help-block"></div> 
-                    </div>         
-                <?php } ?>       
+               <?= $this->render('evaluations',['evaluations' => $evaluations,'lectureEvaluations' => $lectureEvaluations]) ?>    
             <?php } ?>
         </div>
         <div class="tab-pane fade" id="files" role="tabpanel" aria-labelledby="files-tab">
-            <h2>Pievienotie faili</h2>
-            <p>
-                <a target="_blank" class="btn btn-success" href="/sys/lecturesfiles/create?lecture_id=<?=$model->id?>">Pievienot failu</a>
-            </p>       
-            <?php if($lecturefiles){  ?>        
-                <table class="table table-striped table-bordered">
-                <?php foreach($lecturefiles as $id => $file){ ?>
-                    <tr> 
-                        <td><?=$file['title']?></td>       
-                        <td>
-                            <a target="_blank" href="/sys/lecturesfiles/<?=$file['id']?>" title="Skatīt" aria-label="Skatīt" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a> 
-                            <a target="_blank" href="/sys/lecturesfiles/update/<?=$file['id']?>" title="Rediģēt" aria-label="Rediģēt" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a> 
-                            <a href="/sys/lecturesfiles/delete/<?=$file['id']?>" title="Dzēst" aria-label="Dzēst" data-pjax="0" data-confirm="Vai Jūs tiešām vēlaties dzēst šo failu?" data-method="post"><span class="glyphicon glyphicon-trash"></span></a>
-                        </td>
-                    </tr>            
-                <?php } ?>
-                </table>
-            <?php } ?>
-
+        <?php $link = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/create', 'lecture_id' => $model->id]) ?>
+            <?= $this->render('files',['lecturefiles' => $lecturefiles, 'link' => $link])?>
         </div>
     </div>
     
