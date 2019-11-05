@@ -1,8 +1,5 @@
 <?php
 use yii\helpers\Url;
-use \yii2mod\rating\StarRating;
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 
 $this->title = 'Lekcija: ' . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Lekcijas', 'url' => ['index']];
@@ -23,63 +20,20 @@ $this->params['breadcrumbs'][] = $model->title;
         <?php if($lecturefiles){ ?>
             <?= $this->render('video', ['lecturefiles' => $lecturefiles,'videos' => $videos, 'baseUrl' => $baseUrl]); ?> 
             <?= $this->render('audio', ['lecturefiles' => $lecturefiles, 'audio' => $audio]); ?> 
-            <?php } ?>
-            
+        <?php } ?>            
         <?=$model->description?>            
         <?php if($difficulties AND $lectureDifficulties){ ?>
             <?= $this->render('difficulties',['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>    
-            <?php } ?>
-        
-            <?php if($handdifficulties AND $lectureHandDifficulties){  ?>
-              <?= $this->render('handdifficulties',['handdifficulties' => $handdifficulties, 'lectureHandDifficulties' => $lectureHandDifficulties]) ?>      
-            <?php } ?>
-            <?php if($lecturefiles){ ?>
-                <?= $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]); ?> 
-           <?php } ?>
-          
-            <?php if($evaluations AND $lectureEvaluations){  ?>
-                <hr />
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>Novērtē lekciju</h3>
-                    </div>
-                </div>
-                <?php $form = ActiveForm::begin(); ?>
-                <?php      
-                foreach($evaluations as $id => $evaluation){ 
-                    $continue = !isset($lectureEvaluations[$evaluation['id']]);
-                    if($continue){
-                        continue;
-                    }
-                    if($evaluation['type'] == 'teksts') { ?>
-                    <div class="form-group field-election-election_description">
-                        <label class="control-label" for="election-<?=$evaluation['id']?>"><?=$evaluation['title']?></label>
-                        <textarea id="evaluations-title-<?=$evaluation['id']?>" class="form-control" rows="6" name="evaluations[<?=$evaluation['id']?>]"><?=isset($userLectureEvaluations[$evaluation['id']]) ? $userLectureEvaluations[$evaluation['id']] : ''?></textarea>    
-                        <div class="help-block"></div>
-                    </div>
-                    <?php } else { ?>
-                    <div class="form-group field-election-election_description">
-                        <label class="control-label" for="election-<?=$evaluation['id']?>"><?=$evaluation['title']?></label>
-                        <?=StarRating::widget([
-                            'name' => 'evaluations[' . $evaluation['id'] . ']',
-                            'value' => isset($userLectureEvaluations[$evaluation['id']]) ? $userLectureEvaluations[$evaluation['id']] : 0,
-                            'clientOptions' => [
-                                // Your client options
-                                'id' => 'election-' . $evaluation['id'],
-                                'required' => 'required',
-                                'scoreName' => 'evaluations[' . $evaluation['id'] . ']'
-                            ],
-                        ]); ?>
-                        <div class="help-block"></div>
-                    </div>
-                    <?php } ?>                                                 
-                <?php } ?>   
-                <div class="form-group">
-                    <?= Html::submitButton('Iesniegt', ['class' => 'btn btn-success']) ?>
-                </div>            
-            </div>    
-            <?php ActiveForm::end(); ?>
-            <?php } ?>
+        <?php } ?>        
+        <?php if($handdifficulties AND $lectureHandDifficulties){  ?>
+            <?= $this->render('handdifficulties',['handdifficulties' => $handdifficulties, 'lectureHandDifficulties' => $lectureHandDifficulties]) ?>      
+        <?php } ?>
+        <?php if($lecturefiles){ ?>
+            <?= $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]); ?> 
+        <?php } ?>          
+        <?php if($evaluations AND $lectureEvaluations){  ?>
+            <?= $this->render('evaluations', ['evaluations' => $evaluations, 'lectureEvaluations' => $lectureEvaluations]) ?>
+        <?php } ?>
         </div>
     </div>
 </div>
