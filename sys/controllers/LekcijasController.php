@@ -28,6 +28,7 @@ class LekcijasController extends Controller
 {
     const VIDEOS = ['mp4','mov','ogv','webm','flv','avi','f4v'];
     const DOCS = ['doc','docx','pdf'];
+    const AUDIO = ['aac','alac','amr','flac','mp3','opus','vorbis','ogg','wav'];
     /**
      * {@inheritdoc}
      */
@@ -127,7 +128,8 @@ class LekcijasController extends Controller
             $lectureHandDifficulties = Lectureshanddifficulties::getLectureDifficulties($id);
             $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
             $lecturefiles = Lecturesfiles::getLectureFiles($id); 
-            $userLectureEvaluations = Userlectureevaluations::getLectureEvaluations($user->id,$id);       
+            $userLectureEvaluations = Userlectureevaluations::getLectureEvaluations($user->id,$id); 
+            $baseUrl = Yii::$app->request->baseUrl;      
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,
@@ -141,6 +143,8 @@ class LekcijasController extends Controller
                 'userLectureEvaluations' => $userLectureEvaluations,
                 'videos' => self::VIDEOS,
                 'docs' => self::DOCS,
+                'audio' => self::AUDIO,
+                'baseUrl' => $baseUrl,
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');

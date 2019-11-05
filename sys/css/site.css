@@ -123,6 +123,14 @@ a.desc:after {
     border: none;
 }
 
+.video-js {
+    width: 100%;
+    height: 500px;
+}
+.video-js .vjs-big-play-button{
+    top: 230px!important;
+    left: 43%!important;
+}
 @media(max-width:767px) {
     #logo {
         width: 60px;

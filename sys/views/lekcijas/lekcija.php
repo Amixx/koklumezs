@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $model->title;
             $hasFiles = false;
             foreach($lecturefiles as $id => $file){ 
                 $path_info = pathinfo($file['file']);
-                if(in_array($path_info['extension'],$videos)){
+                if(in_array(strtolower($path_info['extension']),$videos)){
                     $hasFiles = true;
                 }
             }    
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $model->title;
         <div class="row">
         <?php foreach($lecturefiles as $id => $file){ 
             $path_info = pathinfo($file['file']);
-                if(!in_array($path_info['extension'],$videos)){
+                if(!in_array(strtolower($path_info['extension']),$videos)){
                     continue;
                 }
                 ?>
@@ -44,9 +44,9 @@ $this->params['breadcrumbs'][] = $model->title;
                     class="video-js vjs-layout-x-large"
                     controls
                     preload="auto"
-                    poster=""
+                    poster="<?=$baseUrl?>/files/cover.jpg"
                     data-setup='{}'>
-                <source src="<?=$file['file']?>" type="video/<?=$path_info['extension']?>"></source>
+                <source src="<?=$file['file']?>" type="video/<?=strtolower($path_info['extension'])?>"></source>
                 <p class="vjs-no-js">
                     To view this video please enable JavaScript, and consider upgrading to a
                     web browser that
@@ -59,12 +59,40 @@ $this->params['breadcrumbs'][] = $model->title;
                     var player = videojs('my-player<?=$id?>',{responsive: true,width:400});
                 </script>
                 </div>
-                
-                            
+                <hr />                            
             <?php } ?>
+            </div>
+            <hr />  
+            <?php } 
+            $hasFiles = false;
+            foreach($lecturefiles as $id => $file){ 
+                $path_info = pathinfo($file['file']);
+                if(in_array(strtolower($path_info['extension']),$audio)){
+                    $hasFiles = true;
+                }
+            }    
+            if($hasFiles){ 
+            ?>
+        <div class="row">
+        <?php foreach($lecturefiles as $id => $file){ 
+            $path_info = pathinfo($file['file']);
+                if(!in_array(strtolower($path_info['extension']),$audio)){
+                    continue;
+                }
+                ?>
+                <div class="col-md-12">
+                    <p><?=$file['title']?></p>   
+                    <audio controls>
+                        <source src="<?=$file['file']?>" type="audio/<?=strtolower($path_info['extension'])?>">
+                        Your browser does not support the audio element.
+                    </audio>
+                
+                </div>      
+            <?php } ?>           
         </div>
         <hr /> 
         <?php }
+        
         } ?>
         <?=$model->description?>            
         <?php if($difficulties AND $lectureDifficulties){ 
@@ -132,7 +160,7 @@ $this->params['breadcrumbs'][] = $model->title;
                 $hasFiles = false;
                 foreach($lecturefiles as $id => $file){ 
                     $path_info = pathinfo($file['file']);
-                    if(in_array($path_info['extension'],$docs)){
+                    if(in_array(strtolower($path_info['extension']),$docs)){
                         $hasFiles = true;
                     }
                 }    
@@ -143,7 +171,7 @@ $this->params['breadcrumbs'][] = $model->title;
                 <div class="row">
                 <?php foreach($lecturefiles as $id => $file){ 
                     $path_info = pathinfo($file['file']);
-                    if(in_array($path_info['extension'],$videos)){
+                    if(!in_array(strtolower($path_info['extension']),$docs)){
                         continue;
                     }
                     ?>

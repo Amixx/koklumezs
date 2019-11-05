@@ -26,7 +26,7 @@ use yii\web\JsExpression;
     <?= $form->field($model, 'file')->widget(InputFile::className(), [
     'language'      => 'lv',
     'controller'    => 'elfinder', // вставляем название контроллера, по умолчанию равен elfinder
-    'filter'        => ['image', 'application/pdf', 'text', 'video'] ,    // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
+    'filter'        => ['image', 'application/pdf', 'text', 'video', 'audio'] ,    // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
     'template'      => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
     'options'       => ['class' => 'form-control'],
     'buttonOptions' => ['class' => 'btn btn-default'],

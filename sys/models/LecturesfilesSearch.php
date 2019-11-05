@@ -18,7 +18,7 @@ class LecturesfilesSearch extends Lecturesfiles
     {
         return [
             [['id', 'lecture_id'], 'integer'],
-            [['file','title'], 'safe'],
+            [['file','title','lecture_id'], 'safe'],
         ];
     }
 

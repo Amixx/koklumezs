@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'lecture_id',
                 'format' => 'raw',
                 'value' => 'lecture.title',
-                'filter'=> Html::dropDownList('UserLecturesSearch[lecture_id]',isset($get['UserLecturesSearch']['lecture_id']) ? $get['UserLecturesSearch']['lecture_id'] : '' ,$lectures,['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
+                'filter'=> Html::dropDownList('LecturesfilesSearch[lecture_id]',isset($get['LecturesfilesSearch']['lecture_id']) ? $get['LecturesfilesSearch']['lecture_id'] : '' ,$lectures,['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
             ], 
 
             ['class' => 'yii\grid\ActionColumn'],
