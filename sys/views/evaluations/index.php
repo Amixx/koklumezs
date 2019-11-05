@@ -28,7 +28,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'id',
             'title:ntext',
-            'type',
+            [
+                'attribute' => 'type',
+                'format' => 'raw',
+                'value' => 'type',
+                'filter'=> Html::dropDownList('EvaluationsSearch[type]',isset($get['EvaluationsSearch']['type']) ? $get['EvaluationsSearch']['type'] : '' ,['zvaigznes' => 'Zvaigznes','teksts' => 'Teksts'],['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
+            ], 
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

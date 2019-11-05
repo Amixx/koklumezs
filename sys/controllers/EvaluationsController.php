@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\Users;
 use app\models\Evaluations;
 use app\models\EvaluationsSearch;
 use yii\web\Controller;
@@ -20,6 +21,20 @@ class EvaluationsController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'rules' => [
+                    // allow authenticated users
+                    [                            
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Users::isUserAdmin(Yii::$app->user->identity->email);
+                        }
+                    ],
+                    // everything else is denied
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -37,10 +52,11 @@ class EvaluationsController extends Controller
     {
         $searchModel = new EvaluationsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $get = Yii::$app->request->queryParams;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'get' =>  $get
         ]);
     }
 
