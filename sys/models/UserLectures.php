@@ -2,6 +2,7 @@
 
 namespace app\models;
 use yii\helpers\ArrayHelper;
+use app\models\Users;
 use Yii;
 
 /**
@@ -33,8 +34,8 @@ class UserLectures extends \yii\db\ActiveRecord
     {
         return [
             [['lecture_id', 'user_id', 'assigned'], 'required'],
-            [['lecture_id', 'user_id', 'assigned','opened'], 'integer'],
-            [['created','opentime'], 'safe'],
+            [['lecture_id', 'user_id', 'assigned','opened','sent'], 'integer'],
+            [['created','opentime','sent'], 'safe'],
             [['assigned'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['assigned' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
@@ -53,7 +54,8 @@ class UserLectures extends \yii\db\ActiveRecord
             'assigned' => 'Administrators',
             'created' => 'Izveidots',
             'opened' => 'Atvērta',
-            'opentime' => 'Atvēršanas laiks'
+            'opentime' => 'Atvēršanas laiks',
+            'sent' => 'Nosūtīts e-pasts',
         ];
     }
 
@@ -101,11 +103,15 @@ class UserLectures extends \yii\db\ActiveRecord
      */
     public function setSeenByUser($user_id,$id)
     {
-        $model = self::find()->where(['opened' => 0,'user_id' => $user_id,'lecture_id' => $id])->one();
-        if($model){
-            $model->opened = 1;
-            $model->opentime = date('Y-m-d H:i:s',time());
-            $model->update();
+        if (($user = Users::findOne($user_id)) !== null) {
+            $model = self::find()->where(['opened' => 0,'user_id' => $user_id,'lecture_id' => $id])->one();
+            if($model){
+                $model->opened = 1;
+                $model->opentime = date('Y-m-d H:i:s',time());
+                $model->update();                
+            }
+            $user->last_lecture = $id;
+            $user->update();
         }
         return true;        
     }

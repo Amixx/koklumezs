@@ -22,7 +22,7 @@ class UserLecturesSearch extends UserLectures
     {
         return [
             [['id', 'lecture_id', 'user_id', 'assigned','opened'], 'integer'],
-            [['createdtime','admin','student','lecture','created','opentime','opened'], 'safe'],
+            [['createdtime','admin','student','lecture','created','opentime','opened','sent'], 'safe'],
         ];
     }
 
@@ -107,6 +107,7 @@ class UserLecturesSearch extends UserLectures
             'user_id' => $this->user_id,
             'assigned' => $this->assigned,
             'opened' => $this->opened,
+            'sent' => $this->sent,
         ]);
         
 

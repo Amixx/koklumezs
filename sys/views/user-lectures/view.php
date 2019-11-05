@@ -34,6 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'user_id',
             'assigned',
             'created',
+            'sent'
         ],
     ]) ?>
 

@@ -76,6 +76,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]),
                 'format' => ['date', 'php:Y-m-d H:i:s']
             ],
+            [
+                'attribute' => 'sent',
+                'format' => 'raw',
+                'value' => function ($dataProvider) {
+                    return $dataProvider->sent == 1 ? 'Jā' : 'Nē';
+                },
+                'filter'=> Html::dropDownList('UserLecturesSearch[sent]',isset($get['UserLecturesSearch']['sent']) ? $get['UserLecturesSearch']['sent'] : '' ,[0 => 'Nav',1 => 'Ir'],['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
