@@ -2,7 +2,7 @@
     width: 70px;
     height: 70px;
     display: inline-block;
-    margin: 5px 15px;
+    margin: 10px 15px;
 }
 
 .navbar {
@@ -128,7 +128,8 @@ a.desc:after {
     height: 500px;
 }
 #navbar{
-    transion: all .9s ease-out;
+    transion: top 1s ease-out;
+    top: 0;
 }
 @media(max-width:767px) {
     .video-js {

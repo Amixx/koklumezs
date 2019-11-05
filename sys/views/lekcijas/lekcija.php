@@ -193,7 +193,7 @@ $this->params['breadcrumbs'][] = $model->title;
             <?php }
         } ?>
           
-            <?php if($evaluations){  ?>
+            <?php if($evaluations AND $lectureEvaluations){  ?>
                 <hr />
                 <div class="row">
                     <div class="col-md-12">
