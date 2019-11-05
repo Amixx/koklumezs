@@ -47,65 +47,12 @@ use  yii\jui\DatePicker;
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
             <?php if($difficulties){ ?>
-                <h2>Parametri šobrīd</h2>      
-                <?php      
-                foreach($difficulties as $id => $name){  ?>
-                <div class="form-group field-studentgoals">
-                    <label class="control-label"for="studentgoals-title-now<?=$id?>"><?=$name?></label>
-                    <select id="studentgoals-title-now<?=$id?>" class="form-control" name="studentgoals[now][<?=$id?>]" aria-required="true" aria-invalid="false">
-                        <option value=""></option>
-                        <?php for($a=1;$a<=10;$a++){ ?>
-                        <option value="<?=$a?>" <?=(isset($studentGoals['Šobrīd'][$id]) AND  ($studentGoals['Šobrīd'][$id] == $a)) ? 'selected' : ''?>><?=$a?></option>
-                        <?php } ?>
-                    </select>
-                    <div class="help-block"></div>
-                </div>                       
-            <?php } ?>       
-            <?php } ?>
-            <?php if($difficulties){  ?>
-                <h2>Parametri vēlamie</h2>      
-                <?php      
-                foreach($difficulties as $id => $name){ ?>
-                <div class="form-group field-studentgoals">
-                    <label class="control-label"for="studentgoals-title-future<?=$id?>"><?=$name?></label>
-                    <select id="studentgoals-title-future<?=$id?>" class="form-control" name="studentgoals[future][<?=$id?>]" aria-required="true" aria-invalid="false">
-                        <option value=""></option>
-                        <?php for($a=1;$a<=10;$a++){ ?>
-                        <option value="<?=$a?>" <?=(isset($studentGoals['Vēlamais'][$id]) AND  ($studentGoals['Vēlamais'][$id] == $a)) ? 'selected' : ''?>><?=$a?></option>
-                        <?php } ?>
-                    </select>
-                    <div class="help-block"></div>
-                </div>
-            <?php } ?>
+            <?= $this->render('difficulties',['difficulties' => $difficulties, 'studentGoals' => $studentGoals]) ?>
             <?php } ?>
         </div>
         <div class="tab-pane fade" id="hands" role="tabpanel" aria-labelledby="hands-tab">
             <?php if($handdifficulties){  ?>
-                <h2>Roku kategorijas</h2>      
-                <?php      
-                if($handdifficulties['left']){ ?>
-                <hr />
-                <h3>Kreisās rokas kategorijas</h3>      
-                <?php foreach($handdifficulties['left'] as $id => $name){ ?>
-                    <div class="form-group field-handdifficulties-title custom-control custom-checkbox mr-sm-2">
-                        <input type="checkbox" class="custom-control-input" id="handdifficulties-title-<?=$id?>" name="studenthandgoals[<?=$id?>]" <?=isset($studentHandGoals[$id]) ? 'checked' : ''?> value="1" aria-required="false" aria-invalid="false" />
-                        <label class="custom-control-label" for="handdifficulties-title-<?=$id?>"><?=$name?></label>
-                        <div class="help-block"></div> 
-                    </div>                  
-                <?php }
-                }
-                if($handdifficulties['right']){ ?>
-                    <h3>Labās rokas kategorijas</h3>    
-                    <hr />  
-                    <?php
-                    foreach($handdifficulties['right'] as $id => $name){ ?>
-                    <div class="form-group field-handdifficulties-title custom-control custom-checkbox mr-sm-2">
-                        <input type="checkbox" class="custom-control-input" id="handdifficulties-title-<?=$id?>" name="studenthandgoals[<?=$id?>]" <?=isset($studentHandGoals[$id]) ? 'checked' : ''?> value="1" aria-required="false" aria-invalid="false" />
-                        <label class="custom-control-label" for="handdifficulties-title-<?=$id?>"><?=$name?></label>
-                        <div class="help-block"></div> 
-                    </div>         
-                <?php }
-                } ?>       
+                <?= $this->render('handdifficulties',['handdifficulties' => $handdifficulties, 'studentHandGoals' => $studentHandGoals]) ?>  
             <?php } ?>
         </div>
     </div>
