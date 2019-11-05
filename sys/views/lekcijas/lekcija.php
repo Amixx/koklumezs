@@ -20,80 +20,11 @@ $this->params['breadcrumbs'][] = $model->title;
     </div>
     <div class="border-left col-md-9">
         <h2 class="text-center"><?=$model->title?></h2>
-        <?php if($lecturefiles){
-            $hasFiles = false;
-            foreach($lecturefiles as $id => $file){ 
-                $path_info = pathinfo($file['file']);
-                if(in_array(strtolower($path_info['extension']),$videos)){
-                    $hasFiles = true;
-                }
-            }    
-            if($hasFiles){ 
-            ?>
-        <div class="row">
-        <?php foreach($lecturefiles as $id => $file){ 
-            $path_info = pathinfo($file['file']);
-                if(!in_array(strtolower($path_info['extension']),$videos)){
-                    continue;
-                }
-                ?>
-                <div class="col-md-12">
-                <p><?=$file['title']?></p>   
-                <video
-                    id="my-player<?=$id?>"
-                    class="video-js vjs-layout-x-large vjs-big-play-centered"
-                    controls
-                    preload="auto"
-                    poster="<?=$baseUrl?>/files/cover.jpg"
-                    data-setup='{}'>
-                <source src="<?=$file['file']?>" type="video/<?=strtolower($path_info['extension'])?>"></source>
-                <p class="vjs-no-js">
-                    To view this video please enable JavaScript, and consider upgrading to a
-                    web browser that
-                    <a href="https://videojs.com/html5-video-support/" target="_blank">
-                    supports HTML5 video
-                    </a>
-                </p>
-                </video>
-                <script>
-                    var player = videojs('my-player<?=$id?>',{responsive: true,width:400});
-                </script>
-                </div>
-                <hr />                            
+        <?php if($lecturefiles){ ?>
+            <?= $this->render('video', ['lecturefiles' => $lecturefiles,'videos' => $videos, 'baseUrl' => $baseUrl]); ?> 
+            <?= $this->render('audio', ['lecturefiles' => $lecturefiles, 'audio' => $audio]); ?> 
             <?php } ?>
-            </div>
-            <hr />  
-            <?php } 
-            $hasFiles = false;
-            foreach($lecturefiles as $id => $file){ 
-                $path_info = pathinfo($file['file']);
-                if(in_array(strtolower($path_info['extension']),$audio)){
-                    $hasFiles = true;
-                }
-            }    
-            if($hasFiles){ 
-            ?>
-        <div class="row">
-        <?php foreach($lecturefiles as $id => $file){ 
-            $path_info = pathinfo($file['file']);
-                if(!in_array(strtolower($path_info['extension']),$audio)){
-                    continue;
-                }
-                ?>
-                <div class="col-md-12">
-                    <p><?=$file['title']?></p>   
-                    <audio controls>
-                        <source src="<?=$file['file']?>" type="audio/<?=strtolower($path_info['extension'])?>">
-                        Your browser does not support the audio element.
-                    </audio>
-                
-                </div>      
-            <?php } ?>           
-        </div>
-        <hr /> 
-        <?php }
-        
-        } ?>
+            
         <?=$model->description?>            
         <?php if($difficulties AND $lectureDifficulties){ 
                 $sum = 0;
@@ -164,34 +95,9 @@ $this->params['breadcrumbs'][] = $model->title;
                 </div>  
                 <?php } ?>       
             <?php } ?>
-            <?php if($lecturefiles){  
-                $hasFiles = false;
-                foreach($lecturefiles as $id => $file){ 
-                    $path_info = pathinfo($file['file']);
-                    if(in_array(strtolower($path_info['extension']),$docs)){
-                        $hasFiles = true;
-                    }
-                }    
-                if($hasFiles){       
-                ?>  
-                <hr />                     
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>Ar lekciju saistītie materiāli:</h3>
-                    </div>
-                <?php foreach($lecturefiles as $id => $file){ 
-                    $path_info = pathinfo($file['file']);
-                    if(!in_array(strtolower($path_info['extension']),$docs)){
-                        continue;
-                    }
-                    ?>
-                    <div class="col-md-3 text-center"> 
-                        <a target="_blank" href="<?=$file['file']?>"><?=$file['title']?></a>   
-                    </div>            
-                <?php } ?>
-                </div>
-            <?php }
-        } ?>
+            <?php if($lecturefiles){ ?>
+                <?= $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]); ?> 
+           <?php } ?>
           
             <?php if($evaluations AND $lectureEvaluations){  ?>
                 <hr />
