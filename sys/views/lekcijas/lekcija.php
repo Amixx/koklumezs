@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $model->title;
                 <p><?=$file['title']?></p>   
                 <video
                     id="my-player<?=$id?>"
-                    class="video-js vjs-layout-x-large"
+                    class="video-js vjs-layout-x-large vjs-big-play-centered"
                     controls
                     preload="auto"
                     poster="<?=$baseUrl?>/files/cover.jpg"
@@ -104,9 +104,9 @@ $this->params['breadcrumbs'][] = $model->title;
                     }
                     $sum += $lectureDifficulties[$id];
                 } ?>
-            <hr />   
-            <h3>Lekcijas sarežģītība: <?=$sum?></h3> 
+            <hr />               
             <div class="row">   
+            <div class="col-md-12"><h3>Lekcijas sarežģītība: <?=$sum?></h3></div>
                 <?php      
                 foreach($difficulties as $id => $name){  
                     $continue = !isset($lectureDifficulties[$id]);
@@ -125,23 +125,29 @@ $this->params['breadcrumbs'][] = $model->title;
                 <hr />
                 <?php      
                 if($handdifficulties['left']){ ?>
-                <div class="row">   
-                <h3>Kreisās rokas kategorijas</h3>      
-                <?php foreach($handdifficulties['left'] as $id => $name){ 
-                     $continue = !isset($lectureHandDifficulties[$id]);
-                     if($continue){
-                         continue;
-                     }
-                    ?>
-                    <div class="col-md-3">
-                        <?=$name?>
-                    </div>            
-                <?php } ?>
+                <div class="row">  
+                    <div class="col-md-12"> 
+                        <h3>Kreisās rokas kategorijas</h3>                       
+                    <ul>     
+                    <?php foreach($handdifficulties['left'] as $id => $name){ 
+                        $continue = !isset($lectureHandDifficulties[$id]);
+                        if($continue){
+                            continue;
+                        }
+                        ?>
+                        <li>
+                            <?=$name?>
+                        </li>            
+                    <?php } ?>
+                    </ul>
+                    </div>
                 </div>
                 <?php }
                 if($handdifficulties['right']){ ?>                    
-                    <div class="row">
-                    <h3>Labās rokas kategorijas</h3>    
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Labās rokas kategorijas</h3>                      
+                    <ul>  
                     <?php
                     foreach($handdifficulties['right'] as $id => $name){ 
                         $continue = !isset($lectureHandDifficulties[$id]);
@@ -149,10 +155,12 @@ $this->params['breadcrumbs'][] = $model->title;
                             continue;
                         }
                         ?>
-                        <div class="col-md-3">
+                        <li>
                             <?=$name?>
-                        </div>      
-                <?php } ?>
+                        </li>      
+                    <?php } ?>
+                    </ul>
+                    </div>
                 </div>  
                 <?php } ?>       
             <?php } ?>
@@ -166,9 +174,11 @@ $this->params['breadcrumbs'][] = $model->title;
                 }    
                 if($hasFiles){       
                 ?>  
-                <hr />
-                <h3>Ar lekciju saistītie materiāli:</h3>      
+                <hr />                     
                 <div class="row">
+                    <div class="col-md-12">
+                        <h3>Ar lekciju saistītie materiāli:</h3>
+                    </div>
                 <?php foreach($lecturefiles as $id => $file){ 
                     $path_info = pathinfo($file['file']);
                     if(!in_array(strtolower($path_info['extension']),$docs)){
@@ -185,7 +195,11 @@ $this->params['breadcrumbs'][] = $model->title;
           
             <?php if($evaluations){  ?>
                 <hr />
-                <h3>Novērtē lekciju</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Novērtē lekciju</h3>
+                    </div>
+                </div>
                 <?php $form = ActiveForm::begin(); ?>
                 <?php      
                 foreach($evaluations as $id => $evaluation){ 
@@ -218,16 +232,10 @@ $this->params['breadcrumbs'][] = $model->title;
                 <?php } ?>   
                 <div class="form-group">
                     <?= Html::submitButton('Iesniegt', ['class' => 'btn btn-success']) ?>
-                </div>
-                </div>      
-
-                
-
-                <?php ActiveForm::end(); ?>
+                </div>            
+            </div>    
+            <?php ActiveForm::end(); ?>
             <?php } ?>
         </div>
     </div>
 </div>
-<?php
-
-?>

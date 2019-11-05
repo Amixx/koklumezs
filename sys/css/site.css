@@ -127,11 +127,14 @@ a.desc:after {
     width: 100%;
     height: 500px;
 }
-.video-js .vjs-big-play-button{
-    top: 230px!important;
-    left: 43%!important;
+#navbar{
+    transion: all .9s ease-out;
 }
 @media(max-width:767px) {
+    .video-js {
+        width: 100%;
+        height: 300px;
+    }
     #logo {
         width: 60px;
         height: 60px;

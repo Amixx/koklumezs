@@ -19,6 +19,7 @@ AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#222">
     <link rel="shortcut icon" href="<?php echo Yii::$app->request->baseUrl; ?>/favicon.png?v=1" type="image/png"/>
     <link rel="apple-touch-icon" href="<?php echo Yii::$app->request->baseUrl; ?>/favicon.png?v=1" type="image/png"/>
     <?php $this->registerCsrfMetaTags() ?>
@@ -68,10 +69,23 @@ AppAsset::register($this);
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
+            'id' => 'navbar', 
         ],
     ]);
     ?>
-    
+    <script>
+    /* When the user scrolls down, hide the navbar. When the user scrolls up, show the navbar */
+    var prevScrollpos = window.pageYOffset;
+    window.onscroll = function() {
+    var currentScrollPos = window.pageYOffset;
+    if (prevScrollpos > currentScrollPos) {
+        document.getElementById("navbar").style.top = "0";
+    } else {
+        document.getElementById("navbar").style.top = "-90px";
+    }
+    prevScrollpos = currentScrollPos;
+    }
+    </script>
     <?php
     $navItems = [];
     if(Yii::$app->user->isGuest){
