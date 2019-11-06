@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $file Fails
+ * @property string $thumb Bilde
  * @property string $title Virsraksts
  * @property int $lecture_id Lekcija
  *
@@ -31,7 +32,7 @@ class Lecturesfiles extends \yii\db\ActiveRecord
     {
         return [
             [['file', 'lecture_id'], 'required'],
-            [['file','title'], 'string'],
+            [['file','title','thumb'], 'string'],
             [['lecture_id'], 'integer'],
             [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
         ];
@@ -46,6 +47,7 @@ class Lecturesfiles extends \yii\db\ActiveRecord
             'id' => 'ID',
             'title' => 'Nosaukums',
             'file' => 'Fails',
+            'thumb' => 'Bilde',
             'lecture_id' => 'Lekcija',
         ];
     }

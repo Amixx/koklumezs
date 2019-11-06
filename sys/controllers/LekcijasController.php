@@ -77,6 +77,7 @@ class LekcijasController extends Controller
                 ->all();
             $opened = UserLectures::getOpened($user->id);
             $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
+            $baseUrl = Yii::$app->request->baseUrl;  
             
             return $this->render('index', [
                 'models' => $models,
@@ -84,6 +85,8 @@ class LekcijasController extends Controller
                 'opened' => $opened,
                 'pages' => $pages,
                 'userLectureEvaluations' => $userLectureEvaluations,
+                'baseUrl' => $baseUrl,
+                'videos' => self::VIDEOS,
             ]);
         }
         

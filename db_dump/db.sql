@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 05, 2019 at 12:08 PM
+-- Generation Time: Nov 06, 2019 at 12:07 PM
 -- Server version: 5.5.64-MariaDB
 -- PHP Version: 5.4.16
 
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `lectures` (
 --
 
 INSERT INTO `lectures` (`id`, `title`, `description`, `created`, `updated`, `author`, `complexity`) VALUES
-(1, 'Lekcija 1', '<h2><strong>Lorem ipsum dolor sit amet,</strong></h2>\r\n\r\n<p>consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, <span style="background-color:#FF0000">faucibus justo</span>. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.</p>\r\n', '2019-10-31 07:49:29', '2019-11-04 09:51:17', 1, '1'),
+(1, 'Lekcija 1', '<h2><strong>Lorem ipsum dolor sit amet,</strong></h2>\r\n\r\n<p>consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, <span style="background-color:#FF0000">faucibus justo</span>. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.</p>\r\n', '2019-10-31 07:49:29', '2019-11-05 11:41:43', 1, '1'),
 (3, 'Lekcija 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.\r\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.', '2019-10-31 07:49:29', '2019-11-01 12:39:02', 2, '6'),
 (4, 'Lekcija 3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel mi pretium, elementum nisi nec, consequat eros. Donec nunc lorem, viverra ut vulputate non, ultrices eu eros. Integer vestibulum ex ut risus bibendum iaculis. Aliquam varius, nisi ut commodo commodo, purus tortor semper urna, non pharetra est ligula a est. Quisque sed consequat nunc, ac tincidunt dui. Sed auctor facilisis ultrices. Suspendisse eu nulla rhoncus, rhoncus neque consectetur, faucibus justo. In tincidunt molestie convallis. Suspendisse elementum rutrum nisl lobortis feugiat. Quisque viverra felis tellus, eget consequat velit tempus in. Quisque finibus mauris ac pulvinar lobortis.', '2019-10-31 07:49:29', '2019-11-01 08:16:01', 1, '7'),
 (5, 'Lekcija atkal', 'apraksts', '2019-11-01 07:16:22', '2019-11-01 08:09:57', 1, '7');
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `lecturesdifficulties` (
   `diff_id` int(11) NOT NULL COMMENT 'Parametrs',
   `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
   `value` varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Vērtība'
-) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `lecturesdifficulties`
@@ -133,10 +133,10 @@ INSERT INTO `lecturesdifficulties` (`id`, `diff_id`, `lecture_id`, `value`) VALU
 (26, 1, 5, '1'),
 (27, 2, 5, '3'),
 (28, 3, 5, '4'),
-(63, 2, 1, '2'),
-(64, 3, 1, '3'),
-(65, 4, 1, '6'),
-(66, 5, 1, '7');
+(67, 2, 1, '8'),
+(68, 3, 1, '3'),
+(69, 4, 1, '6'),
+(70, 5, 1, '7');
 
 -- --------------------------------------------------------
 
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `lecturesevaluations` (
   `id` int(11) NOT NULL,
   `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
   `evaluation_id` int(11) NOT NULL COMMENT 'Novērtējums'
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `lecturesevaluations`
@@ -157,9 +157,9 @@ CREATE TABLE IF NOT EXISTS `lecturesevaluations` (
 INSERT INTO `lecturesevaluations` (`id`, `lecture_id`, `evaluation_id`) VALUES
 (9, 3, 3),
 (10, 4, 2),
-(19, 1, 1),
-(20, 1, 2),
-(21, 1, 3);
+(22, 1, 1),
+(23, 1, 2),
+(24, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -171,20 +171,22 @@ CREATE TABLE IF NOT EXISTS `lecturesfiles` (
   `id` int(11) NOT NULL,
   `title` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Virsraksts',
   `file` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Fails',
+  `thumb` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Bilde',
   `lecture_id` int(11) NOT NULL COMMENT 'Lekcija'
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `lecturesfiles`
 --
 
-INSERT INTO `lecturesfiles` (`id`, `title`, `file`, `lecture_id`) VALUES
-(1, 'Video lekcija 1', '/sys/files/global/video/BEWARE%20of%20Boris.mp4', 5),
-(2, 'Video lekcija 2', '/sys/files/global/video/y2mate.com%20-%20this_is_getting_out_of_hand_fan_mail_unboxing_c5byF_jaMEw_1080p.mp4', 3),
-(3, 'Video lekcija 3', '/sys/files/global/video/This%20is%20getting%20out%20of%20hand..%20(fan%20mail%20unboxing).mp4', 4),
-(4, 'Video lekcija cita', '/sys/files/global/video/Top%2019%20reasons%20you%20should%20get%20a%20Lada.mp4', 1),
-(5, 'PDF fails ar notīm', '/sys/files/global/pdf/sample.pdf', 1),
-(6, 'Audio test', '/sys/files/global/audio/file_example_MP3_5MG.mp3', 1);
+INSERT INTO `lecturesfiles` (`id`, `title`, `file`, `thumb`, `lecture_id`) VALUES
+(1, 'Video lekcija 1', '/sys/files/global/video/BEWARE%20of%20Boris.mp4', '/sys/files/global/bildes/kokle.jpg', 5),
+(2, 'Video lekcija 2', '/sys/files/global/video/y2mate.com%20-%20this_is_getting_out_of_hand_fan_mail_unboxing_c5byF_jaMEw_1080p.mp4', '', 3),
+(3, 'Video lekcija 3', '/sys/files/global/video/This%20is%20getting%20out%20of%20hand..%20(fan%20mail%20unboxing).mp4', '', 4),
+(4, 'Video lekcija cita', '/sys/files/global/video/Top%2019%20reasons%20you%20should%20get%20a%20Lada.mp4', '/sys/files/global/bildes/kokle.jpg', 1),
+(5, 'PDF fails ar notīm', '/sys/files/global/pdf/sample.pdf', '', 1),
+(6, 'Audio test', '/sys/files/global/audio/file_example_MP3_5MG.mp3', '', 1),
+(7, 'DOC', '/sys/files/global/word/test.doc', '', 1);
 
 -- --------------------------------------------------------
 
@@ -196,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `lectureshanddifficulties` (
   `id` int(11) NOT NULL,
   `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
   `category_id` int(11) NOT NULL COMMENT 'Kategorija'
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `lectureshanddifficulties`
@@ -205,8 +207,8 @@ CREATE TABLE IF NOT EXISTS `lectureshanddifficulties` (
 INSERT INTO `lectureshanddifficulties` (`id`, `lecture_id`, `category_id`) VALUES
 (6, 5, 2),
 (7, 5, 4),
-(22, 1, 1),
-(23, 1, 3);
+(24, 1, 1),
+(25, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -339,8 +341,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `phone_number`, `email`, `password`, `user_level`, `password_hash`, `password_reset_token`, `verification_token`, `auth_key`, `status`, `updated_at`, `passwordResetTokenExpire`, `created_at`, `last_login`, `last_lecture`, `dont_bother`, `goal`) VALUES
-(1, 'test', 'tester', '112', 'test@test.lv', '$2y$13$Q6qwbz72XUw4acnoTQsl7eHA5SugtEmxynv08ScuyVmeV0SGuf45C', 'Admin', '', '', '', '', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2019-11-05 09:51:31', 0, '2019-11-14 23:59:59', ''),
-(2, 'Students', 'Studentiņš', '112', 'student@test.lv', '$2y$13$Q6qwbz72XUw4acnoTQsl7eHA5SugtEmxynv08ScuyVmeV0SGuf45C', 'Student', '', '', '', 'tjI7VodU51a8pA-Qng971MFVzehC9dBp', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2019-11-05 09:51:19', 1, NULL, 'tetsts'),
+(1, 'test', 'tester', '112', 'test@test.lv', '$2y$13$Q6qwbz72XUw4acnoTQsl7eHA5SugtEmxynv08ScuyVmeV0SGuf45C', 'Admin', '', '', '', '', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2019-11-06 07:31:55', 0, '2019-11-14 23:59:59', ''),
+(2, 'Students', 'Studentiņš', '112', 'student@test.lv', '$2y$13$Q6qwbz72XUw4acnoTQsl7eHA5SugtEmxynv08ScuyVmeV0SGuf45C', 'Student', '', '', '', 'tjI7VodU51a8pA-Qng971MFVzehC9dBp', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2019-11-06 07:28:44', 1, NULL, 'tetsts'),
 (3, 'Cits', 'Students', '112', 'student@student.lv', '$2y$13$NHRuxo0M.5KuK58JwVNOCew6WcZxKEoO1ev5oE00c1V.aEAN7zY4K', 'Student', '', '', '', 'eQeIfL_xqWz44ILGMEHp6JOMasD0OWPJ', 9, '2019-10-31 12:40:31', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, NULL, ''),
 (4, 'Jauns', 'Students', '1242', 'students@jauns.lv', '$2y$13$SqB.4oPTqEKKiJiN50JZ7.wr4iJoApYkZM.wljUjcj3z8p2akpjaW', 'Student', '', '', '', 'QJzeNchYlrafPiZ_YZ9u51NlLd9w5IIC', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, NULL, '');
 
@@ -472,22 +474,22 @@ ALTER TABLE `lectures`
 -- AUTO_INCREMENT for table `lecturesdifficulties`
 --
 ALTER TABLE `lecturesdifficulties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=67;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=71;
 --
 -- AUTO_INCREMENT for table `lecturesevaluations`
 --
 ALTER TABLE `lecturesevaluations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=25;
 --
 -- AUTO_INCREMENT for table `lecturesfiles`
 --
 ALTER TABLE `lecturesfiles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `lectureshanddifficulties`
 --
 ALTER TABLE `lectureshanddifficulties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `studentgoals`
 --

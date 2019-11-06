@@ -129,7 +129,7 @@ a.desc:after {
 }
 
 #navbar {
-    transion: top 1s ease-out;
+    transition: all .666s ease-in-out;
     top: 0;
 }
 
@@ -149,6 +149,33 @@ a.desc:after {
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
 }
 
+.lecture-thumb {
+    width: 100%;
+    height: 150px;
+    display: block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding-top: 150px;
+    margin-bottom: 10px;
+}
+
+.lecture-wrap {
+    transition: all .2s ease-in-out;
+    box-sizing: border-box;
+    padding: 20px;
+    font-size: 16px;
+}
+
+.lecture-wrap:hover {
+    transform: scale(1.1);
+}
+
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
 @media(max-width:1199px) {
     #logo {
         display: none;
@@ -156,6 +183,12 @@ a.desc:after {
 }
 
 @media(max-width:767px) {
+    .lecture-thumb {
+        height: 270px;
+    }
+    .lecture-wrap:hover {
+        transform: scale(1.03);
+    }
     .video-js {
         width: 100%;
         height: 300px;

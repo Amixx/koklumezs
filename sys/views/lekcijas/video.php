@@ -22,7 +22,7 @@ $path_info = pathinfo($file['file']);
         class="video-js vjs-layout-x-large vjs-big-play-centered"
         controls
         preload="auto"
-        poster="<?=$baseUrl?>/files/cover.jpg"
+        poster="<?=$file['thumb'] ? $file['thumb'] : $baseUrl . '/files/cover.jpg'?>"
         data-setup='{}'>
     <source src="<?=$file['file']?>" type="video/<?=strtolower($path_info['extension'])?>"></source>
     <p class="vjs-no-js">

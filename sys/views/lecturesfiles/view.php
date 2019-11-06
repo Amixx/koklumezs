@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'file:ntext',
+            'thumb:ntext',
             'lecture_id',
         ],
     ]) ?>

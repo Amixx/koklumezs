@@ -30,6 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'title:ntext',
             'file:ntext',
             [
+                'attribute' => 'thumb',
+                'format' => 'html',    
+                'value' => function ($data) {
+                    return Html::img($data['thumb'],
+                        ['width' => '70px']);
+                },
+            ],
+            [
                 'attribute' => 'lecture_id',
                 'format' => 'raw',
                 'value' => 'lecture.title',
