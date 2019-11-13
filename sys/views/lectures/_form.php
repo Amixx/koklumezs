@@ -34,6 +34,9 @@ $ckeditorOptions = ElFinder::ckeditorOptions('elfinder',
         </li>
         <li class="nav-item">
             <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false">Faili</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="related-tab" data-toggle="tab" href="#related" role="tab" aria-controls="related" aria-selected="false">Saistītās lekcijas</a>
         </li>        
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -60,11 +63,14 @@ $ckeditorOptions = ElFinder::ckeditorOptions('elfinder',
             <?php } ?>
         </div>
         <div class="tab-pane fade" id="files" role="tabpanel" aria-labelledby="files-tab">
-        <?php $link = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/create', 'lecture_id' => $model->id]) ?>
+            <?php $link = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/create', 'lecture_id' => $model->id]) ?>
             <?= $this->render('files',['lecturefiles' => $lecturefiles, 'link' => $link])?>
         </div>
+        <div class="tab-pane fade" id="related" role="tabpanel" aria-labelledby="related-tab">
+            <?= $this->render('related',['lectures' => $lectures, 'relatedLectures' => $relatedLectures])?>
+        </div>
     </div>
-    
+    <br /><br />
     <div class="form-group">
         <?= Html::submitButton('Saglabāt', ['class' => 'btn btn-success']) ?>
     </div>

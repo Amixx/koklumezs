@@ -1,4 +1,5 @@
-<h2>Parametri</h2>      
+<h2>Parametri</h2>
+<hr />      
 <?php      
 foreach($difficulties as $id => $name){  ?>
 <div class="form-group field-studentgoals">

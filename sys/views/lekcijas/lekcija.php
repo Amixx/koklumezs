@@ -34,6 +34,9 @@ $this->params['breadcrumbs'][] = $model->title;
         <?php if($evaluations AND $lectureEvaluations){  ?>
             <?= $this->render('evaluations', ['evaluations' => $evaluations, 'lectureEvaluations' => $lectureEvaluations]) ?>
         <?php } ?>
+        <?php if($relatedLectures){ ?>
+            <?= $this->render('related',['relatedLectures' => $relatedLectures,'lecturefiles' => $lecturefiles,'videos' => $videos, 'baseUrl' => $baseUrl]) ?>
+        <?php } ?>
         </div>
     </div>
 </div>

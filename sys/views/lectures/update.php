@@ -23,6 +23,8 @@ $this->params['breadcrumbs'][] = 'Rediģēt';
         'lectureHandDifficulties' => $lectureHandDifficulties,
         'lectureEvaluations' => $lectureEvaluations,
         'lecturefiles' => $lecturefiles,
+        'lectures' => $lectures, 
+        'relatedLectures' => $relatedLectures
     ]) ?>
 
 </div>

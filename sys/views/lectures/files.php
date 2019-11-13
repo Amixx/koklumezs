@@ -2,6 +2,7 @@
 use Yii;
 ?>
 <h2>Pievienotie faili</h2>
+<hr />
 <p>
     <a target="_blank" class="btn btn-success" href="<?=$link?>">Pievienot failu</a>
 </p>       

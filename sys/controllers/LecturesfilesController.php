@@ -7,6 +7,7 @@ use app\models\Users;
 use app\models\Lectures;
 use app\models\Lecturesfiles;
 use app\models\LecturesfilesSearch;
+use app\models\RelatedLectures;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

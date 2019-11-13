@@ -6,6 +6,7 @@ use app\models\Difficulties;
 use app\models\Handdifficulties;
 use app\models\Evaluations;
 use app\models\Lectures;
+use app\models\RelatedLectures;
 use app\models\LecturesDifficulties;
 use app\models\Lecturesevaluations;
 use app\models\Lecturesfiles;
@@ -132,7 +133,9 @@ class LekcijasController extends Controller
             $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
             $lecturefiles = Lecturesfiles::getLectureFiles($id); 
             $userLectureEvaluations = Userlectureevaluations::getLectureEvaluations($user->id,$id); 
-            $baseUrl = Yii::$app->request->baseUrl;      
+            $baseUrl = Yii::$app->request->baseUrl;
+            $ids = RelatedLectures::getRelations($id); 
+            $relatedLectures = Lectures::getLecturesByIds($ids);     
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,
@@ -148,6 +151,7 @@ class LekcijasController extends Controller
                 'docs' => self::DOCS,
                 'audio' => self::AUDIO,
                 'baseUrl' => $baseUrl,
+                'relatedLectures' => $relatedLectures
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');

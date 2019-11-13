@@ -21,7 +21,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'lectureDifficulties' => [],
         'lectureHandDifficulties' => [],
         'lectureEvaluations' => [],
-        'lecturefiles' => []        
+        'lecturefiles' => [],
+        'lectures' => $lectures, 
+        'relatedLectures' => []        
     ]) ?>
 
 </div>
