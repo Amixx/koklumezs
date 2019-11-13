@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\UserLectures */
@@ -32,7 +33,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'created')->textInput() ?>
 */ ?>
     <div class="form-group">
-        <?= Html::submitButton($lectures ? 'Saglabāt' : 'Atlasīt lekcijas', ['class' => 'btn btn-success']) ?>
+        <?= !$outofLectures ? Html::submitButton($lectures ? 'Saglabāt' : 'Atlasīt lekcijas', ['class' => 'btn btn-success']) : Html::a('Atpakaļ',Url::to(['user-lectures/create']),['class' => 'btn btn-success'])?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -87,6 +87,7 @@ class UserLecturesController extends Controller
      */
     public function actionCreate()
     {
+        $outofLectures = false;
         $model = new UserLectures();
         $model->assigned = Yii::$app->user->identity->id;
         $model->created = date('Y-m-d H:i:s', time());
@@ -108,6 +109,8 @@ class UserLecturesController extends Controller
                 $model->user_id = $user->id;
                 $userLectures = UserLectures::getUserLectures($user->id);
                 $lectures = Lectures::getLecturesForUser($userLectures);
+                $outofLectures = empty($lectures);
+                $lectures = !empty($lectures) ? $lectures : [0 => 'Visas lekcijas piešķirtas'];                
             }
         }
 
@@ -115,6 +118,7 @@ class UserLecturesController extends Controller
             'model' => $model,
             'students' => $students,
             'lectures' => $lectures,
+            'outofLectures' => $outofLectures
         ]);
 
     }
@@ -129,7 +133,7 @@ class UserLecturesController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $outofLectures = false;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $sent = self::sendEmail($model->user_id, $model->lecture_id);
             $model->sent = (int) $sent;
@@ -143,6 +147,7 @@ class UserLecturesController extends Controller
             'model' => $model,
             'students' => $students,
             'lectures' => $lectures,
+            'outofLectures' => $outofLectures
         ]);
     }
 

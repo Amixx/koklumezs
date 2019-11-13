@@ -17,7 +17,8 @@ $this->params['breadcrumbs'][] = 'Rediģēt';
     <?= $this->render('_form', [
         'model' => $model,
         'students' => $students,
-        'lectures' => $lectures
+        'lectures' => $lectures,
+        'outofLectures' => $outofLectures
     ]) ?>
 
 </div>
