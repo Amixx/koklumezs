@@ -94,5 +94,10 @@ class Lectures extends \yii\db\ActiveRecord
         return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'title');        
     }
 
+    public function getLecturesForUser($ids)
+    {
+        return ArrayHelper::map(self::find()->where(['not in', 'id', $ids])->asArray()->all(), 'id', 'title');
+    }
+
 
 }

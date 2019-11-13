@@ -2,15 +2,14 @@
 
 namespace app\controllers;
 
-
-use Yii;
+use app\models\Lectures;
 use app\models\UserLectures;
 use app\models\UserLecturesSearch;
 use app\models\Users;
-use app\models\Lectures;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * UserLecturesController implements the CRUD actions for UserLectures model.
@@ -27,12 +26,12 @@ class UserLecturesController extends Controller
                 'class' => \yii\filters\AccessControl::className(),
                 'rules' => [
                     // allow authenticated users
-                    [                            
+                    [
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
                             return Users::isUserAdmin(Yii::$app->user->identity->email);
-                        }
+                        },
                     ],
                     // everything else is denied
                 ],
@@ -90,19 +89,32 @@ class UserLecturesController extends Controller
     {
         $model = new UserLectures();
         $model->assigned = Yii::$app->user->identity->id;
-        $model->created = date('Y-m-d H:i:s',time());
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $sent = self::sendEmail($model->user_id,$model->lecture_id);
-            $model->sent = (int)$sent;
-            $model->update();
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
+        $model->created = date('Y-m-d H:i:s', time());
+        $post = Yii::$app->request->post();
+        $lectures = [];
         $students = Users::getActiveStudents();
-        $lectures = Lectures::getLectures();
+        //$lectures = Lectures::getLectures();
+        
+        if ($post) {
+            
+            if (isset($post['UserLectures']['lecture_id']) && $model->load($post) && $model->save()) {
+                $sent = self::sendEmail($model->user_id, $model->lecture_id);
+                $model->sent = (int) $sent;
+                $model->update();
+                return $this->redirect(['view', 'id' => $model->id]);
+            } elseif (isset($post['UserLectures']['user_id'])) {
+                $user = Users::findOne($post['UserLectures']['user_id']);
+                $students = [$user->id => $user->email];
+                $model->user_id = $user->id;
+                $userLectures = UserLectures::getUserLectures($user->id);
+                $lectures = Lectures::getLecturesForUser($userLectures);
+            }
+        }
+
         return $this->render('create', [
             'model' => $model,
             'students' => $students,
-            'lectures' => $lectures
+            'lectures' => $lectures,
         ]);
 
     }
@@ -119,8 +131,8 @@ class UserLecturesController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $sent = self::sendEmail($model->user_id,$model->lecture_id);
-            $model->sent = (int)$sent;
+            $sent = self::sendEmail($model->user_id, $model->lecture_id);
+            $model->sent = (int) $sent;
             $model->update();
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -130,8 +142,8 @@ class UserLecturesController extends Controller
         return $this->render('update', [
             'model' => $model,
             'students' => $students,
-            'lectures' => $lectures
-        ]);        
+            'lectures' => $lectures,
+        ]);
     }
 
     /**
@@ -173,7 +185,7 @@ class UserLecturesController extends Controller
     {
         $user = Users::findOne([
             'id' => $id,
-            'status' => Users::STATUS_ACTIVE
+            'status' => Users::STATUS_ACTIVE,
         ]);
         if ($user === null) {
             return false;
@@ -183,11 +195,11 @@ class UserLecturesController extends Controller
             ->mailer
             ->compose(
                 ['html' => 'lekcija-html', 'text' => 'lekcija-text'],
-                ['user' => $user,'lecture' => $lecture]
+                ['user' => $user, 'lecture' => $lecture]
             )
             ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setTo($user->email)
             ->setSubject('Jauna lekcija ' . Yii::$app->name)
-            ->send();            
+            ->send();
     }
 }

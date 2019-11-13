@@ -11,16 +11,17 @@ use yii\widgets\ActiveForm;
 <div class="user-lectures-form">
 
     <?php $form = ActiveForm::begin(); ?>
-    <?= $form->field($model, 'lecture_id')
-        ->dropDownList(
-            $lectures,           // Flat array ('id'=>'label')
-            ['prompt'=>'']    // options
-        ); ?>
-        <?= $form->field($model, 'user_id')
+    <?= $form->field($model, 'user_id')
         ->dropDownList(
             $students,           // Flat array ('id'=>'label')
             ['prompt'=>'']    // options
         ); ?>
+    <?= $lectures ? $form->field($model, 'lecture_id')
+        ->dropDownList(
+            $lectures,           // Flat array ('id'=>'label')
+            ['prompt'=>'']    // options
+        ) : ''?>
+        
     <?php /*
     <?= $form->field($model, 'lecture_id')->textInput() ?>
 
@@ -31,7 +32,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'created')->textInput() ?>
 */ ?>
     <div class="form-group">
-        <?= Html::submitButton('Saglabāt', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton($lectures ? 'Saglabāt' : 'Atlasīt lekcijas', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
