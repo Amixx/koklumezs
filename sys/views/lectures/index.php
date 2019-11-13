@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use  yii\jui\DatePicker;
+use app\models\Lectures;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\LecturesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -64,7 +65,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($dataProvider) {
                     return $dataProvider->complexity;
                 },
-                'filter'=> Html::dropDownList('LecturesSearch[complexity]',isset($get['LecturesSearch']['complexity']) ? $get['LecturesSearch']['complexity'] : '' ,app\models\Lectures::getComplexity(),['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
+                'filter'=> Html::dropDownList('LecturesSearch[complexity]',isset($get['LecturesSearch']['complexity']) ? $get['LecturesSearch']['complexity'] : '' , Lectures::getComplexity(),['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
+            ],
+            [
+                'attribute' => 'season',
+                'format' => 'raw',
+                'value' => function ($dataProvider) {
+                    return $dataProvider->season;
+                },
+                'filter'=> Html::dropDownList('LecturesSearch[season]',isset($get['LecturesSearch']['season']) ? $get['LecturesSearch']['season'] : '' , Lectures::getSeasons(),['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
             ],     
             ['class' => 'yii\grid\ActionColumn'],
         ],

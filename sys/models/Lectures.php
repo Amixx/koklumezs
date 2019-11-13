@@ -15,6 +15,7 @@ use yii\helpers\ArrayHelper;
  * @property string $updated Atjaunota
  * @property int $author Autors
  * @property string $complexity Sarežģītība
+ * @property string $season Gadskārta
  *
  * @property Users $author
  */
@@ -34,8 +35,8 @@ class Lectures extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'author', 'complexity'], 'required'],
-            [['title', 'description', 'complexity'], 'string'],
+            [['title', 'author', 'complexity', 'season'], 'required'],
+            [['title', 'description', 'complexity', 'season'], 'string'],
             [['created', 'updated'], 'safe'],
             [['author'], 'integer'],
             [['author'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['author' => 'id']],
@@ -55,8 +56,21 @@ class Lectures extends \yii\db\ActiveRecord
             'updated' => 'Atjaunota',
             'author' => 'Autors',
             'complexity' => 'Sarežģītība',
+            'season' => 'Gadskārta',
         ];
     }
+
+    public function getSeasons()
+    {
+        return [
+            'Visi' => 'Visi',
+            'Vasara' => 'Vasara',
+            'Rudens' => 'Rudens',
+            'Ziema' => 'Ziema',
+            'Pavasaris' => 'Pavasaris'
+        ];
+    }
+
 
     /**
      * {@inheritdoc}

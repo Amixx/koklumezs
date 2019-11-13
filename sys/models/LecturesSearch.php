@@ -19,7 +19,7 @@ class LecturesSearch extends Lectures
     {
         return [
             [['id', 'author'], 'integer'],
-            [['title', 'description', 'created', 'updated', 'complexity', 'author','users',], 'safe'],
+            [['title', 'description', 'created', 'updated', 'complexity', 'author','users','season'], 'safe'],
         ];
     }
 
@@ -70,6 +70,7 @@ class LecturesSearch extends Lectures
         $query->andFilterWhere([
             'id' => $this->id,
             'author' => $this->author,
+            'season' => $this->season
         ]);
         $query->andFilterWhere(
             ['like', 'u2.email', $this->users]

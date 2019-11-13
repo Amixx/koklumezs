@@ -46,6 +46,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions('elfinder',
                 'editorOptions' => $ckeditorOptions,
             ]) ?>
             <?= $form->field($model, 'complexity')->dropDownList(Lectures::getComplexity(), ['prompt' => '']) ?>
+            <?= $form->field($model, 'season')->dropDownList(Lectures::getSeasons()) ?>
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
             <?php if($difficulties){  ?>
