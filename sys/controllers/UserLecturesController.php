@@ -130,7 +130,7 @@ class UserLecturesController extends Controller
                     //find lectures already assigned for student and intersect with param lectures
                     if ($diffLecturesIDs) {
                         $ids = array_diff($diffLecturesIDs, $userLectures);
-                        if (!empty($seasonSelected) and !empty($lectures)) {
+                        if (!empty($seasonSelected)) {
                             $lectures = Lectures::getLecturesBySeasonAndIds($ids, $seasonSelected, true);
                         } else {
                             $lectures = Lectures::getLecturesByIds($ids, true);
