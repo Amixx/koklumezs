@@ -1,9 +1,9 @@
 <?php
 
 namespace app\models;
-use yii\helpers\ArrayHelper;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "lecturesdifficulties".
@@ -80,8 +80,44 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getLecturesByDiff($params = []): array
+    {
+        
+        $results = [];
+        foreach ($params as $diff_id => $value) {
+            if($value){
+                $results[] = ArrayHelper::map(
+                    self::find()->where(['diff_id' => $diff_id])
+                        ->andWhere(['>=', 'value', $value])
+                        ->asArray()->all(), 'id', 'lecture_id'
+                );
+            }
+        }
+        $c = count($results);
+        
+        if($c == 1){
+            $result = $results[0];
+        }elseif($c > 1){
+            $result = call_user_func_array('array_intersect', $results);
+        }else{
+            $result = [];
+        }
+        return $result;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLecturesDifficulties($ids)
+    {
+        return ArrayHelper::map(self::find()->where(['in', 'lecture_id', $ids])->asArray()->all(), 'lecture_id', 'diff_id', 'value');
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function removeLectureDifficulties($id)
     {
-        return self::deleteAll(['lecture_id' => $id]);        
+        return self::deleteAll(['lecture_id' => $id]);
     }
 }

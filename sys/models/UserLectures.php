@@ -93,6 +93,20 @@ class UserLectures extends \yii\db\ActiveRecord
         return ArrayHelper::map(self::find()->where(['user_id' => $id])->asArray()->all(), 'id', 'lecture_id');        
     }
 
+    
+     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserLectureTimes($id): array
+    {
+        return ArrayHelper::map(self::find()->where(['user_id' => $id])->asArray()->all(), 'lecture_id', 'created');        
+    }
+
+    public function getLastLecturesForUser($id,$limit = 5)
+    {
+        return ArrayHelper::map(self::find()->where(['user_id' => $id])->orderBy(['id'=>SORT_DESC])->limit($limit)->asArray()->all(), 'id', 'lecture_id');  
+    }
+
     public function getLectures($id)
     {
         return self::find()->where(['user_id' => $id])->orderBy(['lecture_id' => SORT_ASC])->all();        

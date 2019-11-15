@@ -71,7 +71,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions('elfinder',
             <?= $this->render('related',['lectures' => $lectures, 'relatedLectures' => $relatedLectures])?>
         </div>
     </div>
-    <br /><br />
+    <hr />
     <div class="form-group">
         <?= Html::submitButton('Saglabāt', ['class' => 'btn btn-success']) ?>
     </div>

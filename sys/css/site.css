@@ -1,11 +1,19 @@
-.select2-container--default .select2-search--inline .select2-search__field{
-    min-width:300px;
+.form-group .select2-container--default .select2-selection--single,
+.form-group .select2-container--default .select2-search--inline .select2-search__field {
+    min-width: 250px;
+    width: 100%;
+    max-width: 100%;
 }
+
 #logo {
     width: 70px;
     height: 70px;
     display: inline-block;
     margin: 10px 15px;
+}
+
+label {
+    width: 100%;
 }
 
 .navbar {

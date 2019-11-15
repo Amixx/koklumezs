@@ -63,7 +63,7 @@ class Lectures extends \yii\db\ActiveRecord
     public function getSeasons()
     {
         return [
-            'Visi' => 'Visi',
+            'Visas' => 'Visas',
             'Vasara' => 'Vasara',
             'Rudens' => 'Rudens',
             'Ziema' => 'Ziema',
@@ -113,9 +113,13 @@ class Lectures extends \yii\db\ActiveRecord
         return ArrayHelper::map(self::find()->where(['not in', 'id', $ids])->asArray()->all(), 'id', 'title');
     }
 
-    public function getLecturesByIds($ids)
+    public function getLecturesByIds($ids, $asArray = false)
     {
-        return self::find()->where(['in', 'id', $ids])->all();
+        if( $asArray){
+            return ArrayHelper::map(self::find()->where(['in', 'id', $ids])->all(), 'id', 'title');
+        }else{
+            return self::find()->where(['in', 'id', $ids])->all();
+        }
     }
 
 

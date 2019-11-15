@@ -198,8 +198,8 @@ class LecturesController extends Controller
                     $evaluation->save();
                 }
             }
-            if(isset($post['relatedLectures'])) {
-                RelatedLectures::removeLectureRelations($id);
+            RelatedLectures::removeLectureRelations($id);
+            if(isset($post['relatedLectures'])) {                
                 foreach($post['relatedLectures'] as $rid){
                     $relation = new RelatedLectures();
                     $relation->related_id = $rid;

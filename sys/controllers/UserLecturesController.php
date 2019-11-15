@@ -2,7 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\Difficulties;
 use app\models\Lectures;
+use app\models\LecturesDifficulties;
 use app\models\UserLectures;
 use app\models\UserLecturesSearch;
 use app\models\Users;
@@ -80,6 +82,15 @@ class UserLecturesController extends Controller
         ]);
     }
 
+    private function getLectureDiffs($data)
+    {
+        $result = [];
+        foreach ($data as $id) {
+            $result[$id] = LecturesDifficulties::getLectureDifficulties($id);
+        }
+        return $result;
+    }
+
     /**
      * Creates a new UserLectures model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -94,10 +105,11 @@ class UserLecturesController extends Controller
         $post = Yii::$app->request->post();
         $lectures = [];
         $students = Users::getActiveStudents();
+        $hideParams = false;
         //$lectures = Lectures::getLectures();
-        
+        $userLecturesTimes = $selected = $lectureDifficulties = $userLectures = $lastLectures = [];
+        $difficulties = Difficulties::getDifficulties();
         if ($post) {
-            
             if (isset($post['UserLectures']['lecture_id']) && $model->load($post) && $model->save()) {
                 $sent = self::sendEmail($model->user_id, $model->lecture_id);
                 $model->sent = (int) $sent;
@@ -107,10 +119,27 @@ class UserLecturesController extends Controller
                 $user = Users::findOne($post['UserLectures']['user_id']);
                 $students = [$user->id => $user->email];
                 $model->user_id = $user->id;
-                $userLectures = UserLectures::getUserLectures($user->id);
-                $lectures = Lectures::getLecturesForUser($userLectures);
+                $userLecturesTimes = UserLectures::getUserLectureTimes($model->user_id);
+                $userLectures = UserLectures::getUserLectures($model->user_id);
+                $selected = isset($post['difficulties']) ? $post['difficulties'] : $selected;
+                if (!empty($selected)) {
+                    $diffLecturesIDs = LecturesDifficulties::getLecturesByDiff($selected);
+                    //find lectures already assigned for student and intersect with param lectures
+                    if ($diffLecturesIDs) {
+                        $ids = array_diff($diffLecturesIDs, $userLectures);
+                        $lectures = Lectures::getLecturesByIds($ids, true);
+                    } else {
+                        $lectures = Lectures::getLecturesForUser($userLectures);
+                    }
+                } else {
+                    $lectures = Lectures::getLecturesForUser($userLectures);
+                }
                 $outofLectures = empty($lectures);
-                $lectures = !empty($lectures) ? $lectures : [0 => 'Visas lekcijas piešķirtas'];                
+                $lectures = !empty($lectures) ? $lectures : [0 => 'Lekcijas netika atrastas'];
+                $lastLecturesIds = UserLectures::getLastLecturesForUser($model->user_id);
+                $lastLectures = Lectures::getLecturesByIds($lastLecturesIds);
+                $lectureDifficulties = self::getLectureDiffs($lastLecturesIds);
+
             }
         }
 
@@ -118,7 +147,13 @@ class UserLecturesController extends Controller
             'model' => $model,
             'students' => $students,
             'lectures' => $lectures,
-            'outofLectures' => $outofLectures
+            'outofLectures' => $outofLectures,
+            'lastLectures' => $lastLectures,
+            'userLecturesTimes' => $userLecturesTimes,
+            'difficulties' => $difficulties,
+            'lectureDifficulties' => $lectureDifficulties,
+            'selected' => $selected,
+            'hideParams' => $hideParams,
         ]);
 
     }
@@ -134,20 +169,35 @@ class UserLecturesController extends Controller
     {
         $model = $this->findModel($id);
         $outofLectures = false;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $sent = self::sendEmail($model->user_id, $model->lecture_id);
-            $model->sent = (int) $sent;
+        $post = Yii::$app->request->post();
+        $userLecturesTimes = $selected = $lectureDifficulties = $userLectures = $lastLectures = [];
+        $difficulties = Difficulties::getDifficulties();
+        if (isset($post['UserLectures']['lecture_id']) && $model->load($post) && $model->save()) {
+            //$sent = self::sendEmail($model->user_id, $model->lecture_id);
+            //$model->sent = (int) $sent;
             $model->update();
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         $students = Users::getActiveStudents();
         $lectures = Lectures::getLectures();
+        $userLecturesTimes = UserLectures::getUserLectureTimes($model->user_id);
+        $lastLecturesIds = UserLectures::getLastLecturesForUser($model->user_id);
+        $lastLectures = Lectures::getLecturesByIds($lastLecturesIds);
+        $difficulties = Difficulties::getDifficulties();
+        $lectureDifficulties = self::getLectureDiffs($lastLecturesIds);
+        $hideParams = true;
         return $this->render('update', [
             'model' => $model,
             'students' => $students,
             'lectures' => $lectures,
-            'outofLectures' => $outofLectures
+            'outofLectures' => $outofLectures,
+            'lastLectures' => $lastLectures,
+            'userLecturesTimes' => $userLecturesTimes,
+            'difficulties' => $difficulties,
+            'lectureDifficulties' => $lectureDifficulties,
+            'selected' => $selected,
+            'hideParams' => $hideParams,
         ]);
     }
 

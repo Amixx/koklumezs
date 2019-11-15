@@ -18,7 +18,13 @@ $this->params['breadcrumbs'][] = 'Rediģēt';
         'model' => $model,
         'students' => $students,
         'lectures' => $lectures,
-        'outofLectures' => $outofLectures
+        'outofLectures' => $outofLectures,
+        'lastLectures' => $lastLectures,
+        'userLecturesTimes' => $userLecturesTimes,
+        'difficulties' => $difficulties,
+        'lectureDifficulties' => $lectureDifficulties,
+        'selected' => $selected,
+        'hideParams' => $hideParams,
     ]) ?>
 
 </div>
