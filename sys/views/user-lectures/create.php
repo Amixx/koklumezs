@@ -23,7 +23,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'difficulties' => $difficulties,
         'lectureDifficulties' => $lectureDifficulties,
         'selected' => $selected,
-        'hideParams' => $hideParams
+        'hideParams' => $hideParams,
+        'seasons' => $seasons,
+        'seasonSelected' => $seasonSelected,
     ]) ?>
 
 </div>

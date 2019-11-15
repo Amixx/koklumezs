@@ -25,6 +25,8 @@ $this->params['breadcrumbs'][] = 'Rediģēt';
         'lectureDifficulties' => $lectureDifficulties,
         'selected' => $selected,
         'hideParams' => $hideParams,
+        'seasons' => $seasons,
+        'seasonSelected' => $seasonSelected,
     ]) ?>
 
 </div>

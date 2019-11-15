@@ -122,6 +122,15 @@ class Lectures extends \yii\db\ActiveRecord
         }
     }
 
+    public function getLecturesBySeasonAndIds($ids,$season, $asArray = false)
+    {
+        if( $asArray){
+            return ArrayHelper::map(self::find()->where(['in', 'id', $ids])->andWhere(['season' => $season])->all(), 'id', 'title');
+        }else{
+            return self::find()->where(['in', 'id', $ids])->andWhere(['season' => $season])->all();
+        }
+    }
+
 
     public function getLecturesForRelations($id)
     {

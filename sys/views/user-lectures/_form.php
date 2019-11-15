@@ -35,6 +35,7 @@ use yii\helpers\Url;
         ); ?>
          <?php if($difficulties and !$hideParams){  ?>
             <?= $this->render('difficulties',['difficulties' => $difficulties, 'selected' => $selected])?>
+            <?= $this->render('seasons',['seasons' => $seasons, 'seasonSelected' => $seasonSelected])?>
         <?php } ?>
     </div>
     <?php if($model->user_id){ ?>

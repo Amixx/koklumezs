@@ -105,7 +105,8 @@ class UserLecturesController extends Controller
         $post = Yii::$app->request->post();
         $lectures = [];
         $students = Users::getActiveStudents();
-        $hideParams = false;
+        $seasonSelected = $hideParams = false;
+        $seasons = Lectures::getSeasons();
         //$lectures = Lectures::getLectures();
         $userLecturesTimes = $selected = $lectureDifficulties = $userLectures = $lastLectures = [];
         $difficulties = Difficulties::getDifficulties();
@@ -122,18 +123,33 @@ class UserLecturesController extends Controller
                 $userLecturesTimes = UserLectures::getUserLectureTimes($model->user_id);
                 $userLectures = UserLectures::getUserLectures($model->user_id);
                 $selected = isset($post['difficulties']) ? $post['difficulties'] : $selected;
+                $seasonSelected = isset($post['season']) ? $post['season'] : $seasonSelected;
+
                 if (!empty($selected)) {
                     $diffLecturesIDs = LecturesDifficulties::getLecturesByDiff($selected);
                     //find lectures already assigned for student and intersect with param lectures
                     if ($diffLecturesIDs) {
                         $ids = array_diff($diffLecturesIDs, $userLectures);
-                        $lectures = Lectures::getLecturesByIds($ids, true);
+                        if (!empty($seasonSelected) and !empty($lectures)) {
+                            $lectures = Lectures::getLecturesBySeasonAndIds($ids, $seasonSelected, true);
+                        } else {
+                            $lectures = Lectures::getLecturesByIds($ids, true);
+                        }
                     } else {
                         $lectures = Lectures::getLecturesForUser($userLectures);
+                        if (!empty($seasonSelected) and !empty($lectures)) {
+                            $ids = array_keys($lectures);
+                            $lectures = Lectures::getLecturesBySeasonAndIds($ids, $seasonSelected, true);
+                        }
                     }
                 } else {
                     $lectures = Lectures::getLecturesForUser($userLectures);
+                    if (!empty($seasonSelected) and !empty($lectures)) {
+                        $ids = array_keys($lectures);
+                        $lectures = Lectures::getLecturesBySeasonAndIds($ids, $seasonSelected, true);
+                    }
                 }
+
                 $outofLectures = empty($lectures);
                 $lectures = !empty($lectures) ? $lectures : [0 => 'Lekcijas netika atrastas'];
                 $lastLecturesIds = UserLectures::getLastLecturesForUser($model->user_id);
@@ -154,6 +170,8 @@ class UserLecturesController extends Controller
             'lectureDifficulties' => $lectureDifficulties,
             'selected' => $selected,
             'hideParams' => $hideParams,
+            'seasons' => $seasons,
+            'seasonSelected' => $seasonSelected,
         ]);
 
     }
@@ -170,7 +188,7 @@ class UserLecturesController extends Controller
         $model = $this->findModel($id);
         $outofLectures = false;
         $post = Yii::$app->request->post();
-        $userLecturesTimes = $selected = $lectureDifficulties = $userLectures = $lastLectures = [];
+        $seasons = $userLecturesTimes = $selected = $lectureDifficulties = $userLectures = $lastLectures = [];
         $difficulties = Difficulties::getDifficulties();
         if (isset($post['UserLectures']['lecture_id']) && $model->load($post) && $model->save()) {
             //$sent = self::sendEmail($model->user_id, $model->lecture_id);
@@ -198,6 +216,7 @@ class UserLecturesController extends Controller
             'lectureDifficulties' => $lectureDifficulties,
             'selected' => $selected,
             'hideParams' => $hideParams,
+            'seasons' => $seasons,
         ]);
     }
 
