@@ -4,7 +4,7 @@
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
-            <th></th>
+            <th>Datums</th>
             <?php foreach($lastLectures as $lecture){ ?>
                 <th><?=isset($userLecturesTimes[$lecture->id]) ? $userLecturesTimes[$lecture->id] : ''?></th>
             <?php } ?>                            
