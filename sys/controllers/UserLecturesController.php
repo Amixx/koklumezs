@@ -204,7 +204,7 @@ class UserLecturesController extends Controller
         $lastLectures = Lectures::getLecturesByIds($lastLecturesIds);
         $difficulties = Difficulties::getDifficulties();
         $lectureDifficulties = self::getLectureDiffs($lastLecturesIds);
-        $hideParams = true;
+        $seasonSelected = $hideParams = true;
         return $this->render('update', [
             'model' => $model,
             'students' => $students,
@@ -217,6 +217,7 @@ class UserLecturesController extends Controller
             'selected' => $selected,
             'hideParams' => $hideParams,
             'seasons' => $seasons,
+            'seasonSelected' => $seasonSelected,
         ]);
     }
 
