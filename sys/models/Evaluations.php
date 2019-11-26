@@ -44,6 +44,9 @@ class Evaluations extends \yii\db\ActiveRecord
             'id' => 'ID',
             'title' => 'Virsraksts',
             'type' => 'Tips',
+            'stars' => 'Zvaigžņu skaits',
+            'star_text' => 'Zvaigžņu teksti',
+            'is_scale' => 'Algoritma skala',
         ];
     }
 

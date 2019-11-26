@@ -54,6 +54,7 @@ use yii\helpers\Url;
     <?php } ?>     
     <hr />
     <div class="form-group">
+        <?= $form->field($model, 'evaluated')->checkBox(['value' => 1]) ?>
         <?= !$outofLectures ? Html::submitButton($lectures ? 'Saglabāt' : 'Atlasīt lekcijas', ['class' => 'btn btn-success']) : Html::a('Atpakaļ',Url::to(['user-lectures/create']),['class' => 'btn btn-success'])?>
     </div>
 

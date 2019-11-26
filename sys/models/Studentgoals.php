@@ -89,6 +89,15 @@ class Studentgoals extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getUserDifficulty($id): int
+    {
+        $sum = self::find()->where(['type' => self::NOW,'user_id' => $id])->sum('value');
+        return $sum;        
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function removeUserGoals($id)
     {
         return self::deleteAll(['user_id' => $id]);        

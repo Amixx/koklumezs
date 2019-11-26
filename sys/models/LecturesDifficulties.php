@@ -72,9 +72,27 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLectureDifficulties($id)
+    public function getLectureDifficulties($id): array
     {
         return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'diff_id', 'value');
+    }
+
+    /**
+     * @return int
+     */
+    public function getLectureDifficulty($id): int
+    {
+        $sum = self::find()->where(['lecture_id' => $id])->sum('value');
+        return $sum;     
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLecturesByDifficulty($sum): array
+    {
+        //return self::findAll(['sum(value)' => $sum]);
+        return ArrayHelper::map(self::find()->having(['sum(value)' => 25])->asArray()->all(), 'lecture_id', 'lecture_id');     
     }
 
     /**

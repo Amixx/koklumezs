@@ -193,6 +193,7 @@ class UserLecturesController extends Controller
         if (isset($post['UserLectures']['lecture_id']) && $model->load($post) && $model->save()) {
             //$sent = self::sendEmail($model->user_id, $model->lecture_id);
             //$model->sent = (int) $sent;
+            $model->evaluated = isset($post["UserLectures"]["evaluated"]) ? $post["UserLectures"]["evaluated"] : 0;        
             $model->update();
             return $this->redirect(['view', 'id' => $model->id]);
         }

@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = 'Rediģēt';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'stars_texts' => $stars_texts
     ]) ?>
 
 </div>

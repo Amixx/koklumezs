@@ -32,10 +32,12 @@ use yii\widgets\ActiveForm;
                     // Your client options
                     'id' => 'election-' . $evaluation['id'],
                     'required' => 'required',
-                    'scoreName' => 'evaluations[' . $evaluation['id'] . ']'
-                ],
+                    'scoreName' => 'evaluations[' . $evaluation['id'] . ']', 
+                    'number' => $evaluation['stars'],
+                    'hints'    =>   !empty(unserialize($evaluation['star_text'])) ? unserialize($evaluation['star_text']) : [],// Hints used on each star.
+                ],                
             ]); ?>
-            <div class="help-block"></div>
+            <div class="help-block hint"></div>
         </div>
         <?php } ?>                                                 
     <?php } ?>   

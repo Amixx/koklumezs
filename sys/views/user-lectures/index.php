@@ -84,6 +84,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'filter'=> Html::dropDownList('UserLecturesSearch[sent]',isset($get['UserLecturesSearch']['sent']) ? $get['UserLecturesSearch']['sent'] : '' ,[0 => 'Nav',1 => 'Ir'],['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
             ],
+            [
+                'attribute' => 'evaluated',
+                'format' => 'raw',
+                'value' => function ($dataProvider) {
+                    return $dataProvider->evaluated == 1 ? 'Jā' : 'Nē';
+                },
+                'filter'=> Html::dropDownList('UserLecturesSearch[evaluated]',isset($get['UserLecturesSearchevaluatedsent']) ? $get['UserLecturesSearch']['evaluated'] : '' ,[0 => 'Nav',1 => 'Ir'],['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
+            ],
+            
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

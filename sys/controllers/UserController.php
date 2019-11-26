@@ -51,8 +51,6 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        if (Yii::$app->user->isGuest OR Yii::$app->user->identity->user_level == 'Expert')
-           return false; 
         $searchModel = new UserSearch();
         $get = Yii::$app->request->queryParams;
         $dataProvider = $searchModel->search($get);

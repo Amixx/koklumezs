@@ -3,33 +3,32 @@
 namespace app\controllers;
 
 use app\models\Difficulties;
-use app\models\Handdifficulties;
 use app\models\Evaluations;
+use app\models\Handdifficulties;
 use app\models\Lectures;
-use app\models\RelatedLectures;
 use app\models\LecturesDifficulties;
 use app\models\Lecturesevaluations;
 use app\models\Lecturesfiles;
 use app\models\Lectureshanddifficulties;
-use app\models\UserLectures;
-use app\models\Studenthandgoals;
+use app\models\RelatedLectures;
 use app\models\Studentgoals;
 use app\models\Userlectureevaluations;
+use app\models\UserLectures;
 use app\models\Users;
 use Yii;
+use yii\data\Pagination;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\data\Pagination;
 
 /**
  * LekcijasController implements the actions for Lectures model by student.
  */
 class LekcijasController extends Controller
 {
-    const VIDEOS = ['mp4','mov','ogv','webm','flv','avi','f4v'];
-    const DOCS = ['doc','docx','pdf'];
-    const AUDIO = ['aac','alac','amr','flac','mp3','opus','vorbis','ogg','wav'];
+    const VIDEOS = ['mp4', 'mov', 'ogv', 'webm', 'flv', 'avi', 'f4v'];
+    const DOCS = ['doc', 'docx', 'pdf'];
+    const AUDIO = ['aac', 'alac', 'amr', 'flac', 'mp3', 'opus', 'vorbis', 'ogg', 'wav'];
     /**
      * {@inheritdoc}
      */
@@ -78,8 +77,8 @@ class LekcijasController extends Controller
                 ->all();
             $opened = UserLectures::getOpened($user->id);
             $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
-            $baseUrl = Yii::$app->request->baseUrl;  
-            
+            $baseUrl = Yii::$app->request->baseUrl;
+
             return $this->render('index', [
                 'models' => $models,
                 'userLectures' => $userLectures,
@@ -90,11 +89,122 @@ class LekcijasController extends Controller
                 'videos' => self::VIDEOS,
             ]);
         }
-        
+
         return $this->render('index', [
             'models' => [],
             'pages' => [],
         ]);
+    }
+
+    /**
+     * @property $userDifficulty
+     * Max - $userDifficulty
+     * 1 (Viss tik viegls, ka garlaicīgi, vajag pieslēgties manuāli)
+     * 2 (ļoti ļoti viegli, neoteikti vajag grūāk) Max-x+4 (jāpieliek 4 sarežģītības punkti klāt kopumā. Piemēram ja bija 45345, tad tagad varētu būt 56455 vai 35566)
+     * 3 (izspēlēju vienu reizi un jau viss skaidrs) Max-x+3
+     * 4 (Diezgan vienkārši)        Max-x+2
+     * 5 (nācās pastrādāt, bet tiku galā bez milzīgas piepūles) Max-x+1 vai max-x+2 ( ja ir jauns ķēdes uzdevums)
+     * 6 (Tiku galā): |Paliek tas pats Max-x vai arī Max-x+1 (jau ir nākamais ķēdes uzdevums)
+     * 7 (diezgan gŗūti) Max-x-1
+     * 8 (itkā saprotu, ebt pirksti neklausa) Max-x-2/3
+     * 9 (kaut ko mēģinu, bet pārāk nesanāk): Max-x-4
+     * 10 (vispār neko nesaprotu): Manuāli
+     */
+    private function getNewUserDifficulty($user_id, $x = null, $lecture_id = null): int
+    {
+        $userDifficulty = Studentgoals::getUserDifficulty($user_id);
+        $lectureDifficulty = LecturesDifficulties::getLectureDifficulty($lecture_id);
+        if ($x == 5 or $x == 6) {
+            $nextLectures = RelatedLectures::getRelations($lecture_id);
+            $nextLecture = 0;
+            foreach ($nextLectures as $lecture) {
+                $test = LecturesDifficulties::getLectureDifficulty($lecture);
+                if ($test > $lectureDifficulty) {
+                    echo 'nex Lecture:' . $lecture . ' <br />';
+                    $nextLecture = $lecture;
+                    break;
+                } else {
+                    echo 'test Lecture:' . $test . ' <br />';
+                }
+            }
+        }
+        switch ($x) {
+            /**
+                 * 1 (Viss tik viegls, ka garlaicīgi, vajag pieslēgties manuāli)
+                 */
+            case 1:
+                $result = 0;
+                break;
+            /**
+                 * 2 (ļoti ļoti viegli, neoteikti vajag grūāk) Max-x+4 (jāpieliek 4 sarežģītības punkti klāt kopumā. Piemēram ja bija 45345, tad tagad varētu būt 56455 vai 35566)
+                 */
+            case 2:
+                $result = $userDifficulty - $x + 4;
+                break;
+            /**
+                 * 3 (izspēlēju vienu reizi un jau viss skaidrs) Max-x+3
+                 */
+            case 3:
+                $result = $userDifficulty - $x + 3;
+                break;
+            /**
+                 * 4 (Diezgan vienkārši)        Max-x+2
+                 */
+            case 4:
+                $result = $userDifficulty - $x + 2;
+                break;
+            /**
+                 * 5 (nācās pastrādāt, bet tiku galā bez milzīgas piepūles) Max-x+1 vai max-x+2 ( ja ir jauns ķēdes uzdevums)
+                 */
+            case 5:
+                $result = $nextLecture ? $userDifficulty - $x + 2 : $userDifficulty - $x + 1;
+                break;
+            /**
+                 * 6 (Tiku galā): |Paliek tas pats Max-x vai arī Max-x+1 (jau ir nākamais ķēdes uzdevums)
+                 */
+            case 6:
+                $result = $nextLecture ? $userDifficulty - $x + 1 : $userDifficulty - $x;
+                break;
+            /**
+                 * 7 (diezgan gŗūti) Max-x-1
+                 */
+            case 7:
+                $result = $userDifficulty - $x - 1;
+                break;
+            /**
+                 * 8 (itkā saprotu, ebt pirksti neklausa) Max-x-2/3
+                 */
+            case 8:
+                $result = ceil($userDifficulty - $x - 2 / 3);
+                break;
+            /**
+                 * 9 (kaut ko mēģinu, bet pārāk nesanāk): Max-x-4
+                 */
+            case 9:
+                $result = $userDifficulty - $x - 4;
+                break;
+            /**
+                 * 10 (vispār neko nesaprotu): Manuāli
+                 */
+            case 10:
+                $result = 0;
+                break;
+            default:
+                $result = $userDifficulty;
+        }
+        if ($result) {
+            $modelsIds = LecturesDifficulties::getLecturesByDifficulty($result);
+            $lec = Lectures::find()->where(['in', 'id', $modelsIds]);
+            var_dump($modelsIds);
+        }
+        /** maybe, will see..
+        if ($result and ($userDifficulty > $lectureDifficulty)) {
+
+         * evaluating old lecture, skill is greater by default
+         */
+        /**$result = $userDifficulty;
+        }*/
+        return $result;
     }
 
     /**
@@ -107,35 +217,47 @@ class LekcijasController extends Controller
     {
         $model = $this->findModel($id);
         $user = Yii::$app->user->identity;
+        // for ($x = 1; $x <= 10; $x++) {
+        //     $s = self::getNewUserDifficulty($user->id, $x, $id);
+        //     echo $x . '<br />';
+        //     var_dump($s);
+        //     echo '<hr />';
+        // }
+        // die;
         $modelsIds = UserLectures::getUserLectures($user->id);
-        $check = in_array($id,$modelsIds);
+        $check = in_array($id, $modelsIds);
         $userLectures = UserLectures::getLectures($user->id);
-        if($check){
+        $userEvaluatedLectures = UserLectures::getEvaluatedLectures($user->id);
+        $userDifficulty = Studentgoals::getUserDifficulty($user->id);
+        $lectureDifficulty = LecturesDifficulties::getLectureDifficulty($id);
+        if ($check) {
             $post = Yii::$app->request->post();
-            if(isset($post['evaluations']))
-            {   
-                foreach($post['evaluations'] as $pid => $value){
+            if (isset($post['evaluations'])) {
+                foreach ($post['evaluations'] as $pid => $value) {
                     $evaluation = new Userlectureevaluations();
                     $evaluation->evaluation_id = $pid;
                     $evaluation->lecture_id = $model->id;
                     $evaluation->user_id = $user->id;
-                    $evaluation->created = date('Y-m-d H:i:s',time());
+                    $evaluation->created = date('Y-m-d H:i:s', time());
                     $evaluation->evaluation = $value ?? 0;
                     $evaluation->save();
                 }
+                $userLecture = UserLectures::findOne($id);
+                $userLecture->evaluated = 1;
+                $userLecture->save();
             }
-            UserLectures::setSeenByUser($user->id,$id);            
+            UserLectures::setSeenByUser($user->id, $id);
             $difficulties = Difficulties::getDifficulties();
             $evaluations = Evaluations::getEvaluations();
             $handdifficulties = Handdifficulties::getDifficulties();
             $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
             $lectureHandDifficulties = Lectureshanddifficulties::getLectureDifficulties($id);
             $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
-            $lecturefiles = Lecturesfiles::getLectureFiles($id); 
-            $userLectureEvaluations = Userlectureevaluations::getLectureEvaluations($user->id,$id); 
+            $lecturefiles = Lecturesfiles::getLectureFiles($id);
+            $userLectureEvaluations = Userlectureevaluations::getLectureEvaluations($user->id, $id);
             $baseUrl = Yii::$app->request->baseUrl;
-            $ids = RelatedLectures::getRelations($id); 
-            $relatedLectures = Lectures::getLecturesByIds($ids);     
+            $ids = RelatedLectures::getRelations($id);
+            $relatedLectures = Lectures::getLecturesByIds($ids);
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,
@@ -146,12 +268,13 @@ class LekcijasController extends Controller
                 'lectureEvaluations' => $lectureEvaluations,
                 'lecturefiles' => $lecturefiles,
                 'userLectures' => $userLectures,
+                'userEvaluatedLectures' => $userEvaluatedLectures,
                 'userLectureEvaluations' => $userLectureEvaluations,
                 'videos' => self::VIDEOS,
                 'docs' => self::DOCS,
                 'audio' => self::AUDIO,
                 'baseUrl' => $baseUrl,
-                'relatedLectures' => $relatedLectures
+                'relatedLectures' => $relatedLectures,
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');

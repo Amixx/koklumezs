@@ -100,14 +100,24 @@ class EvaluationsController extends Controller
      */
     public function actionUpdate($id)
     {
+        // $E = array("Viss tik viegls, ka garlaicīgi","Ļoti ļoti viegli, noteikti vajag grūtāk","Izspēlēju vienu reizi un jau viss skaidrs","Diezgan vienkārši","Nācās pastrādāt, bet tiku galā bez milzīgas piepūles","Tiku galā","Diezgan grūti","Itkā saprotu, bet pirksti neklausa","Kaut ko mēģinu, bet pārāk nesanāk","Vispār neko nesaprotu");
+        // $s = serialize($E);
+        // var_dump($s);die;
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $post = Yii::$app->request->post();
+        if ( $post) {
+            $model->load($post);
+            $model->stars = isset($post["Evaluations"]["stars"]) ? $post["Evaluations"]["stars"] : null;
+            $model->is_scale = isset($post["Evaluations"]["is_scale"]) ? $post["Evaluations"]["is_scale"] : null;
+            $model->star_text = isset($post['stars_texts']) ? serialize($post['stars_texts']) : null;               
+            $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
+        $stars_texts = unserialize($model->star_text);
 
         return $this->render('update', [
             'model' => $model,
+            'stars_texts' => $stars_texts 
         ]);
     }
 

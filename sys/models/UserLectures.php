@@ -56,6 +56,7 @@ class UserLectures extends \yii\db\ActiveRecord
             'opened' => 'Atvērta',
             'opentime' => 'Atvēršanas laiks',
             'sent' => 'Nosūtīts e-pasts',
+            'evaluated' => 'Novērtēta',
         ];
     }
 
@@ -90,8 +91,16 @@ class UserLectures extends \yii\db\ActiveRecord
      */
     public function getUserLectures($id): array
     {
-        return ArrayHelper::map(self::find()->where(['user_id' => $id])->asArray()->all(), 'id', 'lecture_id');        
+        return ArrayHelper::map(self::find()->where(['user_id' => $id,'evaluated' => 0])->asArray()->all(), 'id', 'lecture_id');        
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEvaluatedLectures($id): array
+    {
+        return ArrayHelper::map(self::find()->where(['user_id' => $id,'evaluated' => 1])->asArray()->all(), 'id', 'lecture_id');        
+    }    
 
     
      /**
@@ -107,9 +116,9 @@ class UserLectures extends \yii\db\ActiveRecord
         return ArrayHelper::map(self::find()->where(['user_id' => $id])->orderBy(['id'=>SORT_DESC])->limit($limit)->asArray()->all(), 'id', 'lecture_id');  
     }
 
-    public function getLectures($id)
+    public function getLectures($id,$evaluated = 0)
     {
-        return self::find()->where(['user_id' => $id])->orderBy(['lecture_id' => SORT_ASC])->all();        
+        return self::find()->where(['user_id' => $id,'evaluated' => $evaluated])->orderBy(['lecture_id' => SORT_ASC])->all();        
     }
 
     /**

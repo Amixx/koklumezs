@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $model->title;
             <?= $this->render('evaluations', ['evaluations' => $evaluations, 'lectureEvaluations' => $lectureEvaluations]) ?>
         <?php } ?>
         <?php if($relatedLectures){ ?>
-            <?= $this->render('related',['relatedLectures' => $relatedLectures,'lecturefiles' => $lecturefiles,'videos' => $videos, 'baseUrl' => $baseUrl]) ?>
+            <?= $this->render('related',['relatedLectures' => $relatedLectures,'lecturefiles' => $lecturefiles,'videos' => $videos, 'baseUrl' => $baseUrl,'userEvaluatedLectures' => $userEvaluatedLectures]) ?>
         <?php } ?>
         </div>
     </div>

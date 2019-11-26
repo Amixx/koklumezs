@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 <div class="container">
     <div class="row">
         <div class="col col-md-12">
-            <div class="related-lectures-form">
+            <div class="related-lectures-form form-group">
                 <h2>Saistītās lekcijas</h2>
                 <hr />
                 <select class="select2" name="relatedLectures[]" multiple>
