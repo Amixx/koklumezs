@@ -129,7 +129,6 @@ class LecturesController extends Controller
                 }
             }
             if(isset($post['relatedLectures'])) {
-                RelatedLectures::removeLectureRelations($id);
                 foreach($post['relatedLectures'] as $rid){
                     $relation = new RelatedLectures();
                     $relation->related_id = $rid;

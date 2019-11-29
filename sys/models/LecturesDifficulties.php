@@ -82,8 +82,9 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
      */
     public function getLectureDifficulty($id): int
     {
+        $default = 0;
         $sum = self::find()->where(['lecture_id' => $id])->sum('value');
-        return $sum;     
+        return $sum ?? $default;     
     }
 
     /**
@@ -91,8 +92,19 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
      */
     public function getLecturesByDifficulty($sum): array
     {
-        //return self::findAll(['sum(value)' => $sum]);
-        return ArrayHelper::map(self::find()->having(['sum(value)' => 25])->asArray()->all(), 'lecture_id', 'lecture_id');     
+        $sums = self::getLectureSums();
+        return isset($sums[$sum]) ? $sums[$sum] : [];
+    }
+
+    public function getLectureSums()
+    {
+        $q = 'SELECT DISTINCT lecture_id, SUM(value) as sum FROM `'. self::tableName() .'` GROUP BY lecture_id';
+        $data = Yii::$app->db->createCommand($q)->queryAll();
+        $sums = [];
+        foreach($data as $d){
+           $sums[$d['sum']][] = $d['lecture_id']; 
+        }
+        return $sums;
     }
 
     /**

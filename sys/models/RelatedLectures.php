@@ -74,6 +74,14 @@ class RelatedLectures extends \yii\db\ActiveRecord
         return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'id', 'related_id');        
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRelatedParents($id): array
+    {
+        return ArrayHelper::map(self::find()->where(['related_id' => $id])->asArray()->all(), 'id', 'lecture_id');        
+    }
+
     public function getLectures($id)
     {
         return self::find()->where(['user_id' => $id])->orderBy(['lecture_id' => SORT_ASC])->all();        

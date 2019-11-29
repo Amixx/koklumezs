@@ -96,6 +96,74 @@ class LekcijasController extends Controller
         ]);
     }
 
+    private function getKidRelation(int $id, int $it = 3, $results = [])
+    {
+        $result = RelatedLectures::getRelatedParents($id);
+        if ($result) {
+            $id = reset($result);
+            $results[$it] = $id;
+            $it--;
+            if ($it) {
+                $results[$it] = self::getKidRelation($id, $it, $results);
+            } else {
+                return $results;
+            }
+        }
+        return $results[$it];
+    }
+
+    public function getNewDifficultyIds(int $result = 0, int $x = 0, int $lecture_id = null): array
+    {
+        $modelsIds = [];
+        if ($result) {
+            /** get related in chain below this lecture
+             * 3. ■ <- 2. ■ <- 1. ■ <- This lecture □
+             */
+            $kids = [];
+            if (($x == 1) or ($x == 10)) {} else {
+                $kids = self::getKidRelation($lecture_id);
+                if (Yii::$app->request->get('dbg')) {
+                    echo 'KIDS<pre>';
+                    var_dump($kids);
+                    echo '</pre>';
+                }
+            }
+            $foundKid = false;
+            if ($kids) {
+                foreach ($kids as $kid) {
+                    $lectureDifficulty = LecturesDifficulties::getLectureDifficulty($kid);
+                    //found match in kids
+                    if ($lectureDifficulty == $result) {
+                        $modelsIds = $kids;
+                        if (!empty($modelsIds)) {
+                            if (Yii::$app->request->get('dbg')) {
+                                echo "<span style='color:red'>Found by kids difficulty:</span><pre>";
+                                print_r($modelsIds);
+                                echo "</pre>";
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            if ($foundKid === false) {
+                $modelsIds = LecturesDifficulties::getLecturesByDifficulty($result);
+                //remove current lecture
+                $modelsIds = array_diff($modelsIds, [$lecture_id]);
+            }
+
+            $lec = Lectures::find()->where(['in', 'id', $modelsIds]);
+            if (!empty($modelsIds)) {
+                if (Yii::$app->request->get('dbg')) {
+                    echo "<span style='color:red'>Found by new difficulty:</span><pre>";
+                    print_r($modelsIds);
+                    echo "</pre>";
+                }
+            }
+        }
+        return $modelsIds;
+    }
+
     /**
      * @property $userDifficulty
      * Max - $userDifficulty
@@ -110,21 +178,30 @@ class LekcijasController extends Controller
      * 9 (kaut ko mēģinu, bet pārāk nesanāk): Max-x-4
      * 10 (vispār neko nesaprotu): Manuāli
      */
-    private function getNewUserDifficulty($user_id, $x = null, $lecture_id = null): int
+    public function getNewUserDifficulty($user_id, $x = null, $lecture_id = null): int
     {
         $userDifficulty = Studentgoals::getUserDifficulty($user_id);
         $lectureDifficulty = LecturesDifficulties::getLectureDifficulty($lecture_id);
+        if (Yii::$app->request->get('dbg')) {
+            echo 'User difficulty:' . $userDifficulty . '<br />';
+            echo 'Lecture difficulty:' . $lectureDifficulty . '<br />';
+        }
         if ($x == 5 or $x == 6) {
             $nextLectures = RelatedLectures::getRelations($lecture_id);
+            //var_dump( $previousLectures);
             $nextLecture = 0;
             foreach ($nextLectures as $lecture) {
                 $test = LecturesDifficulties::getLectureDifficulty($lecture);
                 if ($test > $lectureDifficulty) {
-                    echo 'nex Lecture:' . $lecture . ' <br />';
+                    if (Yii::$app->request->get('dbg')) {
+                        echo 'next related Lecture:' . $lecture . ' <br />';
+                    }
                     $nextLecture = $lecture;
                     break;
                 } else {
-                    echo 'test Lecture:' . $test . ' <br />';
+                    if (Yii::$app->request->get('dbg')) {
+                        echo 'test Lecture:' . $test . ' <br />';
+                    }
                 }
             }
         }
@@ -192,11 +269,6 @@ class LekcijasController extends Controller
             default:
                 $result = $userDifficulty;
         }
-        if ($result) {
-            $modelsIds = LecturesDifficulties::getLecturesByDifficulty($result);
-            $lec = Lectures::find()->where(['in', 'id', $modelsIds]);
-            var_dump($modelsIds);
-        }
         /** maybe, will see..
         if ($result and ($userDifficulty > $lectureDifficulty)) {
 
@@ -217,13 +289,22 @@ class LekcijasController extends Controller
     {
         $model = $this->findModel($id);
         $user = Yii::$app->user->identity;
-        // for ($x = 1; $x <= 10; $x++) {
-        //     $s = self::getNewUserDifficulty($user->id, $x, $id);
-        //     echo $x . '<br />';
-        //     var_dump($s);
-        //     echo '<hr />';
-        // }
-        // die;
+        if (Yii::$app->request->get('dbg')) {
+
+            for ($x = 1; $x <= 10; $x++) {
+                $result = self::getNewUserDifficulty($user->id, $x, $id);
+                $data = self::getNewDifficultyIds($result, $x, $id);
+                echo 'iteration: ' . $x . '<br />';
+                echo "new difficulty:<pre>";
+                print_r($result);
+                echo "</pre>";
+                echo "new lecture ids:<pre>";
+                print_r($data);
+                echo "</pre>";
+                echo '<hr />';
+            }
+            die;
+        }
         $modelsIds = UserLectures::getUserLectures($user->id);
         $check = in_array($id, $modelsIds);
         $userLectures = UserLectures::getLectures($user->id);
