@@ -369,29 +369,31 @@ class LekcijasController extends Controller
                     $evaluation->save();
                 }
                 $param = Evaluations::getScaleParam();
-                if (isset($post['evaluations'][$param])) {
-                    $x = (int) $post['evaluations'][$param];
-                    $userLecture = UserLectures::findOne($id);
-                    $userLecture->evaluated = 1;
-                    $savedEvaluation = $userLecture->save();
-                    // find next lecture(s)
-                    if ($savedEvaluation) {
-                        $result = self::getNewUserDifficulty($user->id, $x, $id);
-                        if ($result) {
-                            $ids = self::getNewDifficultyIds($result, $x, $id, $user->id);
-                            if ($ids) {
-                                //check if user is not already signed to found lectures
-                                $newIds = UserLectures::getNewLectures($user->id, $ids);
-                                if (!empty($newIds)) {
-                                    $skippErrors = true;
-                                    $model = new UserLectures();
-                                    $model->assigned = null;
-                                    $model->created = date('Y-m-d H:i:s', time());
-                                    $saved = $model->save($skippErrors);
-                                    if ($saved) {
-                                        $sent = UserLectures::sendEmail($model->user_id, $model->lecture_id);
-                                        $model->sent = (int) $sent;
-                                        $model->update();
+                if (isset($post['evaluations'][$param->id])) {
+                    $x = (int) $post['evaluations'][$param->id];
+                    if($x > 0){
+                        $userLecture = UserLectures::findOne(['user_id' => $user->id,'lecture_id' => $id]);
+                        $userLecture->evaluated = 1;
+                        $savedEvaluation = $userLecture->save();
+                        // find next lecture(s)
+                        if ($savedEvaluation) {
+                            $result = self::getNewUserDifficulty($user->id, $x, $id);
+                            if ($result) {
+                                $ids = self::getNewDifficultyIds($result, $x, $id, $user->id);
+                                if ($ids) {
+                                    //check if user is not already signed to found lectures
+                                    $newIds = UserLectures::getNewLectures($user->id, $ids);
+                                    if (!empty($newIds)) {
+                                        $skippErrors = true;
+                                        $model = new UserLectures();
+                                        $model->assigned = null;
+                                        $model->created = date('Y-m-d H:i:s', time());
+                                        $saved = $model->save($skippErrors);
+                                        if ($saved) {
+                                            $sent = UserLectures::sendEmail($model->user_id, $model->lecture_id);
+                                            $model->sent = (int) $sent;
+                                            $model->update();
+                                        }
                                     }
                                 }
                             }
