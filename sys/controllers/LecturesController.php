@@ -103,14 +103,20 @@ class LecturesController extends Controller
         $model->author = Yii::$app->user->identity->id;
         $model->created = date('Y-m-d H:i:s', time());
         if ($model->load($post) && $model->save()) {
-            if(isset($post['difficulties'])) {   
+            if(isset($post['difficulties'])) {
+                $sum = 0;   
                 foreach($post['difficulties'] as $pid => $value){
                     $difficulty = new LecturesDifficulties();
                     $difficulty->diff_id = $pid;
                     $difficulty->lecture_id = $model->id;
                     $difficulty->value = $value ?? 0;
+                    if(is_numeric($difficulty->value)){
+                        $sum += $difficulty->value;
+                    }
                     $difficulty->save();
                 }
+                $model->complexity = (int)$sum;
+                $model->update();
             }
             if(isset($post['handdifficulties'])) {   
                 foreach($post['handdifficulties'] as $pid => $value){
@@ -170,14 +176,21 @@ class LecturesController extends Controller
         $model->updated = date('Y-m-d H:i:s', time());
         if ($model->load($post) && $model->save()) {
             if(isset($post['difficulties'])) {   
-                LecturesDifficulties::removeLectureDifficulties($id);
+                $sum = 0;   
+                LecturesDifficulties::removeLectureDifficulties($model->id);
                 foreach($post['difficulties'] as $pid => $value){
                     $difficulty = new LecturesDifficulties();
                     $difficulty->diff_id = $pid;
                     $difficulty->lecture_id = $model->id;
                     $difficulty->value = $value ?? 0;
+                    if(is_numeric($difficulty->value)){
+                        $sum += $difficulty->value;
+                    }
                     $difficulty->save();
-                }
+                }  
+                $model->complexity = (int)$sum;
+                $model->updated = date('Y-m-d H:i:s', time());
+                $model->save();               
             }
             if(isset($post['handdifficulties'])) {   
                 Lectureshanddifficulties::removeLectureDifficulties($id);

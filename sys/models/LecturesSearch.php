@@ -70,14 +70,14 @@ class LecturesSearch extends Lectures
         $query->andFilterWhere([
             'id' => $this->id,
             'author' => $this->author,
-            'season' => $this->season
+            'season' => $this->season,
+            'complexity' => $this->complexity
         ]);
         $query->andFilterWhere(
             ['like', 'u2.email', $this->users]
         );
         $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'complexity', $this->complexity])
+            ->andFilterWhere(['like', 'description', $this->description])           
             ->andFilterWhere(['like', 'created', $this->created])
             ->andFilterWhere(['like', 'updated', $this->updated]);
 

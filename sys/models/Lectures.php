@@ -35,7 +35,7 @@ class Lectures extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'author', 'complexity', 'season'], 'required'],
+            [['title', 'author',  'season'], 'required'],//'complexity',
             [['title', 'description', 'complexity', 'season'], 'string'],
             [['created', 'updated'], 'safe'],
             [['author'], 'integer'],
@@ -78,7 +78,7 @@ class Lectures extends \yii\db\ActiveRecord
     public function getComplexity()
     {
         $complex = [];
-        for($x = 1;$x <=10;$x++){
+        for($x = 1;$x <=50;$x++){
             $complex[$x] = $x;
         }
        return $complex;

@@ -1,8 +1,9 @@
 <?php
 
 namespace app\models;
-use yii\helpers\ArrayHelper;
+
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "evaluations".
@@ -67,18 +68,26 @@ class Evaluations extends \yii\db\ActiveRecord
     }
 
     /**
-    * {@inheritdoc}
-    */
-   public function getEvaluations()
-   {
-       return self::find()->asArray()->all();        
-   }
+     * {@inheritdoc}
+     */
+    public function getEvaluations()
+    {
+        return self::find()->asArray()->all();
+    }
 
-   /**
+    /**
      * {@inheritdoc}
      */
     public function getEvaluationsTitles()
     {
-        return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'title');        
+        return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'title');
     }
+
+    public function getScaleParam()
+    {
+        return self::findOne([
+            'is_scale' => 1,
+        ]);
+    }
+
 }

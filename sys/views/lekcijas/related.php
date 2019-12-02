@@ -2,6 +2,7 @@
 use app\models\Lecturesfiles;
 use yii\helpers\Html;
 use yii\helpers\Url;
+if($relatedLectures){
 ?>
 <h2>Saistītās lekcijas</h2>
 <hr />
@@ -19,3 +20,4 @@ use yii\helpers\Url;
     <?php } ?>        
     </div>
 </div>
+<?php } ?>

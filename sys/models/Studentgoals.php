@@ -79,11 +79,10 @@ class Studentgoals extends \yii\db\ActiveRecord
     {
         $data = self::findAll(['user_id' => $id]);
         $result = [];
-        foreach($data as $d)
-        {
+        foreach ($data as $d) {
             $result[$d->type][$d->diff_id] = $d->value;
         }
-        return $result;        
+        return $result;
     }
 
     /**
@@ -91,15 +90,25 @@ class Studentgoals extends \yii\db\ActiveRecord
      */
     public function getUserDifficulty($id): int
     {
-        $sum = self::find()->where(['type' => self::NOW,'user_id' => $id])->sum('value');
-        return $sum;        
+        $sum = self::find()->where(['type' => self::NOW, 'user_id' => $id])->sum('value');
+        return $sum;
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function removeUserGoals($id)
+    public function removeUserGoals($id, $type = null)
     {
-        return self::deleteAll(['user_id' => $id]);        
+        $params = [];
+        if ($type) {
+            $params = ['user_id' => $id, 'type' => $type];
+        } else {
+            $params = ['user_id' => $id];
+        }
+        if (!empty($params)) {
+            return self::deleteAll($params);
+        } else {
+            return null;
+        }
     }
 }

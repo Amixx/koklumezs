@@ -84,25 +84,30 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
     {
         $default = 0;
         $sum = self::find()->where(['lecture_id' => $id])->sum('value');
-        return $sum ?? $default;     
+        return $sum ?? $default;
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLecturesByDifficulty($sum): array
+    public function getLecturesByDifficulty($sum, $returnRandom = false): array
     {
         $sums = self::getLectureSums();
+        if ($returnRandom and isset($sums[$sum])) {
+            $len = count($sums[$sum]);
+            $random = rand(0, $len - 1);
+            return [$sums[$sum][$random]];
+        }
         return isset($sums[$sum]) ? $sums[$sum] : [];
     }
 
     public function getLectureSums()
     {
-        $q = 'SELECT DISTINCT lecture_id, SUM(value) as sum FROM `'. self::tableName() .'` GROUP BY lecture_id';
+        $q = 'SELECT DISTINCT lecture_id, SUM(value) as sum FROM `' . self::tableName() . '` GROUP BY lecture_id';
         $data = Yii::$app->db->createCommand($q)->queryAll();
         $sums = [];
-        foreach($data as $d){
-           $sums[$d['sum']][] = $d['lecture_id']; 
+        foreach ($data as $d) {
+            $sums[$d['sum']][] = $d['lecture_id'];
         }
         return $sums;
     }
@@ -112,10 +117,10 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
      */
     public function getLecturesByDiff($params = []): array
     {
-        
+
         $results = [];
         foreach ($params as $diff_id => $value) {
-            if($value){
+            if ($value) {
                 $results[] = ArrayHelper::map(
                     self::find()->where(['diff_id' => $diff_id])
                         ->andWhere(['>=', 'value', $value])
@@ -124,12 +129,12 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
             }
         }
         $c = count($results);
-        
-        if($c == 1){
+
+        if ($c == 1) {
             $result = $results[0];
-        }elseif($c > 1){
+        } elseif ($c > 1) {
             $result = call_user_func_array('array_intersect', $results);
-        }else{
+        } else {
             $result = [];
         }
         return $result;
