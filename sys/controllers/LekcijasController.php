@@ -112,6 +112,25 @@ class LekcijasController extends Controller
         return isset($results[$it]) ? $results[$it] : [];
     }
 
+    private function changeUserParams($user_id = null, $lecture_id = null)
+    {
+        $newDifficulties = LecturesDifficulties::getLectureDifficulties($lecture_id);
+        if(!empty($newDifficulties)){
+            //remove previous params                        
+            Studentgoals::removeUserGoals($user_id,Studentgoals::NOW);
+            foreach($newDifficulties as $diff => $value)
+            {
+                $goal = new Studentgoals();
+                $goal->user_id = $user_id;
+                $goal->diff_id = $diff;                    
+                $goal->type = Studentgoals::NOW;
+                $goal->value = $value ?? 0;
+                $goal->save();
+            }
+        }
+        return !empty($newDifficulties);
+    }
+
     public function getNewDifficultyIds(int $result = 0, int $x = 0, int $lecture_id = 0, $user_id = null): array
     {
         $modelsIds = [];
@@ -136,20 +155,7 @@ class LekcijasController extends Controller
                     if ($lectureDifficulty == $result) {
                         $foundKid = $kid;
                         //change user params
-                        $newDifficulties = LecturesDifficulties::getLectureDifficulties($kid);
-                        if(!empty($newDifficulties)){
-                            //remove previous params                        
-                            Studentgoals::removeUserGoals($user_id,Studentgoals::NOW);
-                            foreach($newDifficulties as $diff => $value)
-                            {
-                                $goal = new Studentgoals();
-                                $goal->user_id = $user_id;
-                                $goal->diff_id = $diff;                    
-                                $goal->type = Studentgoals::NOW;
-                                $goal->value = $value ?? 0;
-                                $goal->save();
-                            }
-                        }
+                        self::changeUserParams($user_id,$kid);
                         $modelsIds = $kids;
                         if (!empty($modelsIds)) {
                             if (Yii::$app->request->get('dbg')) {
@@ -183,20 +189,7 @@ class LekcijasController extends Controller
                 }
                 if($newLecture){
                     //change user params
-                    $newDifficulties = LecturesDifficulties::getLectureDifficulties($newLecture);
-                    if(!empty($newDifficulties)){
-                        //remove previous params                        
-                        Studentgoals::removeUserGoals($user_id,Studentgoals::NOW);
-                        foreach($newDifficulties as $diff => $value)
-                        {
-                            $goal = new Studentgoals();
-                            $goal->user_id = $user_id;
-                            $goal->diff_id = $diff;                    
-                            $goal->type = Studentgoals::NOW;
-                            $goal->value = $value ?? 0;
-                            $goal->save();
-                        }
-                    }
+                    self::changeUserParams($user_id,$newLecture);
                     $kids = self::getKidRelation($newLecture);
                     if($kids){
                         $modelsIds = array_merge($kids,[$newLecture]);
