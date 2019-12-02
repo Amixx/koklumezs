@@ -1,4 +1,4 @@
-[title]:hover:after {
+img[title]:hover:after {
     content: attr(title);
     padding: 4px 8px;
     color: #333;
