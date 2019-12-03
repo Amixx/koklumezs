@@ -83,7 +83,7 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
     public function getLectureDifficulty($id): int
     {
         $default = 0;
-        $sum = self::find()->where(['lecture_id' => $id])->sum('value');
+        $sum = self::find()->where(['lecture_id' => $id])->sum('value');        
         return $sum ?? $default;
     }
 

@@ -2,9 +2,9 @@
 <?php
 
 return [
-    'adminEmail' => 'info@koklumezs.lv',
+    'adminEmail' => 'nasing.spesal.just.blogs@gmail.com',
     'senderEmail' => 'noreply@koklumezs.lv',
     'senderName' => 'Kokļu mežs',
-    'supportEmail' => 'support@koklumezs.lv',
+    'supportEmail' => 'support@demo55izstrade.eu',
     'user.passwordResetTokenExpire' => 3600,
 ];

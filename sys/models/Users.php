@@ -6,8 +6,8 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\web\IdentityInterface;
 use yii\helpers\ArrayHelper;
+use yii\web\IdentityInterface;
 
 class Users extends ActiveRecord implements IdentityInterface
 {
@@ -28,7 +28,7 @@ class Users extends ActiveRecord implements IdentityInterface
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE]],
             [['email'], 'required'],
-            [['user_level','goal'], 'string'],
+            [['user_level', 'goal'], 'string'],
             ['user_level', 'default', 'value' => self::ROLE_USER],
             ['user_level', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN]],
             [['email'], 'email'],
@@ -56,7 +56,7 @@ class Users extends ActiveRecord implements IdentityInterface
             'last_lecture' => 'Pēdējā lekcija',
             'dont_bother' => 'Netraucēt',
             'status' => 'Statuss',
-            'goal' => 'Mērķis'
+            'goal' => 'Mērķis',
         ];
     }
 
@@ -78,21 +78,38 @@ class Users extends ActiveRecord implements IdentityInterface
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
     }
 
-     /**
+    /**
      * {@inheritdoc}
      */
     public static function getAdmins()
     {
-        return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_ADMIN])->asArray()->all(), 'id', 'email');        
+        return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_ADMIN])->asArray()->all(), 'id', 'email');
     }
-
 
     /**
      * {@inheritdoc}
      */
-    public static function getActiveStudents()
+    public static function getActiveStudents($dont_bother = false)
     {
-        return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_USER,'status' => self::STATUS_ACTIVE])->asArray()->all(), 'id', 'email');        
+        $params = ['user_level' => self::ROLE_USER, 'status' => self::STATUS_ACTIVE];
+        if ($dont_bother) {
+            $users = self::find()->where($params)->asArray()->all();
+            $result = [];
+            foreach ($users as $u) {
+                if ($u['dont_bother'] != null) {
+                    $time = time();
+                    $check = strtotime($u['dont_bother']);
+                    if ($check < $time) {
+                        $result[$u['id']] = $u;
+                    }
+                } else {
+                    $result[$u['id']] = $u;
+                }
+            }
+        } else {
+            $users = ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'email');
+        }
+        return $dont_bother ? $result : $users;
     }
 
     /**
@@ -284,7 +301,7 @@ class Users extends ActiveRecord implements IdentityInterface
         ];
     }
 
-     /**
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getLecture()

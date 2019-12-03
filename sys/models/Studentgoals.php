@@ -91,7 +91,23 @@ class Studentgoals extends \yii\db\ActiveRecord
     public function getUserDifficulty($id): int
     {
         $sum = self::find()->where(['type' => self::NOW, 'user_id' => $id])->sum('value');
-        return $sum;
+        return (int)$sum;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserDifficultyCoef($id): int
+    {
+        $data = self::find()->where(['type' => self::NOW, 'user_id' => $id])->all();
+        $result = 0;
+        $sum = 0;
+        $count = count($data) - 1;
+        foreach($data as $d){
+            $sum += (int)$d['value'];
+        }
+        $result = ceil($sum/$count);
+        return (int)$result;
     }
 
     /**

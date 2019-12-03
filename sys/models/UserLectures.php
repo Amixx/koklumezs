@@ -91,9 +91,10 @@ class UserLectures extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUserLectures($id): array
+    public function getUserLectures($id, $sent = 1): array
     {
-        return ArrayHelper::map(self::find()->where(['user_id' => $id, 'evaluated' => 0])->asArray()->all(), 'id', 'lecture_id');
+        $results = self::find()->where(['user_id' => $id, 'evaluated' => 0, 'sent' => $sent])->asArray()->all();
+        return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
     }
 
     /**
@@ -101,7 +102,16 @@ class UserLectures extends \yii\db\ActiveRecord
      */
     public function getEvaluatedLectures($id): array
     {
-        return ArrayHelper::map(self::find()->where(['user_id' => $id, 'evaluated' => 1])->asArray()->all(), 'id', 'lecture_id');
+        $results = self::find()->where(['user_id' => $id, 'evaluated' => 1])->asArray()->all();
+        return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLastEvaluatedLecture($id)
+    {
+        return self::find()->where(['user_id' => $id, 'evaluated' => 1])->orderBy(['id' => SORT_DESC])->one();
     }
 
     /**
@@ -109,17 +119,24 @@ class UserLectures extends \yii\db\ActiveRecord
      */
     public function getUserLectureTimes($id): array
     {
-        return ArrayHelper::map(self::find()->where(['user_id' => $id])->asArray()->all(), 'lecture_id', 'created');
+        $results = self::find()->where(['user_id' => $id])->asArray()->all();
+        return $results ? ArrayHelper::map($results, 'lecture_id', 'created') : [];
     }
 
-    public function getLastLecturesForUser($id, $limit = 5)
+    public function getLastLecturesForUser($id, $limit = 5): array
     {
-        return ArrayHelper::map(self::find()->where(['user_id' => $id])->orderBy(['id' => SORT_DESC])->limit($limit)->asArray()->all(), 'id', 'lecture_id');
+        $results = self::find()->where(['user_id' => $id])->orderBy(['id' => SORT_DESC])->limit($limit)->asArray()->all();
+        return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
     }
 
     public function getLectures($id, $evaluated = 0)
     {
-        return self::find()->where(['user_id' => $id, 'evaluated' => $evaluated])->orderBy(['lecture_id' => SORT_ASC])->all();
+        return self::find()->where(['user_id' => $id, 'evaluated' => $evaluated])->orderBy(['id' => SORT_DESC])->all();
+    }
+
+    public function getUnsentLectures($id, $evaluated = 0, $sent = 0)
+    {
+        return self::find()->where(['user_id' => $id, 'evaluated' => $evaluated, 'sent' => $sent])->orderBy(['id' => SORT_DESC])->all();
     }
 
     /**
@@ -142,13 +159,16 @@ class UserLectures extends \yii\db\ActiveRecord
 
     public function getOpened($id)
     {
-        return ArrayHelper::map(self::find()->where(['user_id' => $id, 'opened' => 1])->asArray()->all(), 'lecture_id', 'id');
+        $results = self::find()->where(['user_id' => $id, 'opened' => 1])->asArray()->all();
+        return $results ? ArrayHelper::map($results, 'lecture_id', 'id') : [];
     }
 
     public function getNewLectures($user_id, $ids = []): array
     {
+        $ids = array_map('intval', $ids);
         $results = [];
-        $current = ArrayHelper::map(self::find()->where(['user_id' => $user_id])->orderBy(['lecture_id' => SORT_ASC])->all(), 'lecture_id', 'id');
+        $r = self::find()->where(['user_id' => $user_id])->orderBy(['lecture_id' => SORT_ASC])->all();
+        $current = $r ? ArrayHelper::map($r, 'id', 'lecture_id') : $results;
         if ($current) {
             $results = array_diff($ids, $current);
         }
@@ -178,7 +198,34 @@ class UserLectures extends \yii\db\ActiveRecord
             )
             ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setTo($user->email)
-            ->setSubject('Jauna lekcija ' . Yii::$app->name)
+            ->setSubject('Jauna lekcija - ' . Yii::$app->name)
+            ->send();
+    }
+
+    /**
+     * Sends confirmation email to user
+     *
+     * @return bool whether the email was sent
+     */
+    public function sendAdminEmail($id, $lecture_id, $x)
+    {
+        $user = Users::findOne([
+            'id' => $id,
+            'status' => Users::STATUS_ACTIVE,
+        ]);
+        if ($user === null) {
+            return false;
+        }
+        $lecture = Lectures::findOne($lecture_id);
+        return Yii::$app
+            ->mailer
+            ->compose(
+                ['html' => 'japieskir-lekcija-html', 'text' => 'japieskir-lekcija-text'],
+                ['user' => $user, 'lecture' => $lecture, 'x' => $x]
+            )
+            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+            ->setTo(Yii::$app->params['adminEmail'])
+            ->setSubject('Jāpiešķir lekcija - ' . Yii::$app->name)
             ->send();
     }
 }

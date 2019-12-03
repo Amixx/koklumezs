@@ -129,8 +129,7 @@ class UserController extends Controller
             }
             if(isset($post['studentgoals'])){
                 Studentgoals::removeUserGoals($id);
-                if(isset($post['studentgoals']['now'])){
-                    
+                if(isset($post['studentgoals']['now'])){                    
                     foreach($post['studentgoals']['now'] as $pid => $value){
                         $goal = new Studentgoals();
                         $goal->user_id = $model->id;

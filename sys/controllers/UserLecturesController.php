@@ -112,9 +112,15 @@ class UserLecturesController extends Controller
         $difficulties = Difficulties::getDifficulties();
         if ($post) {
             if (isset($post['UserLectures']['lecture_id']) && $model->load($post) && $model->save()) {
-                $sent = self::sendEmail($model->user_id, $model->lecture_id);
-                $model->sent = (int) $sent;
-                $model->update();
+                $model = new UserLectures();
+                $model->assigned = Yii::$app->user->identity->id;
+                $model->created = date('Y-m-d H:i:s', time());
+                $saved = $model->save();
+                if($saved){
+                    $sent = UserLectures::sendEmail($model->user_id, $model->lecture_id);
+                    $model->sent = (int) $sent;
+                    $model->update();
+                }
                 return $this->redirect(['view', 'id' => $model->id]);
             } elseif (isset($post['UserLectures']['user_id'])) {
                 $user = Users::findOne($post['UserLectures']['user_id']);
@@ -251,31 +257,5 @@ class UserLecturesController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
-    /**
-     * Sends confirmation email to user
-     *
-     * @return bool whether the email was sent
-     */
-    public function sendEmail($id, $lecture_id)
-    {
-        $user = Users::findOne([
-            'id' => $id,
-            'status' => Users::STATUS_ACTIVE,
-        ]);
-        if ($user === null) {
-            return false;
-        }
-        $lecture = Lectures::findOne($lecture_id);
-        return Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'lekcija-html', 'text' => 'lekcija-text'],
-                ['user' => $user, 'lecture' => $lecture]
-            )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setTo($user->email)
-            ->setSubject('Jauna lekcija ' . Yii::$app->name)
-            ->send();
-    }
+    
 }
