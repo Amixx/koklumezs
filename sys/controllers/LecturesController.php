@@ -102,6 +102,7 @@ class LecturesController extends Controller
         $model = new Lectures();
         $model->author = Yii::$app->user->identity->id;
         $model->created = date('Y-m-d H:i:s', time());
+        $model->complexity = 1;
         if ($model->load($post) && $model->save()) {
             if(isset($post['difficulties'])) {
                 $sum = 0;   

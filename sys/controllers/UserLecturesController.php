@@ -57,8 +57,8 @@ class UserLecturesController extends Controller
         $students = Users::getActiveStudents();
         $admins = Users::getAdmins();
         $lectures = Lectures::getLectures();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $get = Yii::$app->request->queryParams;
+        $dataProvider = $searchModel->search($get);        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -121,7 +121,7 @@ class UserLecturesController extends Controller
                     $model->sent = (int) $sent;
                     $model->update();
                 }
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['index']);
             } elseif (isset($post['UserLectures']['user_id'])) {
                 $user = Users::findOne($post['UserLectures']['user_id']);
                 $students = [$user->id => $user->email];

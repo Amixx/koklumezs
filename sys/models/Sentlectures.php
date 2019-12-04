@@ -57,6 +57,15 @@ class Sentlectures extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getStudent()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'user_id'])
+            ->from(['student' => Users::tableName()]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getUser()
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id']);

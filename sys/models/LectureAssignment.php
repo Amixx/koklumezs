@@ -35,101 +35,163 @@ class LectureAssignment extends \yii\db\ActiveRecord
 
     private function getKidRelation(int $id, int $it = 3, $results = [])
     {
+        $results = [];
         $result = RelatedLectures::getRelatedParents($id);
         if ($result) {
             $id = reset($result);
             $results[$it] = $id;
             $it--;
-            if ($it) {
-                $results[$it] = self::getKidRelation($id, $it, $results);
-            } else {
-                return $results;
+            for ($x = $it; $x <= 0; $x--) {
+                $result = RelatedLectures::getRelatedParents($id);
+                if (!$result) {
+                    break;
+                }
+                $id = reset($result);
+                $results[$x] = $id;
             }
         }
-        return isset($results[$it]) ? $results[$it] : [];
+        return $results;
     }
 
-    public function getNewDifficultyIds(int $result = 0, int $x = 0, $lecture_id = null, $user_id = null): array
+    public function getNewDifficultyIds(int $result = 0, int $x = 0, $lecture_id = null, $user_id = null, $dbg = false): array
     {
         $modelsIds = [];
         if ($result) {
-            /** get related in chain below this lecture
-             * 3. ■ <- 2. ■ <- 1. ■ <- This lecture □
-             */
-            $kids = [];
-            if ($lecture_id) {
-                if (($x == 1) or ($x == 10)) {} else {
-                    $kids = self::getKidRelation($lecture_id);
-                    if (Yii::$app->request->get('dbg')) {
-                        echo 'KIDS<pre>';
-                        var_dump($kids);
-                        echo '</pre>';
-                    }
+            //Ja ķēdē iekļaujas līdzīgi uzdevumi, tad liekam līdzīgus no vienas ķēdes, bet ja ķēdē nav līdzīgā sarežģītībā (jo ķēdes pērsvarā attīstas sarežģītībā), tad sūtam ko jaunu.
+            $nextLectures = $lecture_id ? RelatedLectures::getRelations($lecture_id) : [];
+            $foundNext = false;
+            if($nextLectures){
+                if ($dbg and !empty($nextLectures)) {
+                    echo 'NEXT RELATED LECTURES<pre>';
+                    print_r($nextLectures);
+                    echo '</pre>';
                 }
-            }
-            $foundKid = false;
-            if ($kids) {
-                foreach ($kids as $kid) {
-                    $lectureDifficulty = LecturesDifficulties::getLectureDifficulty($kid);
+                foreach ($nextLectures as $next) {
+                    $lectureDifficulty = LecturesDifficulties::getLectureDifficulty($next);
                     //found match in kids
                     if ($lectureDifficulty == $result) {
-                        $foundKid = $kid;
-                        //change user params
-                        self::changeUserParams($user_id, $kid);
-                        $modelsIds = $kids;
+                        $foundNext = $next;
+                        if (!$dbg) {
+                            //change user params
+                            self::changeUserParams($user_id, $next);
+                        }
+                        $modelsIds = $nextLectures;
                         if (!empty($modelsIds)) {
-                            if (Yii::$app->request->get('dbg')) {
-                                echo "<span style='color:red'>Found by kids difficulty:</span><pre>";
+                            if ($dbg) {
+                                echo "<span style='color:red'>Found by next chain related difficulty:</span><pre>";
                                 print_r($modelsIds);
                                 echo "</pre>";
+                                echo 'LECTURES<br />';
+                                foreach ($modelsIds as $id) {
+                                    $lecture = Lectures::findOne($id);
+                                    $dif = LecturesDifficulties::getLectureDifficulty($id);
+                                    echo $id . ' - ' . $lecture->title . '<strong>[' . $dif . ']</strong></br>';
+                                }
+                                echo "<span style='color:red'>New lecture by next chain related difficulty:<strong> $foundNext </strong></span>";                               
                             }
                         }
                         break;
                     }
                 }
             }
-            //not found relations, check new random lecture chain.
-            if ($foundKid === false) {
-                $ids = LecturesDifficulties::getLecturesByDifficulty($result);
-                //remove current lecture if found
-                $ids = array_diff($ids, [$lecture_id]);
-                //check if user is not already signed to found lectures
-                $newIds = UserLectures::getNewLectures($user_id, $ids);
-                $newLecture = null;
-                if (!empty($newIds)) {
-                    $len = count($newIds);
-                    $random = rand(0, $len - 1);
-                    $a = 0;
-                    foreach ($newIds as $lecture) {
-                        //find random result
-                        if ($a == $random) {
-                            $newLecture = $lecture;
+            if (empty($modelsIds)) {
+                /** get related in chain below this lecture
+                 * 3. ■ <- 2. ■ <- 1. ■ <- This lecture □
+                 */
+                $kids = [];
+                if ($lecture_id) {
+                    if (($x == 1) or ($x == 10)) {} else {
+                        $kids = self::getKidRelation($lecture_id);
+                        if ($dbg and !empty($kids)) {
+                            echo 'KIDS<pre>';
+                            print_r($kids);
+                            echo '</pre>';
+                        }
+                    }
+                }
+                $foundKid = false;
+                if ($kids) {
+                    foreach ($kids as $kid) {
+                        $lectureDifficulty = LecturesDifficulties::getLectureDifficulty($kid);
+                        //found match in kids
+                        if ($lectureDifficulty == $result) {
+                            $foundKid = $kid;
+                            if (!$dbg) {
+                                //change user params
+                                self::changeUserParams($user_id, $kid);
+                            }
+                            $modelsIds = $kids;
+                            if (!empty($modelsIds)) {
+                                if ($dbg) {
+                                    echo "<span style='color:red'>Found by kids difficulty:</span><pre>";
+                                    print_r($modelsIds);
+                                    echo "</pre>";
+                                    echo 'LECTURES<br />';
+                                    foreach ($modelsIds as $id) {
+                                        $lecture = Lectures::findOne($id);
+                                        $dif = LecturesDifficulties::getLectureDifficulty($id);
+                                        echo $id . ' - ' . $lecture->title . '<strong>[' . $dif . ']</strong></br>';
+                                    }
+                                    echo "<span style='color:red'>New lecture by kids difficulty:<strong> $foundKid </strong></span>";                                    
+                                }
+                            }
                             break;
                         }
-                        $a++;
                     }
                 }
-                if ($newLecture) {
-                    //change user params
-                    self::changeUserParams($user_id, $newLecture);
-                    $kids = self::getKidRelation($newLecture);
-                    if ($kids) {
-                        $modelsIds = array_merge($kids, [$newLecture]);
-                    } else {
-                        $modelsIds = [$newLecture];
+                //not found relations, check new random lecture chain.
+                if ($foundKid === false) {
+                    $ids = LecturesDifficulties::getLecturesByDifficulty($result);
+                    //remove current lecture if found
+                    $ids = array_diff($ids, [$lecture_id]);
+                    //check if user is not already signed to found lectures
+                    $newIds = UserLectures::getNewLectures($user_id, $ids);
+                    $newLecture = null;
+                    if (!empty($newIds)) {
+                        $len = count($newIds);
+                        $random = rand(0, $len - 1);
+                        $a = 0;
+                        foreach ($newIds as $lecture) {
+                            //find random result
+                            if ($a == $random) {
+                                $newLecture = $lecture;
+                                break;
+                            }
+                            $a++;
+                        }
                     }
-                }
-                if (!empty($modelsIds)) {
-                    if (Yii::$app->request->get('dbg')) {
-                        echo "<span style='color:red'>Found by new difficulty:</span><pre>";
-                        print_r($modelsIds);
-                        echo "</pre>";
+                    if ($newLecture) {
+                        if (!$dbg) {
+                            //change user params
+                            self::changeUserParams($user_id, $newLecture);
+                        }
+                        $kids = self::getKidRelation($newLecture);
+                        if ($kids) {
+                            $modelsIds = array_merge($kids, [$newLecture]);
+                        } else {
+                            $modelsIds = [$newLecture];
+                        }
+                    }
+                    if (!empty($modelsIds)) {
+                        if ($dbg) {
+                            echo "<span style='color:red'>Found by new difficulty:</span><pre>";
+                            print_r($modelsIds);
+                            echo "</pre>";
+                            echo 'LEKCIJAS<br />';
+                            foreach ($modelsIds as $id) {
+                                $lecture = Lectures::findOne($id);
+                                $dif = LecturesDifficulties::getLectureDifficulty($id);
+                                echo $id . ' - ' . $lecture->title . '<strong>[' . $dif . ']</strong></br>';
+                            }
+                            echo "<span style='color:red'>New lecture by difficulty:</span><strong> $newLecture </strong>";
+                        }
                     }
                 }
             }
-
         }
-        
+        if (empty($modelsIds) and $dbg) {
+            echo "<span style='color:red'>NOT FOUND ANY NEW LECTURE by difficulty:<strong> $result </strong></span>";
+        }
         return $modelsIds;
     }
 
@@ -147,14 +209,14 @@ class LectureAssignment extends \yii\db\ActiveRecord
      * 9 (kaut ko mēģinu, bet pārāk nesanāk): Max-x-4
      * 10 (vispār neko nesaprotu): Manuāli
      */
-    public function getNewUserDifficulty($user_id, $x = null, $lecture_id = null): int
+    public function getNewUserDifficulty($user_id, $x = null, $lecture_id = null, $dbg = false): int
     {
         $userDifficulty = Studentgoals::getUserDifficulty($user_id);
         $lectureDifficulty = null;
         if ($lecture_id) {
             $lectureDifficulty = LecturesDifficulties::getLectureDifficulty($lecture_id);
         }
-        if (Yii::$app->request->get('dbg')) {
+        if ($dbg) {
             echo 'User difficulty:' . $userDifficulty . '<br />';
             echo 'Lecture difficulty:' . $lectureDifficulty . '<br />';
         }
@@ -236,16 +298,18 @@ class LectureAssignment extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public function giveNewAssignment($user = null, $x = 0, $id = null, $spam = false)
+    public function giveNewAssignment($user = null, $x = 0, $id = null, $spam = false, $dbg = false)
     {
-        $result = self::getNewUserDifficulty($user, $x, $id);
+        $result = self::getNewUserDifficulty($user, $x, $id, $dbg);
         if ($result) {
-            $ids = self::getNewDifficultyIds($result, $x, $id, $user);
+            if ($dbg) {
+                echo 'New difficulty:<strong>' . $result . '</strong><br />';
+            }
+            $ids = self::getNewDifficultyIds($result, $x, $id, $user, $dbg);
             if ($ids) {
                 //check if user is not already signed to found lectures
                 $newIds = UserLectures::getNewLectures($user, $ids);
-             
-                if (!empty($newIds)) {
+                if (!empty($newIds) and !$dbg) {
                     foreach ($newIds as $lec) {
                         $skipErrors = true;
                         $model = new UserLectures();
@@ -267,7 +331,6 @@ class LectureAssignment extends \yii\db\ActiveRecord
                                 $m->lecture_id = $model->lecture_id;
                                 $m->created = date('Y-m-d H:i:s', time());
                                 $sent = UserLectures::sendEmail($model->user_id, $model->lecture_id);
-                                var_dump( $sent);die;
                                 if (!$sent) {
                                     UserLectures::sendAdminEmail($model->user_id, $model->lecture_id, 0);
                                 }
@@ -276,17 +339,33 @@ class LectureAssignment extends \yii\db\ActiveRecord
                             }
                         }
                     }
+                } elseif ($dbg) {
+                    echo '<pre>';
+                    print_r($newIds);
+                    echo '</pre>';
+                } else {
+                    if ($dbg) {
+                        echo '<br />SPAM TO ADMIN';
+                    } else {
+                        //spam admin about manual involvement
+                        UserLectures::sendAdminEmail($user, $id, $x);
+                    }
+                }
+            } else {
+                if ($dbg) {
+                    echo '<br />SPAM TO ADMIN';
                 } else {
                     //spam admin about manual involvement
                     UserLectures::sendAdminEmail($user, $id, $x);
                 }
+            }
+        } else {
+            if ($dbg) {
+                echo '<br />SPAM TO ADMIN';
             } else {
                 //spam admin about manual involvement
                 UserLectures::sendAdminEmail($user, $id, $x);
             }
-        } else {
-            //spam admin about manual involvement
-            UserLectures::sendAdminEmail($user, $id, $x);
         }
         return $result;
     }

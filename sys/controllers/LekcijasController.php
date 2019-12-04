@@ -108,20 +108,28 @@ class LekcijasController extends Controller
     {
         $model = $this->findModel($id);
         $user = Yii::$app->user->identity;
-        if (Yii::$app->request->get('dbg')) {
-
-            for ($x = 1; $x <= 10; $x++) {
-                $result = LectureAssignment::getNewUserDifficulty($user->id, $x, $id);
-                $data = LectureAssignment::getNewDifficultyIds($result, $x, $id, $user->id);
-                echo 'x: ' . $x . '<br />';
-                echo "new difficulty:<pre>";
-                print_r($result);
-                echo "</pre>";
-                echo "new lecture ids:<pre>";
-                print_r($data);
-                echo "</pre>";
-                echo '<hr />';
-            }
+        $dbg = Yii::$app->request->get('dbg');        
+        if ($dbg) {
+            $defX = Yii::$app->request->get('x');
+            if( is_numeric($defX)){                
+                echo 'X: <strong>' . $defX . '</strong><br />';
+                $result = LectureAssignment::getNewUserDifficulty($user->id, $defX, $id, $dbg);
+                if ($dbg) {
+                    echo 'New difficulty:<strong>' . $result .'</strong><br />';
+                }
+                $data = LectureAssignment::getNewDifficultyIds($result, $defX, $id, $user->id, $dbg);                
+                echo '<hr />';                
+            }else{
+                for ($x = 1; $x <= 10; $x++) {
+                    echo 'X: <strong>' . $x . '</strong><br />';
+                    $result = LectureAssignment::getNewUserDifficulty($user->id, $x, $id, $dbg);
+                    if ($dbg) {
+                        echo 'New difficulty:<strong>' . $result .'</strong><br />';
+                    }
+                    $data = LectureAssignment::getNewDifficultyIds($result, $x, $id, $user->id, $dbg);                
+                    echo '<hr />';
+                }
+            }            
             die;
         }
         $modelsIds = UserLectures::getUserLectures($user->id);

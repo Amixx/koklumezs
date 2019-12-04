@@ -12,7 +12,9 @@ $this->params['breadcrumbs'][] = $model->title;
 <div class="row">
     <div class="col-md-3 ">
         <?php foreach($userLectures as $lecture){  ?>
+        <?php if($lecture->sent){ ?>
         <p><a href="<?=Url::to(['lekcijas/lekcija', 'id' => $lecture['lecture_id']]);?>"><?=$lecture->lecture->title?></a></p>
+        <?php } ?>
         <?php } ?>
     </div>
     <div class="border-left col-md-9">

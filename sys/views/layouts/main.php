@@ -114,6 +114,7 @@ AppAsset::register($this);
         $navItems[] = ['label' => 'Novērtējumi', 'url' => ['/evaluations'],'active' =>  in_array(\Yii::$app->controller->id,['evaluations'])];
         $navItems[] = ['label' => 'Lietotāji', 'url' => ['/user'],'active' =>  in_array(\Yii::$app->controller->id,['user'])];
         $navItems[] = ['label' => 'Lietotāju vērtējumi', 'url' => ['/user-lecture-evaluations'],'active' =>  in_array(\Yii::$app->controller->id,['user-lecture-evaluations'])];
+        $navItems[] = ['label' => 'Izsūtītie e-pasti', 'url' => ['/sentlectures'],'active' =>  in_array(\Yii::$app->controller->id,['sentlectures'])];
         $navItems[] = $navEnd;
     }
     elseif(Yii::$app->user->identity->user_level == 'Student')
