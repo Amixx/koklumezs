@@ -66,6 +66,8 @@ label.custom-control-label {
 
 .navbar-brand {
     padding: 0!important;
+    z-index: 1;
+    position: relative;
 }
 
 html,
