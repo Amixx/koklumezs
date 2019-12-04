@@ -65,6 +65,12 @@ class LectureAssignment extends \yii\db\ActiveRecord
                     echo 'NEXT RELATED LECTURES<pre>';
                     print_r($nextLectures);
                     echo '</pre>';
+                    echo 'NEXT LECTURES<br />';
+                    foreach ($nextLectures as $id) {
+                        $lecture = Lectures::findOne($id);
+                        $dif = LecturesDifficulties::getLectureDifficulty($id);
+                        echo $id . ' - ' . $lecture->title . '<strong>[' . $dif . ']</strong></br>';
+                    }
                 }
                 foreach ($nextLectures as $next) {
                     $lectureDifficulty = LecturesDifficulties::getLectureDifficulty($next);
