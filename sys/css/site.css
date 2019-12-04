@@ -47,6 +47,11 @@ img[title]:hover:after {
     margin: 10px 15px;
 }
 
+#logo svg {
+    background: darkgoldenrod;
+    border-radius: 50%;
+}
+
 label {
     width: 100%;
 }
