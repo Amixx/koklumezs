@@ -75,7 +75,44 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'filter'=> Html::dropDownList('LecturesSearch[season]',isset($get['LecturesSearch']['season']) ? $get['LecturesSearch']['season'] : '' , Lectures::getSeasons(),['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
             ],     
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'header' => 'Darbības',
+                'template' => '{view} {update} {delete}',
+                'buttons' => [                     
+                    'view' => function ($url, $model) { 
+                        return Html::a( '<span class="glyphicon glyphicon-eye-open"> </span>', $url, 
+                        [ 'title' => 'View', 'data-pjax' => '0', 'onclick' => "window.open('" . $url . "','newwindow','width=1200,height=1200');return false;" ] );
+                    },
+                    'update' => function ($url, $model) { 
+                        return Html::a( '<span class="glyphicon glyphicon-pencil"> </span>', $url, 
+                        [ 'title' => 'Update', 'data-pjax' => '0' ] );
+                    },                    
+                    'delete' => function ($url, $model, $key) { 
+                        return Html::a( '<span  class="glyphicon glyphicon glyphicon-trash"> </span>', $url, 
+                        [ 'title' => 'Delete' , 'data' => [
+                            'confirm' => 'Are you sure you want to delete this item?',
+                        ], ] );
+                    }                                     
+                ],
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    if ($action === 'view') {
+                        $url = '/sys/lekcijas/lekcija/' . $model->id . '?force=1';
+                        return $url;
+                    }
+        
+                    if ($action === 'update') {
+                        $url = '/sys/lectures/update/' . $model->id;
+                        return $url;
+                    }
+                    if ($action === 'delete') {
+                        $url = '/sys/lectures/delete/' . $model->id;
+                        return $url;
+                    }
+        
+                  }
+            ],
+
         ],
     ]); ?>
 

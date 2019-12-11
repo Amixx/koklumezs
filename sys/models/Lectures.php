@@ -16,7 +16,9 @@ use yii\helpers\ArrayHelper;
  * @property int $author Autors
  * @property string $complexity Sarežģītība
  * @property string $season Gadskārta
- *
+ * @property string $file Video fails
+ * @property string $thumb Video bilde
+ * 
  * @property Users $author
  */
 class Lectures extends \yii\db\ActiveRecord
@@ -36,7 +38,7 @@ class Lectures extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'author',  'season'], 'required'],//'complexity',
-            [['title', 'description', 'complexity', 'season'], 'string'],
+            [['title', 'description', 'complexity', 'season','file','thumb'], 'string'],
             [['created', 'updated'], 'safe'],
             [['author'], 'integer'],
             [['author'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['author' => 'id']],
@@ -57,6 +59,8 @@ class Lectures extends \yii\db\ActiveRecord
             'author' => 'Autors',
             'complexity' => 'Sarežģītība',
             'season' => 'Gadskārta',
+            'file' => 'Video(nav obligāti)',
+            'thumb' => 'Video bilde(nav obligāti)',
         ];
     }
 

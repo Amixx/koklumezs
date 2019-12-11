@@ -40,9 +40,11 @@ use yii\widgets\ActiveForm;
             <div class="help-block hint"></div>
         </div>
         <?php } ?>                                                 
-    <?php } ?>   
+    <?php } ?>
+    <?php if(!$force){ ?>   
     <div class="form-group">
         <?= Html::submitButton('Iesniegt', ['class' => 'btn btn-success']) ?>
-    </div>            
+    </div>
+    <?php } ?>            
 </div>    
 <?php ActiveForm::end(); ?>

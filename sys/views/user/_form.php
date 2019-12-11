@@ -19,9 +19,11 @@ use  yii\jui\DatePicker;
         <li class="nav-item">
             <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false">Parametri</a>
         </li>
+        <?php /*
         <li class="nav-item">
             <a class="nav-link" id="hands-tab" data-toggle="tab" href="#hands" role="tab" aria-controls="hands" aria-selected="false">Roku kategorijas</a>
         </li>
+        */ ?>
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -50,11 +52,13 @@ use  yii\jui\DatePicker;
             <?= $this->render('difficulties',['difficulties' => $difficulties, 'studentGoals' => $studentGoals]) ?>
             <?php } ?>
         </div>
+        <?php /*
         <div class="tab-pane fade" id="hands" role="tabpanel" aria-labelledby="hands-tab">
             <?php if($handdifficulties){  ?>
                 <?= $this->render('handdifficulties',['handdifficulties' => $handdifficulties, 'studentHandGoals' => $studentHandGoals]) ?>  
             <?php } ?>
         </div>
+        */ ?>
     </div>
     <div class="form-group">
         <?= Html::submitButton('Saglabāt', ['class' => 'btn btn-success']) ?>

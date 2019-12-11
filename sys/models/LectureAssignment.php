@@ -14,10 +14,17 @@ use Yii;
  */
 class LectureAssignment extends \yii\db\ActiveRecord
 {
+    private static $sum;
+
+    public function __construct()
+    {
+        self::$sum = 0;
+    }
+
     private function changeUserParams($user_id = null, $lecture_id = null)
     {
         $newDifficulties = LecturesDifficulties::getLectureDifficulties($lecture_id);
-
+        self::$sum = 0;
         if (!empty($newDifficulties)) {
             //remove previous params
             Studentgoals::removeUserGoals($user_id, Studentgoals::NOW);
@@ -27,6 +34,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                 $goal->diff_id = $diff;
                 $goal->type = Studentgoals::NOW;
                 $goal->value = $value ?? 0;
+                self::$sum += $goal->value;
                 $goal->save();
             }
         }
@@ -53,14 +61,14 @@ class LectureAssignment extends \yii\db\ActiveRecord
         return $results;
     }
 
-    public function getNewDifficultyIds(int $result = 0, int $x = 0, $lecture_id = null, $user_id = null, $dbg = false): array
+    public function getNewDifficultyIds(int $result = 0, int $x = 0, $lecture_id = null, $user_id = null, $dbg = false, $returnIds = false): array
     {
         $modelsIds = [];
         if ($result) {
             //Ja ķēdē iekļaujas līdzīgi uzdevumi, tad liekam līdzīgus no vienas ķēdes, bet ja ķēdē nav līdzīgā sarežģītībā (jo ķēdes pērsvarā attīstas sarežģītībā), tad sūtam ko jaunu.
             $nextLectures = $lecture_id ? RelatedLectures::getRelations($lecture_id) : [];
             $foundNext = false;
-            if($nextLectures){
+            if ($nextLectures) {
                 if ($dbg and !empty($nextLectures)) {
                     echo 'NEXT RELATED LECTURES<pre>';
                     print_r($nextLectures);
@@ -77,7 +85,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                     //found match in kids
                     if ($lectureDifficulty == $result) {
                         $foundNext = $next;
-                        if (!$dbg) {
+                        if (!$dbg and !$returnIds) {
                             //change user params
                             self::changeUserParams($user_id, $next);
                         }
@@ -93,7 +101,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                                     $dif = LecturesDifficulties::getLectureDifficulty($id);
                                     echo $id . ' - ' . $lecture->title . '<strong>[' . $dif . ']</strong></br>';
                                 }
-                                echo "<span style='color:red'>New lecture by next chain related difficulty:<strong> $foundNext </strong></span>";                               
+                                echo "<span style='color:red'>New lecture by next chain related difficulty:<strong> $foundNext </strong></span>";
                             }
                         }
                         break;
@@ -122,7 +130,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                         //found match in kids
                         if ($lectureDifficulty == $result) {
                             $foundKid = $kid;
-                            if (!$dbg) {
+                            if (!$dbg and !$returnIds) {
                                 //change user params
                                 self::changeUserParams($user_id, $kid);
                             }
@@ -138,7 +146,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                                         $dif = LecturesDifficulties::getLectureDifficulty($id);
                                         echo $id . ' - ' . $lecture->title . '<strong>[' . $dif . ']</strong></br>';
                                     }
-                                    echo "<span style='color:red'>New lecture by kids difficulty:<strong> $foundKid </strong></span>";                                    
+                                    echo "<span style='color:red'>New lecture by kids difficulty:<strong> $foundKid </strong></span>";
                                 }
                             }
                             break;
@@ -167,7 +175,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                         }
                     }
                     if ($newLecture) {
-                        if (!$dbg) {
+                        if (!$dbg and !$returnIds) {
                             //change user params
                             self::changeUserParams($user_id, $newLecture);
                         }
@@ -199,6 +207,29 @@ class LectureAssignment extends \yii\db\ActiveRecord
             echo "<span style='color:red'>NOT FOUND ANY NEW LECTURE by difficulty:<strong> $result </strong></span>";
         }
         return $modelsIds;
+    }
+
+    public function getPossibleThreeLectures($user_id = null, $spam = false, $dbg = false)
+    {
+        $result = [];
+        $last = UserLectures::getLastEvaluatedLecture($user_id);
+        if ($last) {
+            $count = $last->sent_times;
+            if ($count == 1) {
+                $x = 4;
+            } elseif ($count == 2) {
+                //Respektīvi ievietojam nākamo uzdevumu ar vērtējumu "8 (diezgan sarežģīti un nepieciešams ko vieglāku nākamajā reizē)".
+                //8 (itkā saprotu, ebt pirksti neklausa) Max-x-2/3
+                $x = 8;
+            } else {
+                $x = Studentgoals::getUserDifficultyCoef($user_id);
+            }
+            $result = self::giveNewAssignment($user_id, $x, $last->lecture_id, $spam, $dbg, true);
+        } else {
+            $x = Studentgoals::getUserDifficultyCoef($user_id);
+            $result = self::giveNewAssignment($user_id, $x, null, $spam, $dbg, true);
+        }
+        return $result;
     }
 
     /**
@@ -304,18 +335,21 @@ class LectureAssignment extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public function giveNewAssignment($user = null, $x = 0, $id = null, $spam = false, $dbg = false)
+    public function giveNewAssignment($user = null, $x = 0, $id = null, $spam = false, $dbg = false, $returnIds = false)
     {
         $result = self::getNewUserDifficulty($user, $x, $id, $dbg);
         if ($result) {
             if ($dbg) {
                 echo 'New difficulty:<strong>' . $result . '</strong><br />';
             }
-            $ids = self::getNewDifficultyIds($result, $x, $id, $user, $dbg);
+            $ids = self::getNewDifficultyIds($result, $x, $id, $user, $dbg, $returnIds);
             if ($ids) {
                 //check if user is not already signed to found lectures
                 $newIds = UserLectures::getNewLectures($user, $ids);
                 if (!empty($newIds) and !$dbg) {
+                    if ($returnIds) {
+                        return $ids;
+                    }
                     foreach ($newIds as $lec) {
                         $skipErrors = true;
                         $model = new UserLectures();
@@ -323,6 +357,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                         $model->lecture_id = $lec;
                         $model->assigned = 1;
                         $model->created = date('Y-m-d H:i:s', time());
+                        $model->user_difficulty = self::$sum ?? 0;
                         $saved = $model->save($skipErrors);
                         //dont send now, only when needed, twice a week or smthn..
                         $sendNow = false;
@@ -349,7 +384,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                     echo '<pre>';
                     print_r($newIds);
                     echo '</pre>';
-                } else {
+                } elseif (!$returnIds) {
                     if ($dbg) {
                         echo '<br />SPAM TO ADMIN';
                     } else {
@@ -357,7 +392,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                         UserLectures::sendAdminEmail($user, $id, $x);
                     }
                 }
-            } else {
+            } elseif (!$returnIds) {
                 if ($dbg) {
                     echo '<br />SPAM TO ADMIN';
                 } else {
@@ -365,7 +400,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                     UserLectures::sendAdminEmail($user, $id, $x);
                 }
             }
-        } else {
+        } elseif (!$returnIds) {
             if ($dbg) {
                 echo '<br />SPAM TO ADMIN';
             } else {

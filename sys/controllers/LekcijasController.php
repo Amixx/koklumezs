@@ -45,7 +45,7 @@ class LekcijasController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Users::isStudent(Yii::$app->user->identity->email);
+                            return !empty(Yii::$app->user->identity);//Users::isStudent(Yii::$app->user->identity->email);
                         },
                     ],
                     // everything else is denied
@@ -108,7 +108,8 @@ class LekcijasController extends Controller
     {
         $model = $this->findModel($id);
         $user = Yii::$app->user->identity;
-        $dbg = Yii::$app->request->get('dbg');        
+        $dbg = Yii::$app->request->get('dbg');
+        $force = Yii::$app->request->get('force');             
         if ($dbg) {
             $defX = Yii::$app->request->get('x');
             if( is_numeric($defX)){                
@@ -132,10 +133,10 @@ class LekcijasController extends Controller
             }            
             die;
         }
-        $modelsIds = UserLectures::getUserLectures($user->id);
+        $modelsIds = $force ? [$id] : UserLectures::getUserLectures($user->id);
         $check = in_array($id, $modelsIds);
-        $userLectures = UserLectures::getLectures($user->id);
-        $userEvaluatedLectures = UserLectures::getEvaluatedLectures($user->id);
+        $userLectures = $force ? [] : UserLectures::getLectures($user->id);
+        $userEvaluatedLectures = $force ? [] : UserLectures::getEvaluatedLectures($user->id);
         if ($check) {
             $post = Yii::$app->request->post();
             if (isset($post['evaluations'])) {
@@ -162,22 +163,24 @@ class LekcijasController extends Controller
                     }
                 }
             }
-            UserLectures::setSeenByUser($user->id, $id);
+            if(!$force){
+                UserLectures::setSeenByUser($user->id, $id);            
+            }
             $difficulties = Difficulties::getDifficulties();
             $evaluations = Evaluations::getEvaluations();
-            $handdifficulties = Handdifficulties::getDifficulties();
+            //$handdifficulties = Handdifficulties::getDifficulties();
             $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
             $lectureHandDifficulties = Lectureshanddifficulties::getLectureDifficulties($id);
             $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
             $lecturefiles = Lecturesfiles::getLectureFiles($id);
-            $userLectureEvaluations = Userlectureevaluations::getLectureEvaluations($user->id, $id);
+            $userLectureEvaluations = $force ? [] : Userlectureevaluations::getLectureEvaluations($user->id, $id);
             $baseUrl = Yii::$app->request->baseUrl;
             $ids = RelatedLectures::getRelations($id);
             $relatedLectures = Lectures::getLecturesByIds($ids);
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,
-                'handdifficulties' => $handdifficulties,
+                //'handdifficulties' => $handdifficulties,
                 'evaluations' => $evaluations,
                 'lectureDifficulties' => $lectureDifficulties,
                 'lectureHandDifficulties' => $lectureHandDifficulties,
@@ -190,6 +193,7 @@ class LekcijasController extends Controller
                 'docs' => self::DOCS,
                 'audio' => self::AUDIO,
                 'baseUrl' => $baseUrl,
+                'force' => $force,
                 'relatedLectures' => $relatedLectures,
             ]);
         }

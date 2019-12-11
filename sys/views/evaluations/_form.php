@@ -1,3 +1,4 @@
+
 <?php
 
 use yii\helpers\Html;
@@ -37,6 +38,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'is_scale')->checkBox(['value' => 1]) ?>
     
+    <?= $form->field($model, 'is_video_param')->checkBox(['value' => 1]) ?>
+
     <div class="form-group">
         <?= Html::submitButton('Saglabāt', ['class' => 'btn btn-success']) ?>
     </div>

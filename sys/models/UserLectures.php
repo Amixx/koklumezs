@@ -37,7 +37,7 @@ class UserLectures extends \yii\db\ActiveRecord
         return [
             [['lecture_id', 'user_id', 'assigned'], 'required'],
             [['lecture_id', 'user_id', 'assigned', 'opened', 'sent'], 'integer'],
-            [['created', 'opentime', 'sent'], 'safe'],
+            [['created', 'opentime', 'sent', 'open_times', 'user_difficulty'], 'safe'],
             [['assigned'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['assigned' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
@@ -59,6 +59,7 @@ class UserLectures extends \yii\db\ActiveRecord
             'opentime' => 'Atvēršanas laiks',
             'sent' => 'Nosūtīts e-pasts',
             'evaluated' => 'Novērtēta',
+            'user_difficulty' => 'Spējas'
         ];
     }
 
@@ -117,6 +118,46 @@ class UserLectures extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getLastTenEvaluatedLectures($id, $limit = 10)
+    {
+        return self::find()->where(['user_id' => $id, 'evaluated' => 1])->orderBy(['id' => SORT_DESC])->limit($limit)->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLastTenLectures($id, $limit = 10)
+    {
+        return self::find()->where(['user_id' => $id])->orderBy(['id' => SORT_DESC])->limit($limit)->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDayResult($id, $days = 7)
+    {
+        $result = 0;
+        $data = self::find()->where(['user_id' => $id])->andWhere('created >= DATE_SUB(CURDATE(), INTERVAL ' . $days . ' DAY)')->orderBy(['id' => SORT_DESC])->all();
+        foreach($data as $d){
+            $result += (int)$d->open_times;
+        }
+        return $result;
+    }
+
+
+    
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLastEvaluatedLectures($ids)
+    {
+        return self::find()->where(['in', 'user_id', $ids])->andWhere(['evaluated' => 1])->orderBy(['id' => SORT_DESC])->asArray()->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getUserLectureTimes($id): array
     {
         $results = self::find()->where(['user_id' => $id])->asArray()->all();
@@ -144,12 +185,22 @@ class UserLectures extends \yii\db\ActiveRecord
      */
     public function setSeenByUser($user_id, $id)
     {
+        $setOpenTime = false;
         if (($user = Users::findOne($user_id)) !== null) {
             $model = self::find()->where(['opened' => 0, 'user_id' => $user_id, 'lecture_id' => $id])->one();
             if ($model) {
                 $model->opened = 1;
+                if (!$setOpenTime) {
+                    $model->open_times = $model->open_times + 1;
+                }
                 $model->opentime = date('Y-m-d H:i:s', time());
-                $model->update();
+                $setOpenTime = $model->update();
+            } else {
+                $model = self::find()->where(['opened' => 1, 'user_id' => $user_id, 'lecture_id' => $id])->one();
+                if ($model and !$setOpenTime) {
+                    $model->open_times = (int) $model->open_times + 1;
+                    $setOpenTime = $model->update();
+                }
             }
             $user->last_lecture = $id;
             $user->update();

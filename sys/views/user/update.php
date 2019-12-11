@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = 'Rediģēt';
         'studentGoals' => $studentGoals,
         'studentHandGoals' => $studentHandGoals,
         'difficulties' => $difficulties,
-        'handdifficulties' => $handdifficulties,
+        //'handdifficulties' => $handdifficulties,
     ]) ?>
 
 </div>

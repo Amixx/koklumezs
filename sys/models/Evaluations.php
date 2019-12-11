@@ -32,7 +32,7 @@ class Evaluations extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'type'], 'required'],
-            [['title', 'type'], 'string'],
+            [['title', 'type'], 'string'],           
         ];
     }
 
@@ -48,6 +48,7 @@ class Evaluations extends \yii\db\ActiveRecord
             'stars' => 'Zvaigžņu skaits',
             'star_text' => 'Zvaigžņu teksti',
             'is_scale' => 'Algoritma skala',
+            'is_video_param' => 'Lekciju biežuma parametrs',
         ];
     }
 
@@ -78,6 +79,22 @@ class Evaluations extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public function getEvaluationsValueTexts()
+    {
+        $result = [];
+        $data = self::getEvaluations();
+        foreach($data as $d){
+            if($d['type'] == 'zvaigznes')
+            $result[$d['id']] = unserialize($d['star_text']);
+        }
+        return $result;
+    }
+
+    
+
+    /**
+     * {@inheritdoc}
+     */
     public function getEvaluationsTitles()
     {
         return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'title');
@@ -87,6 +104,13 @@ class Evaluations extends \yii\db\ActiveRecord
     {
         return self::findOne([
             'is_scale' => 1,
+        ]);
+    }
+
+    public function getVideoParam()
+    {
+        return self::findOne([
+            'is_video_param' => 1,
         ]);
     }
 

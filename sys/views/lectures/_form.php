@@ -2,6 +2,7 @@
 use Yii;
 use mihaildev\ckeditor\CKEditor;
 use mihaildev\elfinder\ElFinder;
+use mihaildev\elfinder\InputFile;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\models\Lectures;
@@ -26,9 +27,11 @@ $ckeditorOptions = ElFinder::ckeditorOptions('elfinder',
         <li class="nav-item">
             <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false">Parametri</a>
         </li>
+        <?php /*
         <li class="nav-item">
             <a class="nav-link" id="hands-tab" data-toggle="tab" href="#hands" role="tab" aria-controls="hands" aria-selected="false">Roku kategorijas</a>
         </li>
+         */ ?>
         <li class="nav-item">
             <a class="nav-link" id="evaluations-tab" data-toggle="tab" href="#evaluations" role="tab" aria-controls="evaluations" aria-selected="false">Novērtējumi</a>
         </li>
@@ -45,6 +48,25 @@ $ckeditorOptions = ElFinder::ckeditorOptions('elfinder',
             <?= $form->field($model, 'description')->widget(CKEditor::className(),[
                 'editorOptions' => $ckeditorOptions,
             ]) ?>
+            <?=$form->field($model, 'file')->widget(InputFile::className(), [
+                'language' => 'lv',
+                'controller' => 'elfinder', // вставляем название контроллера, по умолчанию равен elfinder
+                'filter' => ['video'], // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
+                'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
+                'options' => ['class' => 'form-control'],
+                'buttonOptions' => ['class' => 'btn btn-default'],
+                'multiple' => false, // возможность выбора нескольких файлов
+            ]);?>
+            <?=$form->field($model, 'thumb')->widget(InputFile::className(), [
+                'language' => 'lv',
+                'controller' => 'elfinder', // вставляем название контроллера, по умолчанию равен elfinder
+                'filter' => ['image'], // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
+                'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
+                'options' => ['class' => 'form-control'],
+                'buttonOptions' => ['class' => 'btn btn-default'],
+                'multiple' => false, // возможность выбора нескольких файлов
+            ]);?>
+            <small>Ja nepieciešams pievienot vēl citus failus, tad to var izdarīt pie "Faili"</small><br /><br />
             <?= $form->field($model, 'complexity')->dropDownList(Lectures::getComplexity(), ['prompt' => '']) ?>
             <?= $form->field($model, 'season')->dropDownList(Lectures::getSeasons()) ?>
         </div>
@@ -53,11 +75,13 @@ $ckeditorOptions = ElFinder::ckeditorOptions('elfinder',
                 <?= $this->render('difficulties',['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>
             <?php } ?>
         </div>
+        <?php /*
         <div class="tab-pane fade" id="hands" role="tabpanel" aria-labelledby="hands-tab">
             <?php if($handdifficulties){  ?>
                <?= $this->render('handdifficulties',['handdifficulties' => $handdifficulties,'lectureHandDifficulties' => $lectureHandDifficulties]) ?> 
             <?php } ?>
         </div>
+        */ ?>
         <div class="tab-pane fade" id="evaluations" role="tabpanel" aria-labelledby="evaluations-tab">
             <?php if($evaluations){  ?>
                <?= $this->render('evaluations',['evaluations' => $evaluations,'lectureEvaluations' => $lectureEvaluations]) ?>    

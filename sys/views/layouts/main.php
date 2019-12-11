@@ -106,11 +106,12 @@ AppAsset::register($this);
     }
     elseif(Yii::$app->user->identity->user_level == 'Admin')
     {
-        $navItems[] = ['label' => 'Piešķirtās lekcijas', 'url' => ['/user-lectures'],'active' =>  in_array(\Yii::$app->controller->id,['user-lectures']),];
+        $navItems[] = ['label' => 'Piešķiršana', 'url' => ['/assign'],'active' =>  in_array(\Yii::$app->controller->id,['assign']),];
+        $navItems[] = ['label' => 'Piešķirts', 'url' => ['/user-lectures'],'active' =>  in_array(\Yii::$app->controller->id,['user-lectures']),];
         $navItems[] = ['label' => 'Lekcijas', 'url' => ['/lectures'],'active' =>  in_array(\Yii::$app->controller->id,['lectures']),];
         $navItems[] = ['label' => 'Faili', 'url' => ['/lecturesfiles'],'active' =>  in_array(\Yii::$app->controller->id,['lecturesfiles']),];
         $navItems[] = ['label' => 'Parametri', 'url' => ['/difficulties'],'active' =>  in_array(\Yii::$app->controller->id,['difficulties']),];
-        $navItems[] = ['label' => 'Kategorijas', 'url' => ['/handdifficulties'],'active' =>  in_array(\Yii::$app->controller->id,['handdifficulties']),];        
+        //$navItems[] = ['label' => 'Kategorijas', 'url' => ['/handdifficulties'],'active' =>  in_array(\Yii::$app->controller->id,['handdifficulties']),];        
         $navItems[] = ['label' => 'Novērtējumi', 'url' => ['/evaluations'],'active' =>  in_array(\Yii::$app->controller->id,['evaluations'])];
         $navItems[] = ['label' => 'Lietotāji', 'url' => ['/user'],'active' =>  in_array(\Yii::$app->controller->id,['user'])];
         $navItems[] = ['label' => 'Lietotāju vērtējumi', 'url' => ['/user-lecture-evaluations'],'active' =>  in_array(\Yii::$app->controller->id,['user-lecture-evaluations'])];

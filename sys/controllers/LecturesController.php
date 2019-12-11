@@ -191,7 +191,7 @@ class LecturesController extends Controller
                 }  
                 $model->complexity = (int)$sum;
                 $model->updated = date('Y-m-d H:i:s', time());
-                $model->save();               
+                $model->save(false);               
             }
             if(isset($post['handdifficulties'])) {   
                 Lectureshanddifficulties::removeLectureDifficulties($id);

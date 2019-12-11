@@ -19,6 +19,9 @@ $this->params['breadcrumbs'][] = $model->title;
     </div>
     <div class="border-left col-md-9">
         <h2 class="text-center"><?=$model->title?></h2>
+        <?php if($model->file){ ?>
+            <?= $this->render('video', ['lecturefiles' => [0 => ['title' => $model->title,'file' => $model->file, 'thumb' => $model->thumb ?? '']],'videos' => $videos, 'baseUrl' => $baseUrl]); ?> 
+        <?php } ?>
         <?php if($lecturefiles){ ?>
             <?= $this->render('video', ['lecturefiles' => $lecturefiles,'videos' => $videos, 'baseUrl' => $baseUrl]); ?> 
             <?= $this->render('audio', ['lecturefiles' => $lecturefiles, 'audio' => $audio]); ?> 
@@ -27,14 +30,14 @@ $this->params['breadcrumbs'][] = $model->title;
         <?php if($difficulties AND $lectureDifficulties){ ?>
             <?= $this->render('difficulties',['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>    
         <?php } ?>        
-        <?php if($handdifficulties AND $lectureHandDifficulties){  ?>
+        <?php /* if($handdifficulties AND $lectureHandDifficulties){  ?>
             <?= $this->render('handdifficulties',['handdifficulties' => $handdifficulties, 'lectureHandDifficulties' => $lectureHandDifficulties]) ?>      
-        <?php } ?>
+        <?php } */ ?>
         <?php if($lecturefiles){ ?>
             <?= $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]); ?> 
         <?php } ?>          
         <?php if($evaluations AND $lectureEvaluations){  ?>
-            <?= $this->render('evaluations', ['evaluations' => $evaluations, 'lectureEvaluations' => $lectureEvaluations]) ?>
+            <?= $this->render('evaluations', ['evaluations' => $evaluations, 'lectureEvaluations' => $lectureEvaluations, 'force' => $force]) ?>
         <?php } ?>
         <?php if($relatedLectures){ ?>
             <?= $this->render('related',['relatedLectures' => $relatedLectures,'lecturefiles' => $lecturefiles,'videos' => $videos, 'baseUrl' => $baseUrl,'userEvaluatedLectures' => $userEvaluatedLectures]) ?>

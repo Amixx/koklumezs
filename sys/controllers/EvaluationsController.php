@@ -109,6 +109,7 @@ class EvaluationsController extends Controller
             $model->load($post);
             $model->stars = isset($post["Evaluations"]["stars"]) ? $post["Evaluations"]["stars"] : null;
             $model->is_scale = isset($post["Evaluations"]["is_scale"]) ? $post["Evaluations"]["is_scale"] : null;
+            $model->is_video_param = isset($post["Evaluations"]["is_video_param"]) ? $post["Evaluations"]["is_video_param"] : null;
             $model->star_text = isset($post['stars_texts']) ? serialize($post['stars_texts']) : null;               
             $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
