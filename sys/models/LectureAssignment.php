@@ -63,6 +63,9 @@ class LectureAssignment extends \yii\db\ActiveRecord
 
     public function getNewDifficultyIds(int $result = 0, int $x = 0, $lecture_id = null, $user_id = null, $dbg = false, $returnIds = false): array
     {
+        //always true from now
+        $dbg = false;
+        ob_start();
         $modelsIds = [];
         if ($result) {
             //Ja ķēdē iekļaujas līdzīgi uzdevumi, tad liekam līdzīgus no vienas ķēdes, bet ja ķēdē nav līdzīgā sarežģītībā (jo ķēdes pērsvarā attīstas sarežģītībā), tad sūtam ko jaunu.
@@ -203,9 +206,13 @@ class LectureAssignment extends \yii\db\ActiveRecord
                 }
             }
         }
-        if (empty($modelsIds) and $dbg) {
-            echo "<span style='color:red'>NOT FOUND ANY NEW LECTURE by difficulty:<strong> $result </strong></span>";
+        if (empty($modelsIds)) {
+            echo "<br /><span style='color:red'>NOT FOUND ANY NEW LECTURE by difficulty:<strong> $result </strong></span>";
+        }else{
+            echo "<br /><span style='color:green'>FOUND NEW LECTURE by difficulty:<strong> $result </strong></span>";
         }
+        $log = ob_get_clean();
+        Yii::$app->session->setFlash('assignmentlog',  $log);
         return $modelsIds;
     }
 

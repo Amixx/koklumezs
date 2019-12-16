@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php foreach($evaluationsTitles as $etid => $et){ ?>
                 <td align="center">
                     <?php if(isset($evaluations[$id][$etid])){
-                        echo isset($evaluationsValues[$etid]) ? $evaluationsValues[$etid][$evaluations[$id][$etid]] : $evaluations[$id][$etid];
+                        echo isset($evaluationsValues[$etid]) ? (isset($evaluationsValues[$etid][$evaluations[$id][$etid]]) ? $evaluationsValues[$etid][$evaluations[$id][$etid]] : '<code>Not set</code>') : (isset($evaluations[$id][$etid]) ? $evaluations[$id][$etid] : '<code>Not set</code>');
                     }else{
                         echo '<code>Not set</code>';
                     }  ?>

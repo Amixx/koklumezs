@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php foreach($evaluationsTitles as $etid => $et){ ?>
                 <td align="center">
                     <?php if(isset($evaluations[$lecture->lecture_id][$etid])){
-                        echo isset($evaluationsValues[$etid]) ? $evaluationsValues[$etid][$evaluations[$lecture->lecture_id][$etid]] : $evaluations[$lecture->lecture_id][$etid];
+                        echo isset($evaluationsValues[$etid]) ? (isset($evaluationsValues[$etid][$evaluations[$lecture->lecture_id][$etid]]) ? $evaluationsValues[$etid][$evaluations[$lecture->lecture_id][$etid]] : '<code>Not set</code>') : (isset($evaluations[$lecture->lecture_id][$etid]) ? $evaluations[$lecture->lecture_id][$etid] : '<code>Not set</code>');
                     }else{
                         echo '<code>Not set</code>';
                     }  ?>
@@ -72,8 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>Spēles reizes pēdējās 30 dienās: <strong><?=$thirtyDayResult?></strong> </p>
     <p>Spējas šobrīd:<?=isset($goals[$goalsnow]) ? '<strong>' . $goalsum . '</strong>': '<code>Not set</code>' ?></p>
     <?php if(is_array($PossibleThreeLectures)){ 
-        $limit = 3;
-        $PossibleThreeLectures = [1,4,5,6];
+        $limit = 3;        
         ?>
     
     <h3>Piemeklētās lekcijas:</h3>
@@ -110,5 +109,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="form-group">
         <?= Html::submitButton('Piešķirt lekciju', ['class' => 'btn btn-success'])?>
     </div>
+    <?= Yii::$app->session->getFlash('assignmentlog') ?>
     <?php ActiveForm::end(); ?>   
 </div>
