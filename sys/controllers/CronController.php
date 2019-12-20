@@ -35,7 +35,7 @@ class CronController extends Controller
         ob_start();
         foreach ($users as $user_id => $userVals) {
             //if( $dbg ){
-                echo '<strong>' . $userVals['email'] . '</strong><br />';
+                echo '<strong>' . $userVals['email'] . ' automātiskā sūtīšana</strong><br />';
             //}
             $queue = UserLectures::getUnsentLectures($user_id);
             $last = UserLectures::getLastEvaluatedLecture($user_id);
@@ -50,7 +50,10 @@ class CronController extends Controller
                         $model->created = date('Y-m-d H:i:s', time());
                         $sent = UserLectures::sendEmail($user_id, $model->lecture_id);
                         if (!$sent) {
+                            echo '<strong>Nosūtīts e-pasts administratoram</strong><br />';
                             UserLectures::sendAdminEmail($user_id, $model->lecture_id, 0);
+                        }else{
+                            echo '<strong>' . $userVals['email'] . ' nosūtīta lekcija ' . $model->lecture_id .'</strong><br />';
                         }
                         $model->sent = (int) $sent;
                         $model->save();
@@ -58,6 +61,9 @@ class CronController extends Controller
                         $q->save();                        
                     }
                 }
+                echo '<hr />';
+            }else{
+                echo '<strong>' . $userVals['email'] . ' nebija sakrājušās lekcijas ko nosūtīt</strong><br />';
             }
             if ($last) {
                 $count = $last->sent_times;
@@ -76,6 +82,7 @@ class CronController extends Controller
             } else {
                 $x = Studentgoals::getUserDifficultyCoef($user_id);
                 LectureAssignment::giveNewAssignment($user_id, $x, null, $spam, $dbg);
+                echo '<strong>' . $userVals['email'] . ' tiek piešķirtas jaunās lekcijas</strong><br />';
             }
             if( $dbg ){
                 echo '<hr />';

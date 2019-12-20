@@ -15,6 +15,14 @@ use Yii;
 class LectureAssignment extends \yii\db\ActiveRecord
 {
     private static $sum;
+    /**
+     * 1 + 1 + 1 + 1 + 1 
+     */
+    const MINIMUM = 5;
+    /**
+     * 10 + 10 + 10 + 10 + 10 
+     */
+    const MAX = MINIMUM * 10;
 
     public function __construct()
     {
@@ -267,7 +275,11 @@ class LectureAssignment extends \yii\db\ActiveRecord
         $nextLectures = $lecture_id ? RelatedLectures::getRelations($lecture_id) : [];
         $difficulty = $nextLectures ? $lectureDifficulty : $userDifficulty;
         $nextLecture = count($nextLectures);
-
+        /**
+         * minimum difficulty
+         * 1 + 1 + 1 + 1 +1
+         */        
+        $minimumDifficulty = self::MINIMUM;
         switch ($x) {
             /**
                  * 1 (Viss tik viegls, ka garlaicīgi, vajag pieslēgties manuāli)
@@ -339,12 +351,12 @@ class LectureAssignment extends \yii\db\ActiveRecord
          */
         /**$result = $userDifficulty;
         }*/
-        return $result;
+        return (($result > $minimumDifficulty) ? $minimumDifficulty : $result);
     }
 
-    public function giveNewAssignment($user = null, $x = 0, $id = null, $spam = false, $dbg = false, $returnIds = false)
+    public function giveNewAssignment($user = null, $x = 0, $id = null, $spam = false, $dbg = false, $returnIds = false, int $predefinedResult = 0)
     {
-        $result = self::getNewUserDifficulty($user, $x, $id, $dbg);
+        $result =  $predefinedResult ?? self::getNewUserDifficulty($user, $x, $id, $dbg);
         if ($result) {
             if ($dbg) {
                 echo 'New difficulty:<strong>' . $result . '</strong><br />';
@@ -354,9 +366,6 @@ class LectureAssignment extends \yii\db\ActiveRecord
                 //check if user is not already signed to found lectures
                 $newIds = UserLectures::getNewLectures($user, $ids);
                 if (!empty($newIds) and !$dbg) {
-                    if ($returnIds) {
-                        return $ids;
-                    }
                     foreach ($newIds as $lec) {
                         $skipErrors = true;
                         $model = new UserLectures();
@@ -387,11 +396,19 @@ class LectureAssignment extends \yii\db\ActiveRecord
                             }
                         }
                     }
+                    if ($returnIds) {
+                        return $ids;
+                    }
                 } elseif ($dbg) {
                     echo '<pre>';
                     print_r($newIds);
                     echo '</pre>';
                 } elseif (!$returnIds) {
+                    //recursion till the end of time..
+                    if($result < MAX){
+                        $result++;
+                        return self::giveNewAssignment($user, $x = 0, $id, false, false, false, $result);
+                    }
                     if ($dbg) {
                         echo '<br />SPAM TO ADMIN';
                     } else {
@@ -400,7 +417,12 @@ class LectureAssignment extends \yii\db\ActiveRecord
                     }
                 }
             } elseif (!$returnIds) {
-                if ($dbg) {
+                //recursion till the end of time..
+                if($result < MAX){
+                    $result++;
+                    return self::giveNewAssignment($user, $x = 0, $id, false, false, false, $result);
+                }
+                elseif ($dbg) {
                     echo '<br />SPAM TO ADMIN';
                 } else {
                     //spam admin about manual involvement

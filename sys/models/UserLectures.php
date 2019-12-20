@@ -102,6 +102,26 @@ class UserLectures extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getSentUserLectures($id, $sent = 1): array
+    {
+        $results = self::find()->where(['user_id' => $id, 'evaluated' => 0, 'sent' => $sent])->asArray()->all();
+        return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
+    }
+
+     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEvaluatedUserLectures($id, $sent = 1): array
+    {
+        $results = self::find()->where(['user_id' => $id, 'evaluated' => 1, 'sent' => $sent])->asArray()->all();
+        return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
+    }
+
+    
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getEvaluatedLectures($id): array
     {
         $results = self::find()->where(['user_id' => $id, 'evaluated' => 1])->asArray()->all();

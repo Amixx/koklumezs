@@ -67,9 +67,12 @@ class LekcijasController extends Controller
     public function actionIndex()
     {
         $models = [];
+        $archive = [];
+        $pages = [];
         $user = Yii::$app->user->identity;
-        $modelsIds = UserLectures::getUserLectures($user->id);
-        if ($modelsIds) {
+        $modelsIds = UserLectures::getSentUserLectures($user->id);
+        $evaluatedIds = UserLectures::getEvaluatedUserLectures($user->id);
+        if ($modelsIds or $evaluatedIds) {
             $userLectures = UserLectures::getLectures($user->id);
             $query = Lectures::find()->where(['in', 'id', $modelsIds]);
             $countQuery = clone $query;
@@ -77,6 +80,10 @@ class LekcijasController extends Controller
             $models = $query->offset($pages->offset)
                 ->limit($pages->limit)
                 ->all();
+                
+            if($evaluatedIds){
+                $archive = Lectures::find()->where(['in', 'id', $evaluatedIds])->all();                
+            }
             $opened = UserLectures::getOpened($user->id);
             $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
             $baseUrl = Yii::$app->request->baseUrl;
@@ -89,12 +96,14 @@ class LekcijasController extends Controller
                 'userLectureEvaluations' => $userLectureEvaluations,
                 'baseUrl' => $baseUrl,
                 'videos' => self::VIDEOS,
+                'archive' => $archive
             ]);
         }
 
         return $this->render('index', [
-            'models' => [],
-            'pages' => [],
+            'models' => $models,
+            'pages' => $pages,
+            'archive' =>  $archive,
         ]);
     }
 
@@ -109,7 +118,7 @@ class LekcijasController extends Controller
         $model = $this->findModel($id);
         $user = Yii::$app->user->identity;
         $dbg = Yii::$app->request->get('dbg');
-        $force = Yii::$app->request->get('force');             
+        $force = Yii::$app->request->get('force');
         if ($dbg) {
             $defX = Yii::$app->request->get('x');
             if( is_numeric($defX)){                
@@ -133,7 +142,7 @@ class LekcijasController extends Controller
             }            
             die;
         }
-        $modelsIds = $force ? [$id] : UserLectures::getUserLectures($user->id);
+        $modelsIds = $force ? [$id] : UserLectures::getSentUserLectures($user->id);
         $check = in_array($id, $modelsIds);
         $userLectures = $force ? [] : UserLectures::getLectures($user->id);
         $userEvaluatedLectures = $force ? [] : UserLectures::getEvaluatedLectures($user->id);
@@ -176,6 +185,16 @@ class LekcijasController extends Controller
             $userLectureEvaluations = $force ? [] : Userlectureevaluations::getLectureEvaluations($user->id, $id);
             $baseUrl = Yii::$app->request->baseUrl;
             $ids = RelatedLectures::getRelations($id);
+            if($ids){
+                //filter out lecture that is not assigned to student
+                $tmp = [];
+                foreach($ids as $check){
+                    if(in_array($check, $modelsIds)){
+                        $tmp[] = $check;
+                    }
+                }
+                $ids = $tmp;
+            }
             $relatedLectures = Lectures::getLecturesByIds($ids);
             return $this->render('lekcija', [
                 'model' => $model,
