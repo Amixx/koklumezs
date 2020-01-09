@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $model->title;
     <div class="col-md-3 ">
         <?php foreach($userLectures as $lecture){  ?>
         <?php if($lecture->sent){ ?>
-        <p><a href="<?=Url::to(['lekcijas/lekcija', 'id' => $lecture['lecture_id']]);?>"><?=$lecture->lecture->title?></a></p>
+        <p><a href="<?=Url::to(['lekcijas/lekcija', 'id' => $lecture->lecture_id]);?>"><?=$lecture->lecture->title?></a></p>
         <?php } ?>
         <?php } ?>
     </div>
@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $model->title;
         <?php if($lecturefiles){ ?>
             <?= $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]); ?> 
         <?php } ?>          
-        <?php if($evaluations AND $lectureEvaluations){  ?>
+        <?php if($evaluations AND $lectureEvaluations AND !in_array($model->id, $userEvaluatedLectures)){  ?>
             <?= $this->render('evaluations', ['evaluations' => $evaluations, 'lectureEvaluations' => $lectureEvaluations, 'force' => $force]) ?>
         <?php } ?>
         <?php if($relatedLectures){ ?>

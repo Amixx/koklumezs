@@ -13,11 +13,14 @@ class Users extends ActiveRecord implements IdentityInterface
 {
     const ROLE_USER = 'Student';
     const ROLE_ADMIN = 'Admin';
+    const MAX_MORE_REQUESTS = 4;
 
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
     public static function tableName()
-    {return 'users';}
+    {
+        return 'users';
+    }
 
     /**
      * @inheritdoc
@@ -57,6 +60,7 @@ class Users extends ActiveRecord implements IdentityInterface
             'dont_bother' => 'Netraucēt',
             'status' => 'Statuss',
             'goal' => 'Mērķis',
+            //more_lecture_requests` tikai līdz 4 uzdevumiem starp sūtīšanas reizēm. Lai neaptrūkstas uzdevumi
         ];
     }
 

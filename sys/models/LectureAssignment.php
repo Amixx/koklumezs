@@ -22,7 +22,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
     /**
      * 10 + 10 + 10 + 10 + 10 
      */
-    const MAX = MINIMUM * 10;
+    const MAX = self::MINIMUM * 10;
 
     public function __construct()
     {
@@ -239,11 +239,19 @@ class LectureAssignment extends \yii\db\ActiveRecord
             } else {
                 $x = Studentgoals::getUserDifficultyCoef($user_id);
             }
-            $result = self::giveNewAssignment($user_id, $x, $last->lecture_id, $spam, $dbg, true);
+            $result = self::giveNewAssignment($user_id, $x, $last->lecture_id, $spam, $dbg, true);            
         } else {
-            $x = Studentgoals::getUserDifficultyCoef($user_id);
-            $result = self::giveNewAssignment($user_id, $x, null, $spam, $dbg, true);
+            $result = self::getSameDiffLectures($user_id, $spam, $dbg );
         }
+        return $result;
+    }
+
+    public function getSameDiffLectures($user_id = null, $spam = false, $dbg = false)
+    {
+        $result = [];
+        $x = 0;//Studentgoals::getUserDifficultyCoef($user_id);
+        $predefinedResult = Studentgoals::getUserDifficulty($user_id);
+        $result = self::giveNewAssignment($user_id, $x, null, $spam, $dbg, true, $predefinedResult);
         return $result;
     }
 
@@ -407,7 +415,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                     //recursion till the end of time..
                     if($result < MAX){
                         $result++;
-                        return self::giveNewAssignment($user, $x = 0, $id, false, false, false, $result);
+                        return self::giveNewAssignment($user, $x, $id, false, false, false, $result);
                     }
                     if ($dbg) {
                         echo '<br />SPAM TO ADMIN';

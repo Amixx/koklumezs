@@ -87,6 +87,7 @@ class AssignController extends \yii\web\Controller
         $get = Yii::$app->request->get();
         $user = Users::findOne($id);
         $goals = StudentGoals::getUserGoals($id);
+        $diff = Studentgoals::getUserDifficulty($id);
         $goalsnow = StudentGoals::NOW;
         $goalsum = isset($goals[$goalsnow]) ? array_sum($goals[$goalsnow]) : 0;
         if ($post) {
@@ -159,6 +160,7 @@ class AssignController extends \yii\web\Controller
         $options['PossibleThreeLectures'] = $PossibleThreeLectures;
         $options['manualLectures'] = $lectures;
         $options['model'] = new UserLectures;
+        $options['diff'] = $diff;
         return $this->render('userlectures', $options);
     }
 
