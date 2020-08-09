@@ -16,8 +16,9 @@ class SchoolTeacher extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['school_id', 'user_id'], 'required'],
+            [['school_id', 'user_id', 'instrument'], 'required'],
             [['school_id', 'user_id'], 'integer'],
+            [['instrument'], 'string'],
             [['school_id'], 'exist', 'skipOnError' => true, 'targetClass' => School::className(), 'targetAttribute' => ['school_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -37,7 +38,7 @@ class SchoolTeacher extends \yii\db\ActiveRecord
 
     public function getSchool()
     {
-        return $this->hasOne(Schools::className(), ['id' => 'school_id']);
+        return $this->hasOne(School::className(), ['id' => 'school_id']);
     }
 
     public function getTeacher()

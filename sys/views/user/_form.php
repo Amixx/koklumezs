@@ -39,6 +39,10 @@ use  yii\jui\DatePicker;
 
             <?= $form->field($model, 'user_level')->dropDownList(['Admin' => 'Administrators', 'Student' => 'Students', 'Teacher' => 'Skolotājs'], ['prompt' => '']) ?>
 
+            <label for="teacher_instrument">Instruments (tikai skolotājiem):</label>
+            <?= Html::input("text", "teacher_instrument", "", ['class' => 'form-control']) ?>
+
+
             <?= $form->field($model, 'language')->dropDownList(['lv' => 'Latviešu', 'eng' => 'Angļu',], ['prompt' => '']) ?>
 
             <?= $form->field($model, 'subscription_type')->dropDownList(['free' => 'Par brīvu', 'paid' => 'Par maksu', 'lead' => 'Izmēģina',], ['prompt' => '']) ?>

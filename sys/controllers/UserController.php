@@ -90,26 +90,31 @@ class UserController extends Controller
         $post = Yii::$app->request->post();
 
         if ($model->load($post)) {
+            $isTeacher = $post['Users']['user_level'] && $post['Users']['user_level'] == 'Teacher';
+            if ($isTeacher and !$post['teacher_instrument']) {
+                Yii::$app->session->setFlash('error', "Norādiet skolotāja instrumentu!");
+                return $this->redirect(['create']);
+            }
             $model->password = \Yii::$app->security->generatePasswordHash($model->password);
             $model->created_at = date('Y-m-d H:i:s', time());
             $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
             $created = $model->save();
-            if ($created) {
-                Yii::$app->session->setFlash('success', "User created successfully!");
-            } else {
-                Yii::$app->session->setFlash('error', "User not created!");
-            }
-
-            $isTeacher = $post['Users']['user_level'] && $post['Users']['user_level'] == 'Teacher';
             if ($isTeacher) {
                 $newSchool = new School;
-                $newSchool->instrument = "kokle";
+                $newSchool->instrument = $post['teacher_instrument'];
                 $newSchool->save();
 
                 $newSchoolTeacher = new SchoolTeacher;
                 $newSchoolTeacher->school_id = $newSchool->id;
                 $newSchoolTeacher->user_id = $model->id;
+                $newSchoolTeacher->instrument = $post['teacher_instrument'];
                 $newSchoolTeacher->save();
+            }
+            if ($created) {
+                Yii::$app->session->setFlash('success', "User created successfully!");
+            } else {
+                Yii::$app->session->setFlash('error', "User not created!");
+                return $this->redirect(['index']);
             }
 
             return $this->redirect(['index']);

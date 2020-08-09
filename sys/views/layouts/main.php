@@ -104,7 +104,7 @@ AppAsset::register($this);
         $navItems = [];
         if ($isGuest) {
         } else {
-            $text = $isAdmin or $isTeacher ? '' : '/Sign out';
+            $text = ($isAdmin || $isTeacher) ? '' : '/Sign out';
             $navEnd = '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
