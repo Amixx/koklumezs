@@ -30,6 +30,12 @@ class School extends \yii\db\ActiveRecord
         ];
     }
 
+    // public function getByTeacher($teacherId)
+    // {
+    //     $schoolId = SchoolTeacher::getSchoolTeacher($teacherId);
+    //     return self::findOne(['id' => $schoolId]);
+    // }
+
     // public function getTeachers()
     // {
     //     return $this->hasOne(Users::className(), ['id' => 'author']);

@@ -12,6 +12,7 @@ use app\models\Handdifficulties;
 use app\models\Studenthandgoals;
 use app\models\School;
 use app\models\SchoolTeacher;
+use app\models\SchoolStudent;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -88,10 +89,13 @@ class UserController extends Controller
         $difficulties = Difficulties::getDifficulties();
         $handdifficulties = Handdifficulties::getDifficulties();
         $post = Yii::$app->request->post();
+        $currentUserEmail = Yii::$app->user->identity->email;
+        $currentUser = Users::getByEmail($currentUserEmail);
+        $isCurrentUserTeacher = Users::isTeacher($currentUserEmail);
 
         if ($model->load($post)) {
-            $isTeacher = $post['Users']['user_level'] && $post['Users']['user_level'] == 'Teacher';
-            if ($isTeacher and !$post['teacher_instrument']) {
+            $isNewUserTeacher = $post['Users']['user_level'] && $post['Users']['user_level'] == 'Teacher';
+            if ($isNewUserTeacher and !$post['teacher_instrument']) {
                 Yii::$app->session->setFlash('error', "Norādiet skolotāja instrumentu!");
                 return $this->redirect(['create']);
             }
@@ -99,7 +103,7 @@ class UserController extends Controller
             $model->created_at = date('Y-m-d H:i:s', time());
             $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
             $created = $model->save();
-            if ($isTeacher) {
+            if ($isNewUserTeacher) {
                 $newSchool = new School;
                 $newSchool->instrument = $post['teacher_instrument'];
                 $newSchool->save();
@@ -109,6 +113,13 @@ class UserController extends Controller
                 $newSchoolTeacher->user_id = $model->id;
                 $newSchoolTeacher->instrument = $post['teacher_instrument'];
                 $newSchoolTeacher->save();
+            }
+            if ($isCurrentUserTeacher) {
+                $teacher = SchoolTeacher::getSchoolTeacher($currentUser->id);
+                $newSchoolStudent = new SchoolStudent;
+                $newSchoolStudent->school_id = $teacher->school_id;
+                $newSchoolStudent->user_id = $model->id;
+                $studentAddedToSchool = $newSchoolStudent->save();
             }
             if ($created) {
                 Yii::$app->session->setFlash('success', "User created successfully!");

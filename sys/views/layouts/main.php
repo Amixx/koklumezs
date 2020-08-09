@@ -100,7 +100,6 @@ AppAsset::register($this);
             }
         </script>
         <?php
-        // Yii::$app->assetManager->forceCopy = true;
         $navItems = [];
         if ($isGuest) {
         } else {
