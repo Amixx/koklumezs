@@ -4,9 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\models\Users;
 use  yii\jui\DatePicker;
-/* @var $this yii\web\View */
-/* @var $model app\models\Users */
-/* @var $form yii\widgets\ActiveForm */
+
+$isTeacher = Users::isTeacher(Yii::$app->user->identity->email);
 ?>
 
 <div class="user-form">
@@ -37,11 +36,13 @@ use  yii\jui\DatePicker;
 
             <?= $form->field($model, 'password')->passwordInput(['maxlength' => true, 'value' => ""]) ?>
 
-            <?= $form->field($model, 'user_level')->dropDownList(['Admin' => 'Administrators', 'Student' => 'Students', 'Teacher' => 'Skolotājs'], ['prompt' => '']) ?>
-
-            <label for="teacher_instrument">Instruments (tikai skolotājiem):</label>
-            <?= Html::input("text", "teacher_instrument", "", ['class' => 'form-control']) ?>
-
+            <?php if (!$isTeacher) {
+                echo $form->field($model, 'user_level')->dropDownList(['Admin' => 'Administrators', 'Student' => 'Students', 'Teacher' => 'Skolotājs'], ['prompt' => '']);
+            ?>
+                <label for="teacher_instrument">Instruments (tikai skolotājiem):</label>
+            <?php
+                echo Html::input("text", "teacher_instrument", "", ['class' => 'form-control']);
+            }; ?>
 
             <?= $form->field($model, 'language')->dropDownList(['lv' => 'Latviešu', 'eng' => 'Angļu',], ['prompt' => '']) ?>
 

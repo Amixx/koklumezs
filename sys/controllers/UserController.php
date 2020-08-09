@@ -96,10 +96,13 @@ class UserController extends Controller
         $isCurrentUserTeacher = Users::isTeacher($currentUserEmail);
 
         if ($model->load($post)) {
-            $isNewUserTeacher = $post['Users']['user_level'] && $post['Users']['user_level'] == 'Teacher';
+            $isNewUserTeacher = isset($post['Users']['user_level']) && $post['Users']['user_level'] == 'Teacher';
             if ($isNewUserTeacher and !$post['teacher_instrument']) {
                 Yii::$app->session->setFlash('error', "Norādiet skolotāja instrumentu!");
                 return $this->redirect(['create']);
+            }
+            if ($isCurrentUserTeacher) {
+                $model->user_level = Users::ROLE_USER;
             }
             $model->password = \Yii::$app->security->generatePasswordHash($model->password);
             $model->created_at = date('Y-m-d H:i:s', time());
@@ -207,7 +210,7 @@ class UserController extends Controller
                 'studentGoals' => $studentGoals,
                 'studentHandGoals' => $studentHandGoals,
                 'difficulties' => $difficulties,
-                'handdifficulties' => $handdifficulties,
+                'handdifficulties' => $handdifficulties
             ]);
         }
     }
