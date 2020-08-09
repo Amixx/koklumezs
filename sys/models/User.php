@@ -12,11 +12,15 @@ class User extends ActiveRecord implements IdentityInterface
 {
     const ROLE_USER = 'Student';
     const ROLE_ADMIN = 'Admin';
+    const ROLE_TEACHER = 'Teacher';
 
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
+    const STATUS_PASSIVE = 11;
     public static function tableName()
-    {return 'users';}
+    {
+        return 'users';
+    }
 
     /**
      * @inheritdoc
@@ -25,11 +29,11 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_PASSIVE]],
             [['email'], 'required'],
             [['user_level'], 'string'],
             ['user_level', 'default', 'value' => self::ROLE_USER],
-            ['user_level', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN]],
+            ['user_level', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN, self::ROLE_TEACHER]],
             [['email'], 'email'],
             [['email'], 'unique'],
             [['phone_number'], 'string', 'max' => 30],
@@ -50,7 +54,7 @@ class User extends ActiveRecord implements IdentityInterface
             'phone_number' => 'Telefona numurs',
             'first_name' => 'Vārds',
             'last_name' => 'Uzvārds',
-            'password' => 'Parole',            
+            'password' => 'Parole',
         ];
     }
 
@@ -69,7 +73,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['id' => $id, 'status' => [self::STATUS_ACTIVE, self::STATUS_PASSIVE]]);
     }
 
     /**
@@ -145,12 +149,12 @@ class User extends ActiveRecord implements IdentityInterface
         return Yii::$app->getSecurity()->validatePassword($password, $this->password);
     }
 
-/**
- * Finds user by password reset token
- *
- * @param string $token password reset token
- * @return static|null
- */
+    /**
+     * Finds user by password reset token
+     *
+     * @param string $token password reset token
+     * @return static|null
+     */
     public static function findByPasswordResetToken($token)
     {
         if (!static::isPasswordResetTokenValid($token)) {
@@ -245,6 +249,15 @@ class User extends ActiveRecord implements IdentityInterface
         }
     }
 
+    public static function isTeacher($email)
+    {
+        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static function getStatus()
     {
         return [
@@ -258,6 +271,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             self::ROLE_USER => 'Students',
             self::ROLE_ADMIN => 'Administrators',
+            self::ROLE_TEACHER => 'Skolotājs',
         ];
     }
 
@@ -270,5 +284,4 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->hasMany(Projects::className(), ['change_by' => 'id']);
     }
-
 }

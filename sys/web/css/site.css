@@ -1,3 +1,88 @@
+img[title]:hover:after {
+    content: attr(title);
+    padding: 4px 8px;
+    color: #333;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: 20px;
+    /* You can change tooltip design */
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0px 0px 4px #222;
+    -webkit-box-shadow: 0px 0px 4px #222;
+    box-shadow: 0px 0px 4px #cccccc;
+    background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eeeeee), color-stop(1, #cccccc));
+    background-image: -webkit-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -ms-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -o-linear-gradient(top, #eeeeee, #cccccc);
+}
+
+.form-group .select2-container--default .select2-selection--single,
+.form-group .select2-container--default .select2-search--inline .select2-search__field,
+.form-group .select2-container--default .select2-selection--multiple {
+    min-width: 250px;
+    width: 100%;
+    max-width: 100%;
+}
+
+.form-group .select2-container--default .select2-selection--multiple {
+    min-width: 600px;
+}
+
+.related-lectures-form #logo {
+    width: 70px;
+    height: 70px;
+    display: inline-block;
+    margin: 10px 15px;
+}
+
+#logo {
+    width: 70px;
+    height: 70px;
+    display: inline-block;
+    margin: 10px 15px;
+}
+
+#logo.admin {
+    margin-left: -50px;
+}
+
+#logo svg {
+    background: darkgoldenrod;
+    border-radius: 50%;
+}
+
+label {
+    width: 100%;
+}
+
+label.custom-control-label {
+    width: 90%;
+}
+
+.navbar {
+    min-height: 90px;
+    padding-top: 20px;
+}
+
+.navbar-header {
+    margin-top: -20px;
+}
+
+.navbar-brand {
+    padding: 0!important;
+    z-index: 1;
+    position: relative;
+}
+
+.navbar-admin .navbar-nav {
+    margin-right: -115px;
+}
+
 html,
 body {
     height: 100%;
@@ -10,8 +95,8 @@ body {
     padding: 0 0 60px;
 }
 
-.wrap > .container {
-    padding: 70px 15px 20px;
+.wrap>.container {
+    padding: 110px 15px 20px;
 }
 
 .footer {
@@ -36,8 +121,11 @@ body {
     font-style: italic;
 }
 
+
 /* add sorting icons to gridview sort links */
-a.asc:after, a.desc:after {
+
+a.asc:after,
+a.desc:after {
     position: relative;
     top: 1px;
     display: inline-block;
@@ -49,11 +137,13 @@ a.asc:after, a.desc:after {
 }
 
 a.asc:after {
-    content: /*"\e113"*/ "\e151";
+    content: /*"\e113"*/
+    "\e151";
 }
 
 a.desc:after {
-    content: /*"\e114"*/ "\e152";
+    content: /*"\e114"*/
+    "\e152";
 }
 
 .sort-numerical a.asc:after {
@@ -90,26 +180,203 @@ a.desc:after {
     margin: 0 0 15px 0;
 }
 
+
 /* align the logout "link" (button in form) of the navbar */
-.nav li > form > button.logout {
+
+.nav li>form>button.logout {
     padding: 15px;
     border: none;
 }
 
+.video-js {
+    width: 100%;
+    height: 500px;
+}
+
+#navbar {
+    transition: all .666s ease-in-out;
+    top: 0;
+}
+
+.hasDatepicker {
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+}
+
+.lecture-thumb {
+    width: 100%;
+    height: 150px;
+    display: block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding-top: 150px;
+    margin-bottom: 10px;
+}
+
+.lecture-wrap {
+    transition: all .2s ease-in-out;
+    box-sizing: border-box;
+    padding: 20px;
+    font-size: 16px;
+}
+
+.lecture-wrap:hover {
+    transform: scale(1.1);
+}
+
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
+@media(max-width:1199px) {
+    #logo {
+        display: none;
+    }
+}
+
 @media(max-width:767px) {
-    .nav li > form > button.logout {
-        display:block;
+    .lecture-thumb {
+        height: 270px;
+    }
+    .lecture-wrap:hover {
+        transform: scale(1.03);
+    }
+    .video-js {
+        width: 100%;
+        height: 300px;
+    }
+    #logo {
+        width: 60px;
+        height: 60px;
+        margin: 10px 15px;
+        display: block;
+    }
+    .navbar {
+        min-height: 80px;
+        padding-top: 10px;
+    }
+    .navbar-header {
+        margin-top: -10px;
+    }
+    .navbar-toggle {
+        margin-top: 18px;
+    }
+    .navbar-collapse {
+        margin-top: 12px;
+    }
+    .nav li>form>button.logout {
+        display: block;
         text-align: left;
         width: 100%;
         padding: 10px 15px;
     }
 }
 
-.nav > li > form > button.logout:focus,
-.nav > li > form > button.logout:hover {
+.nav>li>form>button.logout:focus,
+.nav>li>form>button.logout:hover {
     text-decoration: none;
 }
 
-.nav > li > form > button.logout:focus {
+.nav>li>form>button.logout:focus {
     outline: none;
+}
+
+
+.a2hs {
+    display:none;
+    position:fixed;
+    background: white;
+    width: 100%;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    padding-top: 0px;
+    font-size: 22px;
+    line-height: 3;
+    color: white;
+    font-weight: bold;
+    background: goldenrod;
+}
+
+.LessonComments__Container {
+    border: 1px solid gainsboro;
+    border-radius: 18px;
+    display:inline-block;
+    padding: 5px 10px;
+    margin-top: 10px;
+    max-width: 85%;
+}
+
+.LessonComments__Container--response {
+    margin-left:20px;
+}
+
+@media(max-width: 768px){
+    .LessonComments__Container {
+        max-width: 75%;
+    }
+
+    .LessonComments__Container--response {
+        max-width: 70%;
+    }
+}
+
+.LessonComments__Response {
+    border-radius: 16px;
+    text-indent: 10px;
+    border: 1px solid gainsboro;
+    outline: 0!important;
+    margin-top: 5px;
+    margin-left: 20px;
+    width: 68%;
+}
+
+.icon-favourite {
+    display:inline;
+}
+
+.icon-favourite:after{
+    content: "";
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    background: #ea1e92;
+    border-radius: 50%;
+    margin-top: 6px;
+    margin-left: 5px;
+}
+
+.icon-still-learning {
+    display:inline;
+}
+
+.icon-still-learning:after{
+    content: "";
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    background: #1e92ea;
+    border-radius: 50%;
+    margin-top: 6px;
+    margin-left: 20px;
+}
+
+@media (min-width: 979px) {
+  ul.navbar-nav li.dropdown:hover > ul.dropdown-menu {
+    display: block;
+  }
 }

@@ -32,7 +32,7 @@ class Evaluations extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'type'], 'required'],
-            [['title', 'type'], 'string'],           
+            [['title', 'type'], 'string'],
         ];
     }
 
@@ -73,8 +73,9 @@ class Evaluations extends \yii\db\ActiveRecord
      */
     public function getEvaluations()
     {
-        return self::find()->asArray()->all();
+        return self::find()->where(['!=', 'id', 5])->asArray()->all();
     }
+
 
     /**
      * {@inheritdoc}
@@ -83,12 +84,12 @@ class Evaluations extends \yii\db\ActiveRecord
     {
         $result = [];
         $data = self::getEvaluations();
-        foreach($data as $d){
-            if($d['type'] == 'zvaigznes'){
+        foreach ($data as $d) {
+            if ($d['type'] == 'zvaigznes') {
                 $arr = unserialize($d['star_text']);
                 $new_array = [];
-                foreach($arr as $key => $value){
-                    $new_array[$key+1] = $value;
+                foreach ($arr as $key => $value) {
+                    $new_array[$key + 1] = $value;
                 }
                 $result[$d['id']] = $new_array;
             }
@@ -96,7 +97,7 @@ class Evaluations extends \yii\db\ActiveRecord
         return $result;
     }
 
-    
+
 
     /**
      * {@inheritdoc}
@@ -119,5 +120,4 @@ class Evaluations extends \yii\db\ActiveRecord
             'is_video_param' => 1,
         ]);
     }
-
 }

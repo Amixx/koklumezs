@@ -15,6 +15,8 @@ use app\models\Studentgoals;
 use app\models\Userlectureevaluations;
 use app\models\UserLectures;
 use app\models\Users;
+use app\models\SectionsVisible;
+use app\models\CommentResponses;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\VerbFilter;
@@ -61,64 +63,74 @@ class LekcijasController extends Controller
      * Lists all user Lectures models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($type = null)
     {
         $models = [];
-        $archive = [];
         $pages = [];
         $user = Yii::$app->user->identity;
-        $modelsIds = UserLectures::getSentUserLectures($user->id);
-        $evaluatedIds = UserLectures::getEvaluatedUserLectures($user->id);
-        if ($modelsIds or $evaluatedIds) {
-            $userLectures = UserLectures::getLectures($user->id);
-            $query = Lectures::find()->where(['in', 'id', $modelsIds]);
-            $countQuery = clone $query;
-            $pages = new Pagination(['totalCount' => $countQuery->count()]);
-            $models = $query->offset($pages->offset)
-                ->limit($pages->limit)
-                ->all();
+        // $modelsIds = UserLectures::getUserLectures($user->id);
+        if ($type) {
+            $modelsIds = UserLectures::getLecturesOfType($user->id, $type);
+            if ($modelsIds) {
+                $query = Lectures::find()->where(['in', 'id', $modelsIds]);
+                $countQuery = clone $query;
+                $pages = new Pagination(['totalCount' => $countQuery->count()]);
+                $models = $query->offset($pages->offset)
+                    ->limit($pages->limit)
+                    ->all();
 
-            if ($evaluatedIds) {
-                $archive = Lectures::find()->where(['in', 'id', $evaluatedIds])->all();
-                // $alphabet = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "a", "ā", "b", "c", "č", "d", "e", "ē", "f", "g", "ģ", "h", "i", "ī", "j", "k", "ķ", "l", "ļ", "m", "n", "ņ", "o", "p", "q", "r", "s", "š", "t", "u", "ū", "v", "w", "x", "y", "z", "ž");
-                usort($archive, function ($a, $b) {
-                    // $aTitle = strtolower(trim($a->title));
-                    // $bTitle = strtolower(trim($b->title));
-
-                    // $aIndex = array_search(mb_substr($aTitle, 0, 1), $alphabet);
-                    // $bIndex = array_search(mb_substr($bTitle, 0, 1), $alphabet);
-
-                    // if ($aIndex === false || $bIndex === false) {
-                    //     return;
-                    // }
-
-                    // return $aIndex < $bIndex;
-
-                    return strcoll(strtolower(trim($a->title)), strtolower(trim($b->title)));
+                //sakārtojas pēc lekcijas piešķiršanas datuma
+                usort($models, function ($a, $b) use ($modelsIds) {
+                    $keyA = array_search($a['id'], $modelsIds);
+                    $keyB = array_search($b['id'], $modelsIds);
+                    return $keyA < $keyB;
                 });
+
+                $opened = UserLectures::getOpened($user->id);
+                $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
+                $baseUrl = Yii::$app->request->baseUrl;
+
+                return $this->render('index', [
+                    'models' => $models,
+                    'type' => $type,
+                    'opened' => $opened,
+                    'pages' => $pages,
+                    'userLectureEvaluations' => $userLectureEvaluations,
+                    'baseUrl' => $baseUrl,
+                    'videos' => self::VIDEOS
+                ]);
             }
+        } else {
+            $latestNewLecturesIds = UserLectures::getLatestLecturesOfType($user->id, "new");
+            $latestStillLearningLecturesIds = UserLectures::getLatestLecturesOfType($user->id, "learning");
+            $latestFavouriteLecturesIds = UserLectures::getLatestLecturesOfType($user->id, "favourite");
+            $newLectures = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->all();
+            $stillLearningLectures = Lectures::find()->where(['in', 'id', $latestStillLearningLecturesIds])->all();
+            $favouriteLectures = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->all();
             $opened = UserLectures::getOpened($user->id);
             $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
             $baseUrl = Yii::$app->request->baseUrl;
 
-            return $this->render('index', [
+            return $this->render('overview', [
                 'models' => $models,
-                'userLectures' => $userLectures,
+                'newLectures' => $newLectures,
+                'stillLearningLectures' => $stillLearningLectures,
+                'favouriteLectures' => $favouriteLectures,
                 'opened' => $opened,
                 'pages' => $pages,
                 'userLectureEvaluations' => $userLectureEvaluations,
                 'baseUrl' => $baseUrl,
-                'videos' => self::VIDEOS,
-                'archive' => $archive,
+                'videos' => self::VIDEOS
             ]);
         }
 
+
         return $this->render('index', [
             'models' => $models,
-            'pages' => $pages,
-            'archive' => $archive,
+            'pages' => $pages
         ]);
     }
+
 
     /**
      * Displays a single Lecture model.
@@ -130,6 +142,10 @@ class LekcijasController extends Controller
     {
         $model = $this->findModel($id);
         $user = Yii::$app->user->identity;
+        $uLecture = null;
+        if (Yii::$app->user->identity->user_level == 'Student') {
+            $uLecture = UserLectures::findOne(['user_id' => $user->id, 'lecture_id' => $id]);
+        }
         $dbg = Yii::$app->request->get('dbg');
         $force = Yii::$app->request->get('force');
         if ($dbg) {
@@ -219,7 +235,17 @@ class LekcijasController extends Controller
                         */
                     }
                 }
+                if (isset($post["add-to-favourites"])) {
+                    $uLecture->is_favourite = $post["add-to-favourites"];
+                    $uLecture->update();
+                }
+                if (isset($post["add-to-still-learning"])) {
+                    $uLecture->still_learning = $post["add-to-still-learning"];
+                    $uLecture->update();
+                }
+                $this->refresh();
             }
+
             if (!$force) {
                 UserLectures::setSeenByUser($user->id, $id);
             }
@@ -255,12 +281,99 @@ class LekcijasController extends Controller
                 array_push($difficultiesEng, $engName);
             }
             $evaluations = Evaluations::getEvaluations();
+            foreach ($evaluations as &$ev) {
+                if ($ev['title'] === "Uzdevuma sarežģītība") {
+                    $ev['titleEng'] = "Task difficulty";
+                } else if ($ev['title'] === "Uzdevumu daudzums") {
+                    $ev['titleEng'] = "Amount of tasks";
+                } else if ($ev['title'] === "Komentāri") {
+                    $ev['titleEng'] = "Comments";
+                } else if ($ev['title'] = "Kādu dziesmu vēlētos nākamo") {
+                    $ev['titleEng'] = "What song would you like next";
+                }
+            }
+            function toEng($starText)
+            {
+                $engText = "";
+                switch ($starText) {
+                    case "Viss tik viegls, ka garlaicīgi":
+                        $engText = "Super easy, boring";
+                        break;
+                    case "Ļoti ļoti viegli, noteikti vajag grūtāk":
+                        $engText = "Very easy";
+                        break;
+                    case "Izspēlēju vienu reizi un jau viss skaidrs":
+                        $engText = "Easy";
+                        break;
+                    case "Diezgan vienkārši":
+                        $engText = "Quite easy";
+                        break;
+                    case "Nācās pastrādāt, bet tiku galā bez milzīgas piepūles":
+                        $engText = "Doable";
+                        break;
+                    case "Tiku galā":
+                        $engText = "Perfect";
+                        break;
+                    case "Diezgan grūti":
+                        $engText = "Challenging";
+                        break;
+                    case "Itkā saprotu, bet pirksti neklausa":
+                        $engText = "Hard";
+                        break;
+                    case "Kaut ko mēģinu, bet pārāk nesanāk":
+                        $engText = "Very hard";
+                        break;
+                    case "Vispār neko nesaprotu":
+                        $engText = "Impossible";
+                        break;
+
+                    case "Par daudz, vajadzētu mazāk":
+                        $engText = "Too much";
+                        break;
+                    case "Tieši tik daudz ir labi":
+                        $engText = "Perfect amount";
+                        break;
+                    case "Par maz, vajadzētu vairāk":
+                        $engText = "Too little";
+                        break;
+
+                    case "Vajadzētu mazāk, bija par daudz":
+                        $engText = "Too much";
+                        break;
+                    case "Ideāli, tā turpināt":
+                        $engText = "Perfect amount";
+                        break;
+                    case "Bija par maz, dodiet uz nākamo reizi vairāk":
+                        $engText = "Too little";
+                        break;
+                }
+
+                return $engText;
+            };
+            foreach ($evaluations as &$evaluation) {
+                if ($evaluation['star_text']) {
+                    $starTextArray = unserialize($evaluation['star_text']);
+                    foreach ($starTextArray as &$starText) {
+                        $starText = $starText . "/" . toEng($starText);
+                    };
+                    $evaluation['star_text'] = serialize($starTextArray);
+                }
+            }
             //$handdifficulties = Handdifficulties::getDifficulties();
             $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
             $lectureHandDifficulties = Lectureshanddifficulties::getLectureDifficulties($id);
             $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
             $lecturefiles = Lecturesfiles::getLectureFiles($id);
             $userLectureEvaluations = $force ? [] : Userlectureevaluations::getLectureEvaluations($user->id, $id);
+            $userComments = [];
+            if (SectionsVisible::isVisible("Komentāri")) {
+                $userComments = Userlectureevaluations::getComments($id);
+                foreach ($userComments as &$comment) {
+                    if ($comment['id']) {
+                        $comment['responses'] = CommentResponses::getCommentResponses($comment['id']);
+                    }
+                }
+            }
             $baseUrl = Yii::$app->request->baseUrl;
             $ids = RelatedLectures::getRelations($id);
             if ($ids) {
@@ -273,7 +386,11 @@ class LekcijasController extends Controller
                 }
                 $ids = $tmp;
             }
+
+            $dbUser = Users::findOne([$id => $user->id]);
+            $userCanDownloadFiles = $dbUser->allowed_to_download_files;
             $relatedLectures = Lectures::getLecturesByIds($ids);
+            $difficultiesVisible = SectionsVisible::isVisible("Nodarbības sarežģītība");
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,
@@ -293,9 +410,29 @@ class LekcijasController extends Controller
                 'baseUrl' => $baseUrl,
                 'force' => $force,
                 'relatedLectures' => $relatedLectures,
+                'difficultiesVisible' => $difficultiesVisible,
+                'comments' => $userComments,
+                'uLecture' => $uLecture,
+                'userCanDownloadFiles' => $userCanDownloadFiles
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionToggleIsFavourite($lectureId)
+    {
+        $model = UserLectures::findOne(['lecture_id' => $lectureId, 'user_id' => Yii::$app->user->identity->id]);
+        $model->is_favourite = !$model->is_favourite;
+        $model->update();
+        return $this->redirect(Yii::$app->request->referrer);
+    }
+
+    public function actionToggleStillLearning($lectureId)
+    {
+        $model = UserLectures::findOne(['lecture_id' => $lectureId, 'user_id' => Yii::$app->user->identity->id]);
+        $model->still_learning = !$model->still_learning;
+        $model->update();
+        return $this->redirect(Yii::$app->request->referrer);
     }
 
     /**

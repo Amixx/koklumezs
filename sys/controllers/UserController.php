@@ -1,7 +1,7 @@
 <?php
- 
+
 namespace app\controllers;
- 
+
 use Yii;
 use app\models\Users;
 use app\models\Lectures;
@@ -13,7 +13,7 @@ use app\models\Studenthandgoals;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
- 
+
 /**
  * UserController implements the CRUD actions for Users model.
  */
@@ -26,7 +26,7 @@ class UserController extends Controller
                 'class' => \yii\filters\AccessControl::className(),
                 'rules' => [
                     // allow authenticated users
-                    [                            
+                    [
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
@@ -40,11 +40,11 @@ class UserController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
-                ],                
+                ],
             ],
         ];
     }
- 
+
     /**
      * Lists all Users models.
      * @return mixed
@@ -59,10 +59,10 @@ class UserController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'get' => $get,
-            'lectures' => $lectures, 
+            'lectures' => $lectures,
         ]);
     }
- 
+
     /**
      * Displays a single User model.
      * @param integer $id
@@ -74,7 +74,7 @@ class UserController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
- 
+
     /**
      * Creates a new Users model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -91,22 +91,22 @@ class UserController extends Controller
             $model->created_at = date('Y-m-d H:i:s', time());
             $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
             $created = $model->save();
-            if($created){
-                Yii::$app->session->setFlash('success', "User created successfully!");               
-            }else{
-                Yii::$app->session->setFlash('error', "User not created!");               
+            if ($created) {
+                Yii::$app->session->setFlash('success', "User created successfully!");
+            } else {
+                Yii::$app->session->setFlash('error', "User not created!");
             }
-            return $this->redirect(['index']);            
-        } 
+            return $this->redirect(['index']);
+        }
         return $this->render('create', [
             'model' => $model,
             'studentGoals' => [],
             'studentHandGoals' => [],
             'difficulties' => $difficulties,
             'handdifficulties' => $handdifficulties,
-        ]);    
+        ]);
     }
- 
+
     /**
      * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -121,46 +121,51 @@ class UserController extends Controller
         $studentHandGoals = Studenthandgoals::getUserGoals($id);
         $difficulties = Difficulties::getDifficulties();
         $handdifficulties = Handdifficulties::getDifficulties();
+
         if ($model->load($post)) {
-            if(!empty($post['Users']['password'])){
+            if (!empty($post['Users']['password'])) {
                 $model->password = \Yii::$app->security->generatePasswordHash($post['Users']['password']);
-            }else{
+            } else {
                 unset($model->password);
             }
-            if(isset($post['studentgoals'])){
+            if (isset($post['studentgoals'])) {
                 Studentgoals::removeUserGoals($id);
-                if(isset($post['studentgoals']['now'])){                    
-                    foreach($post['studentgoals']['now'] as $pid => $value){
+                if (isset($post['studentgoals']['now'])) {
+                    foreach ($post['studentgoals']['now'] as $pid => $value) {
                         $goal = new Studentgoals();
                         $goal->user_id = $model->id;
-                        $goal->diff_id = $pid;                    
+                        $goal->diff_id = $pid;
                         $goal->type = Studentgoals::NOW;
                         $goal->value = $value ?? 0;
                         $goal->save();
                     }
                 }
-                if(isset($post['studentgoals']['future'])){
-                    foreach($post['studentgoals']['future'] as $pid => $value){
+                if (isset($post['studentgoals']['future'])) {
+                    foreach ($post['studentgoals']['future'] as $pid => $value) {
                         $goal = new Studentgoals();
                         $goal->user_id = $model->id;
-                        $goal->diff_id = $pid;                    
+                        $goal->diff_id = $pid;
                         $goal->type = Studentgoals::FUTURE;
                         $goal->value = $value ?? 0;
                         $goal->save();
                     }
                 }
             }
-            if(isset($post['studenthandgoals'])){
+            if (isset($post['studenthandgoals'])) {
                 Studenthandgoals::removeUserGoals($id);
-                foreach($post['studenthandgoals'] as $pid => $value){
+                foreach ($post['studenthandgoals'] as $pid => $value) {
                     $goal = new Studenthandgoals();
                     $goal->user_id = $model->id;
-                    $goal->category_id = $pid;                    
+                    $goal->category_id = $pid;
                     $goal->save();
                 }
             }
             $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
-            $model->update();              
+            if (isset($post['Users']['allowed_to_download_files'])) {
+                $model->allowed_to_download_files = $post['Users']['allowed_to_download_files'];
+            }
+
+            $model->update();
             return $this->redirect(['update', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -172,7 +177,7 @@ class UserController extends Controller
             ]);
         }
     }
- 
+
     /**
      * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -182,10 +187,10 @@ class UserController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
- 
+
         return $this->redirect(['index']);
     }
- 
+
     /**
      * Finds the Users model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

@@ -1,0 +1,22 @@
+{
+  "name": "Koklumezs",
+  "short_name": "Koklumezs",
+  "description": "Kokles speles skola",
+  "icons": [
+    {
+      "src": "icon192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/site",
+  "background_color": "darkgoldenrod",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "darkgoldenrod"
+}

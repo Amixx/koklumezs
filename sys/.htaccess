@@ -1,6 +1,35 @@
-RewriteEngine On RewriteBase /
+<Files "pwa-builder.js">
+Header Set Service-Worker-allowed "/"
+</Files>
+
+<IfModule mod_rewrite.c>
+    #Options +FollowSymlinks
+    #RewriteEngine On
+    #RewriteBase /
+    #RewriteCond %{REQUEST_URI} ^/.*
+    #RewriteRule ^(.*)$ sys/web/$1 [L]
+    #RewriteCond %{REQUEST_URI} !^/web/
+    #RewriteCond %{REQUEST_FILENAME} !-f [OR]
+    #RewriteCond %{REQUEST_FILENAME} !-d
+    #RewriteRule ^.*$ sys/web/index.php
+    # Options +FollowSymLinks
+    Options +SymLinksIfOwnerMatch
+    IndexIgnore */*
+    RewriteEngine On
+
+RewriteCond %{HTTPS} !on
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]   
  
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
- 
-RewriteRule . index.php
+    RewriteCond %{REQUEST_URI} !^/(web)
+    RewriteRule ^$ /web [L]
+    RewriteRule ^assets/(.*)$ sys/web/assets/$1 [L]
+    RewriteRule ^css/(.*)$ sys/web/css/$1 [L]
+    RewriteRule ^js/(.*)$ sys/web/js/$1 [L]
+    RewriteRule ^images/(.*)$ sys/web/images/$1 [L]
+    RewriteRule (.*) sys/web/$1
+    RewriteRule (.*) sys/web/$1
+    
+    #RewriteCond %{REQUEST_FILENAME} !-f
+    #RewriteCond %{REQUEST_FILENAME} !-d
+    #RewriteRule ^.*$ sys/web/index.php
+</IfModule>

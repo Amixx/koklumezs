@@ -104,7 +104,7 @@ class UserLectures extends \yii\db\ActiveRecord
      */
     public function getSentUserLectures($id, $sent = 1): array
     {
-        $results = self::find()->where(['user_id' => $id, 'evaluated' => 0, 'sent' => $sent])->asArray()->all();
+        $results = self::find()->where(['user_id' => $id, 'evaluated' => 0, 'sent' => $sent])->asArray()->orderBy(['created' => SORT_DESC])->all();
         return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
     }
 
@@ -196,6 +196,26 @@ class UserLectures extends \yii\db\ActiveRecord
         return self::find()->where(['user_id' => $id, 'evaluated' => $evaluated])->orderBy(['id' => SORT_DESC])->all();
     }
 
+    public function getLecturesOfType($id, $type)
+    {
+        $condition = ['user_id' => $id, 'sent' => true];
+        if ($type == "new") {
+            $condition['opened'] = false;
+        } else if ($type == "learning") {
+            $condition['still_learning'] = true;
+        } else if ($type == "favourite") {
+            $condition['is_favourite'] = true;
+        }
+
+        $results = self::find()->where($condition)->orderBy(['id' => SORT_DESC])->all();
+        return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
+    }
+
+    public function getLatestLecturesOfType($id, $type)
+    {
+        return array_slice(self::getLecturesOfType($id, $type), 0, 8);
+    }
+
     public function getUnsentLectures($id, $evaluated = 0, $sent = 0)
     {
         return self::find()->where(['user_id' => $id, 'evaluated' => $evaluated, 'sent' => $sent])->orderBy(['id' => SORT_DESC])->all();
@@ -211,6 +231,7 @@ class UserLectures extends \yii\db\ActiveRecord
             $model = self::find()->where(['opened' => 0, 'user_id' => $user_id, 'lecture_id' => $id])->one();
             if ($model) {
                 $model->opened = 1;
+                $model->still_learning = 1;
                 if (!$setOpenTime) {
                     $model->open_times = $model->open_times + 1;
                 }
@@ -247,6 +268,13 @@ class UserLectures extends \yii\db\ActiveRecord
             $results = $ids;
         }
         return $results;
+    }
+
+    public function getUserLectureByLectureId($lecture_id)
+    {
+        $user_id = Yii::$app->user->identity->id;
+
+        return self::findOne(['user_id' => $user_id, 'lecture_id' => $lecture_id]);
     }
 
     /**

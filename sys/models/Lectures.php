@@ -37,8 +37,8 @@ class Lectures extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'author',  'season'], 'required'],//'complexity',
-            [['title', 'description', 'complexity', 'season','file','thumb'], 'string'],
+            [['title', 'author',  'season'], 'required'], //'complexity',
+            [['title', 'description', 'complexity', 'season', 'file', 'thumb'], 'string'],
             [['created', 'updated'], 'safe'],
             [['author'], 'integer'],
             [['author'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['author' => 'id']],
@@ -82,10 +82,10 @@ class Lectures extends \yii\db\ActiveRecord
     public function getComplexity()
     {
         $complex = [];
-        for($x = 1;$x <=50;$x++){
+        for ($x = 1; $x <= 50; $x++) {
             $complex[$x] = $x;
         }
-       return $complex;
+        return $complex;
     }
     /**
      * @return \yii\db\ActiveQuery
@@ -101,15 +101,20 @@ class Lectures extends \yii\db\ActiveRecord
     public function getUsers()
     {
         return $this->hasOne(Users::className(), ['id' => 'author'])
-        ->from(['u2' => Users::tableName()]);
+            ->from(['u2' => Users::tableName()]);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getLectures()
-    {    
-        return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'title');        
+    {
+        return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'title');
+    }
+
+    public function getLecturesObjects()
+    {
+        return self::find()->asArray()->all();
     }
 
     public function getLecturesForUser($ids)
@@ -117,20 +122,33 @@ class Lectures extends \yii\db\ActiveRecord
         return ArrayHelper::map(self::find()->where(['not in', 'id', $ids])->asArray()->all(), 'id', 'title');
     }
 
+    public function getLecturesObjectsForUser($ids)
+    {
+        $data = self::find()->where(['not in', 'id', $ids])->asArray()->all();
+        $returnArray = [];
+        foreach ($data as $d) {
+            $returnArray[$d['id']] = [
+                'title' => $d['title'],
+                'complexity' => $d['complexity']
+            ];
+        }
+        return $returnArray;
+    }
+
     public function getLecturesByIds($ids, $asArray = false)
     {
-        if( $asArray){
+        if ($asArray) {
             return ArrayHelper::map(self::find()->where(['in', 'id', $ids])->all(), 'id', 'title');
-        }else{
+        } else {
             return self::find()->where(['in', 'id', $ids])->all();
         }
     }
 
-    public function getLecturesBySeasonAndIds($ids,$season, $asArray = false)
+    public function getLecturesBySeasonAndIds($ids, $season, $asArray = false)
     {
-        if( $asArray){
+        if ($asArray) {
             return ArrayHelper::map(self::find()->where(['in', 'id', $ids])->andWhere(['season' => $season])->all(), 'id', 'title');
-        }else{
+        } else {
             return self::find()->where(['in', 'id', $ids])->andWhere(['season' => $season])->all();
         }
     }
@@ -140,6 +158,4 @@ class Lectures extends \yii\db\ActiveRecord
     {
         return ArrayHelper::map(self::find()->where(['not in', 'id', [$id]])->asArray()->all(), 'id', 'title');
     }
-
-
 }

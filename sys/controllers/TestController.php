@@ -8,6 +8,15 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
+use app\models\LectureAssignment;
+use app\models\UserLectures;
+use app\models\SectionsVisible;
+use app\models\Lectures;
+use app\models\Users;
+use yii\data\Pagination;
+use yii\web\NotFoundHttpException;
+use app\models\CommentresponsesSearch;
+
 
 class TestController extends Controller
 {
@@ -60,8 +69,9 @@ class TestController extends Controller
      */
     public function actionIndex()
     {
-        $difficulties = Difficulties::getDifficulties();
-        var_dump($difficulties);
-        echo "testing";
+        $commentResponsesSearchModel = new CommentresponsesSearch();
+        $commentResponsesDataProvider = $commentResponsesSearchModel->search(Yii::$app->request->queryParams);
+
+        var_dump($commentResponsesDataProvider);
     }
 }

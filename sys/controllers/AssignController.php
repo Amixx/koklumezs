@@ -55,7 +55,7 @@ class AssignController extends \yii\web\Controller
             $lastlectures[$id] = UserLectures::getLastEvaluatedLecture($id);
             if ($lastlectures[$id]) {
                 if (!isset($evaluations[$id])) {
-                    $evaluations[$id] = Userlectureevaluations::getLectureEvaluations($id, $lastlectures[$id]['lecture_id']);                    
+                    $evaluations[$id] = Userlectureevaluations::getLectureEvaluations($id, $lastlectures[$id]['lecture_id']);
                 }
                 if (!isset($lectureDifficulties[$lastlectures[$id]['lecture_id']])) {
                     $lectureDifficulties[$lastlectures[$id]['lecture_id']] = LecturesDifficulties::getLectureDifficulties($lastlectures[$id]['lecture_id']);
@@ -64,7 +64,6 @@ class AssignController extends \yii\web\Controller
             if (!isset($goals[$id])) {
                 $goals[$id] = StudentGoals::getUserGoals($id);
             }
-
         }
 
         $videotexts = unserialize($videoParam->star_text);
@@ -95,12 +94,12 @@ class AssignController extends \yii\web\Controller
             $model->assigned = Yii::$app->user->identity->id;
             $model->created = date('Y-m-d H:i:s', time());
             $model->user_difficulty = $goalsum;
-            if (isset($post['UserLectures']['lecture_id']) && $model->load($post) && $model->save()) {                
+            if (isset($post['UserLectures']['lecture_id']) && $model->load($post) && $model->save()) {
                 $sent = UserLectures::sendEmail($model->user_id, $model->lecture_id);
                 $model->sent = (int) $sent;
-                $model->update();            
+                $model->update();
                 return $this->refresh();
-            } 
+            }
         }
         if (isset($get['assign']) and is_numeric($get['assign'])) {
             $model = new UserLectures();
@@ -110,7 +109,7 @@ class AssignController extends \yii\web\Controller
             $model->lecture_id = $get['assign'];
             $model->user_difficulty = $goalsum;
             $saved = $model->save();
-            if($saved){
+            if ($saved) {
                 $sent = UserLectures::sendEmail($model->user_id, $model->lecture_id);
                 $model->sent = (int) $sent;
                 $model->update();
@@ -130,7 +129,8 @@ class AssignController extends \yii\web\Controller
         $thirtyDayResult = UserLectures::getDayResult($id, 30);
         $PossibleThreeLectures = LectureAssignment::getPossibleThreeLectures($id);
         $userLectures = UserLectures::getUserLectures($id);
-        $lectures = Lectures::getLecturesForUser($userLectures);
+        $lectures = Lectures::getLecturesObjectsForUser($userLectures);
+
         if ($lastlectures) {
             foreach ($lastlectures as $lecture) {
                 if (!isset($evaluations[$lecture->lecture_id])) {
@@ -141,7 +141,20 @@ class AssignController extends \yii\web\Controller
                 }
             }
         }
-       
+
+        $onlyThoseWithoutDontBother = true;
+        $filterLang = array_key_exists("lang", $get) ? $get["lang"] : null;
+        $filterSubType = array_key_exists("subType", $get) ? $get["subType"] : null;
+        $users = Users::getActiveStudentsWithParams($onlyThoseWithoutDontBother, $filterLang, $filterSubType);
+        $currentUserId = $user->id;
+
+        $userIds = array_keys($users);
+        $currentUserKey = (array_search($currentUserId, $userIds, true));
+        $prevUserId = key_exists($currentUserKey - 1, $userIds) ? $userIds[$currentUserKey - 1] : null;
+        $nextUserId = key_exists($currentUserKey + 1, $userIds) ? $userIds[$currentUserKey + 1] : null;
+        $userCount = count($users);
+
+
         $videotexts = unserialize($videoParam->star_text);
         $options['id'] = $id;
         $options['videoparamtexts'] = $videotexts;
@@ -161,7 +174,12 @@ class AssignController extends \yii\web\Controller
         $options['manualLectures'] = $lectures;
         $options['model'] = new UserLectures;
         $options['diff'] = $diff;
+        $options['prevUserId'] = $prevUserId;
+        $options['nextUserId'] = $nextUserId;
+        $options['filterLang'] = $filterLang;
+        $options['filterSubType'] = $filterSubType;
+        $options['currentUserIndex'] = $currentUserKey;
+        $options['userCount'] = $userCount;
         return $this->render('userlectures', $options);
     }
-
 }

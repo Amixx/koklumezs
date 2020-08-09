@@ -57,6 +57,7 @@ class UserLecturesController extends Controller
         $students = Users::getActiveStudents();
         $admins = Users::getAdmins();
         $lectures = Lectures::getLectures();
+        $lectureObjects = Lectures::getLecturesObjects();
         $get = Yii::$app->request->queryParams;
         $dataProvider = $searchModel->search($get);
         return $this->render('index', [
@@ -65,6 +66,7 @@ class UserLecturesController extends Controller
             'students' => $students,
             'admins' => $admins,
             'lectures' => $lectures,
+            'lectureObjects' => $lectureObjects,
             'get' => $get,
         ]);
     }

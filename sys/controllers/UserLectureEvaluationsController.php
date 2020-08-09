@@ -8,6 +8,8 @@ use app\models\UserlectureevaluationsSearch;
 use app\models\Users;
 use app\models\Lectures;
 use app\models\Evaluations;
+use app\models\CommentResponses;
+use app\models\CommentresponsesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -44,13 +46,19 @@ class UserLectureEvaluationsController extends Controller
         $lectures = Lectures::getLectures();
         $evaluations = Evaluations::getEvaluationsTitles();
         $get = Yii::$app->request->queryParams;
+
+        // $commentResponsesSearchModel = new CommentresponsesSearch();
+        // $commentResponsesDataProvider = $commentResponsesSearchModel->search(Yii::$app->request->queryParams);
+        $commentResponsesDataProvider = CommentResponses::getAllCommentResponses();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'students' => $students,
             'lectures' => $lectures,
             'evaluations' => $evaluations,
-            'get' => $get
+            'get' => $get,
+            'commentResponsesDataProvider' => $commentResponsesDataProvider
         ]);
     }
 

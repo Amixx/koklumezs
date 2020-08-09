@@ -9,6 +9,7 @@ $this->title = 'Lietotāja rediģēšana: ' . $model->email;
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->email, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Rediģēt';
+
 ?>
 <div class="user-update">
 

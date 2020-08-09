@@ -9,6 +9,8 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\Models\CommentResponses;
+use app\Models\Userlectureevaluations;
 
 AppAsset::register($this);
 ?>
@@ -23,8 +25,8 @@ AppAsset::register($this);
     <meta name="theme-color" content="#222">
     <link rel="shortcut icon" href="<?php echo Yii::$app->request->baseUrl; ?>/favicon.png?v=1" type="image/png" />
     <link rel="apple-touch-icon" href="<?php echo Yii::$app->request->baseUrl; ?>/favicon.png?v=1" type="image/png" />
-    <?php $this->registerCsrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
+    <link rel="manifest" href="<?php echo Yii::$app->request->baseUrl; ?>/manifest.webmanifest">
+    <?php $this->registerCsrfMetaTags() ?> <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
 
@@ -34,7 +36,7 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
         ob_start(); ?>
-        <div id="logo" title="<?= Yii::$app->name ?>">
+        <div id="logo" title="<?= Yii::$app->name ?>" class="<?= (!Yii::$app->user->isGuest and Yii::$app->user->identity->user_level == 'Admin') ? 'admin' : '' ?>">
             <!--?xml version="1.0" encoding="UTF-8"?-->
             <svg preserveAspectRatio="xMidYMid meet" data-bbox="1.3 1.3 176 176" viewBox="0 0 178.6 178.6" xmlns="http://www.w3.org/2000/svg" data-type="ugc" role="img">
                 <g>
@@ -66,11 +68,16 @@ AppAsset::register($this);
         </div>
         <?php
         $logo = ob_get_clean();
+        $classes = 'navbar-inverse navbar-fixed-top';
+        if (!Yii::$app->user->isGuest and Yii::$app->user->identity->user_level == 'Admin') {
+            $classes .= ' navbar-admin';
+        }
+
         NavBar::begin([
             'brandLabel' => $logo,
             'brandUrl' => Yii::$app->homeUrl,
             'options' => [
-                'class' => 'navbar-inverse navbar-fixed-top',
+                'class' => $classes,
                 'id' => 'navbar',
             ],
         ]);
@@ -89,26 +96,29 @@ AppAsset::register($this);
             }
         </script>
         <?php
+        // Yii::$app->assetManager->forceCopy = true;
         $navItems = [];
         if (Yii::$app->user->isGuest) {
         } else {
+            $text = Yii::$app->user->identity->user_level == 'Admin' ? '' : '/Sign out';
             $navEnd = '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    'Izrakstīties (' . Yii::$app->user->identity->first_name . ' ' . Yii::$app->user->identity->last_name . ')',
+                    'Izrakstīties' . $text . ' (' . Yii::$app->user->identity->first_name . ' ' . Yii::$app->user->identity->last_name . ')',
                     ['class' => 'btn btn-link logout']
                 )
                 . Html::endForm()
                 . '</li>';
         }
         if (Yii::$app->user->isGuest) {
-            $navItems[] = ['label' => 'Pierakstīties', 'url' => ['/site/login']];
+            $navItems[] = ['label' => 'Pierakstīties/Log in', 'url' => ['/site/login']];
         } elseif (Yii::$app->user->identity->user_level == 'Admin') {
             $navItems[] = ['label' => 'Piešķiršana', 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),];
             $navItems[] = ['label' => 'Piešķirts', 'url' => ['/user-lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lectures']),];
             $navItems[] = ['label' => 'Nodarbības', 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
             $navItems[] = ['label' => 'Faili', 'url' => ['/lecturesfiles'], 'active' =>  in_array(\Yii::$app->controller->id, ['lecturesfiles']),];
             $navItems[] = ['label' => 'Parametri', 'url' => ['/difficulties'], 'active' =>  in_array(\Yii::$app->controller->id, ['difficulties']),];
+            $navItems[] = ['label' => 'Sekciju redzamība', 'url' => ['/sections'], 'active' =>  in_array(\Yii::$app->controller->id, ['sections']),];
             //$navItems[] = ['label' => 'Kategorijas', 'url' => ['/handdifficulties'],'active' =>  in_array(\Yii::$app->controller->id,['handdifficulties']),];        
             $navItems[] = ['label' => 'Novērtējumi', 'url' => ['/evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['evaluations'])];
             $navItems[] = ['label' => 'Lietotāji', 'url' => ['/user'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])];
@@ -116,12 +126,36 @@ AppAsset::register($this);
             $navItems[] = ['label' => 'Izsūtītie e-pasti', 'url' => ['/sentlectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['sentlectures'])];
             $navItems[] = $navEnd;
         } elseif (Yii::$app->user->identity->user_level == 'Student') {
-            $navItems[] = ['label' => 'Nodarbības (lessons)', 'url' => ['/lekcijas'], 'active' =>  in_array(\Yii::$app->controller->id, ['lekcijas'])];
+            $commentsItemText = 'Jaunākie komentāri/Newest comments';
+            $unseenResponsesCount = array_key_exists('unseen_responses_count', $this->params) ? $this->params['unseen_responses_count'] : null;
+            if ($unseenResponsesCount && $unseenResponsesCount > 0) {
+                $commentsItemText .= " ($unseenResponsesCount)";
+            }
+
+            $navItems[] = [
+                'label' => 'Nodarbības/Lessons',
+                'active' =>  in_array(\Yii::$app->controller->id, ['lekcijas']),
+                'items' => [
+                    ['label' => 'Jaunās nodarbības/New lessons', 'url' => ['/lekcijas?type=new']],
+                    ['label' => 'Šobrīd mācos/Currently learning', 'url' => ['/lekcijas?type=learning']],
+                    ['label' => 'Mīļākās nodarbības/Favourite lessons', 'url' => ['/lekcijas?type=favourite']]
+                ],
+                'options' => ['class' => 'navbar-lessons-dropdown-toggle']
+            ];
+            $navItems[] = ['label' => 'Notis/Sheet music', 'url' => ['/file'], 'active' =>  in_array(\Yii::$app->controller->id, ['file'])];
+            $navItems[] = ['label' => $commentsItemText, 'url' => ['/comment-responses'], 'active' =>  in_array(\Yii::$app->controller->id, ['comment-responses'])];
+            $navItems[] = ['label' => 'Arhīvs/Archive', 'url' => ['/archive'], 'active' =>  in_array(\Yii::$app->controller->id, ['archive'])];
+
             $navItems[] = $navEnd;
         }
 
+        $navbarClasses = 'navbar-nav navbar-right';
+        if (!Yii::$app->user->isGuest && Yii::$app->user->identity->user_level == 'Student') {
+            $navbarClasses .= ' for-students';
+        }
+
         echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-right'],
+            'options' => ['class' => $navbarClasses],
             'items' => $navItems
         ]);
         NavBar::end();
@@ -144,7 +178,52 @@ AppAsset::register($this);
         </div>
     </footer>
 
+    <div id="install-prompt" class="a2hs">Pievienot sākuma ekrānam</div>
+
     <?php $this->endBody() ?>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/pwabuilder-sw.js', {
+                    scope: "/"
+                })
+                .then(function(registration) {
+                    // console.log('Service worker registration successful, scope is: ', registration.scope);
+                })
+                .catch(function(error) {
+                    // console.log('Service worker registration failed, error: ', error);
+                });
+        }
+
+        window.addEventListener('beforeinstallprompt', function(e) {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+
+            if (window.innerWidth < 769) {
+                document.getElementById("install-prompt").style.display = "block";
+            }
+        });
+
+
+        document.getElementById("install-prompt").addEventListener('click', (e) => {
+            // Hide the app provided install promotion
+            document.getElementById("install-prompt").style.background = "gainsboro";
+            // Show the install prompt
+            deferredPrompt.prompt();
+            // Wait for the user to respond to the prompt
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                    document.getElementById("install-prompt").style.display = "none";
+                } else {
+                    console.log('User dismissed the install prompt');
+                    document.getElementById("install-prompt").style.background = "goldenrod";
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

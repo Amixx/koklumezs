@@ -19,7 +19,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Piešķirt nodarbību', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); 
+    <?php // echo $this->render('_search', ['model' => $searchModel]);
+    // var_dump($lectureObjects);
     ?>
 
     <?= GridView::widget([
@@ -94,7 +95,27 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => Html::dropDownList('UserLecturesSearch[evaluated]', isset($get['UserLecturesSearchevaluatedsent']) ? $get['UserLecturesSearch']['evaluated'] : '', [0 => 'Nav', 1 => 'Ir'], ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
             ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            // ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view}',
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-eye-open"> </span>',
+                            $url,
+                            ['title' => 'View', 'data-pjax' => '0', 'onclick' => "window.open('" . $url . "','newwindow','width=1200,height=1200');return false;"]
+                        );
+                    },
+                ],
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    if ($action === 'view') {
+                        $url = '/sys/lekcijas/lekcija/' . $model['lecture_id'] . '?force=1';
+                        return $url;
+                    }
+                }
+            ],
+            ['class' => 'yii\grid\ActionColumn', 'template' => '{update} {delete}'],
         ],
     ]); ?>
 

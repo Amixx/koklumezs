@@ -14,7 +14,7 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
     public $student;
     public $lecture;
     public $evalua;
-    
+
     /**
      * {@inheritdoc}
      */
@@ -54,7 +54,7 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
 
         //relations
         $query->joinWith(['student']);
-                
+
         $dataProvider->sort->attributes['student'] = [
             // The tables are the ones our relation are configured to
             'asc' => ['student.email' => SORT_ASC],
@@ -63,7 +63,7 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
 
         //relations
         $query->joinWith(['lecture']);
-                
+
         $dataProvider->sort->attributes['lecture'] = [
             // The tables are the ones our relation are configured to
             'asc' => ['lecture.title' => SORT_ASC],
@@ -71,7 +71,7 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
         ];
 
         $query->joinWith(['evalua']);
-                
+
         $dataProvider->sort->attributes['evalua'] = [
             // The tables are the ones our relation are configured to
             'asc' => ['evalua.title' => SORT_ASC],
@@ -98,16 +98,18 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
         $query->andFilterWhere(
             ['like', self::tableName() . '.created', $this->created]
         );
-        
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'lecture_id' => $this->lecture_id,
-            'evaluation_id' => $this->evaluation_id,
+            'evaluation_id' => $this->evaluation_id ? $this->evaluation_id : 4,
             'user_id' => $this->user_id,
         ]);
 
         $query->andFilterWhere(['like', 'evalua', $this->evalua]);
+
+        $dataProvider->sort->defaultOrder = ['created' => SORT_DESC];
 
         return $dataProvider;
     }

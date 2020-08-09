@@ -48,7 +48,7 @@ class LecturesController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['GET'],
                 ],
             ],
         ];
@@ -64,13 +64,13 @@ class LecturesController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $get = Yii::$app->request->queryParams;
         $admins = Users::getAdmins();
-        
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'get' => $get,
             'admins' => $admins,
-            
+
         ]);
     }
 
@@ -104,39 +104,39 @@ class LecturesController extends Controller
         $model->created = date('Y-m-d H:i:s', time());
         $model->complexity = 1;
         if ($model->load($post) && $model->save()) {
-            if(isset($post['difficulties'])) {
-                $sum = 0;   
-                foreach($post['difficulties'] as $pid => $value){
+            if (isset($post['difficulties'])) {
+                $sum = 0;
+                foreach ($post['difficulties'] as $pid => $value) {
                     $difficulty = new LecturesDifficulties();
                     $difficulty->diff_id = $pid;
                     $difficulty->lecture_id = $model->id;
                     $difficulty->value = $value ?? 0;
-                    if(is_numeric($difficulty->value)){
+                    if (is_numeric($difficulty->value)) {
                         $sum += $difficulty->value;
                     }
                     $difficulty->save();
                 }
-                $model->complexity = (int)$sum;
+                $model->complexity = (int) $sum;
                 $model->update();
             }
-            if(isset($post['handdifficulties'])) {   
-                foreach($post['handdifficulties'] as $pid => $value){
+            if (isset($post['handdifficulties'])) {
+                foreach ($post['handdifficulties'] as $pid => $value) {
                     $handdifficulty = new Lectureshanddifficulties();
                     $handdifficulty->category_id = $pid;
                     $handdifficulty->lecture_id = $model->id;
                     $handdifficulty->save();
                 }
             }
-            if(isset($post['evaluations'])) {   
-                foreach($post['evaluations'] as $eid => $value){
+            if (isset($post['evaluations'])) {
+                foreach ($post['evaluations'] as $eid => $value) {
                     $evaluation = new Lecturesevaluations();
                     $evaluation->evaluation_id = $eid;
                     $evaluation->lecture_id = $model->id;
                     $evaluation->save();
                 }
             }
-            if(isset($post['relatedLectures'])) {
-                foreach($post['relatedLectures'] as $rid){
+            if (isset($post['relatedLectures'])) {
+                foreach ($post['relatedLectures'] as $rid) {
                     $relation = new RelatedLectures();
                     $relation->related_id = $rid;
                     $relation->lecture_id = $model->id;
@@ -149,7 +149,7 @@ class LecturesController extends Controller
             'model' => $model,
             'difficulties' => $difficulties,
             'handdifficulties' => $handdifficulties,
-            'evaluations' => $evaluations,            
+            'evaluations' => $evaluations,
             'lectures' => $lectures,
         ]);
     }
@@ -176,35 +176,35 @@ class LecturesController extends Controller
         $model = $this->findModel($id);
         $model->updated = date('Y-m-d H:i:s', time());
         if ($model->load($post) && $model->save()) {
-            if(isset($post['difficulties'])) {   
-                $sum = 0;   
+            if (isset($post['difficulties'])) {
+                $sum = 0;
                 LecturesDifficulties::removeLectureDifficulties($model->id);
-                foreach($post['difficulties'] as $pid => $value){
+                foreach ($post['difficulties'] as $pid => $value) {
                     $difficulty = new LecturesDifficulties();
                     $difficulty->diff_id = $pid;
                     $difficulty->lecture_id = $model->id;
                     $difficulty->value = $value ?? 0;
-                    if(is_numeric($difficulty->value)){
+                    if (is_numeric($difficulty->value)) {
                         $sum += $difficulty->value;
                     }
                     $difficulty->save();
-                }  
-                $model->complexity = (int)$sum;
+                }
+                $model->complexity = (int) $sum;
                 $model->updated = date('Y-m-d H:i:s', time());
-                $model->save(false);               
+                $model->save(false);
             }
-            if(isset($post['handdifficulties'])) {   
+            if (isset($post['handdifficulties'])) {
                 Lectureshanddifficulties::removeLectureDifficulties($id);
-                foreach($post['handdifficulties'] as $pid => $value){
+                foreach ($post['handdifficulties'] as $pid => $value) {
                     $handdifficulty = new Lectureshanddifficulties();
                     $handdifficulty->category_id = $pid;
                     $handdifficulty->lecture_id = $model->id;
                     $handdifficulty->save();
                 }
             }
-            if(isset($post['evaluations'])) {   
+            if (isset($post['evaluations'])) {
                 Lecturesevaluations::removeLectureEvalutions($id);
-                foreach($post['evaluations'] as $eid => $value){
+                foreach ($post['evaluations'] as $eid => $value) {
                     $evaluation = new Lecturesevaluations();
                     $evaluation->evaluation_id = $eid;
                     $evaluation->lecture_id = $model->id;
@@ -212,8 +212,8 @@ class LecturesController extends Controller
                 }
             }
             RelatedLectures::removeLectureRelations($id);
-            if(isset($post['relatedLectures'])) {                
-                foreach($post['relatedLectures'] as $rid){
+            if (isset($post['relatedLectures'])) {
+                foreach ($post['relatedLectures'] as $rid) {
                     $relation = new RelatedLectures();
                     $relation->related_id = $rid;
                     $relation->lecture_id = $model->id;

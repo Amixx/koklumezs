@@ -1,8 +1,11 @@
 <?php
 
 namespace app\models;
+
 use yii\helpers\ArrayHelper;
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\Query;
 
 /**
  * This is the model class for table "userlectureevaluations".
@@ -75,16 +78,16 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }
 
-     /**
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getStudent()
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id'])
-        ->from(['student' => Users::tableName()]);
+            ->from(['student' => Users::tableName()]);
     }
 
-     /**
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getLecture()
@@ -100,20 +103,48 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
         return $this->hasOne(Evaluations::className(), ['id' => 'evaluation_id']);
     }
 
-   
+
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLectureEvaluations($user_id,$id)
+    public function getLectureEvaluations($user_id, $id)
     {
-        return ArrayHelper::map(self::find()->where(['user_id' => $user_id,'lecture_id' => $id])->orderBy(['id' => SORT_ASC])->asArray()->all(), 'evaluation_id', 'evaluation');
+        return ArrayHelper::map(self::find()->where(['user_id' => $user_id, 'lecture_id' => $id])->orderBy(['id' => SORT_ASC])->asArray()->all(), 'evaluation_id', 'evaluation');
     }
 
-     /**
+    public function getCommentresponses()
+    {
+        return $this->hasMany(CommentResponses::className(), ['id' => 'evaluation_id']);
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function hasLectureEvaluations($user_id)
     {
         return ArrayHelper::map(self::find()->where(['user_id' => $user_id])->orderBy(['id' => SORT_ASC])->asArray()->all(), 'lecture_id', 'evaluation_id');
+    }
+
+    public function getCommentsResponsesForUser()
+    {
+        $myComments = self::getCommentsForUser();
+        return $myComments;
+    }
+
+    public function getCommentsForUser()
+    {
+        // $timeToStartShowingComments = new \DateTime('2020-06-27');
+        $timeToStartShowingComments = new \DateTime('2019-06-27'); //for debugging
+        $timeFormatted = $timeToStartShowingComments->format('Y-m-d');
+        // $subquery = new Query()->select(['commentresponses.userlectureevaluation_id'])->from('commentresponses')->where();
+        return self::find()->where(['user_id' => Yii::$app->user->identity->id, 'evaluation_id' => 4])->andWhere(['>=', 'created', $timeFormatted])->andWhere(['id', $subquery])->with('commentresponses')->asArray()->all();
+    }
+
+    public function getComments($id)
+    {
+        $timeToStartShowingComments = new \DateTime('2020-06-27');
+        // $timeToStartShowingComments = new \DateTime('2019-06-27'); for debugging
+        $timeFormatted = $timeToStartShowingComments->format('Y-m-d');
+        return self::find()->where(['evaluation_id' => 4, 'lecture_id' => $id])->andWhere(['>=', 'created', $timeFormatted])->joinWith('student')->asArray()->all();
     }
 }

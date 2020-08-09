@@ -7,7 +7,7 @@ $this->title = 'Nodarbību piešķiršana';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <h1><?= $this->title ?></h1>
-<p>
+<p style="display:inline-block">
     <?= Html::a(
         'Manuāli izsaukt automātisko nodarbību piešķiršanu visiem studentiem',
         ['/cron', 'send' => 1],
@@ -20,8 +20,29 @@ $this->params['breadcrumbs'][] = $this->title;
         ]
     ) ?>
 </p>
+<div style="display:inline-block">
+    <label for="user-language-selector">
+        Valoda:
+        <select name="user-language-selector" id="UserLanguageSelector">
+            <option value="all" selected>Visas</option>
+            <option value="lv">Latviešu</option>
+            <option value="eng">Angļu</option>
+        </select>
+    </label>
+</div>
+<div style="display:inline-block">
+    <label for="user-subscription-type-selector">
+        Abonēšanas veidi:
+        <select name="user-subscription-type-selector" id="UserSubscriptionTypeSelector">
+            <option value="all" selected>Visi</option>
+            <option value="free">Par brīvu</option>
+            <option value="paid">Par maksu</option>
+            <option value="lead">Izmēģina</option>
+        </select>
+    </label>
+</div>
 <div class="grid-view">
-    <table class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered" id="AssignTable">
         <thead>
             <tr>
                 <th>#</th>
@@ -37,11 +58,8 @@ $this->params['breadcrumbs'][] = $this->title;
             </tr>
         </thead>
         <tbody>
-            <?php
-            $a = 1;
-            foreach ($users as $id => $user) {
-
-            ?>
+            <?php $a = 1;
+            foreach ($users as $id => $user) { ?>
                 <tr>
                     <td><?= $a ?></td>
                     <td><?= $user['email'] ?></td>
@@ -77,10 +95,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]
                         ) ?>
                     </td>
+                    <td style="display:none" class="user-language"><?= $user['language'] ?></td>
+                    <td style="display:none" class="user-subscription-type"><?= $user['subscription_type'] ?></td>
                 </tr>
-            <? $a++;
-            }
-            ?>
+            <?php $a++;
+            } ?>
         </tbody>
 
     </table>

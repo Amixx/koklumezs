@@ -8,12 +8,29 @@ use yii\widgets\LinkPager;
 /* @var $searchModel app\models\LecturesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Nodarbības (lessons)';
+if (isset($type)) {
+    if ($type == "new") {
+        $this->title = "Jaunās nodarbības/New lessons";
+    } else if ($type == "learning") {
+        $this->title = "Nodarbības, ko vēl mācos/Lessons I'm still learning";
+    } else if ($type == "favourite") {
+        $this->title = "Mīļākās nodarbības/Favourite lessons";
+    }
+}
+
+
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lectures-index">
-    <h3>Jaunās nodarbības (new lessons)</h3>
+    <h3><?= $this->title ?></h3>
     <div class="row">
+        <?php
+        if (count($models) == 0) { ?>
+            <div class="col-md-6">
+                <h3>Nav nevienas nodarbības!</h3>
+            </div>
+
+        <?php } ?>
         <?php foreach ($models as $model) {
             $lecturefiles = Lecturesfiles::getLectureFiles($model->id);
         ?>
@@ -30,18 +47,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'pagination' => $pages,
         ]);
     }
-    if ($archive) { ?>
-        <hr />
-        <h3>Arhīvs (archive)</h3>
-        <div class="row">
-            <?php foreach ($archive as $model) {
-                $lecturefiles = Lecturesfiles::getLectureFiles($model->id);
-            ?>
-                <div class="col-md-6 col-lg-3 text-center lecture-wrap">
-                    <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->id]) ?>" style="background-image: url('<?= trim($model->thumb ? $this->render('video_thumb', ['lecturefiles' => [0 => ['file' => $model->file, 'thumb' => $model->thumb]], 'videos' => $videos, 'baseUrl' => $baseUrl]) :   $this->render('video_thumb', ['lecturefiles' => $lecturefiles, 'videos' => $videos, 'baseUrl' => $baseUrl])) ?>');"></a>
-                    <?= $model->title ?>
-                </div>
-            <?php } ?>
-        </div>
-    <?php } ?>
+    ?>
+    <!-- <?= Html::a('Uz arhīvu/To archive', ['/archive'], ['class' => 'btn btn-primary']) ?> -->
 </div>

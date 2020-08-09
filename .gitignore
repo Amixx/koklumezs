@@ -2,8 +2,11 @@ stats/*
 error/*
 vendor/*
 assets/*
+sys/assets/*
 !assets/.gitignore
 protected/runtime/*
 !protected/runtime/.gitignore
 protected/data/*.db
 themes/classic/views/
+icon/*
+sys/web/files/global/*

@@ -4,11 +4,80 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-$this->title = $user['email'] . ' nodarbības';
+$subscriptionTypeText;
+$subscriptionTypeClassSuffix;
+if ($user['subscription_type'] == 'free') {
+    $subscriptionTypeText =  "par brīvu";
+    $subscriptionTypeClassSuffix = "primary";
+} else if ($user['subscription_type'] == 'paid') {
+    $subscriptionTypeText =  "par maksu";
+    $subscriptionTypeClassSuffix = "success";
+} else {
+    $subscriptionTypeText = "izmēģina";
+    $subscriptionTypeClassSuffix = "warning";
+}
+
+$this->title = $user['email'];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<h1><?= $this->title ?></h1>
-<div class="grid-view">
+<div class="row">
+    <?php if ($filterLang) { ?>
+        <div class="col-sm-3">Valoda: <?= $filterLang ?></div>
+    <?php } ?>
+    <?php if ($filterSubType) { ?>
+        <div class="col-sm-3">Abonementa veids: <?= $subscriptionTypeText ?></div>
+    <?php } ?>
+    <div class="col-sm-3">
+        <?= $currentUserIndex + 1 ?>/<?= $userCount ?>
+    </div>
+</div>
+<div style="min-height: 50px;">
+    <?php
+    $prevButtonHref = null;
+    $nextButtonHref = null;
+
+    if ($prevUserId) {
+        $prevButtonHref = "/assign/userlectures/$prevUserId";
+        if ($filterLang) {
+            $prevButtonHref .= "?lang=$filterLang";
+            if ($filterSubType) {
+                $prevButtonHref .= "&subType=$filterSubType";
+            }
+        } else if ($filterSubType) {
+            $prevButtonHref .= "?subType=$filterSubType";
+        }
+    }
+
+    if ($nextUserId) {
+        $nextButtonHref = "/assign/userlectures/$nextUserId";
+        if ($filterLang) {
+            $nextButtonHref .= "?lang=$filterLang";
+            if ($filterSubType) {
+                $nextButtonHref .= "&subType=$filterSubType";
+            }
+        } else if ($filterSubType) {
+            $nextButtonHref .= "?subType=$filterSubType";
+        }
+    }
+    ?>
+    <?php
+    if ($prevUserId) { ?>
+        <span style="vertical-align:top;">
+            <?= Html::a('Iepriekšējais', [$prevButtonHref], ['class' => 'btn btn-primary']); ?>
+        </span>
+    <?php } ?>
+
+    <h1 style="display:inline"><?= $this->title . " (<span class='text-" . $subscriptionTypeClassSuffix . "'>" . $subscriptionTypeText . "</span>)" ?></h1>
+
+    <?php
+    if ($nextUserId) { ?>
+        <span style="vertical-align:top;">
+            <?= Html::a('Nākamais', [$nextButtonHref], ['class' => 'btn btn-primary pull-right']); ?>
+        </span>
+    <?php } ?>
+</div>
+
+<div class="grid-view" id="assign-page-main">
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
@@ -64,14 +133,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 </td>
                 */ ?>
                 </tr>
-            <? $a++;
+            <?php $a++;
             }
 
             ?>
         </tbody>
     </table>
-    <p>Spēles reizes pēdējās 7 dienās: <strong><?= $sevenDayResult ?></strong></p>
-    <p>Spēles reizes pēdējās 30 dienās: <strong><?= $thirtyDayResult ?></strong> </p>
+    <!-- <p>Spēles reizes pēdējās 7 dienās: <strong><?= $sevenDayResult ?></strong></p>
+    <p>Spēles reizes pēdējās 30 dienās: <strong><?= $thirtyDayResult ?></strong> </p> -->
     <p>Spējas šobrīd:<?= isset($goals[$goalsnow]) ? '<strong>' . $goalsum . '</strong>' : '<code>Not set</code>' ?></p>
     <?php if (is_array($PossibleThreeLectures)) {
         $limit = 3;
@@ -102,11 +171,22 @@ $this->params['breadcrumbs'][] = $this->title;
         <h3>Jaunā sarežģītības vērtība ir: <strong><?= $PossibleThreeLectures > 0 ? $PossibleThreeLectures : $goalsum ?></strong> <small>[netika atrasts neviens atbilstošs uzdevums]</small></h3>
     <?php } ?>
     <h3>Manuāla nodarbības piešķiršana:</h3>
+    <label for="preferred-lecture-difficulty">
+        Sarežģītība
+        <input type="number" name="preferred-lecture-difficulty" id="PreferredLectureDifficulty">
+    </label>
+
     <?php $form = ActiveForm::begin(); ?>
+
+    <?php
+    $lectureTexts = array_map(function ($lecture) {
+        return $lecture['title'] . " (" . $lecture['complexity'] . ")";
+    }, $manualLectures);
+    ?>
     <?= $manualLectures ? $form->field($model, 'lecture_id')
         ->dropDownList(
-            $manualLectures,           // Flat array ('id'=>'label')
-            ['prompt' => '']    // options
+            $lectureTexts,
+            ['prompt' => '']
         ) : ' <p>Nav nodarbību ko piešķirt</p>' ?>
 </div>
 <?= $manualLectures ? $form->field($model, 'user_id')->hiddenInput(['value' => $id])->label(false) : ''; ?>

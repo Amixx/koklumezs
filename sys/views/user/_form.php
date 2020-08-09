@@ -34,22 +34,26 @@ use  yii\jui\DatePicker;
             <?= $form->field($model, 'phone_number')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
-                
 
-            <?= $form->field($model, 'password')->passwordInput(['maxlength' => true,'value'=>""]) ?>    
+            <?= $form->field($model, 'password')->passwordInput(['maxlength' => true, 'value' => ""]) ?>
 
-            
-            <?= $form->field($model, 'user_level')->dropDownList([ 'Admin' => 'Admin', 'Student' => 'Students', ], ['prompt' => '']) ?>
+            <?= $form->field($model, 'user_level')->dropDownList(['Admin' => 'Administrators', 'Student' => 'Students', 'Teacher' => 'Skolotājs'], ['prompt' => '']) ?>
 
-            <?= $form->field($model, 'status')->dropDownList([ Users::STATUS_INACTIVE => 'Nav aktīvs', Users::STATUS_ACTIVE => 'Aktīvs'], ['prompt' => '']) ?>
+            <?= $form->field($model, 'language')->dropDownList(['lv' => 'Latviešu', 'eng' => 'Angļu',], ['prompt' => '']) ?>
+
+            <?= $form->field($model, 'subscription_type')->dropDownList(['free' => 'Par brīvu', 'paid' => 'Par maksu', 'lead' => 'Izmēģina',], ['prompt' => '']) ?>
+
+            <?= $form->field($model, 'status')->dropDownList([Users::STATUS_INACTIVE => 'Nav aktīvs', Users::STATUS_ACTIVE => 'Aktīvs', Users::STATUS_PASSIVE => 'Pasīvs'], ['prompt' => '']) ?>
 
             <?= $form->field($model, 'goal')->textArea(['rows' => 6]) ?>
 
-            <?= $form->field($model, 'dont_bother')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd','language' => 'lv']) ?>    
+            <?= $form->field($model, 'dont_bother')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv']) ?>
+
+            <?= $form->field($model, 'allowed_to_download_files')->dropDownList([0 => 'Nē', 1 => 'Jā'], ['prompt' => '']) ?>
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
-            <?php if($difficulties){ ?>
-            <?= $this->render('difficulties',['difficulties' => $difficulties, 'studentGoals' => $studentGoals]) ?>
+            <?php if ($difficulties) { ?>
+                <?= $this->render('difficulties', ['difficulties' => $difficulties, 'studentGoals' => $studentGoals]) ?>
             <?php } ?>
         </div>
         <?php /*

@@ -6,7 +6,7 @@ use yii\helpers\Url;
 
 if ($relatedLectures) {
 ?>
-    <h2>Saistītās nodarbības</h2>
+    <h2>Saistītās nodarbības/Related lessons</h2>
     <hr />
     <div class="lectures-related">
 

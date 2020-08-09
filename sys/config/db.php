@@ -5,6 +5,8 @@ return [
     'dsn' => 'mysql:host=localhost;dbname=skola_sys_db',
     'username' => 'skola',
     'password' => 'nJ%k]AQn36vA',
+    // 'username' => 'root',
+    // 'password' => 'JbrGpS8sbBV',
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)
