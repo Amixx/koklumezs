@@ -58,25 +58,14 @@ class UserController extends Controller
         $get = Yii::$app->request->queryParams;
         $lectures = Lectures::getLectures();
         $isCurrentUserTeacher = Users::isTeacher(Yii::$app->user->identity->email);
-        if ($isCurrentUserTeacher) {
-            $searchModel = new TeacherUserSearch();
-            $dataProvider = $searchModel->search($get);
-            return $this->render('teacher/index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-                'get' => $get,
-                'lectures' => $lectures
-            ]);
-        } else {
-            $searchModel = new UserSearch();
-            $dataProvider = $searchModel->search($get);
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-                'get' => $get,
-                'lectures' => $lectures
-            ]);
-        }
+        $searchModel = $isCurrentUserTeacher ? new TeacherUserSearch() : new UserSearch();
+        $dataProvider = $searchModel->search($get);
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'get' => $get,
+            'lectures' => $lectures
+        ]);
     }
 
     /**
