@@ -353,6 +353,15 @@ class Users extends ActiveRecord implements IdentityInterface
         }
     }
 
+    public static function isAdminOrTeacher($email)
+    {
+        if (static::findOne(['email' => $email, 'user_level' => [self::ROLE_ADMIN, self::ROLE_TEACHER]])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static function getStatus()
     {
         return [

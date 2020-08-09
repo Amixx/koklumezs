@@ -31,7 +31,7 @@ class LecturesfilesController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Users::isUserAdmin(Yii::$app->user->identity->email);
+                            return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         },
                     ],
                     // everything else is denied
@@ -90,8 +90,7 @@ class LecturesfilesController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
-        if(isset($get['lecture_id']) AND is_numeric($get['lecture_id']))
-        {
+        if (isset($get['lecture_id']) and is_numeric($get['lecture_id'])) {
             $model->lecture_id = (int)$get['lecture_id'];
         }
         return $this->render('create', [

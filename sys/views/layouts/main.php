@@ -36,7 +36,13 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
         ob_start(); ?>
-        <div id="logo" title="<?= Yii::$app->name ?>" class="<?= (!Yii::$app->user->isGuest and Yii::$app->user->identity->user_level == 'Admin') ? 'admin' : '' ?>">
+        <?php
+        $isGuest = Yii::$app->user->isGuest;
+        $isAdmin = !$isGuest && Yii::$app->user->identity->user_level == 'Admin';
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+        ?>
+        <div id="logo" title="<?= Yii::$app->name ?>" class="<?= $isAdmin ? 'admin' : '' ?>">
             <!--?xml version="1.0" encoding="UTF-8"?-->
             <svg preserveAspectRatio="xMidYMid meet" data-bbox="1.3 1.3 176 176" viewBox="0 0 178.6 178.6" xmlns="http://www.w3.org/2000/svg" data-type="ugc" role="img">
                 <g>
@@ -69,9 +75,7 @@ AppAsset::register($this);
         <?php
         $logo = ob_get_clean();
         $classes = 'navbar-inverse navbar-fixed-top';
-        if (!Yii::$app->user->isGuest and Yii::$app->user->identity->user_level == 'Admin') {
-            $classes .= ' navbar-admin';
-        }
+        if ($isAdmin) $classes .= ' navbar-admin';
 
         NavBar::begin([
             'brandLabel' => $logo,
@@ -98,9 +102,9 @@ AppAsset::register($this);
         <?php
         // Yii::$app->assetManager->forceCopy = true;
         $navItems = [];
-        if (Yii::$app->user->isGuest) {
+        if ($isGuest) {
         } else {
-            $text = Yii::$app->user->identity->user_level == 'Admin' ? '' : '/Sign out';
+            $text = $isAdmin or $isTeacher ? '' : '/Sign out';
             $navEnd = '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
@@ -110,9 +114,9 @@ AppAsset::register($this);
                 . Html::endForm()
                 . '</li>';
         }
-        if (Yii::$app->user->isGuest) {
+        if ($isGuest) {
             $navItems[] = ['label' => 'Pierakstīties/Log in', 'url' => ['/site/login']];
-        } elseif (Yii::$app->user->identity->user_level == 'Admin') {
+        } elseif ($isAdmin) {
             $navItems[] = ['label' => 'Piešķiršana', 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),];
             $navItems[] = ['label' => 'Piešķirts', 'url' => ['/user-lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lectures']),];
             $navItems[] = ['label' => 'Nodarbības', 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
@@ -125,7 +129,16 @@ AppAsset::register($this);
             $navItems[] = ['label' => 'Lietotāju vērtējumi', 'url' => ['/user-lecture-evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations'])];
             $navItems[] = ['label' => 'Izsūtītie e-pasti', 'url' => ['/sentlectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['sentlectures'])];
             $navItems[] = $navEnd;
-        } elseif (Yii::$app->user->identity->user_level == 'Student') {
+        } elseif ($isTeacher) {
+            $navItems[] = ['label' => 'Skola', 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),];
+            $navItems[] = ['label' => 'Community', 'url' => ['/evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['evaluations'])];
+            $navItems[] = ['label' => 'Skolēni', 'url' => ['/user'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])];
+            $navItems[] = ['label' => 'Nodarbības', 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
+            // $navItems[] = ['label' => 'Piešķirts', 'url' => ['/user-lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lectures']),];
+            // $navItems[] = ['label' => 'Parametri', 'url' => ['/difficulties'], 'active' =>  in_array(\Yii::$app->controller->id, ['difficulties']),];
+            $navItems[] = ['label' => 'Metrikas', 'url' => ['/evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['evaluations'])];
+            $navItems[] = $navEnd;
+        } elseif ($isStudent) {
             $commentsItemText = 'Jaunākie komentāri/Newest comments';
             $unseenResponsesCount = array_key_exists('unseen_responses_count', $this->params) ? $this->params['unseen_responses_count'] : null;
             if ($unseenResponsesCount && $unseenResponsesCount > 0) {
@@ -150,7 +163,7 @@ AppAsset::register($this);
         }
 
         $navbarClasses = 'navbar-nav navbar-right';
-        if (!Yii::$app->user->isGuest && Yii::$app->user->identity->user_level == 'Student') {
+        if (!$isGuest && $isStudent) {
             $navbarClasses .= ' for-students';
         }
 

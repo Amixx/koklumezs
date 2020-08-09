@@ -67,7 +67,7 @@ class SiteController extends Controller
     {
         $email = isset(Yii::$app->user->identity->email) ? Yii::$app->user->identity->email : null;
 
-        if (Users::isUserAdmin($email)) {
+        if (Users::isAdminOrTeacher($email)) {
             return $this->redirect(['/lectures']);
         } elseif (Users::isStudent($email)) {
             return $this->redirect(['/lekcijas']);

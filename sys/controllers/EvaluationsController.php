@@ -25,11 +25,11 @@ class EvaluationsController extends Controller
                 'class' => \yii\filters\AccessControl::className(),
                 'rules' => [
                     // allow authenticated users
-                    [                            
+                    [
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Users::isUserAdmin(Yii::$app->user->identity->email);
+                            return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         }
                     ],
                     // everything else is denied
@@ -105,12 +105,12 @@ class EvaluationsController extends Controller
         // var_dump($s);die;
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
-        if ( $post) {
+        if ($post) {
             $model->load($post);
             $model->stars = isset($post["Evaluations"]["stars"]) ? $post["Evaluations"]["stars"] : null;
             $model->is_scale = isset($post["Evaluations"]["is_scale"]) ? $post["Evaluations"]["is_scale"] : null;
             $model->is_video_param = isset($post["Evaluations"]["is_video_param"]) ? $post["Evaluations"]["is_video_param"] : null;
-            $model->star_text = isset($post['stars_texts']) ? serialize($post['stars_texts']) : null;               
+            $model->star_text = isset($post['stars_texts']) ? serialize($post['stars_texts']) : null;
             $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -118,7 +118,7 @@ class EvaluationsController extends Controller
 
         return $this->render('update', [
             'model' => $model,
-            'stars_texts' => $stars_texts 
+            'stars_texts' => $stars_texts
         ]);
     }
 

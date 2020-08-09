@@ -30,7 +30,7 @@ class SentlecturesController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Users::isUserAdmin(Yii::$app->user->identity->email);
+                            return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         },
                     ],
                     // everything else is denied
@@ -55,7 +55,7 @@ class SentlecturesController extends Controller
         $students = Users::getActiveStudents();
         $lectures = Lectures::getLectures();
         $get = Yii::$app->request->queryParams;
-        $dataProvider = $searchModel->search($get);  
+        $dataProvider = $searchModel->search($get);
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

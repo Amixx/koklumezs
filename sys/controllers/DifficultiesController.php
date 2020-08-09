@@ -25,7 +25,7 @@ class DifficultiesController extends Controller
                 'class' => \yii\filters\AccessControl::className(),
                 'rules' => [
                     // allow authenticated users
-                    [                            
+                    [
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
