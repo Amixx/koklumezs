@@ -10,6 +10,8 @@ use app\models\Studentgoals;
 use app\models\Difficulties;
 use app\models\Handdifficulties;
 use app\models\Studenthandgoals;
+use app\models\School;
+use app\models\SchoolTeacher;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -86,6 +88,7 @@ class UserController extends Controller
         $difficulties = Difficulties::getDifficulties();
         $handdifficulties = Handdifficulties::getDifficulties();
         $post = Yii::$app->request->post();
+
         if ($model->load($post)) {
             $model->password = \Yii::$app->security->generatePasswordHash($model->password);
             $model->created_at = date('Y-m-d H:i:s', time());
@@ -96,6 +99,19 @@ class UserController extends Controller
             } else {
                 Yii::$app->session->setFlash('error', "User not created!");
             }
+
+            $isTeacher = $post['Users']['user_level'] && $post['Users']['user_level'] == 'Teacher';
+            if ($isTeacher) {
+                $newSchool = new School;
+                $newSchool->instrument = "kokle";
+                $newSchool->save();
+
+                $newSchoolTeacher = new SchoolTeacher;
+                $newSchoolTeacher->school_id = $newSchool->id;
+                $newSchoolTeacher->user_id = $model->id;
+                $newSchoolTeacher->save();
+            }
+
             return $this->redirect(['index']);
         }
         return $this->render('create', [

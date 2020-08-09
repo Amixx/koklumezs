@@ -6,20 +6,20 @@ use yii\helpers\ArrayHelper;
 use app\models\Lectures;
 use Yii;
 
-class SchoolTeachers extends \yii\db\ActiveRecord
+class SchoolLesson extends \yii\db\ActiveRecord
 {
     public static function tableName()
     {
-        return 'schoolteachers';
+        return 'schoollessons';
     }
 
     public function rules()
     {
         return [
-            [['school_id', 'user_id'], 'required'],
-            [['school_id', 'user_id'], 'integer'],
-            [['school_id'], 'exist', 'skipOnError' => true, 'targetClass' => Schools::className(), 'targetAttribute' => ['school_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['school_id', 'lesson_id'], 'required'],
+            [['school_id', 'lesson_id'], 'integer'],
+            [['school_id'], 'exist', 'skipOnError' => true, 'targetClass' => School::className(), 'targetAttribute' => ['school_id' => 'id']],
+            [['lesson_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['lesson_id' => 'id']],
         ];
     }
 
@@ -31,7 +31,7 @@ class SchoolTeachers extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'school_id' => 'Skola',
-            'user_id' => 'Skolotājs',
+            'lesson_id' => 'Nodarbība',
         ];
     }
 
@@ -40,9 +40,9 @@ class SchoolTeachers extends \yii\db\ActiveRecord
         return $this->hasOne(Schools::className(), ['id' => 'school_id']);
     }
 
-    public function getTeacher()
+    public function getLessons()
     {
-        return $this->hasOne(Users::className(), ['id' => 'teacher_id']);
+        return $this->hasMany(Users::className(), ['id' => 'lesson_id']);
     }
 
     // public function getRelations($id): array

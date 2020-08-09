@@ -92,6 +92,11 @@ class Users extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public static function getByEmail($email)
+    {
+        return static::findOne(['email' => $email]);
+    }
+
     /**
      * {@inheritdoc}
      */

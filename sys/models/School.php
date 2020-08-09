@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 use yii\helpers\ArrayHelper;
 
-class Schools extends \yii\db\ActiveRecord
+class School extends \yii\db\ActiveRecord
 {
     public static function tableName()
     {
@@ -15,7 +15,7 @@ class Schools extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'instrument'], 'required'], //'complexity',
+            [['instrument'], 'required'],
             [['instrument'], 'string'],
             [['created'], 'safe'],
         ];
