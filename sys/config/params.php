@@ -2,9 +2,9 @@
 <?php
 
 return [
-    'adminEmail' => 'nasing.spesal.just.blogs@gmail.com',
+    'adminEmail' => 'jansonsansis@gmail.com',
     'senderEmail' => 'noreply@koklumezs.lv',
     'senderName' => 'Kokļu mežs',
-    'supportEmail' => 'support@demo55izstrade.eu',
+    'supportEmail' => 'jansonsansis@gmail.com',
     'user.passwordResetTokenExpire' => 3600,
 ];

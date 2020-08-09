@@ -5,8 +5,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\UserLectures */
 
-$this->title = 'Piešķirt lekciju';
-$this->params['breadcrumbs'][] = ['label' => 'Piešķirtās lekcijas', 'url' => ['index']];
+$this->title = 'Piešķirt nodarbību';
+$this->params['breadcrumbs'][] = ['label' => 'Piešķirtās nodarbības', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-lectures-create">

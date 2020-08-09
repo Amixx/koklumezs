@@ -13,7 +13,7 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
-        'request' => [            
+        'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'q6hzujS3q73rs42dJYgBWOpNGOOtXf9E',
         ],
@@ -32,7 +32,7 @@ $config = [
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'useFileTransport' => false,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -43,16 +43,16 @@ $config = [
                 ],
             ],
         ],
-        'db' => $db,        
+        'db' => $db,
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [                
+            'rules' => [
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',             
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],
-        ],        
+        ],
     ],
     'params' => $params,
     'defaultRoute' => 'site/index',
@@ -63,8 +63,8 @@ $config = [
             'disabledCommands' => ['netmount'], //отключение ненужных команд https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#commands
             'roots' => [
                 [
-                    'baseUrl'=>'@web',
-                    'basePath'=>'@webroot',
+                    'baseUrl' => '@web',
+                    'basePath' => '@webroot',
                     'path' => 'files/global',
                     'name' => 'Global'
                 ],
@@ -84,13 +84,13 @@ $config = [
                 // ]
             ],
             'watermark' => [
-            		'source'         => __DIR__.'/logo.png', // Path to Water mark image
-                     'marginRight'    => 5,          // Margin right pixel
-                     'marginBottom'   => 5,          // Margin bottom pixel
-                     'quality'        => 95,         // JPEG image save quality
-                     'transparency'   => 70,         // Water mark image transparency ( other than PNG )
-                     'targetType'     => IMG_GIF|IMG_JPG|IMG_PNG|IMG_WBMP, // Target image formats ( bit-field )
-                     'targetMinPixel' => 200         // Target image minimum pixel size
+                'source'         => __DIR__ . '/logo.png', // Path to Water mark image
+                'marginRight'    => 5,          // Margin right pixel
+                'marginBottom'   => 5,          // Margin bottom pixel
+                'quality'        => 95,         // JPEG image save quality
+                'transparency'   => 70,         // Water mark image transparency ( other than PNG )
+                'targetType'     => IMG_GIF | IMG_JPG | IMG_PNG | IMG_WBMP, // Target image formats ( bit-field )
+                'targetMinPixel' => 200         // Target image minimum pixel size
             ]
         ]
     ],

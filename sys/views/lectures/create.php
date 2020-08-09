@@ -5,8 +5,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Lectures */
 
-$this->title = 'Izveidot lekciju';
-$this->params['breadcrumbs'][] = ['label' => 'Lekcijas', 'url' => ['index']];
+$this->title = 'Izveidot nodarbību';
+$this->params['breadcrumbs'][] = ['label' => 'Nodarbības', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lectures-create">
@@ -15,15 +15,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'difficulties' =>$difficulties,
+        'difficulties' => $difficulties,
         'handdifficulties' => $handdifficulties,
         'evaluations' => $evaluations,
         'lectureDifficulties' => [],
         'lectureHandDifficulties' => [],
         'lectureEvaluations' => [],
         'lecturefiles' => [],
-        'lectures' => $lectures, 
-        'relatedLectures' => []        
+        'lectures' => $lectures,
+        'relatedLectures' => []
     ]) ?>
 
 </div>

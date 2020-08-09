@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $user_id Lietotājs
- * @property int $lecture_id Pēdējā lekcija
+ * @property int $lecture_id Pēdējā nodarbīa
  * @property int $sent Nosūtīts e-pasts
  * @property string $created Izveidots
  *
@@ -48,7 +48,7 @@ class Sentlectures extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'Lietotājs',
-            'lecture_id' => 'Pēdējā lekcija',
+            'lecture_id' => 'Pēdējā nodarbība',
             'sent' => 'Nosūtīts e-pasts',
             'created' => 'Izveidots',
         ];
@@ -79,7 +79,7 @@ class Sentlectures extends \yii\db\ActiveRecord
         return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
     }
 
-    public function getLectureCount($user = null,$lecture = null)
+    public function getLectureCount($user = null, $lecture = null)
     {
         return self::find(['user_id' => $user, 'lecture_id' => $lecture])->count();
     }

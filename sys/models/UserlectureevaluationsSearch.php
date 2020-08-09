@@ -22,7 +22,7 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
     {
         return [
             [['id', 'lecture_id', 'evaluation_id', 'user_id'], 'integer'],
-            [['evaluation'], 'safe'],
+            [['evaluation', 'created'], 'safe'],
         ];
     }
 
@@ -94,6 +94,10 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
         // $query->andFilterWhere(
         //      ['like', 'evalua.title', $this->evaluation_id]
         // );
+
+        $query->andFilterWhere(
+            ['like', self::tableName() . '.created', $this->created]
+        );
         
         // grid filtering conditions
         $query->andFilterWhere([

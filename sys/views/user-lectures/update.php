@@ -5,8 +5,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\UserLectures */
 
-$this->title = 'Rediģēt lekciju: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Piešķirtās lekcijas', 'url' => ['index']];
+$this->title = 'Rediģēt nodarbību: ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Piešķirtās nodarbības', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Rediģēt';
 ?>

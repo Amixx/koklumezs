@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+
 use yii\helpers\ArrayHelper;
 use app\models\Lectures;
 use Yii;
@@ -9,8 +10,8 @@ use Yii;
  * This is the model class for table "relatedlectures".
  *
  * @property int $id
- * @property int $lecture_id Lekcija
- * @property int $related_id Saistītā lekcija
+ * @property int $lecture_id Nodarbība
+ * @property int $related_id Saistītā nodarbība
  *
  * @property Lectures $lecture
  */
@@ -44,8 +45,8 @@ class RelatedLectures extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'lecture_id' => 'Lekcija',
-            'related_id' => 'Saistītā lekcija',
+            'lecture_id' => 'Nodarbība',
+            'related_id' => 'Saistītā nodarbība',
         ];
     }
 
@@ -57,7 +58,7 @@ class RelatedLectures extends \yii\db\ActiveRecord
         return $this->hasMany(Lectures::className(), ['id' => 'related_id']);
     }
 
-    
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -71,7 +72,7 @@ class RelatedLectures extends \yii\db\ActiveRecord
      */
     public function getRelations($id): array
     {
-        return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'id', 'related_id');        
+        return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'id', 'related_id');
     }
 
     /**
@@ -79,12 +80,12 @@ class RelatedLectures extends \yii\db\ActiveRecord
      */
     public function getRelatedParents($id): array
     {
-        return ArrayHelper::map(self::find()->where(['related_id' => $id])->asArray()->all(), 'id', 'lecture_id');        
+        return ArrayHelper::map(self::find()->where(['related_id' => $id])->asArray()->all(), 'id', 'lecture_id');
     }
 
     public function getLectures($id)
     {
-        return self::find()->where(['user_id' => $id])->orderBy(['lecture_id' => SORT_ASC])->all();        
+        return self::find()->where(['user_id' => $id])->orderBy(['lecture_id' => SORT_ASC])->all();
     }
 
     /**
@@ -92,7 +93,6 @@ class RelatedLectures extends \yii\db\ActiveRecord
      */
     public function removeLectureRelations($id)
     {
-        return self::deleteAll(['lecture_id' => $id]);        
+        return self::deleteAll(['lecture_id' => $id]);
     }
-
 }

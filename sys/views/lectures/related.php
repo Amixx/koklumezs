@@ -11,12 +11,12 @@ use yii\widgets\ActiveForm;
     <div class="row">
         <div class="col col-md-12">
             <div class="related-lectures-form form-group">
-                <h2>Saistītās lekcijas</h2>
+                <h2>Saistītās nodarbības</h2>
                 <hr />
                 <select class="select2" name="relatedLectures[]" multiple>
-                <?php foreach($lectures as $id => $lecture){ ?>
-                    <option value="<?=$id?>"<?=in_array($id,$relatedLectures) ? ' selected' : ''?>><?=$lecture?></option>
-                <?php } ?>
+                    <?php foreach ($lectures as $id => $lecture) { ?>
+                        <option value="<?= $id ?>" <?= in_array($id, $relatedLectures) ? ' selected' : '' ?>><?= $lecture ?></option>
+                    <?php } ?>
                 </select>
             </div>
         </div>

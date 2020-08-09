@@ -1,20 +1,24 @@
 <?php
 /* @var $this yii\web\View */
+
 use yii\helpers\Html;
-$this->title = 'Lekciju piešķiršana';
+
+$this->title = 'Nodarbību piešķiršana';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<h1><?=$this->title?></h1>
+<h1><?= $this->title ?></h1>
 <p>
-    <?= Html::a('Manuāli izsaukt automātisko lekciju piešķiršanu visiem studentiem', 
-    ['/cron','send' => 1], 
-    [
-        'class' => 'btn btn-success',
-        'target' => '_blank',
-        'data' => [
-            'confirm' => 'Are you sure ?',
+    <?= Html::a(
+        'Manuāli izsaukt automātisko nodarbību piešķiršanu visiem studentiem',
+        ['/cron', 'send' => 1],
+        [
+            'class' => 'btn btn-success',
+            'target' => '_blank',
+            'data' => [
+                'confirm' => 'Are you sure ?',
+            ]
         ]
-    ]) ?>
+    ) ?>
 </p>
 <div class="grid-view">
     <table class="table table-striped table-bordered">
@@ -22,57 +26,61 @@ $this->params['breadcrumbs'][] = $this->title;
             <tr>
                 <th>#</th>
                 <th>Lietotājs</th>
-                <th>Pēdējā lekcija</th>
+                <th>Pēdējā nodarbība</th>
                 <th>Spēles reizes</th>
                 <th>Sarežģītība</th>
-                <?php foreach($evaluationsTitles as $et){ ?>
-                <th><?=$et?></th>
+                <?php foreach ($evaluationsTitles as $et) { ?>
+                    <th><?= $et ?></th>
                 <?php } ?>
                 <th>Spējas</th>
                 <th class="action-column">Darbības</th>
             </tr>
         </thead>
         <tbody>
-        <?php
+            <?php
             $a = 1;
-            foreach($users as $id => $user){
-                
-                ?>
-            <tr>
-                <td><?=$a?></td>
-                <td><?=$user['email']?></td>
-                <td><?=isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->title : '<code>Not set</code>' ?></td>
-                <td align="center"><?=$lastlectures[$id]['open_times']?></td>
-                <td align="center"><?=isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->complexity : '<code>Not set</code>'?></td>
-                <?php foreach($evaluationsTitles as $etid => $et){ ?>
-                <td align="center">
-                    <?php if(isset($evaluations[$id][$etid])){
-                        echo isset($evaluationsValues[$etid]) ? (isset($evaluationsValues[$etid][(int)$evaluations[$id][$etid]]) ? $evaluationsValues[$etid][(int)$evaluations[$id][$etid]] : '<code>Not set</code>') : (isset($evaluations[$id][$etid]) ? $evaluations[$id][$etid] : '<code>Not set</code>');
-                    }else{
-                        echo '<code>Not set</code>';
-                    }  ?>
-                </td>
-                <?php } ?>
-                <td align="center"><?=isset($goals[$id][$goalsnow]) ? array_sum($goals[$id][$goalsnow]) : '<code>Not set</code>' ?></td>
-                <td align="center">
-                    <?= Html::a('<span class="glyphicon glyphicon-eye-open"> </span>', 
-                    ['/assign/userlectures','id' => $id], 
-                    [
-                        'title' => 'Apskatīt',                        
-                    ]) ?> 
-                    <?= Html::a('<span class="glyphicon glyphicon-wrench"> </span>', 
-                    ['/cron/userlectures','id' => $id], 
-                    [
-                        'title' => 'Automātiska piešķiršana',
-                        'data' => [
-                            'confirm' => 'Are you sure ?',
-                        ]
-                    ]) ?> 
-                </td>
-            </tr>
-            <?   $a++;
+            foreach ($users as $id => $user) {
+
+            ?>
+                <tr>
+                    <td><?= $a ?></td>
+                    <td><?= $user['email'] ?></td>
+                    <td><?= isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->title : '<code>Not set</code>' ?></td>
+                    <td align="center"><?= $lastlectures[$id]['open_times'] ?></td>
+                    <td align="center"><?= isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->complexity : '<code>Not set</code>' ?></td>
+                    <?php foreach ($evaluationsTitles as $etid => $et) { ?>
+                        <td align="center">
+                            <?php if (isset($evaluations[$id][$etid])) {
+                                echo isset($evaluationsValues[$etid]) ? (isset($evaluationsValues[$etid][(int) $evaluations[$id][$etid]]) ? $evaluationsValues[$etid][(int) $evaluations[$id][$etid]] : '<code>Not set</code>') : (isset($evaluations[$id][$etid]) ? $evaluations[$id][$etid] : '<code>Not set</code>');
+                            } else {
+                                echo '<code>Not set</code>';
+                            }  ?>
+                        </td>
+                    <?php } ?>
+                    <td align="center"><?= isset($goals[$id][$goalsnow]) ? array_sum($goals[$id][$goalsnow]) : '<code>Not set</code>' ?></td>
+                    <td align="center">
+                        <?= Html::a(
+                            '<span class="glyphicon glyphicon-eye-open"> </span>',
+                            ['/assign/userlectures', 'id' => $id],
+                            [
+                                'title' => 'Apskatīt',
+                            ]
+                        ) ?>
+                        <?= Html::a(
+                            '<span class="glyphicon glyphicon-wrench"> </span>',
+                            ['/cron/userlectures', 'id' => $id],
+                            [
+                                'title' => 'Automātiska piešķiršana',
+                                'data' => [
+                                    'confirm' => 'Are you sure ?',
+                                ]
+                            ]
+                        ) ?>
+                    </td>
+                </tr>
+            <? $a++;
             }
-        ?>
+            ?>
         </tbody>
 
     </table>

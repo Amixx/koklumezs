@@ -52,9 +52,7 @@ class LekcijasController extends Controller
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
-                'actions' => [
-
-                ],
+                'actions' => [],
             ],
         ];
     }
@@ -82,6 +80,22 @@ class LekcijasController extends Controller
 
             if ($evaluatedIds) {
                 $archive = Lectures::find()->where(['in', 'id', $evaluatedIds])->all();
+                // $alphabet = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "a", "ā", "b", "c", "č", "d", "e", "ē", "f", "g", "ģ", "h", "i", "ī", "j", "k", "ķ", "l", "ļ", "m", "n", "ņ", "o", "p", "q", "r", "s", "š", "t", "u", "ū", "v", "w", "x", "y", "z", "ž");
+                usort($archive, function ($a, $b) {
+                    // $aTitle = strtolower(trim($a->title));
+                    // $bTitle = strtolower(trim($b->title));
+
+                    // $aIndex = array_search(mb_substr($aTitle, 0, 1), $alphabet);
+                    // $bIndex = array_search(mb_substr($bTitle, 0, 1), $alphabet);
+
+                    // if ($aIndex === false || $bIndex === false) {
+                    //     return;
+                    // }
+
+                    // return $aIndex < $bIndex;
+
+                    return strcoll(strtolower(trim($a->title)), strtolower(trim($b->title)));
+                });
             }
             $opened = UserLectures::getOpened($user->id);
             $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
@@ -141,7 +155,7 @@ class LekcijasController extends Controller
             }
             die;
         }
-        $modelsIds = $force ? [$id] : UserLectures::getUserLectures($user->id);//UserLectures::getSentUserLectures($user->id)
+        $modelsIds = $force ? [$id] : UserLectures::getUserLectures($user->id); //UserLectures::getSentUserLectures($user->id)
         $check = in_array($id, $modelsIds);
         $userLectures = $force ? [] : UserLectures::getLectures($user->id);
         $userEvaluatedLectures = $force ? [] : UserLectures::getEvaluatedLectures($user->id);
@@ -166,7 +180,8 @@ class LekcijasController extends Controller
                         $savedEvaluation = $userLecture->save();
                         // find next lecture(s)
                         if ($savedEvaluation) {
-                            LectureAssignment::giveNewAssignment($user->id, $x, $id);                            
+                            //Katru reizi kad skolnieks novērtē uzdevumu, viņam tiek izraudzīts jauns uzdevums. Tā NEVAJADZĒTU BŪT. 
+                            //LectureAssignment::giveNewAssignment($user->id, $x, $id);                            
                         }
                     }
                 }
@@ -179,10 +194,11 @@ class LekcijasController extends Controller
                         $new = [];
                         $coef = 0;
                         if (empty($gotNew)) {
+                            $spam = true;
                             $coef = Studentgoals::getUserDifficultyCoef($user->id);
-                            $new = LectureAssignment::giveNewAssignment($user->id,$coef, $id);
+                            $new = LectureAssignment::giveNewAssignment($user->id, $coef, $id, $spam);
                         }
-                        if($dbg){
+                        if ($dbg) {
                             echo '</hr>More lectures request';
                             echo 'got same diff<br/>';
                             var_dump($gotNew);
@@ -194,11 +210,13 @@ class LekcijasController extends Controller
                         }
                         $u = Users::findOne($user->id);
                         $u->more_lecture_requests = (int) $u->more_lecture_requests + 1;
-                        $u->save(false);                        
+                        $u->save(false);
                     } else {
+                        /* more_lecture_requests = 0 update now is located in croncontroller
                         $u = Users::findOne($user->id);
                         $u->more_lecture_requests = 0;
                         $u->save(false);
+                        */
                     }
                 }
             }
@@ -206,6 +224,36 @@ class LekcijasController extends Controller
                 UserLectures::setSeenByUser($user->id, $id);
             }
             $difficulties = Difficulties::getDifficulties();
+            $difficultiesEng = array();
+            foreach ($difficulties as $name) {
+                $engName = "";
+                switch ($name) {
+                    case "Ritms":
+                        $engName = "rhythm";
+                        break;
+
+                    case "Labā roka":
+                        $engName = "right hand";
+                        break;
+
+                    case "Kreisā roka":
+                        $engName = "left hand";
+                        break;
+
+                    case "Akordu maiņas biežums":
+                        $engName = "chord change frequency";
+                        break;
+
+                    case "Akordi":
+                        $engName = "chords";
+                        break;
+
+                    default:
+                        break;
+                }
+
+                array_push($difficultiesEng, $engName);
+            }
             $evaluations = Evaluations::getEvaluations();
             //$handdifficulties = Handdifficulties::getDifficulties();
             $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
@@ -229,6 +277,7 @@ class LekcijasController extends Controller
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,
+                'difficultiesEng' => $difficultiesEng,
                 //'handdifficulties' => $handdifficulties,
                 'evaluations' => $evaluations,
                 'lectureDifficulties' => $lectureDifficulties,
@@ -264,5 +313,4 @@ class LekcijasController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
 }

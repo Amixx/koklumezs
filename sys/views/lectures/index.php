@@ -8,7 +8,7 @@ use app\models\Lectures;
 /* @var $searchModel app\models\LecturesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Lekcijas';
+$this->title = 'Nodarbības';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lectures-index">
@@ -16,10 +16,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Izveidot lekciju', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Izveidot nodarbību', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]); 
+    ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -29,43 +30,43 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'id',
             'title',
-           // 'description:ntext',
+            // 'description:ntext',
             [
                 'attribute' => 'created',
                 'value' => 'created',
                 'filter' => DatePicker::widget([
-                        'model'=>$searchModel,
-                        'attribute'=>'created',
-                        'language' => 'lv',
-                        'dateFormat' => 'yyyy-MM-dd',
-                    ]),
+                    'model' => $searchModel,
+                    'attribute' => 'created',
+                    'language' => 'lv',
+                    'dateFormat' => 'yyyy-MM-dd',
+                ]),
                 'format' => ['date', 'php:Y-m-d H:i:s']
             ],
             [
                 'attribute' => 'updated',
                 'value' => 'updated',
                 'filter' => DatePicker::widget([
-                        'model'=>$searchModel,
-                        'attribute'=>'updated',
-                        'language' => 'lv',
-                        'dateFormat' => 'yyyy-MM-dd',
-                    ]),
+                    'model' => $searchModel,
+                    'attribute' => 'updated',
+                    'language' => 'lv',
+                    'dateFormat' => 'yyyy-MM-dd',
+                ]),
                 'format' => ['date', 'php:Y-m-d H:i:s']
             ],
-            
+
             [
                 'attribute' => 'author',
                 'format' => 'raw',
                 'value' => 'users.email',
-                'filter'=> Html::dropDownList('LecturesSearch[author]',isset($get['LecturesSearch']['author']) ? $get['LecturesSearch']['author'] : '' ,$admins,['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
-            ],     
+                'filter' => Html::dropDownList('LecturesSearch[author]', isset($get['LecturesSearch']['author']) ? $get['LecturesSearch']['author'] : '', $admins, ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+            ],
             [
                 'attribute' => 'complexity',
                 'format' => 'raw',
                 'value' => function ($dataProvider) {
                     return $dataProvider->complexity;
                 },
-                'filter'=> Html::dropDownList('LecturesSearch[complexity]',isset($get['LecturesSearch']['complexity']) ? $get['LecturesSearch']['complexity'] : '' , Lectures::getComplexity(),['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
+                'filter' => Html::dropDownList('LecturesSearch[complexity]', isset($get['LecturesSearch']['complexity']) ? $get['LecturesSearch']['complexity'] : '', Lectures::getComplexity(), ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'season',
@@ -73,34 +74,43 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($dataProvider) {
                     return $dataProvider->season;
                 },
-                'filter'=> Html::dropDownList('LecturesSearch[season]',isset($get['LecturesSearch']['season']) ? $get['LecturesSearch']['season'] : '' , Lectures::getSeasons(),['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
-            ],     
+                'filter' => Html::dropDownList('LecturesSearch[season]', isset($get['LecturesSearch']['season']) ? $get['LecturesSearch']['season'] : '', Lectures::getSeasons(), ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => 'Darbības',
                 'template' => '{view} {update} {delete}',
-                'buttons' => [                     
-                    'view' => function ($url, $model) { 
-                        return Html::a( '<span class="glyphicon glyphicon-eye-open"> </span>', $url, 
-                        [ 'title' => 'View', 'data-pjax' => '0', 'onclick' => "window.open('" . $url . "','newwindow','width=1200,height=1200');return false;" ] );
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-eye-open"> </span>',
+                            $url,
+                            ['title' => 'View', 'data-pjax' => '0', 'onclick' => "window.open('" . $url . "','newwindow','width=1200,height=1200');return false;"]
+                        );
                     },
-                    'update' => function ($url, $model) { 
-                        return Html::a( '<span class="glyphicon glyphicon-pencil"> </span>', $url, 
-                        [ 'title' => 'Update', 'data-pjax' => '0' ] );
-                    },                    
-                    'delete' => function ($url, $model, $key) { 
-                        return Html::a( '<span  class="glyphicon glyphicon glyphicon-trash"> </span>', $url, 
-                        [ 'title' => 'Delete' , 'data' => [
-                            'confirm' => 'Are you sure you want to delete this item?',
-                        ], ] );
-                    }                                     
+                    'update' => function ($url, $model) {
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-pencil"> </span>',
+                            $url,
+                            ['title' => 'Update', 'data-pjax' => '0']
+                        );
+                    },
+                    'delete' => function ($url, $model, $key) {
+                        return Html::a(
+                            '<span  class="glyphicon glyphicon glyphicon-trash"> </span>',
+                            $url,
+                            ['title' => 'Delete', 'data' => [
+                                'confirm' => 'Are you sure you want to delete this item?',
+                            ],]
+                        );
+                    }
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                     if ($action === 'view') {
                         $url = '/sys/lekcijas/lekcija/' . $model->id . '?force=1';
                         return $url;
                     }
-        
+
                     if ($action === 'update') {
                         $url = '/sys/lectures/update/' . $model->id;
                         return $url;
@@ -109,8 +119,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         $url = '/sys/lectures/delete/' . $model->id;
                         return $url;
                     }
-        
-                  }
+                }
             ],
 
         ],

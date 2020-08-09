@@ -58,7 +58,7 @@ class UserLecturesController extends Controller
         $admins = Users::getAdmins();
         $lectures = Lectures::getLectures();
         $get = Yii::$app->request->queryParams;
-        $dataProvider = $searchModel->search($get);        
+        $dataProvider = $searchModel->search($get);
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -116,7 +116,7 @@ class UserLecturesController extends Controller
                 $model->assigned = Yii::$app->user->identity->id;
                 $model->created = date('Y-m-d H:i:s', time());
                 $saved = $model->save();
-                if($saved){
+                if ($saved) {
                     $sent = UserLectures::sendEmail($model->user_id, $model->lecture_id);
                     $model->sent = (int) $sent;
                     $model->update();
@@ -157,11 +157,10 @@ class UserLecturesController extends Controller
                 }
 
                 $outofLectures = empty($lectures);
-                $lectures = !empty($lectures) ? $lectures : [0 => 'Lekcijas netika atrastas'];
+                $lectures = !empty($lectures) ? $lectures : [0 => 'Nodarbības netika atrastas'];
                 $lastLecturesIds = UserLectures::getLastLecturesForUser($model->user_id);
                 $lastLectures = Lectures::getLecturesByIds($lastLecturesIds);
                 $lectureDifficulties = self::getLectureDiffs($lastLecturesIds);
-
             }
         }
 
@@ -179,7 +178,6 @@ class UserLecturesController extends Controller
             'seasons' => $seasons,
             'seasonSelected' => $seasonSelected,
         ]);
-
     }
 
     /**
@@ -199,7 +197,7 @@ class UserLecturesController extends Controller
         if (isset($post['UserLectures']['lecture_id']) && $model->load($post) && $model->save()) {
             //$sent = self::sendEmail($model->user_id, $model->lecture_id);
             //$model->sent = (int) $sent;
-            $model->evaluated = isset($post["UserLectures"]["evaluated"]) ? $post["UserLectures"]["evaluated"] : 0;        
+            $model->evaluated = isset($post["UserLectures"]["evaluated"]) ? $post["UserLectures"]["evaluated"] : 0;
             $model->update();
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -257,5 +255,4 @@ class UserLecturesController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-    
 }

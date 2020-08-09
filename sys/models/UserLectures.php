@@ -95,7 +95,7 @@ class UserLectures extends \yii\db\ActiveRecord
     public function getUserLectures($id, $sent = 1): array
     {
         //not anymore , 'sent' => $sent
-        $results = self::find()->where(['user_id' => $id])->asArray()->all();//, 'evaluated' => 0
+        $results = self::find()->where(['user_id' => $id])->asArray()->all(); //, 'evaluated' => 0
         return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
     }
 
@@ -108,7 +108,7 @@ class UserLectures extends \yii\db\ActiveRecord
         return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
     }
 
-     /**
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getEvaluatedUserLectures($id, $sent = 1): array
@@ -117,7 +117,7 @@ class UserLectures extends \yii\db\ActiveRecord
         return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
     }
 
-    
+
 
     /**
      * @return \yii\db\ActiveQuery
@@ -159,14 +159,14 @@ class UserLectures extends \yii\db\ActiveRecord
     {
         $result = 0;
         $data = self::find()->where(['user_id' => $id])->andWhere('created >= DATE_SUB(CURDATE(), INTERVAL ' . $days . ' DAY)')->orderBy(['id' => SORT_DESC])->all();
-        foreach($data as $d){
-            $result += (int)$d->open_times;
+        foreach ($data as $d) {
+            $result += (int) $d->open_times;
         }
         return $result;
     }
 
 
-    
+
 
     /**
      * @return \yii\db\ActiveQuery
@@ -243,6 +243,8 @@ class UserLectures extends \yii\db\ActiveRecord
         $current = $r ? ArrayHelper::map($r, 'id', 'lecture_id') : $results;
         if ($current) {
             $results = array_diff($ids, $current);
+        } else {
+            $results = $ids;
         }
         return $results;
     }
@@ -252,7 +254,7 @@ class UserLectures extends \yii\db\ActiveRecord
      *
      * @return bool whether the email was sent
      */
-    public function sendEmail($id, $lecture_id)
+    public function sendEmail($id) //, $lecture_id
     {
         $user = Users::findOne([
             'id' => $id,
@@ -261,16 +263,16 @@ class UserLectures extends \yii\db\ActiveRecord
         if ($user === null) {
             return false;
         }
-        $lecture = Lectures::findOne($lecture_id);
+        //$lecture = Lectures::findOne($lecture_id);
         return Yii::$app
             ->mailer
             ->compose(
                 ['html' => 'lekcija-html', 'text' => 'lekcija-text'],
-                ['user' => $user, 'lecture' => $lecture]
+                ['user' => $user/*, 'lecture' => $lecture*/]
             )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name])
             ->setTo($user->email)
-            ->setSubject('Jauna lekcija - ' . Yii::$app->name)
+            ->setSubject('Jaunas nodarbības - ' . Yii::$app->name)
             ->send();
     }
 
@@ -295,9 +297,9 @@ class UserLectures extends \yii\db\ActiveRecord
                 ['html' => 'japieskir-lekcija-html', 'text' => 'japieskir-lekcija-text'],
                 ['user' => $user, 'lecture' => $lecture, 'x' => $x]
             )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name])
             ->setTo(Yii::$app->params['adminEmail'])
-            ->setSubject('Jāpiešķir lekcija - ' . Yii::$app->name)
+            ->setSubject('Jāpiešķir nodarbība - ' . Yii::$app->name)
             ->send();
     }
 }

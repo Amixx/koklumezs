@@ -56,7 +56,7 @@ class Users extends ActiveRecord implements IdentityInterface
             'last_name' => 'Uzvārds',
             'password' => 'Parole',
             'last_login' => 'Pierakstījies',
-            'last_lecture' => 'Pēdējā lekcija',
+            'last_lecture' => 'Pēdējā nodarbība',
             'dont_bother' => 'Netraucēt',
             'status' => 'Statuss',
             'goal' => 'Mērķis',
@@ -189,12 +189,12 @@ class Users extends ActiveRecord implements IdentityInterface
         return Yii::$app->getSecurity()->validatePassword($password, $this->password);
     }
 
-/**
- * Finds user by password reset token
- *
- * @param string $token password reset token
- * @return static|null
- */
+    /**
+     * Finds user by password reset token
+     *
+     * @param string $token password reset token
+     * @return static|null
+     */
     public static function findByPasswordResetToken($token)
     {
         if (!static::isPasswordResetTokenValid($token)) {
@@ -312,5 +312,4 @@ class Users extends ActiveRecord implements IdentityInterface
     {
         return $this->hasOne(Lectures::className(), ['id' => 'last_lecture']);
     }
-
 }

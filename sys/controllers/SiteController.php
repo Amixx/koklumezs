@@ -65,14 +65,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $email = isset(Yii::$app->user->identity->email) ? Yii::$app->user->identity->email : null;        
-        
-        if ( Users::isUserAdmin($email)) {
+        $email = isset(Yii::$app->user->identity->email) ? Yii::$app->user->identity->email : null;
+
+        if (Users::isUserAdmin($email)) {
             return $this->redirect(['/lectures']);
-        }elseif(Users::isStudent($email)){
+        } elseif (Users::isStudent($email)) {
             return $this->redirect(['/lekcijas']);
-        }
-        else{
+        } else {
             return $this->redirect(['/site/login']);
         }
     }
@@ -192,5 +191,4 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
-   
 }
