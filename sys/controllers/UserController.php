@@ -6,6 +6,7 @@ use Yii;
 use app\models\Users;
 use app\models\Lectures;
 use app\models\UserSearch;
+use app\models\TeacherUserSearch;
 use app\models\Studentgoals;
 use app\models\Difficulties;
 use app\models\Handdifficulties;
@@ -54,16 +55,28 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new UserSearch();
         $get = Yii::$app->request->queryParams;
-        $dataProvider = $searchModel->search($get);
         $lectures = Lectures::getLectures();
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'get' => $get,
-            'lectures' => $lectures,
-        ]);
+        $isCurrentUserTeacher = Users::isTeacher(Yii::$app->user->identity->email);
+        if ($isCurrentUserTeacher) {
+            $searchModel = new TeacherUserSearch();
+            $dataProvider = $searchModel->search($get);
+            return $this->render('teacher/index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'get' => $get,
+                'lectures' => $lectures
+            ]);
+        } else {
+            $searchModel = new UserSearch();
+            $dataProvider = $searchModel->search($get);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'get' => $get,
+                'lectures' => $lectures
+            ]);
+        }
     }
 
     /**

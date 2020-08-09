@@ -39,7 +39,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         case 'Student':
                             return 'Students';
                             break;
-
                         case 'Admin':
                             return 'Administrators';
                             break;
