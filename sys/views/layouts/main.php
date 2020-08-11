@@ -130,7 +130,7 @@ AppAsset::register($this);
             $navItems[] = $navEnd;
         } elseif ($isTeacher) {
             $navItems[] = ['label' => 'Skola', 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),];
-            $navItems[] = ['label' => 'Community', 'url' => ['/evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['evaluations'])];
+            $navItems[] = ['label' => 'Community', 'url' => ['/user-lecture-evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations'])];
             $navItems[] = ['label' => 'Skolēni', 'url' => ['/user'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])];
             $navItems[] = ['label' => 'Nodarbības', 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
             // $navItems[] = ['label' => 'Piešķirts', 'url' => ['/user-lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lectures']),];

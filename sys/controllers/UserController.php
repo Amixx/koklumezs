@@ -57,7 +57,7 @@ class UserController extends Controller
     {
         $get = Yii::$app->request->queryParams;
         $lectures = Lectures::getLectures();
-        $isCurrentUserTeacher = Users::isTeacher(Yii::$app->user->identity->email);
+        $isCurrentUserTeacher = Users::isCurrentUserTeacher();
         $searchModel = $isCurrentUserTeacher ? new TeacherUserSearch() : new UserSearch();
         $dataProvider = $searchModel->search($get);
         return $this->render('index', [

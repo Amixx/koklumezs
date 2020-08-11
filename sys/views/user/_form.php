@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use app\models\Users;
 use  yii\jui\DatePicker;
 
-$isTeacher = Users::isTeacher(Yii::$app->user->identity->email);
+$isTeacher = Users::isCurrentUserTeacher();
 ?>
 
 <div class="user-form">

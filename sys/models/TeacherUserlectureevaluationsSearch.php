@@ -2,14 +2,12 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Userlectureevaluations;
 
-/**
- * UserlectureevaluationsSearch represents the model behind the search form of `app\models\Userlectureevaluations`.
- */
-class UserlectureevaluationsSearch extends Userlectureevaluations
+class TeacherUserlectureevaluationsSearch extends Userlectureevaluations
 {
     public $student;
     public $lecture;
@@ -44,9 +42,15 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
      */
     public function search($params)
     {
-        $query = Userlectureevaluations::find();
+        $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
+        $schoolLectureIds = SchoolLecture::getSchoolLectureIds($currentUserTeacher->school_id);
+        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
 
-        // add conditions that should always apply here
+        $query = Userlectureevaluations::find()->where([
+            'AND',
+            ['in', 'lecture_id', $schoolLectureIds],
+            ['in', 'user_id', $schoolStudentIds],
+        ]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

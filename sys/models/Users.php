@@ -383,6 +383,11 @@ class Users extends ActiveRecord implements IdentityInterface
         }
     }
 
+    public static function isCurrentUserTeacher()
+    {
+        return self::isTeacher(Yii::$app->user->identity->email);
+    }
+
     public static function isAdminOrTeacher($email)
     {
         if (static::findOne(['email' => $email, 'user_level' => [self::ROLE_ADMIN, self::ROLE_TEACHER]])) {

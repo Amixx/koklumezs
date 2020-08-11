@@ -42,7 +42,7 @@ class AssignController extends \yii\web\Controller
     {
         $options = [];
         $onlyThoseWithoutDontBother = true;
-        if (Users::isTeacher(Yii::$app->user->identity->email)) {
+        if (Users::isCurrentUserTeacher()) {
             $users = Users::getActiveStudentsForSchool($onlyThoseWithoutDontBother);
         } else {
             $users = Users::getActiveStudents($onlyThoseWithoutDontBother);

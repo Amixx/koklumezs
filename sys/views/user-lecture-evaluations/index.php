@@ -4,10 +4,6 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use  yii\jui\DatePicker;
 
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\UserlectureevaluationsSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
 $this->title = 'Studentu vērtējumi';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -27,15 +23,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            //'id',
             [
                 'attribute' => 'lecture_id',
                 'format' => 'raw',
                 'value' => 'lecture.title',
                 'filter' => Html::dropDownList('UserlectureevaluationsSearch[lecture_id]', isset($get['UserlectureevaluationsSearch']['lecture_id']) ? $get['UserlectureevaluationsSearch']['lecture_id'] : '', $lectures, ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
             ],
-            //'evaluation_id',
             [
                 'attribute' => 'evaluation_id',
                 'format' => 'raw',
@@ -102,15 +95,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             ['title' => 'View', 'data-pjax' => '0']
                         );
                     },
-                    // 'delete' => function ($url, $model, $key) {
-                    //     return Html::a(
-                    //         '<span  class="glyphicon glyphicon glyphicon-trash"> </span>',
-                    //         $url,
-                    //         ['title' => 'Delete', 'data' => [
-                    //             'confirm' => 'Are you sure you want to delete this item?',
-                    //         ],]
-                    //     );
-                    // }
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                     if ($action === 'view') {

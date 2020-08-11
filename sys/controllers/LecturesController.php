@@ -63,7 +63,7 @@ class LecturesController extends Controller
      */
     public function actionIndex()
     {
-        $isCurrentUserTeacher = Users::isTeacher(Yii::$app->user->identity->email);
+        $isCurrentUserTeacher = Users::isCurrentUserTeacher();
         $searchModel = $isCurrentUserTeacher ? new TeacherLecturesSearch() : new LecturesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $get = Yii::$app->request->queryParams;
@@ -108,7 +108,7 @@ class LecturesController extends Controller
         $model->created = date('Y-m-d H:i:s', time());
         $model->complexity = 1;
         if ($model->load($post) && $model->save()) {
-            if (Users::isTeacher(Yii::$app->user->identity->email)) {
+            if (Users::isCurrentUserTeacher()) {
                 $newSchoolLecture = new SchoolLecture();
                 $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
                 $newSchoolLecture->school_id = $currentUserTeacher->school_id;

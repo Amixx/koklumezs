@@ -5,14 +5,9 @@ namespace app\controllers;
 use app\models\CommentResponses;
 use Yii;
 use app\models\Userlectureevaluations;
-use app\models\UserlectureevaluationsSearch;
-use app\models\Users;
-use app\models\Lectures;
-use app\models\Evaluations;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\data\ActiveDataProvider;
 
 /**
  * UserLectureEvaluationsController implements the CRUD actions for Userlectureevaluations model.

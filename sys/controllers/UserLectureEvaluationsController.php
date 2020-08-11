@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Userlectureevaluations;
 use app\models\UserlectureevaluationsSearch;
+use app\models\TeacherUserlectureevaluationsSearch;
 use app\models\Users;
 use app\models\Lectures;
 use app\models\Evaluations;
@@ -40,7 +41,7 @@ class UserLectureEvaluationsController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new UserlectureevaluationsSearch();
+        $searchModel = Users::isCurrentUserTeacher() ? new TeacherUserlectureevaluationsSearch() : new UserlectureevaluationsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $students = Users::getActiveStudents();
         $lectures = Lectures::getLectures();
