@@ -42,11 +42,15 @@ class AssignController extends \yii\web\Controller
     {
         $options = [];
         $onlyThoseWithoutDontBother = true;
-        $users = Users::getActiveStudents($onlyThoseWithoutDontBother);
+        if (Users::isTeacher(Yii::$app->user->identity->email)) {
+            $users = Users::getActiveStudentsForSchool($onlyThoseWithoutDontBother);
+        } else {
+            $users = Users::getActiveStudents($onlyThoseWithoutDontBother);
+        }
+
         $evaluations = [];
         $lectureDifficulties = [];
         $goals = [];
-        $videoFrequencies = [];
         $lastlectures = [];
         $videoParam = Evaluations::getVideoParam();
         $evaluationsTitles = Evaluations::getEvaluationsTitles();

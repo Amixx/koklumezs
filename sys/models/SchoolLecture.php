@@ -6,20 +6,20 @@ use yii\helpers\ArrayHelper;
 use app\models\Lectures;
 use Yii;
 
-class SchoolLesson extends \yii\db\ActiveRecord
+class SchoolLecture extends \yii\db\ActiveRecord
 {
     public static function tableName()
     {
-        return 'schoollessons';
+        return 'schoollectures';
     }
 
     public function rules()
     {
         return [
-            [['school_id', 'lesson_id'], 'required'],
-            [['school_id', 'lesson_id'], 'integer'],
+            [['school_id', 'lecture_id'], 'required'],
+            [['school_id', 'lecture_id'], 'integer'],
             [['school_id'], 'exist', 'skipOnError' => true, 'targetClass' => School::className(), 'targetAttribute' => ['school_id' => 'id']],
-            [['lesson_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['lesson_id' => 'id']],
+            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
         ];
     }
 
@@ -31,18 +31,24 @@ class SchoolLesson extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'school_id' => 'Skola',
-            'lesson_id' => 'Nodarbība',
+            'lecture_id' => 'Nodarbība',
         ];
     }
 
     public function getSchool()
     {
-        return $this->hasOne(Schools::className(), ['id' => 'school_id']);
+        return $this->hasOne(School::className(), ['id' => 'school_id']);
     }
 
     public function getLessons()
     {
-        return $this->hasMany(Users::className(), ['id' => 'lesson_id']);
+        return $this->hasMany(Users::className(), ['id' => 'lecture_id']);
+    }
+
+    public function getSchoolLectureIds($schoolId)
+    {
+        $lectures = self::find(['school_id' => $schoolId])->asArray()->all();
+        return ArrayHelper::map($lectures, 'id', 'lecture_id');
     }
 
     // public function getRelations($id): array

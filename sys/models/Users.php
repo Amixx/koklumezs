@@ -147,6 +147,31 @@ class Users extends ActiveRecord implements IdentityInterface
         return $dont_bother ? $result : $users;
     }
 
+    public static function getActiveStudentsForSchool($dont_bother = false)
+    {
+        $params = ['user_level' => self::ROLE_USER, 'status' => self::STATUS_ACTIVE];
+        $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
+        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
+        if ($dont_bother) {
+            $users = self::find()->where($params)->andWhere(['in', 'id', $schoolStudentIds])->asArray()->all();
+            $result = [];
+            foreach ($users as $u) {
+                if ($u['dont_bother'] != null) {
+                    $time = time();
+                    $check = strtotime($u['dont_bother']);
+                    if ($check < $time) {
+                        $result[$u['id']] = $u;
+                    }
+                } else {
+                    $result[$u['id']] = $u;
+                }
+            }
+        } else {
+            $users = ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'email');
+        }
+        return $dont_bother ? $result : $users;
+    }
+
     public static function getActiveStudentsWithParams($dont_bother = false, $lang, $subType)
     {
         $params = ['user_level' => self::ROLE_USER, 'status' => self::STATUS_ACTIVE];

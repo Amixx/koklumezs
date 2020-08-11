@@ -2,6 +2,7 @@
 
 use yii\helpers\Url;
 use yii\helpers\Html;
+use app\models\SectionsVisible;
 
 $this->title = 'Nodarbība (lesson): ' . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Nodarbības/Lessons', 'url' => ['index']];
@@ -58,7 +59,7 @@ $this->params['breadcrumbs'][] = $model->title;
         <?php if ($model->file) { ?>
             <?= $this->render('video', ['lecturefiles' => [0 => ['title' => $model->title, 'file' => $model->file, 'thumb' => $model->thumb ?? '']], 'videos' => $videos, 'baseUrl' => $baseUrl]); ?>
         <?php } ?>
-        <?php if ($model->file && $userCanDownloadFiles) { ?>
+        <?php if ($model->file && $userCanDownloadFiles && SectionsVisible::isVisible("Video lejupielādes poga")) { ?>
             <a href="<?= $model->file ?> " target="_blank" download>Lejupielādēt nodarbības video failu</a>
         <?php } ?>
         <?php if ($lecturefiles) { ?>

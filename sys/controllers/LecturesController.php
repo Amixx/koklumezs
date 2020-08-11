@@ -8,11 +8,14 @@ use app\models\Evaluations;
 use app\models\Difficulties;
 use app\models\Lecturesfiles;
 use app\models\LecturesSearch;
+use app\models\TeacherLecturesSearch;
 use app\models\RelatedLectures;
 use app\models\Handdifficulties;
 use app\models\Lecturesevaluations;
 use app\models\LecturesDifficulties;
 use app\models\Lectureshanddifficulties;
+use app\models\SchoolLecture;
+use app\models\SchoolTeacher;
 
 
 use Yii;
@@ -60,7 +63,8 @@ class LecturesController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new LecturesSearch();
+        $isCurrentUserTeacher = Users::isTeacher(Yii::$app->user->identity->email);
+        $searchModel = $isCurrentUserTeacher ? new TeacherLecturesSearch() : new LecturesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $get = Yii::$app->request->queryParams;
         $admins = Users::getAdmins();
@@ -104,6 +108,13 @@ class LecturesController extends Controller
         $model->created = date('Y-m-d H:i:s', time());
         $model->complexity = 1;
         if ($model->load($post) && $model->save()) {
+            if (Users::isTeacher(Yii::$app->user->identity->email)) {
+                $newSchoolLecture = new SchoolLecture();
+                $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
+                $newSchoolLecture->school_id = $currentUserTeacher->school_id;
+                $newSchoolLecture->lecture_id = $model->id;
+                $newSchoolLecture->save();
+            }
             if (isset($post['difficulties'])) {
                 $sum = 0;
                 foreach ($post['difficulties'] as $pid => $value) {

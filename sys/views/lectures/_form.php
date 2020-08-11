@@ -1,6 +1,5 @@
 <?php
 
-use Yii;
 use mihaildev\ckeditor\CKEditor;
 use mihaildev\elfinder\ElFinder;
 use mihaildev\elfinder\InputFile;
@@ -16,7 +15,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
     [
         'preset' => 'full', //разработанны стандартные настройки basic, standard, full данную возможность не обязательно использовать
         'inline' => false, //по умолчанию false
-        'filter'        => ['image', 'application/pdf', 'text', 'video'],    // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
+        'filter' => ['image', 'application/pdf', 'text', 'video'],    // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
     ]
 );
 ?>
@@ -31,11 +30,6 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
         <li class="nav-item">
             <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false">Parametri</a>
         </li>
-        <?php /*
-        <li class="nav-item">
-            <a class="nav-link" id="hands-tab" data-toggle="tab" href="#hands" role="tab" aria-controls="hands" aria-selected="false">Roku kategorijas</a>
-        </li>
-         */ ?>
         <li class="nav-item">
             <a class="nav-link" id="evaluations-tab" data-toggle="tab" href="#evaluations" role="tab" aria-controls="evaluations" aria-selected="false">Novērtējumi</a>
         </li>
@@ -79,13 +73,6 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                 <?= $this->render('difficulties', ['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>
             <?php } ?>
         </div>
-        <?php /*
-        <div class="tab-pane fade" id="hands" role="tabpanel" aria-labelledby="hands-tab">
-            <?php if($handdifficulties){  ?>
-               <?= $this->render('handdifficulties',['handdifficulties' => $handdifficulties,'lectureHandDifficulties' => $lectureHandDifficulties]) ?> 
-            <?php } ?>
-        </div>
-        */ ?>
         <div class="tab-pane fade" id="evaluations" role="tabpanel" aria-labelledby="evaluations-tab">
             <?php if ($evaluations) {  ?>
                 <?= $this->render('evaluations', ['evaluations' => $evaluations, 'lectureEvaluations' => $lectureEvaluations]) ?>
