@@ -40,17 +40,13 @@ class TeacherUserlectureevaluationsSearch extends Userlectureevaluations
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $onlyComments)
     {
         $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
         $schoolLectureIds = SchoolLecture::getSchoolLectureIds($currentUserTeacher->school_id);
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
 
-        $query = Userlectureevaluations::find()->where([
-            'AND',
-            ['in', 'lecture_id', $schoolLectureIds],
-            ['in', 'user_id', $schoolStudentIds],
-        ]);
+        $query = Userlectureevaluations::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -101,6 +97,16 @@ class TeacherUserlectureevaluationsSearch extends Userlectureevaluations
             'lecture_id' => $this->lecture_id,
             'evaluation_id' => $this->evaluation_id ? $this->evaluation_id : $defaultEvaluationId,
             'user_id' => $this->user_id,
+        ]);
+
+        if ($onlyComments) {
+            $query->andFilterWhere(['evaluation_id' => 4]);
+        }
+
+        $query->andFilterWhere([
+            'AND',
+            ['in', 'lecture_id', $schoolLectureIds],
+            ['in', 'user_id', $schoolStudentIds],
         ]);
 
         $query->andFilterWhere(['like', 'evalua', $this->evalua]);

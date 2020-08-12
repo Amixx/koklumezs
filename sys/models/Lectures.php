@@ -128,6 +128,7 @@ class Lectures extends \yii\db\ActiveRecord
         $returnArray = [];
         foreach ($data as $d) {
             $returnArray[$d['id']] = [
+                'id' => $d['id'],
                 'title' => $d['title'],
                 'complexity' => $d['complexity']
             ];

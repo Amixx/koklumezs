@@ -11,13 +11,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <!-- <?= Html::a('Izveidot studenta vērtējumu', ['create'], ['class' => 'btn btn-success']) ?> -->
-    </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); 
-    ?>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -28,12 +21,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => 'lecture.title',
                 'filter' => Html::dropDownList('UserlectureevaluationsSearch[lecture_id]', isset($get['UserlectureevaluationsSearch']['lecture_id']) ? $get['UserlectureevaluationsSearch']['lecture_id'] : '', $lectures, ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
-            ],
-            [
-                'attribute' => 'evaluation_id',
-                'format' => 'raw',
-                'value' => 'evalua.title',
-                'filter' => Html::dropDownList('UserlectureevaluationsSearch[evaluation_id]', isset($get['UserlectureevaluationsSearch']['evaluation_id']) ? $get['UserlectureevaluationsSearch']['evaluation_id'] : '', $evaluations, ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'user_id',
@@ -75,46 +62,5 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn', 'template' => '{update} {delete}']
         ],
     ]);
-    ?>
-
-    <?php if (!$isTeacher) {
-        echo GridView::widget([
-            'dataProvider' => $commentResponsesDataProvider,
-            'columns' => [
-                ['class' => 'yii\grid\SerialColumn'],
-                'author.email',
-                'text',
-                'created',
-                [
-                    'class' => 'yii\grid\ActionColumn',
-                    'template' => '{view}',
-                    'buttons' => [
-                        'view' => function ($url, $model) {
-                            return Html::a(
-                                '<span class="glyphicon glyphicon-eye-open"> </span>',
-                                $url,
-                                ['title' => 'View', 'data-pjax' => '0']
-                            );
-                        },
-                    ],
-                    'urlCreator' => function ($action, $model, $key, $index) {
-                        if ($action === 'view') {
-                            $url = '/sys/lekcijas/lekcija/' . $model['userlectureevaluation']['lecture_id'] . '?force=1';
-                            return $url;
-                        }
-
-                        // if ($action === 'update') {
-                        //     $url = '/sys/lectures/update/' . $model->id;
-                        //     return $url;
-                        // }
-                        // if ($action === 'delete') {
-                        //     $url = '/sys/lectures/delete/' . $model->id;
-                        //     return $url;
-                        // }
-                    }
-                ],
-            ],
-        ]);
-    }
     ?>
 </div>

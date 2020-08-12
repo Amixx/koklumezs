@@ -10,6 +10,9 @@ use app\models\Studentgoals;
 use app\models\Userlectureevaluations;
 use app\models\UserLectures;
 use app\models\Users;
+use app\models\SchoolLecture;
+use app\models\SchoolTeacher;
+use app\models\SchoolStudent;
 use Yii;
 use yii\web\Controller;
 
@@ -150,6 +153,19 @@ class AssignController extends \yii\web\Controller
         $filterLang = array_key_exists("lang", $get) ? $get["lang"] : null;
         $filterSubType = array_key_exists("subType", $get) ? $get["subType"] : null;
         $users = Users::getActiveStudentsWithParams($onlyThoseWithoutDontBother, $filterLang, $filterSubType);
+
+        if (Users::isCurrentUserTeacher()) {
+            $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
+            $schoolLectureIds = SchoolLecture::getSchoolLectureIds($currentUserTeacher->school_id);
+            $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
+
+            $users = array_filter($users, function ($user) use ($schoolStudentIds) {
+                return in_array($user["id"], $schoolStudentIds);
+            });
+            $lectures = array_filter($lectures, function ($lecture) use ($schoolLectureIds) {
+                return in_array($lecture["id"], $schoolLectureIds);
+            });
+        }
         $currentUserId = $user->id;
 
         $userIds = array_keys($users);

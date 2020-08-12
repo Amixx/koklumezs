@@ -42,7 +42,7 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $onlyComments = false)
     {
         $query = Userlectureevaluations::find();
 

@@ -41,8 +41,9 @@ class UserLectureEvaluationsController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = Users::isCurrentUserTeacher() ? new TeacherUserlectureevaluationsSearch() : new UserlectureevaluationsSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $isTeacher = Users::isCurrentUserTeacher();
+        $searchModel = $isTeacher ? new TeacherUserlectureevaluationsSearch() : new UserlectureevaluationsSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, false);
         $students = Users::getActiveStudents();
         $lectures = Lectures::getLectures();
         $evaluations = Evaluations::getEvaluationsTitles();
@@ -59,7 +60,30 @@ class UserLectureEvaluationsController extends Controller
             'lectures' => $lectures,
             'evaluations' => $evaluations,
             'get' => $get,
-            'commentResponsesDataProvider' => $commentResponsesDataProvider
+            'commentResponsesDataProvider' => $commentResponsesDataProvider,
+            'isTeacher' => $isTeacher
+        ]);
+    }
+
+    public function actionComments()
+    {
+        $isTeacher = Users::isCurrentUserTeacher();
+        $searchModel = $isTeacher ? new TeacherUserlectureevaluationsSearch() : new UserlectureevaluationsSearch();
+        $get = Yii::$app->request->queryParams;
+        $get["UserlectureevaluationsSearch"]["evaluation_id"] = 4;
+        $dataProvider = $searchModel->search($get, true);
+        $students = Users::getActiveStudents();
+        $lectures = Lectures::getLectures();
+        $evaluations = Evaluations::getEvaluationsTitles();
+
+
+        return $this->render('comments', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'students' => $students,
+            'lectures' => $lectures,
+            'evaluations' => $evaluations,
+            'get' => $get,
         ]);
     }
 
