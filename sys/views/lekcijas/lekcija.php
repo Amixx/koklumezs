@@ -28,6 +28,18 @@ $this->params['breadcrumbs'][] = $model->title;
                 if ($uLecture->still_learning) echo " (<span class='text-primary'>Vēl mācos/Still learning</span>)";
             } ?>
         </h2>
+
+        <?php if ($model->file) { ?>
+            <?= $this->render('video', ['lecturefiles' => [0 => ['title' => $model->title, 'file' => $model->file, 'thumb' => $model->thumb ?? '']], 'videos' => $videos, 'baseUrl' => $baseUrl]); ?>
+        <?php } ?>
+        <?php if ($model->file && $userCanDownloadFiles && SectionsVisible::isVisible("Video lejupielādes poga")) { ?>
+            <a href="<?= $model->file ?> " target="_blank" download>Lejupielādēt nodarbības video failu</a>
+        <?php } ?>
+        <?php if ($lecturefiles) { ?>
+            <?= $this->render('video', ['lecturefiles' => $lecturefiles, 'videos' => $videos, 'baseUrl' => $baseUrl]); ?>
+            <?= $this->render('audio', ['lecturefiles' => $lecturefiles, 'audio' => $audio]); ?>
+        <?php } ?>
+        <?= $model->description ?>
         <?php if ($uLecture && $uLecture->evaluated) { ?>
             <div style="margin-top:10px;">
                 <div class="col-sm-6" style="margin-bottom: 5px">
@@ -56,17 +68,6 @@ $this->params['breadcrumbs'][] = $model->title;
             </div>
 
         <?php } ?>
-        <?php if ($model->file) { ?>
-            <?= $this->render('video', ['lecturefiles' => [0 => ['title' => $model->title, 'file' => $model->file, 'thumb' => $model->thumb ?? '']], 'videos' => $videos, 'baseUrl' => $baseUrl]); ?>
-        <?php } ?>
-        <?php if ($model->file && $userCanDownloadFiles && SectionsVisible::isVisible("Video lejupielādes poga")) { ?>
-            <a href="<?= $model->file ?> " target="_blank" download>Lejupielādēt nodarbības video failu</a>
-        <?php } ?>
-        <?php if ($lecturefiles) { ?>
-            <?= $this->render('video', ['lecturefiles' => $lecturefiles, 'videos' => $videos, 'baseUrl' => $baseUrl]); ?>
-            <?= $this->render('audio', ['lecturefiles' => $lecturefiles, 'audio' => $audio]); ?>
-        <?php } ?>
-        <?= $model->description ?>
         <?php if ($difficulties and $lectureDifficulties and $difficultiesVisible) { ?>
             <?= $this->render('difficulties', ['difficulties' => $difficulties, 'difficultiesEng' => $difficultiesEng, 'lectureDifficulties' => $lectureDifficulties]) ?>
         <?php } ?>

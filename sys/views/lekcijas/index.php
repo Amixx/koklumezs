@@ -48,5 +48,4 @@ $this->params['breadcrumbs'][] = $this->title;
         ]);
     }
     ?>
-    <!-- <?= Html::a('Uz arhīvu/To archive', ['/archive'], ['class' => 'btn btn-primary']) ?> -->
 </div>
