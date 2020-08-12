@@ -87,8 +87,18 @@ class AssignController extends \yii\web\Controller
         return $this->render('index', $options);
     }
 
-    public function actionUserlectures($id)
+    public function actionUserlectures($id = null)
     {
+        if ($id == null) {
+            $onlyThoseWithoutDontBother = true;
+            if (Users::isCurrentUserTeacher()) {
+                $users = Users::getActiveStudentsForSchool($onlyThoseWithoutDontBother);
+            } else {
+                $users = Users::getActiveStudents($onlyThoseWithoutDontBother);
+            }
+            $id = key($users);
+        }
+
         $post = Yii::$app->request->post();
         $get = Yii::$app->request->get();
         $user = Users::findOne($id);

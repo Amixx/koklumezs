@@ -130,10 +130,11 @@ AppAsset::register($this);
             $navItems[] = $navEnd;
         } elseif ($isTeacher) {
             $navItems[] = ['label' => 'Skola', 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),];
-            $navItems[] = ['label' => 'Community', 'url' => ['/user-lecture-evaluations/comments'], 'active' =>  in_array(\Yii::$app->controller->id, ['evaluations'])];
+            $navItems[] = ['label' => '+', 'url' => ['/assign/userlectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),];
+            $navItems[] = ['label' => 'Community', 'url' => ['/user-lecture-evaluations/comments'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations']) and Yii::$app->controller->action->actionMethod == "actionComments"];
             $navItems[] = ['label' => 'Skolēni', 'url' => ['/user'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])];
             $navItems[] = ['label' => 'Nodarbības', 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
-            $navItems[] = ['label' => 'Metrikas', 'url' => ['/user-lecture-evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations'])];
+            $navItems[] = ['label' => 'Metrikas', 'url' => ['/user-lecture-evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations']) and Yii::$app->controller->action->actionMethod != "actionComments"];
 
             $navItems[] = $navEnd;
         } elseif ($isStudent) {
