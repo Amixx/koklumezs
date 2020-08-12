@@ -138,14 +138,60 @@ function setupAssignFilterByLanguage(){
 }
 
 function setupAssignFilterBySubscriptionType() {
-    $("#UserSubscriptionTypeSelector").on("change", function () {
-        var subType = this.value;
-        modifyViewHrefOnFilter("subType", subType);
-        filterAssignStudentList($("#UserLanguageSelector").val(), subType);
+    // $("#UserSubscriptionTypeSelector").on("change", function () {
+    //     var subType = this.value;
+    //     modifyViewHrefOnFilter("subType", subType);
+    //     filterAssignStudentList($("#UserLanguageSelector").val(), subType);
+    // });
+    
+    
+    $(".subscription-type-selector.type-free").on("change", function () {
+        // var type = this.classList[1].split("-")[1];
+        var subTypes = this.checked ? ["free"] : [];
+        if ($(".subscription-type-selector.type-paid").prop("checked")) subTypes.push("paid");
+        if ($(".subscription-type-selector.type-lead").prop("checked")) subTypes.push("lead");
+        if ($(".subscription-type-selector.type-pausing").prop("checked")) subTypes.push("pausing");
+
+        modifyViewHrefOnFilter("subTypes", subTypes.join(","));
+        filterAssignStudentList($("#UserLanguageSelector").val(), subTypes);
     });
+    $(".subscription-type-selector.type-paid").on("change", function () {
+        // var type = this.classList[1].split("-")[1];
+        var subTypes = this.checked ? ["paid"] : [];
+        if ($(".subscription-type-selector.type-free").prop("checked")) subTypes.push("free");
+        if ($(".subscription-type-selector.type-lead").prop("checked")) subTypes.push("lead");
+        if ($(".subscription-type-selector.type-pausing").prop("checked")) subTypes.push("pausing");
+
+        modifyViewHrefOnFilter("subTypes", subTypes.join(","));
+        filterAssignStudentList($("#UserLanguageSelector").val(), subTypes);
+    });
+    $(".subscription-type-selector.type-lead").on("change", function () {
+        // var type = this.classList[1].split("-")[1];
+        var subTypes = this.checked ? ["lead"] : [];
+        if ($(".subscription-type-selector.type-paid").prop("checked")) subTypes.push("paid");
+        if ($(".subscription-type-selector.type-free").prop("checked")) subTypes.push("free");
+        if ($(".subscription-type-selector.type-pausing").prop("checked")) subTypes.push("pausing");
+
+        modifyViewHrefOnFilter("subTypes", subTypes.join(","));
+        filterAssignStudentList($("#UserLanguageSelector").val(), subTypes);
+    });
+    $(".subscription-type-selector.type-pausing").on("change", function () {
+        // var type = this.classList[1].split("-")[1];
+        var subTypes = this.checked ? ["pausing"] : [];
+        if ($(".subscription-type-selector.type-paid").prop("checked")) subTypes.push("paid");
+        if ($(".subscription-type-selector.type-free").prop("checked")) subTypes.push("free");
+        if ($(".subscription-type-selector.type-lead").prop("checked")) subTypes.push("lead");
+
+        modifyViewHrefOnFilter("subTypes", subTypes.join(","));
+        filterAssignStudentList($("#UserLanguageSelector").val(), subTypes);
+    });
+
+    $(".subscription-type-selector.type-free").trigger("click");
+    $(".subscription-type-selector.type-paid").trigger("click");
+    $(".subscription-type-selector.type-lead").trigger("click");
 }
 
-function filterAssignStudentList(lang, subType){
+function filterAssignStudentList(lang, subTypes){
     $("#AssignTable tr").each(function () {
         this.style.display = "";
     });
@@ -153,27 +199,32 @@ function filterAssignStudentList(lang, subType){
     var $langElems = $("td.user-language");
     $langElems.each(function () {
         var $subTypeElem = $(this).next()[0];
+        var $userStatusElem = $(this).next().next()[0];
         var langText = this.innerText;
         var subTypeText = $subTypeElem.innerText;
+        var isUserPassive = parseInt($userStatusElem.innerText.trim()) === 11;
        
-        if (shouldHideRow(lang, langText, subType, subTypeText)) {
+        if (shouldHideRow(lang, langText, subTypes, subTypeText, isUserPassive)) {
             this.parentElement.style.display = "none";
         }
     });
 
-    function shouldHideRow(lang, langText, subType, subTypeText){
+    function shouldHideRow(lang, langText, subTypes, subTypeText, isUserPassive){
         var hideRow;
-        if (lang === "all") {
-            if (subType === "all") {
+        var showAllSubTypes = subTypes.length === 0 || subTypes.length === 3;
+        if (isUserPassive && subTypes.indexOf("pausing") === -1){
+            hideRow = true;
+        }else if (lang === "all") {
+            if (showAllSubTypes) {
                 hideRow = false;
             } else {
-                hideRow = subType !== subTypeText;
+                hideRow = subTypes.indexOf(subTypeText) === -1;
             }
         } else {
-            if (subType === "all") {
+            if (showAllSubTypes) {
                 hideRow = lang !== langText;
             } else {
-                hideRow = lang !== langText || subType !== subTypeText;
+                hideRow = lang !== langText || subTypes.indexOf(subTypeText) === -1;
             }
         }
         return hideRow;

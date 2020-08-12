@@ -46,9 +46,9 @@ class AssignController extends \yii\web\Controller
         $options = [];
         $onlyThoseWithoutDontBother = true;
         if (Users::isCurrentUserTeacher()) {
-            $users = Users::getActiveStudentsForSchool($onlyThoseWithoutDontBother);
+            $users = Users::getStudentsForSchool($onlyThoseWithoutDontBother);
         } else {
-            $users = Users::getActiveStudents($onlyThoseWithoutDontBother);
+            $users = Users::getStudents($onlyThoseWithoutDontBother);
         }
 
         $evaluations = [];
@@ -92,9 +92,9 @@ class AssignController extends \yii\web\Controller
         if ($id == null) {
             $onlyThoseWithoutDontBother = true;
             if (Users::isCurrentUserTeacher()) {
-                $users = Users::getActiveStudentsForSchool($onlyThoseWithoutDontBother);
+                $users = Users::getStudentsForSchool($onlyThoseWithoutDontBother);
             } else {
-                $users = Users::getActiveStudents($onlyThoseWithoutDontBother);
+                $users = Users::getStudents($onlyThoseWithoutDontBother);
             }
             $id = key($users);
         }
@@ -161,8 +161,8 @@ class AssignController extends \yii\web\Controller
 
         $onlyThoseWithoutDontBother = true;
         $filterLang = array_key_exists("lang", $get) ? $get["lang"] : null;
-        $filterSubType = array_key_exists("subType", $get) ? $get["subType"] : null;
-        $users = Users::getActiveStudentsWithParams($onlyThoseWithoutDontBother, $filterLang, $filterSubType);
+        $filterSubTypes = (array_key_exists("subTypes", $get) and isset($get["subTypes"]) && $get["subTypes"] !== '') ? explode(",", $get["subTypes"]) : null;
+        $users = Users::getStudentsWithParams($onlyThoseWithoutDontBother, $filterLang, $filterSubTypes);
 
         if (Users::isCurrentUserTeacher()) {
             $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
@@ -207,7 +207,7 @@ class AssignController extends \yii\web\Controller
         $options['prevUserId'] = $prevUserId;
         $options['nextUserId'] = $nextUserId;
         $options['filterLang'] = $filterLang;
-        $options['filterSubType'] = $filterSubType;
+        $options['filterSubTypes'] = isset($filterSubTypes) ? implode(",", $filterSubTypes) : null;
         $options['currentUserIndex'] = $currentUserKey;
         $options['userCount'] = $userCount;
         return $this->render('userlectures', $options);

@@ -24,9 +24,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php if ($filterLang) { ?>
         <div class="col-sm-3">Valoda: <?= $filterLang ?></div>
     <?php } ?>
-    <?php if ($filterSubType) { ?>
-        <div class="col-sm-3">Abonementa veids: <?= $subscriptionTypeText ?></div>
-    <?php } ?>
+    <!-- <?php if ($filterSubTypes) { ?>
+        <div class="col-sm-3">Abonementa veids/i: <?= $subscriptionTypeText ?></div>
+    <?php } ?> -->
     <div class="col-sm-3">
         <?= $currentUserIndex + 1 ?>/<?= $userCount ?>
     </div>
@@ -40,11 +40,11 @@ $this->params['breadcrumbs'][] = $this->title;
         $prevButtonHref = "/assign/userlectures/$prevUserId";
         if ($filterLang) {
             $prevButtonHref .= "?lang=$filterLang";
-            if ($filterSubType) {
-                $prevButtonHref .= "&subType=$filterSubType";
+            if ($filterSubTypes) {
+                $prevButtonHref .= "&subTypes=$filterSubTypes";
             }
-        } else if ($filterSubType) {
-            $prevButtonHref .= "?subType=$filterSubType";
+        } else if ($filterSubTypes) {
+            $prevButtonHref .= "?subTypes=$filterSubTypes";
         }
     }
 
@@ -52,11 +52,11 @@ $this->params['breadcrumbs'][] = $this->title;
         $nextButtonHref = "/assign/userlectures/$nextUserId";
         if ($filterLang) {
             $nextButtonHref .= "?lang=$filterLang";
-            if ($filterSubType) {
-                $nextButtonHref .= "&subType=$filterSubType";
+            if ($filterSubTypes) {
+                $nextButtonHref .= "&subTypes=$filterSubTypes";
             }
-        } else if ($filterSubType) {
-            $nextButtonHref .= "?subType=$filterSubType";
+        } else if ($filterSubTypes) {
+            $nextButtonHref .= "?subTypes=$filterSubTypes";
         }
     }
     ?>

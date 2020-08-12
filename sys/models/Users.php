@@ -147,9 +147,32 @@ class Users extends ActiveRecord implements IdentityInterface
         return $dont_bother ? $result : $users;
     }
 
-    public static function getActiveStudentsForSchool($dont_bother = false)
+    public static function getStudents($dont_bother = false)
     {
-        $params = ['user_level' => self::ROLE_USER, 'status' => self::STATUS_ACTIVE];
+        $params = ['user_level' => self::ROLE_USER];
+        if ($dont_bother) {
+            $users = self::find()->where($params)->asArray()->all();
+            $result = [];
+            foreach ($users as $u) {
+                if ($u['dont_bother'] != null) {
+                    $time = time();
+                    $check = strtotime($u['dont_bother']);
+                    if ($check < $time) {
+                        $result[$u['id']] = $u;
+                    }
+                } else {
+                    $result[$u['id']] = $u;
+                }
+            }
+        } else {
+            $users = ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'email');
+        }
+        return $dont_bother ? $result : $users;
+    }
+
+    public static function getStudentsForSchool($dont_bother = false)
+    {
+        $params = ['user_level' => self::ROLE_USER];
         $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
         if ($dont_bother) {
@@ -172,17 +195,23 @@ class Users extends ActiveRecord implements IdentityInterface
         return $dont_bother ? $result : $users;
     }
 
-    public static function getActiveStudentsWithParams($dont_bother = false, $lang, $subType)
+    public static function getStudentsWithParams($dont_bother = false, $lang, $subTypes)
     {
-        $params = ['user_level' => self::ROLE_USER, 'status' => self::STATUS_ACTIVE];
+        $params = ['user_level' => self::ROLE_USER];
         if ($lang) {
             $params['language'] = $lang;
         };
-        if ($subType) {
-            $params['subscription_type'] = $subType;
-        };
+        if ($subTypes && !in_array("pausing", $subTypes)) {;
+            $params['status'] = self::STATUS_ACTIVE;
+        }
+        $query = self::find()->where($params);
+        if ($subTypes) {
+            $query->andWhere(['in', 'subscription_type', $subTypes]);
+        }
+
         if ($dont_bother) {
-            $users = self::find()->where($params)->asArray()->all();
+            $users = $query->asArray()->all();
+
             $result = [];
             foreach ($users as $u) {
                 if ($u['dont_bother'] != null) {
@@ -196,7 +225,7 @@ class Users extends ActiveRecord implements IdentityInterface
                 }
             }
         } else {
-            $users = ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'email');
+            $users = ArrayHelper::map($query->asArray()->all(), 'id', 'email');
         }
         return $dont_bother ? $result : $users;
     }

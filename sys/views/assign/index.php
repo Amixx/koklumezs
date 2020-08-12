@@ -31,14 +31,19 @@ $this->params['breadcrumbs'][] = $this->title;
     </label>
 </div>
 <div style="display:inline-block">
-    <label for="user-subscription-type-selector">
+    <label>
         Abonēšanas veidi:
-        <select name="user-subscription-type-selector" id="UserSubscriptionTypeSelector">
+        <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-free">Par brīvu</label>
+        <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-paid">Par maksu</label>
+        <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-lead">Izmēģina</label>
+        <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-pausing">Pauzē</label>
+
+        <!-- <select name="user-subscription-type-selector" id="UserSubscriptionTypeSelector">
             <option value="all" selected>Visi</option>
             <option value="free">Par brīvu</option>
             <option value="paid">Par maksu</option>
             <option value="lead">Izmēģina</option>
-        </select>
+        </select> -->
     </label>
 </div>
 <div class="grid-view">
@@ -97,6 +102,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </td>
                     <td style="display:none" class="user-language"><?= $user['language'] ?></td>
                     <td style="display:none" class="user-subscription-type"><?= $user['subscription_type'] ?></td>
+                    <td style="display:none" class="user-status"><?= $user['status'] ?></td>
                 </tr>
             <?php $a++;
             } ?>
