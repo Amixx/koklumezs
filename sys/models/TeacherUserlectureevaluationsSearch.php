@@ -90,12 +90,10 @@ class TeacherUserlectureevaluationsSearch extends Userlectureevaluations
             ['like', self::tableName() . '.created', $this->created]
         );
 
-        $defaultEvaluationId = Users::isCurrentUserTeacher() ? null : 4;
-
         $query->andFilterWhere([
             'id' => $this->id,
             'lecture_id' => $this->lecture_id,
-            'evaluation_id' => $this->evaluation_id ? $this->evaluation_id : $defaultEvaluationId,
+            'evaluation_id' => $this->evaluation_id ? $this->evaluation_id : null,
             'user_id' => $this->user_id,
         ]);
 
@@ -103,11 +101,17 @@ class TeacherUserlectureevaluationsSearch extends Userlectureevaluations
             $query->andFilterWhere(['evaluation_id' => 4]);
         }
 
-        $query->andFilterWhere([
-            'AND',
-            ['in', 'lecture_id', $schoolLectureIds],
-            ['in', 'user_id', $schoolStudentIds],
-        ]);
+        if (count($schoolLectureIds) > 0 and count($schoolStudentIds) > 0) {
+            $query->andFilterWhere([
+                'AND',
+                ['in', 'lecture_id', $schoolLectureIds],
+                ['in', 'user_id', $schoolStudentIds],
+            ]);
+        } else {
+            $query->andFilterWhere(['user_id' => -1]);
+        }
+
+
 
         $query->andFilterWhere(['like', 'evalua', $this->evalua]);
 
