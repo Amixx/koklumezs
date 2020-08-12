@@ -179,6 +179,7 @@ class AssignController extends \yii\web\Controller
         $currentUserId = $user->id;
 
         $userIds = array_keys($users);
+
         $currentUserKey = (array_search($currentUserId, $userIds, true));
         $prevUserId = key_exists($currentUserKey - 1, $userIds) ? $userIds[$currentUserKey - 1] : null;
         $nextUserId = key_exists($currentUserKey + 1, $userIds) ? $userIds[$currentUserKey + 1] : null;
