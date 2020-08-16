@@ -163,6 +163,7 @@ class LekcijasController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+
         $model = $this->findModel($id);
         $user = Yii::$app->user->identity;
         $uLecture = null;
@@ -417,6 +418,7 @@ class LekcijasController extends Controller
             $userCanDownloadFiles = $dbUser->allowed_to_download_files;
             $relatedLectures = Lectures::getLecturesByIds($ids);
             $difficultiesVisible = SectionsVisible::isVisible("Nodarbības sarežģītība");
+
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,

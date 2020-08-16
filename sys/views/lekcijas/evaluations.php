@@ -44,8 +44,8 @@ foreach ($evaluations as $id => $evaluation) {
     <?php } ?>
 <?php } ?>
 <div class="form-group">
-    <?= Html::checkbox('add-to-favourites', false, ['label' => 'Pievienot mīļākajām nodarbībām/Add to favourites']) ?>
-    <?= Html::checkbox('add-to-still-learning', false, ['label' => 'Pievienot nodarbībām, ko vēl mācos/Add to lessons I\'m still learning']) ?>
+    <?= Html::checkbox('add-to-favourites', $isFavourite, ['label' => 'Pievienot mīļākajām nodarbībām/Add to favourites']) ?>
+    <?= Html::checkbox('add-to-still-learning', $isStillLearning, ['label' => 'Pievienot nodarbībām, ko vēl mācos/Add to lessons I\'m still learning']) ?>
 </div>
 <?php if (!$force) { ?>
     <div class="form-group">
