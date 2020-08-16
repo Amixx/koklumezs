@@ -389,3 +389,20 @@ a.desc:after {
     display: block;
   }
 }
+
+.LectureOverview__Section {   
+    padding: 4px 16px;
+    margin: 0 -16px;
+}
+
+.LectureOverview__Section--new {
+background: rgba(0,0,0,0.1);
+}
+
+.LectureOverview__Section--favourite {
+    
+}
+
+.LectureOverview__Section--learning {
+   background: rgba(0,0,0,0.1);
+}
