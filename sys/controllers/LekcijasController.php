@@ -258,14 +258,17 @@ class LekcijasController extends Controller
                         */
                     }
                 }
+
+                $uLecture->still_learning = false;
+                $uLecture->is_favourite = false;
                 if (isset($post["add-to-favourites"])) {
                     $uLecture->is_favourite = $post["add-to-favourites"];
-                    $uLecture->update();
                 }
                 if (isset($post["add-to-still-learning"])) {
                     $uLecture->still_learning = $post["add-to-still-learning"];
-                    $uLecture->update();
                 }
+                $uLecture->update();
+
                 $this->refresh();
             }
 

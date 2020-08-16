@@ -152,6 +152,7 @@ class UserLectureEvaluationsController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+
         $model = new Userlectureevaluations();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
