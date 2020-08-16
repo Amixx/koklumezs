@@ -13,6 +13,7 @@ use app\models\Users;
 use app\models\SchoolLecture;
 use app\models\SchoolTeacher;
 use app\models\SchoolStudent;
+use app\models\School;
 use Yii;
 use yii\web\Controller;
 
@@ -43,6 +44,17 @@ class AssignController extends \yii\web\Controller
 
     public function actionIndex()
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         $options = [];
         $onlyThoseWithoutDontBother = true;
         if (Users::isCurrentUserTeacher()) {
@@ -89,6 +101,18 @@ class AssignController extends \yii\web\Controller
 
     public function actionUserlectures($id = null)
     {
+
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         if ($id == null) {
             $onlyThoseWithoutDontBother = true;
             if (Users::isCurrentUserTeacher()) {

@@ -16,6 +16,7 @@ use app\models\LecturesDifficulties;
 use app\models\Lectureshanddifficulties;
 use app\models\SchoolLecture;
 use app\models\SchoolTeacher;
+use app\models\School;
 
 
 use Yii;
@@ -69,6 +70,18 @@ class LecturesController extends Controller
         $get = Yii::$app->request->queryParams;
         $admins = Users::getAdmins();
 
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -86,6 +99,17 @@ class LecturesController extends Controller
      */
     public function actionView($id)
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -156,6 +180,18 @@ class LecturesController extends Controller
             }
             return $this->redirect(['view', 'id' => $model->id]);
         }
+
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         return $this->render('create', [
             'model' => $model,
             'difficulties' => $difficulties,
@@ -234,6 +270,18 @@ class LecturesController extends Controller
             return $this->redirect(['index']);
             //return $this->redirect(['view', 'id' => $model->id]);
         }
+
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         return $this->render('update', [
             'model' => $model,
             'difficulties' => $difficulties,
@@ -257,6 +305,18 @@ class LecturesController extends Controller
      */
     public function actionDelete($id)
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

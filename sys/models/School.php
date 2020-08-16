@@ -2,9 +2,6 @@
 
 namespace app\models;
 
-use Yii;
-use yii\helpers\ArrayHelper;
-
 class School extends \yii\db\ActiveRecord
 {
     public static function tableName()
@@ -30,11 +27,23 @@ class School extends \yii\db\ActiveRecord
         ];
     }
 
-    // public function getByTeacher($teacherId)
-    // {
-    //     $schoolId = SchoolTeacher::getSchoolTeacher($teacherId);
-    //     return self::findOne(['id' => $schoolId]);
-    // }
+    public function getByTeacher($teacherId)
+    {
+        $schoolId = SchoolTeacher::getSchoolTeacher($teacherId);
+        return self::findOne(['id' => $schoolId]);
+    }
+
+    public function getByStudent($studentId)
+    {
+        $schoolId = SchoolStudent::getSchoolStudent($studentId);
+        return self::findOne(['id' => $schoolId]);
+    }
+
+    public function getSettings($teacherId)
+    {
+        $school = self::getByTeacher($teacherId);
+        return ["Skolas fona bilde" => $school->background_image];
+    }
 
     // public function getTeachers()
     // {

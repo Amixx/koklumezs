@@ -15,6 +15,7 @@ use app\models\Studentgoals;
 use app\models\Userlectureevaluations;
 use app\models\UserLectures;
 use app\models\Users;
+use app\models\School;
 use app\models\SectionsVisible;
 use app\models\CommentResponses;
 use Yii;
@@ -65,6 +66,17 @@ class LekcijasController extends Controller
      */
     public function actionIndex($type = null)
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         $models = [];
         $pages = [];
         $user = Yii::$app->user->identity;
@@ -140,6 +152,17 @@ class LekcijasController extends Controller
      */
     public function actionLekcija($id)
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         $model = $this->findModel($id);
         $user = Yii::$app->user->identity;
         $uLecture = null;
@@ -421,6 +444,17 @@ class LekcijasController extends Controller
 
     public function actionToggleIsFavourite($lectureId)
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         $model = UserLectures::findOne(['lecture_id' => $lectureId, 'user_id' => Yii::$app->user->identity->id]);
         $model->is_favourite = !$model->is_favourite;
         $model->update();
@@ -429,6 +463,17 @@ class LekcijasController extends Controller
 
     public function actionToggleStillLearning($lectureId)
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         $model = UserLectures::findOne(['lecture_id' => $lectureId, 'user_id' => Yii::$app->user->identity->id]);
         $model->still_learning = !$model->still_learning;
         $model->update();

@@ -9,38 +9,37 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LectureAssignment;
-use app\models\UserLectures;
 use app\models\SectionsVisible;
 use app\models\Lectures;
 use app\models\Users;
 use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
 use app\models\CommentresponsesSearch;
-
+use yii\base\Event;
+use yii\web\View;
+use app\Models\School;
+use app\Models\SchoolStudent;
+use app\Models\CommentResponses;
+use app\models\UserLectures;
+use app\models\Userlectureevaluations;
 
 class TestController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'class' => \yii\filters\AccessControl::className(),
                 'rules' => [
+                    // allow authenticated users
                     [
-                        'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
+                        },
                     ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
+                    // everything else is denied
                 ],
             ],
         ];
@@ -69,9 +68,16 @@ class TestController extends Controller
      */
     public function actionIndex()
     {
-        $commentResponsesSearchModel = new CommentresponsesSearch();
-        $commentResponsesDataProvider = $commentResponsesSearchModel->search(Yii::$app->request->queryParams);
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
 
-        var_dump($commentResponsesDataProvider);
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
     }
 }

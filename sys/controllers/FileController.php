@@ -10,6 +10,7 @@ use app\models\LecturesDifficulties;
 use app\models\Lecturesevaluations;
 use app\models\Lecturesfiles;
 use app\models\Lectureshanddifficulties;
+use app\models\School;
 use app\models\RelatedLectures;
 use app\models\Studentgoals;
 use app\models\Userlectureevaluations;
@@ -59,6 +60,17 @@ class FileController extends Controller
 
     public function actionIndex()
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         $user = Yii::$app->user->identity;
         $force = Yii::$app->request->get('force');
         $userLectureIds =  UserLectures::getUserLectures($user->id);

@@ -9,8 +9,15 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
-use app\Models\CommentResponses;
-use app\Models\Userlectureevaluations;
+
+$isGuest = Yii::$app->user->isGuest;
+$isAdmin = !$isGuest && Yii::$app->user->identity->user_level == 'Admin';
+$isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+$isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+$school = isset(Yii::$app->view->params['school']) ? Yii::$app->view->params['school'] : null;
+
+$wrapperBackground = $school != null && $school->background_image != null ? "url($school->background_image)" : "white";
 
 AppAsset::register($this);
 ?>
@@ -33,15 +40,10 @@ AppAsset::register($this);
 <body>
     <?php $this->beginBody() ?>
 
-    <div class="wrap">
+    <div class="wrap" style="background: <?= $wrapperBackground ?>">
         <?php
         ob_start(); ?>
-        <?php
-        $isGuest = Yii::$app->user->isGuest;
-        $isAdmin = !$isGuest && Yii::$app->user->identity->user_level == 'Admin';
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-        ?>
+
         <div id="logo" title="<?= Yii::$app->name ?>" class="<?= $isAdmin ? 'admin' : '' ?>">
             <!--?xml version="1.0" encoding="UTF-8"?-->
             <svg preserveAspectRatio="xMidYMid meet" data-bbox="1.3 1.3 176 176" viewBox="0 0 178.6 178.6" xmlns="http://www.w3.org/2000/svg" data-type="ugc" role="img">
@@ -137,6 +139,7 @@ AppAsset::register($this);
             $navItems[] = ['label' => 'Nodarbības', 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
             $navItems[] = ['label' => '+', 'url' => ['/lectures/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
             $navItems[] = ['label' => 'Metrikas', 'url' => ['/user-lecture-evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations']) and Yii::$app->controller->action->actionMethod != "actionComments"];
+            $navItems[] = ['label' => 'Iestatījumi', 'url' => ['/school-settings'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-settings'])];
 
             $navItems[] = $navEnd;
         } elseif ($isStudent) {

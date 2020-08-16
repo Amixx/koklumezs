@@ -8,6 +8,7 @@ use app\models\LecturesDifficulties;
 use app\models\UserLectures;
 use app\models\UserLecturesSearch;
 use app\models\Users;
+use app\models\School;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -53,6 +54,17 @@ class UserLecturesController extends Controller
      */
     public function actionIndex()
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         $searchModel = new UserLecturesSearch();
         $students = Users::getActiveStudents();
         $admins = Users::getAdmins();
@@ -79,6 +91,17 @@ class UserLecturesController extends Controller
      */
     public function actionView($id)
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -100,6 +123,17 @@ class UserLecturesController extends Controller
      */
     public function actionCreate()
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         $outofLectures = false;
         $model = new UserLectures();
         $model->assigned = Yii::$app->user->identity->id;
@@ -191,6 +225,17 @@ class UserLecturesController extends Controller
      */
     public function actionUpdate($id)
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         $model = $this->findModel($id);
         $outofLectures = false;
         $post = Yii::$app->request->post();
@@ -237,6 +282,17 @@ class UserLecturesController extends Controller
      */
     public function actionDelete($id)
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

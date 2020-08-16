@@ -93,10 +93,16 @@ body {
     height: auto;
     margin: 0 auto -60px;
     padding: 0 0 60px;
+    background-repeat:repeat;
 }
 
 .wrap>.container {
     padding: 110px 15px 20px;
+    background:rgba(255,255,255,0.8);
+}
+
+.table {
+    background:white;
 }
 
 .footer {
@@ -160,6 +166,9 @@ a.desc:after {
 
 .sort-ordinal a.desc:after {
     content: "\e156";
+}
+.grid-view {
+    overflow-x:auto;
 }
 
 .grid-view th {

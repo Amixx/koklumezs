@@ -414,6 +414,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function isCurrentUserTeacher()
     {
+        if (!isset(Yii::$app->user->identity->email)) return false;
         return self::isTeacher(Yii::$app->user->identity->email);
     }
 

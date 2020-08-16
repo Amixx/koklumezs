@@ -8,6 +8,7 @@ use app\models\Studentgoals;
 use app\models\UserLectures;
 use app\models\Lectures;
 use app\models\Users;
+use app\models\School;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -24,6 +25,17 @@ class CronController extends Controller
      */
     public function actionIndex()
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         $get = Yii::$app->request->queryParams;
         if (!isset($get['send'])) {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -187,6 +199,17 @@ class CronController extends Controller
      */
     public function actionUserlectures()
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         $get = Yii::$app->request->queryParams;
         if (!isset($get['id'])) {
             throw new NotFoundHttpException('The requested page does not exist.');

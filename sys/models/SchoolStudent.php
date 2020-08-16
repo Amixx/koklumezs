@@ -37,6 +37,11 @@ class SchoolStudent extends \yii\db\ActiveRecord
         return $this->hasOne(School::className(), ['id' => 'school_id']);
     }
 
+    public function getUser()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+    }
+
     public function getStudents()
     {
         return $this->hasMany(Users::className(), ['id' => 'user_id']);
@@ -47,6 +52,12 @@ class SchoolStudent extends \yii\db\ActiveRecord
         $students = self::find(['school_id' => $schoolId])->asArray()->all();
         return ArrayHelper::map($students, 'id', 'user_id');
     }
+
+    public function getSchoolStudent($studentId)
+    {
+        return self::find(['student_id', $studentId])->joinWith('school')->joinWith('user')->one();
+    }
+
 
     // public function getRelations($id): array
     // {

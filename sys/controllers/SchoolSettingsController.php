@@ -2,18 +2,18 @@
 
 namespace app\controllers;
 
-use app\models\CommentResponses;
 use Yii;
-use app\models\Userlectureevaluations;
+use app\models\Users;
 use app\models\School;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\base\Event;
+use yii\web\View;
+use app\Models\SchoolStudent;
+use app\Models\CommentResponses;
 
-/**
- * UserLectureEvaluationsController implements the CRUD actions for Userlectureevaluations model.
- */
-class CommentResponsesController extends Controller
+class SchoolSettingsController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -21,6 +21,20 @@ class CommentResponsesController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'rules' => [
+                    // allow authenticated users
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Users::isCurrentUserTeacher();
+                        }
+                    ],
+                    // everything else is denied
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -30,10 +44,8 @@ class CommentResponsesController extends Controller
         ];
     }
 
-
     public function actionIndex()
     {
-
         $isGuest = Yii::$app->user->isGuest;
         $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
         $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
@@ -45,57 +57,22 @@ class CommentResponsesController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
-        $commentResponses = CommentResponses::getCommentResponsesForUser()->asArray()->all();
-
-        $this->view->params['unseen_responses_count'] = CommentResponses::getUnseenCommentsCount();
-
-        CommentResponses::markResponsesAsSeen();
-
+        $settings = School::getSettings(Yii::$app->user->identity->id);
         return $this->render('index', [
-            'commentResponses' => $commentResponses
+            'settings' => $settings,
         ]);
     }
 
-    /**
-     * Creates a new Userlectureevaluations model.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-
-        $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
-        $model = new CommentResponses;
-
-        $model->author_id = Yii::$app->user->identity->id;
-        $model->userlectureevaluation_id =
-            Yii::$app->request->post()['evaluation_id'];
-        $model->text = Yii::$app->request->post()['response_text'];
-        $model->created = date('Y-m-d H:i:s', time());
-
-        if ($model->save()) {
-            return $this->redirect(Yii::$app->request->referrer);
-        }
-    }
 
     /**
-     * Updates an existing Userlectureevaluations model.
+     * Updates an existing SectionsVisible model.
+     * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate()
     {
-
         $isGuest = Yii::$app->user->isGuest;
         $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
         $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
@@ -107,19 +84,23 @@ class CommentResponsesController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $model = new School;
+        $post = Yii::$app->request->post();
+        if (isset($post) && count($post) > 0) {
+            $model = School::getByTeacher(Yii::$app->user->identity->id);
+            $model->background_image = $post["School"]["background_image"];
+            $saved = $model->save();
+            if ($saved) {
+                Yii::$app->session->setFlash('success', 'Izmaiņas saglabātas!');
+                return $this->redirect(['index']);
+            }
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        return $this->render('update', ['model' => $model]);
     }
 
     /**
-     * Deletes an existing Userlectureevaluations model.
+     * Deletes an existing SectionsVisible model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -127,7 +108,6 @@ class CommentResponsesController extends Controller
      */
     public function actionDelete($id)
     {
-
         $isGuest = Yii::$app->user->isGuest;
         $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
         $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
@@ -142,21 +122,5 @@ class CommentResponsesController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Userlectureevaluations model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Userlectureevaluations the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Userlectureevaluations::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

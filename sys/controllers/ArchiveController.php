@@ -16,6 +16,7 @@ use app\models\Userlectureevaluations;
 use app\models\UserLectures;
 use app\models\Users;
 use app\models\SectionsVisible;
+use app\models\School;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\VerbFilter;
@@ -61,6 +62,17 @@ class ArchiveController extends Controller
 
     public function actionIndex()
     {
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
         $archive = [];
         $user = Yii::$app->user->identity;
         $evaluatedIds = UserLectures::getEvaluatedUserLectures($user->id);
