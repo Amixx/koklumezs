@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use Yii;
+use yii\db\Query;
+use yii\db\Connection;
 use app\models\Difficulties;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -11,6 +13,8 @@ use yii\filters\VerbFilter;
 use app\models\LectureAssignment;
 use app\models\SectionsVisible;
 use app\models\Lectures;
+use app\models\SchoolTeacher;
+use app\models\SchoolLecture;
 use app\models\Users;
 use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
@@ -68,16 +72,18 @@ class TestController extends Controller
      */
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+        // $isGuest = Yii::$app->user->isGuest;
+        // $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        // $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
 
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
+        // $school = null;
+        // if ($isTeacher) {
+        //     $school = School::getByTeacher(Yii::$app->user->identity->id);
+        // } else if ($isStudent) {
+        //     $school = School::getByStudent(Yii::$app->user->identity->id);
+        // }
+        // Yii::$app->view->params['school'] = $school;
+
+
     }
 }

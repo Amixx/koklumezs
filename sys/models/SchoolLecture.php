@@ -47,7 +47,7 @@ class SchoolLecture extends \yii\db\ActiveRecord
 
     public function getSchoolLectureIds($schoolId)
     {
-        $lectures = self::find(['school_id' => $schoolId])->asArray()->all();
+        $lectures = self::find()->where(['school_id' => $schoolId])->asArray()->all();
         return ArrayHelper::map($lectures, 'id', 'lecture_id');
     }
 

@@ -48,7 +48,7 @@ class SchoolTeacher extends \yii\db\ActiveRecord
 
     public function getSchoolTeacher($teacherId)
     {
-        return self::find(['teacher_id', $teacherId])->joinWith('school')->joinWith('user')->one();
+        return self::find()->where(['user_id' => $teacherId])->joinWith('school')->joinWith('user')->one();
     }
 
     // public function getRelations($id): array

@@ -49,7 +49,7 @@ class SchoolStudent extends \yii\db\ActiveRecord
 
     public function getSchoolStudentIds($schoolId)
     {
-        $students = self::find(['school_id' => $schoolId])->asArray()->all();
+        $students = self::find()->where(['school_id' => $schoolId])->asArray()->all();
         return ArrayHelper::map($students, 'id', 'user_id');
     }
 
