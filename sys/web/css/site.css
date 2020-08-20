@@ -406,3 +406,7 @@ background: rgba(0,0,0,0.1);
 .LectureOverview__Section--learning {
    background: rgba(0,0,0,0.1);
 }
+
+.LectureOverview__EmptyText {
+    margin-bottom:200px;
+}

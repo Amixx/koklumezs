@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="LectureOverview__Section LectureOverview__Section--new">
         <h3>Jaunās nodarbības/New lessons</h3>
         <?php if (count($newLectures) == 0) { ?>
-            <h4>
+            <h4 class="LectureOverview__EmptyText">
                 Apsveicu! Visas jaunās nodarbības esi apskatījis!
             </h4>
         <?php } ?>
@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="LectureOverview__Section LectureOverview__Section--favourite">
         <h3>Nodarbības, ko vēl mācos/Lessons I'm still learning</h3>
         <?php if (count($stillLearningLectures) == 0) { ?>
-            <h4>
+            <h4 class="LectureOverview__EmptyText">
                 Šajā sadaļā neesi pievienojis vel nevienu uzdevumu. To vari izdarīt, atzīmējot jebkurā nodarbībā, ka vēlies pievienot šai sadaļai.
             </h4>
         <?php } ?>
@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="LectureOverview__Section LectureOverview__Section--learning">
         <h3>Mīļākās nodarbības/Favourite lessons</h3>
         <?php if (count($favouriteLectures) == 0) { ?>
-            <h4>
+            <h4 class="LectureOverview__EmptyText">
                 Šajā sadaļā neesi pievienojis vēl nevienu uzdevumu. To vari izdarīt, atzīmējot jebkurā nodarbībā, ka vēlies pievienot šai sadaļai.
             </h4>
         <?php } ?>
