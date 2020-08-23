@@ -33,9 +33,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'type',
                 'format' => 'raw',
                 'value' => function ($dataProvider) {
-                    return $dataProvider->type == 'zvaigznes' ? \Yii::t('app',  'Stars') : \Yii::t('app',  'Text');
+                    return $dataProvider->type == 'stars' ? \Yii::t('app',  'Stars') : \Yii::t('app',  'Text');
                 },
-                'filter' => Html::dropDownList('EvaluationsSearch[type]', isset($get['EvaluationsSearch']['type']) ? $get['EvaluationsSearch']['type'] : '', ['zvaigznes' => \Yii::t('app',  'Stars'), 'teksts' => \Yii::t('app',  'Text')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('EvaluationsSearch[type]', isset($get['EvaluationsSearch']['type']) ? $get['EvaluationsSearch']['type'] : '', ['stars' => \Yii::t('app',  'Stars'), 'text' => \Yii::t('app',  'Text')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
 
             ['class' => 'yii\grid\ActionColumn'],

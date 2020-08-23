@@ -66,7 +66,7 @@ class LecturesfilesController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $searchModel = new LecturesfilesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -101,7 +101,7 @@ class LecturesfilesController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -128,7 +128,7 @@ class LecturesfilesController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = new Lecturesfiles();
         $lectures = Lectures::getLectures();
@@ -168,7 +168,7 @@ class LecturesfilesController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = $this->findModel($id);
         $lectures = Lectures::getLectures();
@@ -204,7 +204,7 @@ class LecturesfilesController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $this->findModel($id)->delete();
 

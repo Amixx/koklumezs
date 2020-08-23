@@ -48,7 +48,7 @@ class Lecturesfiles extends \yii\db\ActiveRecord
             'title' => \Yii::t('app',  'Title'),
             'file' => \Yii::t('app',  'File'),
             'thumb' => \Yii::t('app',  'Image'),
-            'lecture_id' => \Yii::t('app',  'Lecture'),
+            'lecture_id' => \Yii::t('app',  'Lesson'),
         ];
     }
 

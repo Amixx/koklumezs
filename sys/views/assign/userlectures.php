@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
     if ($prevUserId) { ?>
         <span style="vertical-align:top;">
-            <?= Html::a(\Yii::t('app', 'Last'), [$prevButtonHref], ['class' => 'btn btn-primary']); ?>
+            <?= Html::a(\Yii::t('app', 'Previous'), [$prevButtonHref], ['class' => 'btn btn-primary']); ?>
         </span>
     <?php } ?>
 
@@ -87,7 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <th><?= \Yii::t('app', 'Times played') ?></th>
                 <th><?= \Yii::t('app', 'Difficulty') ?></th>
                 <?php foreach ($evaluationsTitles as $et) { ?>
-                    <th><?= $et ?></th>
+                    <th><?= \Yii::t('app', $et) ?></th>
                 <?php } ?>
                 <th><?= \Yii::t('app', 'Abilities') ?></th>
             </tr>

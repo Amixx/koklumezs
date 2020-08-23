@@ -4,7 +4,7 @@
         <?php
         foreach ($difficulties as $id => $name) {  ?>
             <div class="form-group field-studentgoals">
-                <label class="control-label" for="studentgoals-title-now<?= $id ?>"><?= $name ?></label>
+                <label class="control-label" for="studentgoals-title-now<?= $id ?>"><?= \Yii::t('app',  $name) ?></label>
                 <select id="studentgoals-title-now<?= $id ?>" class="form-control" name="studentgoals[now][<?= $id ?>]" aria-required="true" aria-invalid="false">
                     <option value=""></option>
                     <?php for ($a = 1; $a <= 10; $a++) { ?>
@@ -20,7 +20,7 @@
         <?php
         foreach ($difficulties as $id => $name) { ?>
             <div class="form-group field-studentgoals">
-                <label class="control-label" for="studentgoals-title-future<?= $id ?>"><?= $name ?></label>
+                <label class="control-label" for="studentgoals-title-future<?= $id ?>"><?= \Yii::t('app',  $name) ?></label>
                 <select id="studentgoals-title-future<?= $id ?>" class="form-control" name="studentgoals[future][<?= $id ?>]" aria-required="true" aria-invalid="false">
                     <option value=""></option>
                     <?php for ($a = 1; $a <= 10; $a++) { ?>

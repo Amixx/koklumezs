@@ -38,7 +38,7 @@ class CronController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $get = Yii::$app->request->queryParams;
         if (!isset($get['send'])) {
@@ -216,7 +216,7 @@ class CronController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $get = Yii::$app->request->queryParams;
         if (!isset($get['id'])) {

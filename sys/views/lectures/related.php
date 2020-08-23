@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
     <div class="row">
         <div class="col col-md-12">
             <div class="related-lectures-form form-group">
-                <h2><?= \Yii::t('app', 'Related lectures') ?></h2>
+                <h2><?= \Yii::t('app', 'Related lessons') ?></h2>
                 <hr />
                 <select class="select2" name="relatedLectures[]" multiple>
                     <?php foreach ($lectures as $id => $lecture) { ?>

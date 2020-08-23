@@ -17,15 +17,15 @@ foreach ($evaluations as $id => $evaluation) {
     if ($continue) {
         continue;
     }
-    if ($evaluation['type'] == 'teksts') { ?>
+    if ($evaluation['type'] == 'text') { ?>
         <div class="form-group field-election-election_description">
-            <label class="control-label" for="election-<?= $evaluation['id'] ?>"><?= $evaluation['title'] ?></label>
+            <label class="control-label" for="election-<?= $evaluation['id'] ?>"><?= \Yii::t('app',  $evaluation['title']) ?></label>
             <textarea id="evaluations-title-<?= $evaluation['id'] ?>" class="form-control" rows="6" name="evaluations[<?= $evaluation['id'] ?>]"><?= isset($userLectureEvaluations[$evaluation['id']]) ? $userLectureEvaluations[$evaluation['id']] : '' ?></textarea>
             <div class="help-block"></div>
         </div>
     <?php } else { ?>
         <div class="form-group field-election-election_description">
-            <label class="control-label" for="election-<?= $evaluation['id'] ?>"><?= $evaluation['title'] ?></label>
+            <label class="control-label" for="election-<?= $evaluation['id'] ?>"><?= \Yii::t('app',  $evaluation['title']) ?></label>
             <?= StarRating::widget([
                 'name' => 'evaluations[' . $evaluation['id'] . ']',
                 'value' => isset($userLectureEvaluations[$evaluation['id']]) ? $userLectureEvaluations[$evaluation['id']] : 0,

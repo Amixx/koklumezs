@@ -45,7 +45,7 @@ class Lectureshanddifficulties extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'lecture_id' => \Yii::t('app',  'Lecture'),
+            'lecture_id' => \Yii::t('app',  'Lesson'),
             'category_id' => \Yii::t('app',  'Category'),
         ];
     }

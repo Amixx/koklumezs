@@ -8,7 +8,7 @@ use  yii\jui\DatePicker;
 /* @var $searchModel app\models\UserLecturesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = \Yii::t('app',  'Assigned lectures');
+$this->title = \Yii::t('app',  'Assigned lessons');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-lectures-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(\Yii::t('app',  'Assign lecture'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(\Yii::t('app',  'Assign lesson'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([

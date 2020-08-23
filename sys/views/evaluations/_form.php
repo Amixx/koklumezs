@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'title')->textInput() ?>
 
-    <?= $form->field($model, 'type')->dropDownList(['zvaigznes' => \Yii::t('app', 'Stars'), 'teksts' => \Yii::t('app',  'Text'),], ['prompt' => '']) ?>
+    <?= $form->field($model, 'type')->dropDownList(['stars' => \Yii::t('app', 'Stars'), 'text' => \Yii::t('app',  'Text'),], ['prompt' => '']) ?>
 
     <?= $form->field($model, 'stars')->textInput() ?>
 

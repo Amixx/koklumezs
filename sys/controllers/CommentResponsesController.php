@@ -9,6 +9,7 @@ use app\models\School;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Users;
 
 /**
  * UserLectureEvaluationsController implements the CRUD actions for Userlectureevaluations model.
@@ -47,7 +48,7 @@ class CommentResponsesController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $commentResponses = CommentResponses::getCommentResponsesForUser()->asArray()->all();
 
@@ -80,7 +81,7 @@ class CommentResponsesController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = new CommentResponses;
 
@@ -117,7 +118,7 @@ class CommentResponsesController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = $this->findModel($id);
 
@@ -153,7 +154,7 @@ class CommentResponsesController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $this->findModel($id)->delete();
 

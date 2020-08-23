@@ -55,7 +55,7 @@ class UserLectureEvaluationsController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $isTeacher = Users::isCurrentUserTeacher();
         $searchModel = $isTeacher ? new TeacherUserlectureevaluationsSearch() : new UserlectureevaluationsSearch();
@@ -63,10 +63,12 @@ class UserLectureEvaluationsController extends Controller
         $students = Users::getActiveStudents();
         $lectures = Lectures::getLectures();
         $evaluations = Evaluations::getEvaluationsTitles();
+        if (Yii::$app->language == 'lv') {
+            $evaluations = array_map(function ($eval) {
+                return Yii::t('app',  $eval);
+            }, $evaluations);
+        }
         $get = Yii::$app->request->queryParams;
-
-        // $commentResponsesSearchModel = new CommentresponsesSearch();
-        // $commentResponsesDataProvider = $commentResponsesSearchModel->search(Yii::$app->request->queryParams);
         $commentResponsesDataProvider = CommentResponses::getAllCommentResponses();
 
         return $this->render('index', [
@@ -96,7 +98,7 @@ class UserLectureEvaluationsController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $isTeacher = Users::isCurrentUserTeacher();
         $searchModel = $isTeacher ? new TeacherUserlectureevaluationsSearch() : new UserlectureevaluationsSearch();
@@ -139,7 +141,7 @@ class UserLectureEvaluationsController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -166,7 +168,7 @@ class UserLectureEvaluationsController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
         $model = new Userlectureevaluations();
@@ -202,7 +204,7 @@ class UserLectureEvaluationsController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = $this->findModel($id);
 
@@ -237,7 +239,7 @@ class UserLectureEvaluationsController extends Controller
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $this->findModel($id)->delete();
 

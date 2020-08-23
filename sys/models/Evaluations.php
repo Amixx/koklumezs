@@ -75,7 +75,7 @@ class Evaluations extends \yii\db\ActiveRecord
         $result = [];
         $data = self::getEvaluations();
         foreach ($data as $d) {
-            if ($d['type'] == 'zvaigznes') {
+            if ($d['type'] == 'stars') {
                 $arr = unserialize($d['star_text']);
                 $new_array = [];
                 foreach ($arr as $key => $value) {
