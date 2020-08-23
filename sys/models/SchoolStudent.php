@@ -55,7 +55,7 @@ class SchoolStudent extends \yii\db\ActiveRecord
 
     public function getSchoolStudent($studentId)
     {
-        return self::find(['student_id', $studentId])->joinWith('school')->joinWith('user')->one();
+        return self::find()->where(['user_id' => $studentId])->joinWith('school')->joinWith('user')->one();
     }
 
 
