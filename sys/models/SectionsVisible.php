@@ -42,8 +42,8 @@ class SectionsVisible extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Sekcijas nosaukums',
-            'is_visible' => 'Vai redzams lietotājiem',
+            'name' => \Yii::t('app',  'Section name'),
+            'is_visible' => \Yii::t('app',  'Is visible to users'),
         ];
     }
 

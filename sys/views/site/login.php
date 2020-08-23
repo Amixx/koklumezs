@@ -7,7 +7,7 @@ use yii\bootstrap\ActiveForm;
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model \common\models\LoginForm */
 
-$this->title = 'Pierakstītes/Log in';
+$this->title = \Yii::t('app',  'Log in');
 $this->params['breadcrumbs'][] = $this->title;
 
 $fieldOptions1 = [
@@ -38,14 +38,14 @@ $fieldOptions2 = [
 
         <div class="row">
             <div class="col-xs-8">
-                <?= $form->field($model, 'rememberMe')->label('Atcerēties mani/Remember me')->checkbox() ?>
+                <?= $form->field($model, 'rememberMe')->label(\Yii::t('app',  'Remember me'))->checkbox() ?>
             </div>
             <div class="col-xs-12 col-md-4">
-                <?= Html::submitButton('Pierakstīties/Log in', ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button']) ?>
+                <?= Html::submitButton(\Yii::t('app',  'Log in'), ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button']) ?>
             </div>
         </div>
         <div style="color:#999;margin:1em 0">
-            <?= Html::a('Aizmirsi paroli/Forgot password?', ['site/request-password-reset']) ?>
+            <?= Html::a(\Yii::t('app',  'Forgot password') . '?', ['site/request-password-reset']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

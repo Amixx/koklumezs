@@ -49,10 +49,10 @@ class Studentgoals extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'Lietotājs',
-            'type' => 'Veids',
-            'diff_id' => 'Parametrs',
-            'value' => 'Vērtība',
+            'user_id' => \Yii::t('app',  'User'),
+            'type' => \Yii::t('app',  'Type'),
+            'diff_id' => \Yii::t('app',  'Parameter'),
+            'value' => \Yii::t('app',  'Value'),
         ];
     }
 
@@ -103,10 +103,10 @@ class Studentgoals extends \yii\db\ActiveRecord
         $result = 0;
         $sum = 0;
         $count = count($data) - 1;
-        foreach($data as $d){
+        foreach ($data as $d) {
             $sum += (int)$d['value'];
         }
-        $result = ceil($sum/$count);
+        $result = ceil($sum / $count);
         return (int)$result;
     }
 

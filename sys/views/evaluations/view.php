@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Evaluations */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Novērtējumi', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Evaluations'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -16,11 +16,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Rediģēt', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Dzēst', ['delete', 'id' => $model->id], [
+        <?= Html::a(\Yii::t('app',  'Edit'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(\Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Vai Jūs tiešām vēlaties dzēst šo ierakstu?',
+                'confirm' => \Yii::t('app', 'Do you really want to delete this entry?'),
                 'method' => 'post',
             ],
         ]) ?>

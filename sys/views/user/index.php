@@ -9,16 +9,16 @@ use  yii\jui\DatePicker;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $user app\models\Users */
 
-$this->title = 'Lietotāji';
+$this->title = \Yii::t('app',  'Users');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
 
     <p>
-        <?= Html::a('Izveidot lietotāju', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(\Yii::t('app',  'Create user'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?php
-    $status = [10 => 'Aktīvs', 9 => 'Nav aktīvs', 0 => 'Dzēsts'];
+    $status = [10 => \Yii::t('app',  'Active'), 9 => \Yii::t('app',  'Inactive'), 0 => \Yii::t('app',  'Deleted')];
     ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -35,53 +35,53 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($dataProvider) {
                     switch ($dataProvider->user_level) {
                         case 'Student':
-                            return 'Students';
+                            return \Yii::t('app',  'Student');
                             break;
                         case 'Admin':
-                            return 'Administrators';
+                            return \Yii::t('app',  'Administrator');
                             break;
                         case 'Teacher':
-                            return 'Skolotājs';
+                            return \Yii::t('app',  'Teacher');
                             break;
                     }
                 },
-                'filter' => Html::dropDownList('UserSearch[user_level]', isset($get['UserSearch']['user_level']) ? $get['UserSearch']['user_level'] : '', app\models\Users::getLevels(), ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('UserSearch[user_level]', isset($get['UserSearch']['user_level']) ? $get['UserSearch']['user_level'] : '', app\models\Users::getLevels(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'language',
                 'format' => 'raw',
                 'value' => function ($dataProvider) {
-                    return $dataProvider->language == 'lv' ? 'Latviešu' : 'Angļu';
+                    return $dataProvider->language == 'lv' ? \Yii::t('app',  'Latvian') : \Yii::t('app',  'English');
                 },
-                'filter' => Html::dropDownList('UserSearch[language]', isset($get['UserSearch']['language']) ? $get['UserSearch']['language'] : '', app\models\Users::getLanguages(), ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('UserSearch[language]', isset($get['UserSearch']['language']) ? $get['UserSearch']['language'] : '', app\models\Users::getLanguages(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'subscription_type',
                 'format' => 'raw',
                 'value' => function ($dataProvider) {
                     if ($dataProvider->subscription_type == 'free') {
-                        return "Par brīvu";
+                        return \Yii::t('app',  'For free');
                     } else if ($dataProvider->subscription_type == 'paid') {
-                        return "Par maksu";
+                        return \Yii::t('app',  'Paid');
                     } else {
-                        return "Izmēģina";
+                        return \Yii::t('app',  'Lead');
                     }
                 },
-                'filter' => Html::dropDownList('UserSearch[subscription_type]', isset($get['UserSearch']['subscription_type']) ? $get['UserSearch']['subscription_type'] : '', app\models\Users::getSubscriptionTypes(), ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('UserSearch[subscription_type]', isset($get['UserSearch']['subscription_type']) ? $get['UserSearch']['subscription_type'] : '', app\models\Users::getSubscriptionTypes(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'status',
                 'format' => 'raw',
                 'value' => function ($dataProvider) {
                     if ($dataProvider->status == '10') {
-                        return '<span style="color:green;">Aktīvs</span>';
+                        return "<span style='color:green;'>" . \Yii::t('app',  'Active') . "</span>";
                     } else if ($dataProvider->status == '9') {
-                        return '<span style="color:red;">Nav aktīvs</span>';
+                        return "<span style='color:red;'>" . \Yii::t('app',  'Inactive') . "</span>";
                     } else {
-                        return '<span>Pasīvs</span>';
+                        return "<span>" . \Yii::t('app',  'Passive') . "</span>";
                     }
                 },
-                'filter' => Html::dropDownList('UserSearch[status]', isset($get['UserSearch']['status']) ? $get['UserSearch']['status'] : '', app\models\Users::getStatus(), ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('UserSearch[status]', isset($get['UserSearch']['status']) ? $get['UserSearch']['status'] : '', app\models\Users::getStatus(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'last_login',
@@ -98,7 +98,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'last_lecture',
                 'format' => 'raw',
                 'value' => 'lecture.title',
-                'filter' => Html::dropDownList('UserSearch[last_lecture]', isset($get['UserSearch']['last_lecture']) ? $get['UserSearch']['last_lecture'] : '', $lectures, ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('UserSearch[last_lecture]', isset($get['UserSearch']['last_lecture']) ? $get['UserSearch']['last_lecture'] : '', $lectures, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'dont_bother',
@@ -114,7 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'allowed_to_download_files',
                 'value' => 'allowed_to_download_files',
-                'filter' => Html::dropDownList('UserSearch[allowed_to_download_files]', isset($get['UserSearch']['allowed_to_download_files']) ? $get['UserSearch']['allowed_to_download_files'] : '', [0 => "Nē", 1 => "Jā"], ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('UserSearch[allowed_to_download_files]', isset($get['UserSearch']['allowed_to_download_files']) ? $get['UserSearch']['allowed_to_download_files'] : '', [0 => \Yii::t('app',  'No'), 1 => \Yii::t('app',  'Yes')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             ['class' => 'yii\grid\ActionColumn'],
         ],

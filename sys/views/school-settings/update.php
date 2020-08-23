@@ -9,8 +9,8 @@ use mihaildev\elfinder\InputFile;
 /* @var $this yii\web\View */
 /* @var $model app\models\Difficulties */
 
-$this->title = 'Rediģēt skolas iestatījumus: ';
-$this->params['breadcrumbs'][] = 'Rediģēt';
+$this->title = \Yii::t('app',  'Edit school settings') . ': ';
+$this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
 ?>
 <div class="school-settings-update">
 
@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = 'Rediģēt';
         ]); ?>
 
         <div class="form-group">
-            <?= Html::submitButton('Saglabāt', ['class' => 'btn btn-success']) ?>
+            <?= Html::submitButton(\Yii::t('app',  'Save'), ['class' => 'btn btn-success']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

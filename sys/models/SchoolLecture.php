@@ -30,8 +30,8 @@ class SchoolLecture extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'school_id' => 'Skola',
-            'lecture_id' => 'Nodarbība',
+            'school_id' => \Yii::t('app',  'School'),
+            'lecture_id' => \Yii::t('app',  'Lesson'),
         ];
     }
 

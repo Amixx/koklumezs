@@ -27,8 +27,8 @@ class SchoolStudent extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'school_id' => 'Skola',
-            'user_id' => 'Students',
+            'school_id' => \Yii::t('app',  'School'),
+            'user_id' => \Yii::t('app',  'Student'),
         ];
     }
 

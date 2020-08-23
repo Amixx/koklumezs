@@ -5,22 +5,6 @@ namespace app\models;
 use Yii;
 use yii\helpers\ArrayHelper;
 
-/**
- * This is the model class for table "lectures".
- *
- * @property int $id
- * @property string $title Nosaukums
- * @property string $description Apraksts
- * @property string $created Izveidota
- * @property string $updated Atjaunota
- * @property int $author Autors
- * @property string $complexity Sarežģītība
- * @property string $season Gadskārta
- * @property string $file Video fails
- * @property string $thumb Video bilde
- * 
- * @property Users $author
- */
 class Lectures extends \yii\db\ActiveRecord
 {
     /**
@@ -52,26 +36,26 @@ class Lectures extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => 'Nosaukums',
-            'description' => 'Apraksts',
-            'created' => 'Izveidota',
-            'updated' => 'Atjaunota',
-            'author' => 'Autors',
-            'complexity' => 'Sarežģītība',
-            'season' => 'Gadskārta',
-            'file' => 'Video(nav obligāti)',
-            'thumb' => 'Video bilde(nav obligāti)',
+            'title' => \Yii::t('app',  'Title'),
+            'description' => \Yii::t('app',  'Description'),
+            'created' => \Yii::t('app',  'Created'),
+            'updated' => \Yii::t('app',  'Updated'),
+            'author' => \Yii::t('app',  'Author'),
+            'complexity' => \Yii::t('app',  'Difficulty'),
+            'season' => \Yii::t('app',  'Season'),
+            'file' => \Yii::t('app',  'Video (not required)'),
+            'thumb' => \Yii::t('app',  'Video thumbnail (not required)'),
         ];
     }
 
     public function getSeasons()
     {
         return [
-            'Visas' => 'Visas',
-            'Vasara' => 'Vasara',
-            'Rudens' => 'Rudens',
-            'Ziema' => 'Ziema',
-            'Pavasaris' => 'Pavasaris'
+            'Visas' => \Yii::t('app',  'All'),
+            'Vasara' => \Yii::t('app',  'Summer'),
+            'Rudens' => \Yii::t('app',  'Autumn'),
+            'Ziema' => \Yii::t('app',  'Winter'),
+            'Pavasaris' => \Yii::t('app',  'Spring'),
         ];
     }
 

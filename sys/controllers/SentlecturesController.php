@@ -63,6 +63,10 @@ class SentlecturesController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         $searchModel = new SentlecturesSearch();
         $students = Users::getActiveStudents();
         $lectures = Lectures::getLectures();
@@ -96,6 +100,10 @@ class SentlecturesController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -119,6 +127,10 @@ class SentlecturesController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         $model = new Sentlectures();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -150,6 +162,10 @@ class SentlecturesController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -181,6 +197,10 @@ class SentlecturesController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

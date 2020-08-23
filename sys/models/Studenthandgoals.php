@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+
 use yii\helpers\ArrayHelper;
 use Yii;
 
@@ -44,8 +45,8 @@ class Studenthandgoals extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'Students',
-            'category_id' => 'Kategory',
+            'user_id' => \Yii::t('app',  'Student'),
+            'category_id' => \Yii::t('app',  'Category'),
         ];
     }
 
@@ -70,7 +71,7 @@ class Studenthandgoals extends \yii\db\ActiveRecord
      */
     public function removeUserGoals($id)
     {
-        return self::deleteAll(['user_id' => $id]);        
+        return self::deleteAll(['user_id' => $id]);
     }
 
     /**
@@ -78,7 +79,6 @@ class Studenthandgoals extends \yii\db\ActiveRecord
      */
     public function getUserGoals($id)
     {
-        return ArrayHelper::map(self::find()->where(['user_id' => $id])->asArray()->all(), 'category_id', 'id');      
+        return ArrayHelper::map(self::find()->where(['user_id' => $id])->asArray()->all(), 'category_id', 'id');
     }
-
 }

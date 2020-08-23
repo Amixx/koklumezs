@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+
 use yii\helpers\ArrayHelper;
 use Yii;
 
@@ -41,8 +42,8 @@ class Handdifficulties extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'hand' => 'Roka',
-            'category' => 'Kategorija',
+            'hand' => \Yii::t('app',  'Hand'),
+            'category' => \Yii::t('app',  'Category'),
         ];
     }
 
@@ -59,12 +60,12 @@ class Handdifficulties extends \yii\db\ActiveRecord
      */
     public function getDifficulties()
     {
-        $result = $maps = [];        
-        $maps['categories'] = ArrayHelper::map(self::find()->asArray()->all(), 'id', 'category');   
-        $maps['hands'] = ArrayHelper::map(self::find()->asArray()->all(), 'id', 'hand');   
-        foreach($maps['categories'] as $id => $cat){
+        $result = $maps = [];
+        $maps['categories'] = ArrayHelper::map(self::find()->asArray()->all(), 'id', 'category');
+        $maps['hands'] = ArrayHelper::map(self::find()->asArray()->all(), 'id', 'hand');
+        foreach ($maps['categories'] as $id => $cat) {
             $result[$maps['hands'][$id]][$id] =  $cat;
         }
-        return $result;     
+        return $result;
     }
 }

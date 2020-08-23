@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\DifficultiesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Skolas iestatījumi';
+$this->title = \Yii::t('app',  'School settings');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="settings-index">
@@ -30,5 +30,5 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php } ?>
         </tr>
     </table>
-    <?= Html::a('Labot', ['update'], ['class' => 'btn btn-primary']) ?>
+    <?= Html::a(\Yii::t('app',  'Edit'), ['update'], ['class' => 'btn btn-primary']) ?>
 </div>

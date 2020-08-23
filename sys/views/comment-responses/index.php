@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\DifficultiesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Atbildes uz komentāriem/Comment responses';
+$this->title = \Yii::t('app', 'Comment responses');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="comment-responses-index">
@@ -16,8 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="container">
         <div class="row">
-            <div class="col-sm-6"><strong>Komentāra atbilde</strong></div>
-            <div class="col-sm-6"><strong>Pilna sarakste šeit:</strong></div>
+            <div class="col-sm-6"><strong><?= \Yii::t('app', 'Comment response') ?></strong></div>
+            <div class="col-sm-6"><strong><?= \Yii::t('app', 'Full correspondence') ?>:</strong></div>
         </div>
         <?php foreach ($commentResponses as $response) { ?>
             <div class="row">

@@ -7,13 +7,13 @@ use yii\widgets\ActiveForm;
 $subscriptionTypeText;
 $subscriptionTypeClassSuffix;
 if ($user['subscription_type'] == 'free') {
-    $subscriptionTypeText =  "par brīvu";
+    $subscriptionTypeText =  \Yii::t('app', 'Free');
     $subscriptionTypeClassSuffix = "primary";
 } else if ($user['subscription_type'] == 'paid') {
-    $subscriptionTypeText =  "par maksu";
+    $subscriptionTypeText =  \Yii::t('app', 'Paid');
     $subscriptionTypeClassSuffix = "success";
 } else {
-    $subscriptionTypeText = "izmēģina";
+    $subscriptionTypeText = \Yii::t('app', 'Lead');
     $subscriptionTypeClassSuffix = "warning";
 }
 
@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
     <?php if ($filterLang) { ?>
-        <div class="col-sm-3">Valoda: <?= $filterLang ?></div>
+        <div class="col-sm-3"><?= \Yii::t('app', 'Language') ?>: <?= $filterLang ?></div>
     <?php } ?>
     <!-- <?php if ($filterSubTypes) { ?>
         <div class="col-sm-3">Abonementa veids/i: <?= $subscriptionTypeText ?></div>
@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
     if ($prevUserId) { ?>
         <span style="vertical-align:top;">
-            <?= Html::a('Iepriekšējais', [$prevButtonHref], ['class' => 'btn btn-primary']); ?>
+            <?= Html::a(\Yii::t('app', 'Last'), [$prevButtonHref], ['class' => 'btn btn-primary']); ?>
         </span>
     <?php } ?>
 
@@ -72,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
     if ($nextUserId) { ?>
         <span style="vertical-align:top;">
-            <?= Html::a('Nākamais', [$nextButtonHref], ['class' => 'btn btn-primary pull-right']); ?>
+            <?= Html::a(\Yii::t('app', 'Next'), [$nextButtonHref], ['class' => 'btn btn-primary pull-right']); ?>
         </span>
     <?php } ?>
 </div>
@@ -82,17 +82,14 @@ $this->params['breadcrumbs'][] = $this->title;
         <thead>
             <tr>
                 <th>#</th>
-                <th>Pēdējā nodarbība</th>
-                <th>Atvērta</th>
-                <th>Spēles reizes</th>
-                <th>Sarežģītība</th>
+                <th><?= \Yii::t('app', 'Last lesson') ?></th>
+                <th><?= \Yii::t('app', 'Opened') ?></th>
+                <th><?= \Yii::t('app', 'Times played') ?></th>
+                <th><?= \Yii::t('app', 'Difficulty') ?></th>
                 <?php foreach ($evaluationsTitles as $et) { ?>
                     <th><?= $et ?></th>
                 <?php } ?>
-                <th>Spējas</th>
-                <?php /*
-                <th class="action-column">Darbības</th>
-                */ ?>
+                <th><?= \Yii::t('app', 'Abilities') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -141,12 +138,12 @@ $this->params['breadcrumbs'][] = $this->title;
     </table>
     <!-- <p>Spēles reizes pēdējās 7 dienās: <strong><?= $sevenDayResult ?></strong></p>
     <p>Spēles reizes pēdējās 30 dienās: <strong><?= $thirtyDayResult ?></strong> </p> -->
-    <p>Spējas šobrīd:<?= isset($goals[$goalsnow]) ? '<strong>' . $goalsum . '</strong>' : '<code>Not set</code>' ?></p>
+    <p><?= \Yii::t('app', 'Abilities now') ?>:<?= isset($goals[$goalsnow]) ? '<strong>' . $goalsum . '</strong>' : '<code>Not set</code>' ?></p>
     <?php if (is_array($PossibleThreeLectures)) {
         $limit = 3;
     ?>
 
-        <h3>Piemeklētās nodarbības:</h3>
+        <h3><?= \Yii::t('app', 'Suitable lessons') ?>:</h3>
         <?php
         foreach ($PossibleThreeLectures as $lid) {
             if ($limit == 0) break;
@@ -156,9 +153,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     '<span class="glyphicon glyphicon-plus"></span>' . $manualLectures[$lid],
                     ['/assign/userlectures', 'id' => $id, 'assign' => $lid],
                     [
-                        'title' => 'Piešķirt',
+                        'title' => \Yii::t('app', 'Assign'),
                         'data' => [
-                            'confirm' => 'Are you sure ?',
+                            'confirm' => \Yii::t('app', 'Are you sure?'),
                         ]
                     ]
                 ) ?>
@@ -168,11 +165,11 @@ $this->params['breadcrumbs'][] = $this->title;
             $limit--;
         }
     } else { ?>
-        <h3>Jaunā sarežģītības vērtība ir: <strong><?= $PossibleThreeLectures > 0 ? $PossibleThreeLectures : $goalsum ?></strong> <small>[netika atrasts neviens atbilstošs uzdevums]</small></h3>
+        <h3><?= \Yii::t('app', 'New difficulty') ?>: <strong><?= $PossibleThreeLectures > 0 ? $PossibleThreeLectures : $goalsum ?></strong> <small>[<?= \Yii::t('app', 'No suitable lessons found') ?>]</small></h3>
     <?php } ?>
-    <h3>Manuāla nodarbības piešķiršana:</h3>
+    <h3><?= \Yii::t('app', 'Manual assignment of lessons') ?>:</h3>
     <label for="preferred-lecture-difficulty">
-        Sarežģītība
+        <?= \Yii::t('app', 'Difficulty') ?>
         <input type="number" name="preferred-lecture-difficulty" id="PreferredLectureDifficulty">
     </label>
 
@@ -187,11 +184,11 @@ $this->params['breadcrumbs'][] = $this->title;
         ->dropDownList(
             $lectureTexts,
             ['prompt' => '']
-        ) : ' <p>Nav nodarbību ko piešķirt</p>' ?>
+        ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
 </div>
 <?= $manualLectures ? $form->field($model, 'user_id')->hiddenInput(['value' => $id])->label(false) : ''; ?>
 <div class="form-group">
-    <?= Html::submitButton('Piešķirt nodarbību', ['class' => 'btn btn-success']) ?>
+    <?= Html::submitButton(\Yii::t('app', 'Assign lesson'), ['class' => 'btn btn-success']) ?>
 </div>
 <?= Yii::$app->session->getFlash('assignmentlog') ?>
 <?php ActiveForm::end(); ?>

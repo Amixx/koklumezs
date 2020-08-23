@@ -12,12 +12,12 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'hand')->dropDownList([ 'left' => 'Left', 'right' => 'Right', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'hand')->dropDownList(['left' => \Yii::t('app',  'Left'), 'right' => \Yii::t('app',  'Right'),], ['prompt' => '']) ?>
 
     <?= $form->field($model, 'category')->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Saglabāt', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(\Yii::t('app',  \Yii::t('app',  'Save')), ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

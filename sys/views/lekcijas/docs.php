@@ -11,7 +11,7 @@ if ($hasFiles) {
     <hr />
     <div class="row">
         <div class="col-md-12">
-            <h3>Ar nodarbību saistītie materiāli (related materials):</h3>
+            <h3><?= \Yii::t('app',  'Related materials') ?>:</h3>
         </div>
         <?php foreach ($lecturefiles as $id => $file) {
             $path_info = pathinfo($file['file']);

@@ -31,8 +31,8 @@ class SchoolTeacher extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'school_id' => 'Skola',
-            'user_id' => 'Skolotājs',
+            'school_id' => \Yii::t('app',  'School'),
+            'user_id' => \Yii::t('app',  'Teacher'),
         ];
     }
 

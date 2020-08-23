@@ -54,11 +54,11 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'lecture_id' => 'Lekcija',
-            'evaluation_id' => 'Novērtējums',
-            'user_id' => 'Students',
-            'evaluation' => 'Vērtējums',
-            'created' => 'Izveidots',
+            'lecture_id' => \Yii::t('app',  'Lecture'),
+            'evaluation_id' => \Yii::t('app',  'Evaluation'),
+            'user_id' => \Yii::t('app',  'Student'),
+            'evaluation' => \Yii::t('app',  'Evaluation'),
+            'created' => \Yii::t('app',  'Created'),
         ];
     }
 

@@ -45,8 +45,8 @@ class RelatedLectures extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'lecture_id' => 'Nodarbība',
-            'related_id' => 'Saistītā nodarbība',
+            'lecture_id' => \Yii::t('app',  'Lesson'),
+            'related_id' => \Yii::t('app',  'Related lesson'),
         ];
     }
 

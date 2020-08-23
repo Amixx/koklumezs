@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use  yii\jui\DatePicker;
 
-$this->title = 'Studentu vērtējumi';
+$this->title = \Yii::t('app',  'Student evaluations');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="userlectureevaluations-index">
@@ -20,13 +20,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'lecture_id',
                 'format' => 'raw',
                 'value' => 'lecture.title',
-                'filter' => Html::dropDownList('UserlectureevaluationsSearch[lecture_id]', isset($get['UserlectureevaluationsSearch']['lecture_id']) ? $get['UserlectureevaluationsSearch']['lecture_id'] : '', $lectures, ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('UserlectureevaluationsSearch[lecture_id]', isset($get['UserlectureevaluationsSearch']['lecture_id']) ? $get['UserlectureevaluationsSearch']['lecture_id'] : '', $lectures, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'user_id',
                 'format' => 'raw',
                 'value' => 'student.email',
-                'filter' => Html::dropDownList('UserlectureevaluationsSearch[user_id]', isset($get['UserlectureevaluationsSearch']['user_id']) ? $get['UserlectureevaluationsSearch']['user_id'] : '', $students, ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('UserlectureevaluationsSearch[user_id]', isset($get['UserlectureevaluationsSearch']['user_id']) ? $get['UserlectureevaluationsSearch']['user_id'] : '', $students, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             'evaluation:ntext',
             [

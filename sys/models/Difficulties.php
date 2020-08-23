@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+
 use yii\helpers\ArrayHelper;
 
 use Yii;
@@ -39,7 +40,7 @@ class Difficulties extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Parametrs',
+            'name' => \Yii::t('app',  'Parameter'),
         ];
     }
 
@@ -48,6 +49,6 @@ class Difficulties extends \yii\db\ActiveRecord
      */
     public function getDifficulties()
     {
-        return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'name');        
+        return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'name');
     }
 }

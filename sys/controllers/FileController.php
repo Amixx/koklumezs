@@ -71,6 +71,10 @@ class FileController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         $user = Yii::$app->user->identity;
         $force = Yii::$app->request->get('force');
         $userLectureIds =  UserLectures::getUserLectures($user->id);

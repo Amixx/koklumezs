@@ -25,19 +25,19 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
     <?php $form = ActiveForm::begin(); ?>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item active">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Lekcija</a>
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><?= \Yii::t('app', 'Lesson') ?></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false">Parametri</a>
+            <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false"><?= \Yii::t('app', 'Parameters') ?></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="evaluations-tab" data-toggle="tab" href="#evaluations" role="tab" aria-controls="evaluations" aria-selected="false">Novērtējumi</a>
+            <a class="nav-link" id="evaluations-tab" data-toggle="tab" href="#evaluations" role="tab" aria-controls="evaluations" aria-selected="false"><?= \Yii::t('app', 'Evaluations') ?></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false">Faili</a>
+            <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false"><?= \Yii::t('app', 'Files') ?></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="related-tab" data-toggle="tab" href="#related" role="tab" aria-controls="related" aria-selected="false">Saistītās nodarbības</a>
+            <a class="nav-link" id="related-tab" data-toggle="tab" href="#related" role="tab" aria-controls="related" aria-selected="false"><?= \Yii::t('app', 'Related lessons') ?></a>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -64,7 +64,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                 'buttonOptions' => ['class' => 'btn btn-default'],
                 'multiple' => false, // возможность выбора нескольких файлов
             ]); ?>
-            <small>Ja nepieciešams pievienot vēl citus failus, tad to var izdarīt pie "Faili"</small><br /><br />
+            <small><?= \Yii::t('app', 'If you need to add more files, go to section "Files"') ?></small><br /><br />
             <?= $form->field($model, 'complexity')->dropDownList(Lectures::getComplexity(), ['prompt' => '']) ?>
             <?= $form->field($model, 'season')->dropDownList(Lectures::getSeasons()) ?>
         </div>
@@ -88,7 +88,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
     </div>
     <hr />
     <div class="form-group">
-        <?= Html::submitButton('Saglabāt', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(\Yii::t('app',  'Save'), ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

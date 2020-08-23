@@ -5,8 +5,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Userlectureevaluations */
 
-$this->title = 'Izveidot studenta vērtējumu';
-$this->params['breadcrumbs'][] = ['label' => 'Studentu vērtējumi', 'url' => ['index']];
+$this->title = \Yii::t('app',  'Create student evaluation');
+$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Student evaluations'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="userlectureevaluations-create">

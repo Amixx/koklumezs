@@ -5,10 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\UserLectures */
 
-$this->title = 'Rediģēt nodarbību: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Piešķirtās nodarbības', 'url' => ['index']];
+$this->title =  \Yii::t('app',  'Edit lesson') . ': ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Assigned lectures'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Rediģēt';
+$this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
 ?>
 <div class="user-lectures-update">
 

@@ -6,7 +6,7 @@ use yii\helpers\Html;
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <h3>Komentāri/Comments</h3>
+        <h3><?= \Yii::t('app',  'Comments') ?></h3>
     </div>
     <?php foreach ($comments as $comment) { ?>
         <div class="col-md-12">
@@ -15,7 +15,7 @@ use yii\helpers\Html;
                     <span><strong><?= $comment['student']['first_name'] ?></strong>: </span>
                     <span><?= $comment['evaluation'] ?></span>
                 </div>
-                <?= Html::submitButton('Atbildēt', ['class' => 'btn btn-primary btn-sm ReplyButton', 'id' => 'comment-' . $comment['id']]) ?>
+                <?= Html::submitButton(\Yii::t('app',  'Reply'), ['class' => 'btn btn-primary btn-sm ReplyButton', 'id' => 'comment-' . $comment['id']]) ?>
             </div>
 
         </div>
@@ -26,7 +26,7 @@ use yii\helpers\Html;
                         <span><strong><?= $response['author']['first_name'] ?></strong>: </span>
                         <span><?= $response['text'] ?></span>
                     </div>
-                    <?= Html::submitButton('Atbildēt', ['class' => 'btn btn-primary btn-sm ReplyButton', 'id' => 'comment-' . $comment['id']]) ?>
+                    <?= Html::submitButton(\Yii::t('app',  'Reply'), ['class' => 'btn btn-primary btn-sm ReplyButton', 'id' => 'comment-' . $comment['id']]) ?>
                 </div>
             <?php } ?>
 
@@ -36,7 +36,7 @@ use yii\helpers\Html;
             <?= Html::beginForm(['/comment-responses/create'], 'post') ?>
             <textarea name="response_text" placeholder="Atbilde" class="LessonComments__Response"></textarea>
             <input type="hidden" name="evaluation_id" value="<?= $comment['id'] ?>" />
-            <?= Html::submitButton('Nosūtīt', ['class' => 'btn btn-primary btn-sm']) ?>
+            <?= Html::submitButton(\Yii::t('app',  'Send'), ['class' => 'btn btn-primary btn-sm']) ?>
             <?= Html::endForm() ?>
         </div>
     <?php } ?>

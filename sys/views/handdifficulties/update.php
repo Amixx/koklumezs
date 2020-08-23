@@ -5,10 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Handdifficulties */
 
-$this->title = 'Rediģēt kategoriju: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Kategorijas', 'url' => ['index']];
+$this->title = \Yii::t('app',  'Edit category') . ': ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Categories'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Rediģēt';
+$this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
 ?>
 <div class="handdifficulties-update">
 

@@ -47,9 +47,9 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'diff_id' => 'Parametrs',
-            'lecture_id' => 'Lekcija',
-            'value' => 'Vērtība',
+            'diff_id' => \Yii::t('app',  'Parameter'),
+            'lecture_id' => \Yii::t('app', 'Lecture'),
+            'value' => \Yii::t('app',  'Value'),
         ];
     }
 
@@ -83,7 +83,7 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
     public function getLectureDifficulty($id): int
     {
         $default = 0;
-        $sum = self::find()->where(['lecture_id' => $id])->sum('value');        
+        $sum = self::find()->where(['lecture_id' => $id])->sum('value');
         return $sum ?? $default;
     }
 
@@ -124,7 +124,9 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
                 $results[] = ArrayHelper::map(
                     self::find()->where(['diff_id' => $diff_id])
                         ->andWhere(['>=', 'value', $value])
-                        ->asArray()->all(), 'id', 'lecture_id'
+                        ->asArray()->all(),
+                    'id',
+                    'lecture_id'
                 );
             }
         }

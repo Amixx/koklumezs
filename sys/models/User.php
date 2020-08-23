@@ -49,9 +49,9 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             'id' => 'ID',
-            'user_level' => 'Piekļuves līmenis',
-            'email' => 'E-pasts',
-            'phone_number' => 'Telefona numurs',
+            'user_level' => \Yii::t('app',  'Access level'),
+            'email' => \Yii::t('app',  'E-mail'),
+            'phone_number' => \Yii::t('app',  'Phone number'),
             'first_name' => 'Vārds',
             'last_name' => 'Uzvārds',
             'password' => 'Parole',
@@ -269,9 +269,9 @@ class User extends ActiveRecord implements IdentityInterface
     public static function getLevels()
     {
         return [
-            self::ROLE_USER => 'Students',
-            self::ROLE_ADMIN => 'Administrators',
-            self::ROLE_TEACHER => 'Skolotājs',
+            self::ROLE_USER => \Yii::t('app',  'Student'),
+            self::ROLE_ADMIN => \Yii::t('app',  'Administrator'),
+            self::ROLE_TEACHER => \Yii::t('app',  'Teacher'),
         ];
     }
 

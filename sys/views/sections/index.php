@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\DifficultiesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Sekciju redzamība';
+$this->title = \Yii::t('app',  'Section visibility');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="difficulties-index">

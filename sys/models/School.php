@@ -22,8 +22,8 @@ class School extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'instrument' => 'Instruments',
-            'created' => 'Izveidošanas datums',
+            'instrument' => \Yii::t('app',  'Instrument'),
+            'created' => \Yii::t('app',  'Creation date'),
         ];
     }
 
@@ -42,7 +42,7 @@ class School extends \yii\db\ActiveRecord
     public function getSettings($teacherId)
     {
         $school = self::getByTeacher($teacherId);
-        return ["Skolas fona bilde" => $school->background_image];
+        return [\Yii::t('app',  'School background image') => $school->background_image];
     }
 
     // public function getTeachers()

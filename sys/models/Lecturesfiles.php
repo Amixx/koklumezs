@@ -32,7 +32,7 @@ class Lecturesfiles extends \yii\db\ActiveRecord
     {
         return [
             [['file', 'lecture_id'], 'required'],
-            [['file','title','thumb'], 'string'],
+            [['file', 'title', 'thumb'], 'string'],
             [['lecture_id'], 'integer'],
             [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
         ];
@@ -45,10 +45,10 @@ class Lecturesfiles extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => 'Nosaukums',
-            'file' => 'Fails',
-            'thumb' => 'Bilde',
-            'lecture_id' => 'Lekcija',
+            'title' => \Yii::t('app',  'Title'),
+            'file' => \Yii::t('app',  'File'),
+            'thumb' => \Yii::t('app',  'Image'),
+            'lecture_id' => \Yii::t('app',  'Lecture'),
         ];
     }
 
@@ -63,7 +63,8 @@ class Lecturesfiles extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function getLectureFiles($id){
-       return self::find()->where(['lecture_id' => $id])->asArray()->all();
+    public function getLectureFiles($id)
+    {
+        return self::find()->where(['lecture_id' => $id])->asArray()->all();
     }
 }

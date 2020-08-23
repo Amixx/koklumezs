@@ -55,6 +55,10 @@ class AssignController extends \yii\web\Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         $options = [];
         $onlyThoseWithoutDontBother = true;
         if (Users::isCurrentUserTeacher()) {
@@ -113,6 +117,10 @@ class AssignController extends \yii\web\Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         if ($id == null) {
             $onlyThoseWithoutDontBother = true;
             if (Users::isCurrentUserTeacher()) {

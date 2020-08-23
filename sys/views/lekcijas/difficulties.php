@@ -10,7 +10,7 @@ foreach ($difficulties as $id => $name) {
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <h3>Nodarbības sarežģītība/Lesson difficulty: <?= $sum ?></h3>
+        <h3><?= \Yii::t('app',  'Lesson difficulty') ?>: <?= $sum ?></h3>
     </div>
     <?php
     foreach ($difficulties as $id => $name) {
@@ -20,7 +20,7 @@ foreach ($difficulties as $id => $name) {
         }
     ?>
         <div class="col-md-3 text-center">
-            <?= $name ?>/<?= ucfirst($difficultiesEng[$id - 1]) ?>: <?= $lectureDifficulties[$id] ?>
+            <?= \Yii::t('app',  $name) ?>/<?= ucfirst($difficultiesEng[$id - 1]) ?>: <?= $lectureDifficulties[$id] ?>
         </div>
     <?php } ?>
 </div>

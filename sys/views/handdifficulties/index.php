@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\HanddifficultiesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Kategorijas';
+$this->title = \Yii::t('app',  'Categories');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="handdifficulties-index">
@@ -15,10 +15,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Pievienot kategoriju', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(\Yii::t('app',  'Add category'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]); 
+    ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -26,15 +27,15 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-           // 'id',
+            // 'id',
             [
                 'attribute' => 'hand',
                 'format' => 'raw',
                 'value' => function ($dataProvider) {
-                    return $dataProvider->hand == 'left' ? 'Kreisā' : 'Labā';
+                    return $dataProvider->hand == 'left' ? \Yii::t('app',  'Left') : \Yii::t('app',  'Right');
                 },
-                'filter'=> Html::dropDownList('HanddifficultiesSearch[hand]',isset($get['HanddifficultiesSearch']['hand']) ? $get['HanddifficultiesSearch']['hand'] : '' ,['left' => 'Kreisā','right' => 'Labā'],['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
-            ],  
+                'filter' => Html::dropDownList('HanddifficultiesSearch[hand]', isset($get['HanddifficultiesSearch']['hand']) ? $get['HanddifficultiesSearch']['hand'] : '', ['left' => \Yii::t('app',  'Left'), 'right' => \Yii::t('app',  'Right')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+            ],
             'category:ntext',
 
             ['class' => 'yii\grid\ActionColumn'],

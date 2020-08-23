@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+
 use yii\helpers\ArrayHelper;
 use Yii;
 
@@ -44,8 +45,8 @@ class Lectureshanddifficulties extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'lecture_id' => 'Lekcija',
-            'category_id' => 'Kategorija',
+            'lecture_id' => \Yii::t('app',  'Lecture'),
+            'category_id' => \Yii::t('app',  'Category'),
         ];
     }
 
@@ -78,6 +79,6 @@ class Lectureshanddifficulties extends \yii\db\ActiveRecord
      */
     public function removeLectureDifficulties($id)
     {
-        return self::deleteAll(['lecture_id' => $id]);        
+        return self::deleteAll(['lecture_id' => $id]);
     }
 }

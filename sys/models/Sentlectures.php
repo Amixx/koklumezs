@@ -47,10 +47,10 @@ class Sentlectures extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'Lietotājs',
-            'lecture_id' => 'Pēdējā nodarbība',
-            'sent' => 'Nosūtīts e-pasts',
-            'created' => 'Izveidots',
+            'user_id' => \Yii::t('app',  'User'),
+            'lecture_id' => \Yii::t('app',  'Last lesson'),
+            'sent' => \Yii::t('app',  'E-mail sent'),
+            'created' => \Yii::t('app',  'Created'),
         ];
     }
 

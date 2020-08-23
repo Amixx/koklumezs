@@ -1,4 +1,3 @@
-
 <?php
 
 use yii\helpers\Html;
@@ -26,19 +25,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'email') ?>
 
-    <?php // echo $form->field($model, 'password') ?>
+    <?php echo $form->field($model, 'status') ?>
 
-    <?php // echo $form->field($model, 'authKey') ?>
-
-    <?php // echo $form->field($model, 'password_reset_token') ?>
-
-    <?php  echo $form->field($model, 'status') ?>
-
-    <?php  echo $form->field($model, 'user_level') ?>
+    <?php echo $form->field($model, 'user_level') ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton(\Yii::t('app',  'Search'), ['class' => 'btn btn-primary']) ?>
+        <?= Html::resetButton(\Yii::t('app',  'Reset'), ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <h3>Novērtē nodarbību/Evaluate the lesson</h3>
+        <h3><?= \Yii::t('app',  'Evaluate the lesson') ?></h3>
     </div>
 </div>
 <?php $form = ActiveForm::begin(); ?>
@@ -19,13 +19,13 @@ foreach ($evaluations as $id => $evaluation) {
     }
     if ($evaluation['type'] == 'teksts') { ?>
         <div class="form-group field-election-election_description">
-            <label class="control-label" for="election-<?= $evaluation['id'] ?>"><?= $evaluation['title'] ?>/<?= $evaluation['titleEng'] ?></label>
+            <label class="control-label" for="election-<?= $evaluation['id'] ?>"><?= $evaluation['title'] ?></label>
             <textarea id="evaluations-title-<?= $evaluation['id'] ?>" class="form-control" rows="6" name="evaluations[<?= $evaluation['id'] ?>]"><?= isset($userLectureEvaluations[$evaluation['id']]) ? $userLectureEvaluations[$evaluation['id']] : '' ?></textarea>
             <div class="help-block"></div>
         </div>
     <?php } else { ?>
         <div class="form-group field-election-election_description">
-            <label class="control-label" for="election-<?= $evaluation['id'] ?>"><?= $evaluation['title'] ?>/<?= $evaluation['titleEng'] ?></label>
+            <label class="control-label" for="election-<?= $evaluation['id'] ?>"><?= $evaluation['title'] ?></label>
             <?= StarRating::widget([
                 'name' => 'evaluations[' . $evaluation['id'] . ']',
                 'value' => isset($userLectureEvaluations[$evaluation['id']]) ? $userLectureEvaluations[$evaluation['id']] : 0,
@@ -44,12 +44,12 @@ foreach ($evaluations as $id => $evaluation) {
     <?php } ?>
 <?php } ?>
 <div class="form-group">
-    <?= Html::checkbox('add-to-favourites', $isFavourite, ['label' => 'Pievienot mīļākajām nodarbībām/Add to favourites']) ?>
-    <?= Html::checkbox('add-to-still-learning', $isStillLearning, ['label' => 'Pievienot nodarbībām, ko vēl mācos/Add to lessons I\'m still learning']) ?>
+    <?= Html::checkbox('add-to-favourites', $isFavourite, ['label' => \Yii::t('app',  'Add to favourites')]) ?>
+    <?= Html::checkbox('add-to-still-learning', $isStillLearning, ['label' => \Yii::t('app',  'Add to lessons I\'m still learning')]) ?>
 </div>
 <?php if (!$force) { ?>
     <div class="form-group">
-        <?= Html::submitButton('Iesniegt/Submit', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(\Yii::t('app',  'Submit'), ['class' => 'btn btn-success']) ?>
     </div>
 <?php } ?>
 </div>

@@ -10,11 +10,11 @@ use yii\widgets\LinkPager;
 
 if (isset($type)) {
     if ($type == "new") {
-        $this->title = "Jaunās nodarbības/New lessons";
+        $this->title = \Yii::t('app',  'New lessons');
     } else if ($type == "learning") {
-        $this->title = "Nodarbības, ko vēl mācos/Lessons I'm still learning";
+        $this->title = \Yii::t('app',  'Lessons I\'m still learning');
     } else if ($type == "favourite") {
-        $this->title = "Mīļākās nodarbības/Favourite lessons";
+        $this->title = \Yii::t('app',  'Favourite lessons');
     }
 }
 
@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php
         if (count($models) == 0) { ?>
             <div class="col-md-6">
-                <h3>Nav nevienas nodarbības!</h3>
+                <h3><?= \Yii::t('app',  'No lessons') ?>!</h3>
             </div>
 
         <?php } ?>

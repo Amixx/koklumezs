@@ -8,7 +8,7 @@ use app\models\Lectures;
 /* @var $searchModel app\models\LecturesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Nodarbības';
+$this->title = \Yii::t('app', 'Lessons');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lectures-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Izveidot nodarbību', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(\Yii::t('app', 'Create lesson'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); 
@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'author',
                 'format' => 'raw',
                 'value' => 'users.email',
-                'filter' => Html::dropDownList('LecturesSearch[author]', isset($get['LecturesSearch']['author']) ? $get['LecturesSearch']['author'] : '', $admins, ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('LecturesSearch[author]', isset($get['LecturesSearch']['author']) ? $get['LecturesSearch']['author'] : '', $admins, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'complexity',
@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($dataProvider) {
                     return $dataProvider->complexity;
                 },
-                'filter' => Html::dropDownList('LecturesSearch[complexity]', isset($get['LecturesSearch']['complexity']) ? $get['LecturesSearch']['complexity'] : '', Lectures::getComplexity(), ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('LecturesSearch[complexity]', isset($get['LecturesSearch']['complexity']) ? $get['LecturesSearch']['complexity'] : '', Lectures::getComplexity(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'season',
@@ -74,33 +74,33 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($dataProvider) {
                     return $dataProvider->season;
                 },
-                'filter' => Html::dropDownList('LecturesSearch[season]', isset($get['LecturesSearch']['season']) ? $get['LecturesSearch']['season'] : '', Lectures::getSeasons(), ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('LecturesSearch[season]', isset($get['LecturesSearch']['season']) ? $get['LecturesSearch']['season'] : '', Lectures::getSeasons(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'header' => 'Darbības',
+                'header' => \Yii::t('app', 'Actions'),
                 'template' => '{view} {update} {delete}',
                 'buttons' => [
                     'view' => function ($url, $model) {
                         return Html::a(
                             '<span class="glyphicon glyphicon-eye-open"> </span>',
                             $url,
-                            ['title' => 'View', 'data-pjax' => '0', 'onclick' => "window.open('" . $url . "','newwindow','width=1200,height=1200');return false;"]
+                            ['title' => \Yii::t('app', 'View'), 'data-pjax' => '0', 'onclick' => "window.open('" . $url . "','newwindow','width=1200,height=1200');return false;"]
                         );
                     },
                     'update' => function ($url, $model) {
                         return Html::a(
                             '<span class="glyphicon glyphicon-pencil"> </span>',
                             $url,
-                            ['title' => 'Update', 'data-pjax' => '0']
+                            ['title' => \Yii::t('app', 'Update'), 'data-pjax' => '0']
                         );
                     },
                     'delete' => function ($url, $model, $key) {
                         return Html::a(
                             '<span  class="glyphicon glyphicon glyphicon-trash"> </span>',
                             $url,
-                            ['title' => 'Delete', 'data' => [
-                                'confirm' => 'Are you sure you want to delete this item?',
+                            ['title' => \Yii::t('app', 'Delete'), 'data' => [
+                                'confirm' => \Yii::t('app', 'Are you sure you want to delete this item?'),
                             ],]
                         );
                     }

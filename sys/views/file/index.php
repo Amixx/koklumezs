@@ -2,8 +2,8 @@
 
 use yii\helpers\Url;
 
-$this->title = 'Notis/Sheet music';
-$this->params['breadcrumbs'][] = ['label' => 'Notis/Sheet music', 'url' => ['index']];
+$this->title = \Yii::t('app',  'Sheet music');
+$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Sheet music'), 'url' => ['index']];
 
 ?>
 

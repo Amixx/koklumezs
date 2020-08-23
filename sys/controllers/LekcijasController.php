@@ -77,6 +77,10 @@ class LekcijasController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         $models = [];
         $pages = [];
         $user = Yii::$app->user->identity;
@@ -163,6 +167,10 @@ class LekcijasController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
 
         $model = $this->findModel($id);
         $user = Yii::$app->user->identity;
@@ -308,17 +316,6 @@ class LekcijasController extends Controller
                 array_push($difficultiesEng, $engName);
             }
             $evaluations = Evaluations::getEvaluations();
-            foreach ($evaluations as &$ev) {
-                if ($ev['title'] === "Uzdevuma sarežģītība") {
-                    $ev['titleEng'] = "Task difficulty";
-                } else if ($ev['title'] === "Uzdevumu daudzums") {
-                    $ev['titleEng'] = "Amount of tasks";
-                } else if ($ev['title'] === "Komentāri") {
-                    $ev['titleEng'] = "Comments";
-                } else if ($ev['title'] = "Kādu dziesmu vēlētos nākamo") {
-                    $ev['titleEng'] = "What song would you like next";
-                }
-            }
             function toEng($starText)
             {
                 $engText = "";
@@ -423,7 +420,6 @@ class LekcijasController extends Controller
                 'model' => $model,
                 'difficulties' => $difficulties,
                 'difficultiesEng' => $difficultiesEng,
-                //'handdifficulties' => $handdifficulties,
                 'evaluations' => $evaluations,
                 'lectureDifficulties' => $lectureDifficulties,
                 'lectureHandDifficulties' => $lectureHandDifficulties,
@@ -460,6 +456,10 @@ class LekcijasController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         $model = UserLectures::findOne(['lecture_id' => $lectureId, 'user_id' => Yii::$app->user->identity->id]);
         $model->is_favourite = !$model->is_favourite;
         $model->update();
@@ -479,6 +479,10 @@ class LekcijasController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         $model = UserLectures::findOne(['lecture_id' => $lectureId, 'user_id' => Yii::$app->user->identity->id]);
         $model->still_learning = !$model->still_learning;
         $model->update();

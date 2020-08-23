@@ -1,10 +1,10 @@
 <?php
 
 ?>
-<h2>Pievienotie faili</h2>
+<h2><?= \Yii::t('app',  'Added files') ?></h2>
 <hr />
 <p>
-    <a target="_blank" class="btn btn-success" href="<?= $link ?>">Pievienot failu</a>
+    <a target="_blank" class="btn btn-success" href="<?= $link ?>"><?= \Yii::t('app',  'Add file') ?></a>
 </p>
 <?php if ($lecturefiles) {  ?>
     <table class="table table-striped table-bordered">
@@ -16,9 +16,9 @@
             <tr>
                 <td><?= $file['title'] ?></td>
                 <td>
-                    <a target="_blank" href="<?= $view ?>" title="Skatīt" aria-label="Skatīt" data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a>
-                    <a target="_blank" href="<?= $up ?>" title="Rediģēt" aria-label="Rediģēt" data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>
-                    <a href="<?= $del ?>" title="Dzēst" aria-label="Dzēst" data-pjax="0" data-confirm="Vai Jūs tiešām vēlaties dzēst šo failu?" data-method="post"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a target="_blank" href="<?= $view ?>" title=<?= \Yii::t('app',  'View') ?> aria-label=<?= \Yii::t('app',  'View') ?> data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a>
+                    <a target="_blank" href="<?= $up ?>" title=<?= \Yii::t('app',  'Edit') ?> aria-label=<?= \Yii::t('app',  'Edit') ?> data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="<?= $del ?>" title=<?= \Yii::t('app',  'Delete') ?> aria-label=<?= \Yii::t('app',  'Delete') ?> data-pjax="0" data-confirm=<?= \Yii::t('app',  'Do you really want to delete this file?') ?> data-method="post"><span class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>
         <?php } ?>

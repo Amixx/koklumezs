@@ -65,6 +65,10 @@ class UserLecturesController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         $searchModel = new UserLecturesSearch();
         $students = Users::getActiveStudents();
         $admins = Users::getAdmins();
@@ -102,6 +106,10 @@ class UserLecturesController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -134,6 +142,10 @@ class UserLecturesController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         $outofLectures = false;
         $model = new UserLectures();
         $model->assigned = Yii::$app->user->identity->id;
@@ -236,6 +248,10 @@ class UserLecturesController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         $model = $this->findModel($id);
         $outofLectures = false;
         $post = Yii::$app->request->post();
@@ -293,6 +309,10 @@ class UserLecturesController extends Controller
             $school = School::getByStudent(Yii::$app->user->identity->id);
         }
         Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

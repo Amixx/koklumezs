@@ -5,16 +5,6 @@ namespace app\models;
 use Yii;
 use yii\helpers\ArrayHelper;
 
-/**
- * This is the model class for table "evaluations".
- *
- * @property int $id
- * @property string $title Virsraksts
- * @property string $type Tips
- *
- * @property Lecturesevaluations[] $lecturesevaluations
- * @property Userlectureevaluations[] $userlectureevaluations
- */
 class Evaluations extends \yii\db\ActiveRecord
 {
     /**
@@ -43,12 +33,12 @@ class Evaluations extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => 'Virsraksts',
-            'type' => 'Tips',
-            'stars' => 'Zvaigžņu skaits',
-            'star_text' => 'Zvaigžņu teksti',
-            'is_scale' => 'Algoritma skala',
-            'is_video_param' => 'Lekciju biežuma parametrs',
+            'title' => \Yii::t('app',  'Title'),
+            'type' => \Yii::t('app',  'Type'),
+            'stars' => \Yii::t('app',  'Star count'),
+            'star_text' => \Yii::t('app',  'Star texts'),
+            'is_scale' => \Yii::t('app',  'Algorithm scale'),
+            'is_video_param' => \Yii::t('app',  'Lesson frequency parameter'),
         ];
     }
 

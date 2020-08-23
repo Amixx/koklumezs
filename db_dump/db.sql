@@ -51,9 +51,9 @@ INSERT INTO `difficulties` (`id`, `name`) VALUES
 CREATE TABLE IF NOT EXISTS `evaluations` (
   `id` int(11) NOT NULL,
   `title` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Virsraksts',
-  `type` enum('zvaigznes','teksts') COLLATE utf8_unicode_ci NOT NULL COMMENT 'Tips',
+  `type` enum('zvaigznes','teksts') COLLATE utf8_unicode_ci NOT NULL COMMENT \Yii::t('app',  'Type'),
   `stars` int(11) NOT NULL DEFAULT '5' COMMENT 'Zvaigžņu skaits',
-  `star_text` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Zvaigžņu teksti',
+  `star_text` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT \Yii::t('app',  'Star texts'),
   `is_scale` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Algoritma skala',
   `is_video_param` int(11) NOT NULL COMMENT 'Lekciju biežuma parametrs'
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -101,11 +101,11 @@ CREATE TABLE IF NOT EXISTS `lectures` (
   `id` int(11) NOT NULL,
   `title` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Nosaukums',
   `description` mediumtext COLLATE utf8_unicode_ci COMMENT 'Apraksts',
-  `created` timestamp NULL DEFAULT NULL COMMENT 'Izveidota',
-  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Atjaunota',
-  `author` int(11) NOT NULL COMMENT 'Autors',
-  `complexity` int(11) NOT NULL DEFAULT '0' COMMENT 'Sarežģītība',
-  `season` enum('Visas','Rudens','Ziema','Pavasaris','Vasara') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Visas' COMMENT 'Gadskārta',
+  `created` timestamp NULL DEFAULT NULL COMMENT \Yii::t('app',  'Created'),
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT \Yii::t('app',  'Updated'),
+  `author` int(11) NOT NULL COMMENT \Yii::t('app',  'Author'),
+  `complexity` int(11) NOT NULL DEFAULT '0' COMMENT \Yii::t('app',  'Difficulty'),
+  `season` enum('Visas',\Yii::t('app',  'Autumn'),\Yii::t('app',  'Winter'),'Pavasaris','Vasara') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Visas' COMMENT \Yii::t('app',  'Season'),
   `file` mediumtext COLLATE utf8_unicode_ci COMMENT 'Video fails',
   `thumb` mediumtext COLLATE utf8_unicode_ci COMMENT 'Video bilde'
 ) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -152,7 +152,7 @@ INSERT INTO `lectures` (`id`, `title`, `description`, `created`, `updated`, `aut
 CREATE TABLE IF NOT EXISTS `lecturesdifficulties` (
   `id` int(11) NOT NULL,
   `diff_id` int(11) NOT NULL COMMENT 'Parametrs',
-  `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
+  `lecture_id` int(11) NOT NULL COMMENT \Yii::t('app',  'Lecture'),
   `value` int(50) NOT NULL COMMENT 'Vērtība'
 ) ENGINE=InnoDB AUTO_INCREMENT=781 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -299,7 +299,7 @@ INSERT INTO `lecturesdifficulties` (`id`, `diff_id`, `lecture_id`, `value`) VALU
 
 CREATE TABLE IF NOT EXISTS `lecturesevaluations` (
   `id` int(11) NOT NULL,
-  `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
+  `lecture_id` int(11) NOT NULL COMMENT \Yii::t('app',  'Lecture'),
   `evaluation_id` int(11) NOT NULL COMMENT 'Novērtējums'
 ) ENGINE=InnoDB AUTO_INCREMENT=397 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -416,8 +416,8 @@ INSERT INTO `lecturesevaluations` (`id`, `lecture_id`, `evaluation_id`) VALUES
 CREATE TABLE IF NOT EXISTS `lecturesfiles` (
   `id` int(11) NOT NULL,
   `title` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Virsraksts',
-  `file` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Fails',
-  `thumb` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Bilde',
+  `file` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT \Yii::t('app',  'File'),
+  `thumb` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT \Yii::t('app',  'Image'),
   `lecture_id` int(11) NOT NULL COMMENT 'Lekcija'
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -437,7 +437,7 @@ INSERT INTO `lecturesfiles` (`id`, `title`, `file`, `thumb`, `lecture_id`) VALUE
 
 CREATE TABLE IF NOT EXISTS `lectureshanddifficulties` (
   `id` int(11) NOT NULL,
-  `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
+  `lecture_id` int(11) NOT NULL COMMENT \Yii::t('app',  'Lecture'),
   `category_id` int(11) NOT NULL COMMENT 'Kategorija'
 ) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -459,7 +459,7 @@ INSERT INTO `lectureshanddifficulties` (`id`, `lecture_id`, `category_id`) VALUE
 
 CREATE TABLE IF NOT EXISTS `relatedlectures` (
   `id` int(11) NOT NULL,
-  `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
+  `lecture_id` int(11) NOT NULL COMMENT \Yii::t('app',  'Lecture'),
   `related_id` int(11) NOT NULL COMMENT 'Saistītā lekcija'
 ) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -492,9 +492,9 @@ INSERT INTO `relatedlectures` (`id`, `lecture_id`, `related_id`) VALUES
 
 CREATE TABLE IF NOT EXISTS `sentlectures` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL COMMENT 'Lietotājs',
+  `user_id` int(11) NOT NULL COMMENT \Yii::t('app',  'User'),
   `lecture_id` int(11) NOT NULL COMMENT 'Pēdējā lekcija',
-  `sent` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Nosūtīts e-pasts',
+  `sent` tinyint(1) NOT NULL DEFAULT '0' COMMENT \Yii::t('app',  'E-mail sent'),
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Izveidots'
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -519,8 +519,8 @@ INSERT INTO `sentlectures` (`id`, `user_id`, `lecture_id`, `sent`, `created`) VA
 
 CREATE TABLE IF NOT EXISTS `studentgoals` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL COMMENT 'Lietotājs',
-  `type` enum('Šobrīd','Vēlamais') COLLATE utf8_unicode_ci NOT NULL COMMENT 'Veids',
+  `user_id` int(11) NOT NULL COMMENT \Yii::t('app',  'User'),
+  `type` enum('Šobrīd','Vēlamais') COLLATE utf8_unicode_ci NOT NULL COMMENT \Yii::t('app',  'Type');
   `diff_id` int(11) NOT NULL COMMENT 'Parametrs',
   `value` int(11) NOT NULL COMMENT 'Vērtība'
 ) ENGINE=InnoDB AUTO_INCREMENT=439 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -546,7 +546,7 @@ INSERT INTO `studentgoals` (`id`, `user_id`, `type`, `diff_id`, `value`) VALUES
 
 CREATE TABLE IF NOT EXISTS `studenthandgoals` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL COMMENT 'Students',
+  `user_id` int(11) NOT NULL COMMENT \Yii::t('app',  'Student'),
   `category_id` int(11) NOT NULL COMMENT 'Kategorija'
 ) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -566,10 +566,10 @@ INSERT INTO `studenthandgoals` (`id`, `user_id`, `category_id`) VALUES
 
 CREATE TABLE IF NOT EXISTS `userlectureevaluations` (
   `id` int(11) NOT NULL,
-  `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
-  `evaluation_id` int(11) NOT NULL COMMENT 'Novērtējums',
-  `user_id` int(11) NOT NULL COMMENT 'Students',
-  `evaluation` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'Vērtējums',
+  `lecture_id` int(11) NOT NULL COMMENT \Yii::t('app',  'Lecture'),
+  `evaluation_id` int(11) NOT NULL COMMENT \Yii::t('app',  'Evaluation'),
+  `user_id` int(11) NOT NULL COMMENT \Yii::t('app',  'Student'),
+  `evaluation` mediumtext COLLATE utf8_unicode_ci NOT NULL COMMENT \Yii::t('app',  'Evaluation'),
   `created` datetime NOT NULL COMMENT 'Izveidots'
 ) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -591,14 +591,14 @@ INSERT INTO `userlectureevaluations` (`id`, `lecture_id`, `evaluation_id`, `user
 
 CREATE TABLE IF NOT EXISTS `userlectures` (
   `id` int(11) NOT NULL,
-  `lecture_id` int(11) NOT NULL COMMENT 'Lekcija',
-  `user_id` int(11) NOT NULL COMMENT 'Students',
+  `lecture_id` int(11) NOT NULL COMMENT \Yii::t('app',  'Lecture'),
+  `user_id` int(11) NOT NULL COMMENT \Yii::t('app',  'Student'),
   `assigned` int(11) NOT NULL COMMENT 'Administrators',
-  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Izveidots',
-  `opened` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Atvērta',
-  `opentime` timestamp NULL DEFAULT NULL COMMENT 'Atvēršanas laiks',
-  `sent` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Nosūtīts e-pasts',
-  `evaluated` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Novērtēta',
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT \Yii::t('app',  'Created'),
+  `opened` tinyint(1) NOT NULL DEFAULT '0' COMMENT \Yii::t('app',  'Opened'),
+  `opentime` timestamp NULL DEFAULT NULL COMMENT \Yii::t('app',  'Opening time'),
+  `sent` tinyint(1) NOT NULL DEFAULT '0' COMMENT \Yii::t('app',  'E-mail sent'),
+  `evaluated` tinyint(1) NOT NULL DEFAULT '0' COMMENT \Yii::t('app',  'Evaluated'),
   `sent_times` int(11) NOT NULL DEFAULT '1' COMMENT 'Cik reizes nosūtīts e-pasts pirms novērtēšanas',
   `open_times` int(11) NOT NULL COMMENT 'Spēles reizes',
   `user_difficulty` int(11) NOT NULL COMMENT 'Maksimālās spējas uz doto brīdi'
@@ -652,9 +652,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `phone_number`, `email`, `password`, `user_level`, `password_hash`, `password_reset_token`, `verification_token`, `auth_key`, `status`, `updated_at`, `passwordResetTokenExpire`, `created_at`, `last_login`, `last_lecture`, `dont_bother`, `goal`) VALUES
 (1, 'test', 'tester', '112', 'test@test.lv', '$2y$13$Q6qwbz72XUw4acnoTQsl7eHA5SugtEmxynv08ScuyVmeV0SGuf45C', 'Admin', '', '', '', '', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2019-12-10 09:29:09', 0, '2019-11-14 23:59:59', ''),
-(2, 'Students', 'Studentiņš', '112', 'student@test.lv', '$2y$13$Q6qwbz72XUw4acnoTQsl7eHA5SugtEmxynv08ScuyVmeV0SGuf45C', 'Student', '', '', '', 'tjI7VodU51a8pA-Qng971MFVzehC9dBp', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2019-12-11 12:07:13', 10, '2019-12-02 23:59:59', 'tetsts'),
-(3, 'Cits', 'Students', '112', 'student@student.lv', '$2y$13$NHRuxo0M.5KuK58JwVNOCew6WcZxKEoO1ev5oE00c1V.aEAN7zY4K', 'Student', '', '', '', 'eQeIfL_xqWz44ILGMEHp6JOMasD0OWPJ', 9, '2019-10-31 12:40:31', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, NULL, ''),
-(4, 'Jauns', 'Students', '1242', 'students@jauns.lv', '$2y$13$SqB.4oPTqEKKiJiN50JZ7.wr4iJoApYkZM.wljUjcj3z8p2akpjaW', 'Student', '', '', '', 'QJzeNchYlrafPiZ_YZ9u51NlLd9w5IIC', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, NULL, '');
+(2, \Yii::t('app',  'Student'), 'Studentiņš', '112', 'student@test.lv', '$2y$13$Q6qwbz72XUw4acnoTQsl7eHA5SugtEmxynv08ScuyVmeV0SGuf45C', 'Student', '', '', '', 'tjI7VodU51a8pA-Qng971MFVzehC9dBp', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '2019-12-11 12:07:13', 10, '2019-12-02 23:59:59', 'tetsts'),
+(3, 'Cits', \Yii::t('app',  'Student'), '112', 'student@student.lv', '$2y$13$NHRuxo0M.5KuK58JwVNOCew6WcZxKEoO1ev5oE00c1V.aEAN7zY4K', 'Student', '', '', '', 'eQeIfL_xqWz44ILGMEHp6JOMasD0OWPJ', 9, '2019-10-31 12:40:31', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, NULL, ''),
+(4, 'Jauns', \Yii::t('app',  'Student'), '1242', 'students@jauns.lv', '$2y$13$SqB.4oPTqEKKiJiN50JZ7.wr4iJoApYkZM.wljUjcj3z8p2akpjaW', 'Student', '', '', '', 'QJzeNchYlrafPiZ_YZ9u51NlLd9w5IIC', 10, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, NULL, '');
 
 --
 -- Indexes for dumped tables

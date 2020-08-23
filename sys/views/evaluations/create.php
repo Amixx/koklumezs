@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model app\models\Evaluations */
 
 $this->title = 'Izveidot novērtējumu';
-$this->params['breadcrumbs'][] = ['label' => 'Novērtējumi', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Evaluations'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="evaluations-create">

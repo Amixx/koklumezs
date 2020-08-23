@@ -8,7 +8,7 @@ use  yii\jui\DatePicker;
 /* @var $searchModel app\models\UserLecturesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Piešķirtās nodarbības';
+$this->title = \Yii::t('app',  'Assigned lectures');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-lectures-index">
@@ -16,37 +16,31 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Piešķirt nodarbību', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(\Yii::t('app',  'Assign lecture'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]);
-    // var_dump($lectureObjects);
-    ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            //'id',
             [
                 'attribute' => 'lecture_id',
                 'format' => 'raw',
                 'value' => 'lecture.title',
-                'filter' => Html::dropDownList('UserLecturesSearch[lecture_id]', isset($get['UserLecturesSearch']['lecture_id']) ? $get['UserLecturesSearch']['lecture_id'] : '', $lectures, ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('UserLecturesSearch[lecture_id]', isset($get['UserLecturesSearch']['lecture_id']) ? $get['UserLecturesSearch']['lecture_id'] : '', $lectures, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'user_id',
                 'format' => 'raw',
                 'value' => 'student.email',
-                'filter' => Html::dropDownList('UserLecturesSearch[user_id]', isset($get['UserLecturesSearch']['user_id']) ? $get['UserLecturesSearch']['user_id'] : '', $students, ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('UserLecturesSearch[user_id]', isset($get['UserLecturesSearch']['user_id']) ? $get['UserLecturesSearch']['user_id'] : '', $students, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'assigned',
                 'format' => 'raw',
                 'value' => 'admin.email',
-                'filter' => Html::dropDownList('UserLecturesSearch[assigned]', isset($get['UserLecturesSearch']['assigned']) ? $get['UserLecturesSearch']['assigned'] : '', $admins, ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('UserLecturesSearch[assigned]', isset($get['UserLecturesSearch']['assigned']) ? $get['UserLecturesSearch']['assigned'] : '', $admins, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'created',
@@ -63,9 +57,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'opened',
                 'format' => 'raw',
                 'value' => function ($dataProvider) {
-                    return $dataProvider->opened == 1 ? 'Jā' : 'Nē';
+                    return $dataProvider->opened == 1 ? \Yii::t('app',  'Yes') : \Yii::t('app',  'No');
                 },
-                'filter' => Html::dropDownList('UserLecturesSearch[opened]', isset($get['UserLecturesSearch']['opened']) ? $get['UserLecturesSearch']['opened'] : '', [0 => 'Nav atvērta', 1 => 'Atvērta'], ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('UserLecturesSearch[opened]', isset($get['UserLecturesSearch']['opened']) ? $get['UserLecturesSearch']['opened'] : '', [0 => \Yii::t('app',  'Not opened'), 1 => \Yii::t('app',  'Opened')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'opentime',
@@ -82,20 +76,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'sent',
                 'format' => 'raw',
                 'value' => function ($dataProvider) {
-                    return $dataProvider->sent == 1 ? 'Jā' : 'Nē';
+                    return $dataProvider->sent == 1 ? \Yii::t('app',  'Yes') : \Yii::t('app',  'No');
                 },
-                'filter' => Html::dropDownList('UserLecturesSearch[sent]', isset($get['UserLecturesSearch']['sent']) ? $get['UserLecturesSearch']['sent'] : '', [0 => 'Nav', 1 => 'Ir'], ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('UserLecturesSearch[sent]', isset($get['UserLecturesSearch']['sent']) ? $get['UserLecturesSearch']['sent'] : '', [0 => \Yii::t('app',  'Isn\'t'), 1 => \Yii::t('app',  'Is')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'evaluated',
                 'format' => 'raw',
                 'value' => function ($dataProvider) {
-                    return $dataProvider->evaluated == 1 ? 'Jā' : 'Nē';
+                    return $dataProvider->evaluated == 1 ? \Yii::t('app',  'Yes') : \Yii::t('app',  'No');
                 },
-                'filter' => Html::dropDownList('UserLecturesSearch[evaluated]', isset($get['UserLecturesSearchevaluatedsent']) ? $get['UserLecturesSearch']['evaluated'] : '', [0 => 'Nav', 1 => 'Ir'], ['prompt' => '-- Rādīt visus --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('UserLecturesSearch[evaluated]', isset($get['UserLecturesSearchevaluatedsent']) ? $get['UserLecturesSearch']['evaluated'] : '', [0 => \Yii::t('app',  'Isn\'t'), 1 => \Yii::t('app',  'Is')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
-
-            // ['class' => 'yii\grid\ActionColumn'],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view}',

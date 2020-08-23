@@ -43,13 +43,13 @@ class SchoolEvaluations extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'school_id' => 'Skolas ID',
-            'title' => 'Virsraksts',
-            'type' => 'Tips',
-            'stars' => 'Zvaigžņu skaits',
-            'star_text' => 'Zvaigžņu teksti',
-            'is_scale' => 'Algoritma skala',
-            'is_video_param' => 'Lekciju biežuma parametrs',
+            'school_id' => \Yii::t('app',  'School ID'),
+            'title' => \Yii::t('app',  'Title'),
+            'type' => \Yii::t('app',  'Type'),
+            'stars' => \Yii::t('app',  'Star count'),
+            'star_text' => \Yii::t('app',  'Star texts'),
+            'is_scale' => \Yii::t('app',  'Algorithm scale'),
+            'is_video_param' => \Yii::t('app',  'Lesson frequency parameter'),
         ];
     }
 

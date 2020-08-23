@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\LecturesfilesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Faili';
+$this->title = \Yii::t('app',  'Files');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lecturesfiles-index">
@@ -15,10 +15,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Pievienot failu', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(\Yii::t('app',  'Add file'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]); 
+    ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -31,18 +32,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'file:ntext',
             [
                 'attribute' => 'thumb',
-                'format' => 'html',    
+                'format' => 'html',
                 'value' => function ($data) {
-                    return Html::img($data['thumb'],
-                        ['width' => '70px']);
+                    return Html::img(
+                        $data['thumb'],
+                        ['width' => '70px']
+                    );
                 },
             ],
             [
                 'attribute' => 'lecture_id',
                 'format' => 'raw',
                 'value' => 'lecture.title',
-                'filter'=> Html::dropDownList('LecturesfilesSearch[lecture_id]',isset($get['LecturesfilesSearch']['lecture_id']) ? $get['LecturesfilesSearch']['lecture_id'] : '' ,$lectures,['prompt'=>'-- Rādīt visus --','class' => 'form-control']),
-            ], 
+                'filter' => Html::dropDownList('LecturesfilesSearch[lecture_id]', isset($get['LecturesfilesSearch']['lecture_id']) ? $get['LecturesfilesSearch']['lecture_id'] : '', $lectures, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

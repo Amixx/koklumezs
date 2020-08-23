@@ -51,15 +51,15 @@ class UserLectures extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'lecture_id' => 'Lekcija',
-            'user_id' => 'Students',
+            'lecture_id' => \Yii::t('app',  'Lecture'),
+            'user_id' => \Yii::t('app',  'Student'),
             'assigned' => 'Administrators',
-            'created' => 'Izveidots',
-            'opened' => 'Atvērta',
-            'opentime' => 'Atvēršanas laiks',
-            'sent' => 'Nosūtīts e-pasts',
-            'evaluated' => 'Novērtēta',
-            'user_difficulty' => 'Spējas'
+            'created' => \Yii::t('app',  'Created'),
+            'opened' => \Yii::t('app',  'Opened'),
+            'opentime' => \Yii::t('app',  'Opening time'),
+            'sent' => \Yii::t('app',  'E-mail sent'),
+            'evaluated' => \Yii::t('app',  'Evaluated'),
+            'user_difficulty' => \Yii::t('app',  'Abilities'),
         ];
     }
 

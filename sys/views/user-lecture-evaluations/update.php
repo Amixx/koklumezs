@@ -5,10 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Userlectureevaluations */
 
-$this->title = 'Rediģēt studentu vērtējumu: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Studentu vērtējumi', 'url' => ['index']];
+$this->title = \Yii::t('app',  'Edit student evaluation') . ': ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Student evaluations'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Rediģēt';
+$this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
 ?>
 <div class="userlectureevaluations-update">
 

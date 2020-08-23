@@ -64,21 +64,20 @@ class Users extends ActiveRecord implements IdentityInterface
     {
         return [
             'id' => 'ID',
-            'user_level' => 'Piekļuves līmenis',
-            'language' => 'Lietotāja valoda',
-            'subscription_type' => 'Abonēšanas veids',
-            'email' => 'E-pasts',
-            'phone_number' => 'Telefona numurs',
-            'first_name' => 'Vārds',
-            'last_name' => 'Uzvārds',
-            'password' => 'Parole',
-            'last_login' => 'Pierakstījies',
-            'last_lecture' => 'Pēdējā nodarbība',
-            'dont_bother' => 'Netraucēt',
-            'status' => 'Statuss',
-            'goal' => 'Mērķis',
-            'allowed_to_download_files' => "Vai drīkst lejupielādēt failus"
-            //more_lecture_requests` tikai līdz 4 uzdevumiem starp sūtīšanas reizēm. Lai neaptrūkstas uzdevumi
+            'user_level' => \Yii::t('app',  'Access level'),
+            'language' => \Yii::t('app',  'User language'),
+            'subscription_type' => \Yii::t('app',  'Abonement type'),
+            'email' => \Yii::t('app',  'E-mail'),
+            'phone_number' => \Yii::t('app',  'Phone number'),
+            'first_name' => \Yii::t('app',  'Name'),
+            'last_name' => \Yii::t('app',  'Surname'),
+            'password' => \Yii::t('app',  'Password'),
+            'last_login' => \Yii::t('app',  'Last logged in'),
+            'last_lecture' => \Yii::t('app',  'Last lesson'),
+            'dont_bother' => \Yii::t('app',  'Do not bother'),
+            'status' => \Yii::t('app',  'Status'),
+            'goal' => \Yii::t('app',  'Goal'),
+            'allowed_to_download_files' => \Yii::t('app',  'Allowed to download files'),
         ];
     }
 
@@ -439,9 +438,9 @@ class Users extends ActiveRecord implements IdentityInterface
     public static function getLevels()
     {
         return [
-            self::ROLE_USER => 'Students',
+            self::ROLE_USER => \Yii::t('app',  'Student'),
             self::ROLE_ADMIN => 'Administrators',
-            self::ROLE_TEACHER => 'Skolotājs',
+            self::ROLE_TEACHER => \Yii::t('app',  'Teacher'),
         ];
     }
 

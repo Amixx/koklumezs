@@ -13,10 +13,10 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lectures-index">
     <div class="LectureOverview__Section LectureOverview__Section--new">
-        <h3>Jaunās nodarbības/New lessons</h3>
+        <h3><?= \Yii::t('app',  'New lessons') ?></h3>
         <?php if (count($newLectures) == 0) { ?>
             <h4 class="LectureOverview__EmptyText">
-                Apsveicu! Visas jaunās nodarbības esi apskatījis!
+                <?= \Yii::t('app',  'Congratulations! You\'ve seen all new lessons') ?>
             </h4>
         <?php } ?>
         <div class="row">
@@ -31,10 +31,10 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
     <div class="LectureOverview__Section LectureOverview__Section--favourite">
-        <h3>Nodarbības, ko vēl mācos/Lessons I'm still learning</h3>
+        <h3> <?= \Yii::t('app',  'Lessons I\'m still learning') ?></h3>
         <?php if (count($stillLearningLectures) == 0) { ?>
             <h4 class="LectureOverview__EmptyText">
-                Šajā sadaļā neesi pievienojis vel nevienu uzdevumu. To vari izdarīt, atzīmējot jebkurā nodarbībā, ka vēlies pievienot šai sadaļai.
+                <?= \Yii::t('app',  'You have not added any lessons to this section yet. You can do this by marking in any lesson that you want to add it to this section.') ?>
             </h4>
         <?php } ?>
         <div class="row">
@@ -49,10 +49,10 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
     <div class="LectureOverview__Section LectureOverview__Section--learning">
-        <h3>Mīļākās nodarbības/Favourite lessons</h3>
+        <h3><?= \Yii::t('app',  'Favourite lessons') ?></h3>
         <?php if (count($favouriteLectures) == 0) { ?>
             <h4 class="LectureOverview__EmptyText">
-                Šajā sadaļā neesi pievienojis vēl nevienu uzdevumu. To vari izdarīt, atzīmējot jebkurā nodarbībā, ka vēlies pievienot šai sadaļai.
+                <?= \Yii::t('app',  'You have not added any lessons to this section yet. You can do this by marking in any lesson that you want to add it to this section.') ?>
             </h4>
         <?php } ?>
         <div class="row">

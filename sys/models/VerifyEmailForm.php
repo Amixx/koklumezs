@@ -1,8 +1,11 @@
 <?php
+
 namespace app\models;
+
 use app\models\Users;
 use yii\base\InvalidArgumentException;
 use yii\base\Model;
+
 class VerifyEmailForm extends Model
 {
     /**

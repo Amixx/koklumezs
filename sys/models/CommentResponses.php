@@ -34,10 +34,10 @@ class CommentResponses extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'author_id' => 'Autora ID',
-            'userlectureevaluation_id' => 'Novērtējuma ID',
-            'text' => 'Atbildes teksts',
-            'created' => 'Kad izveidots',
+            'author_id' => \Yii::t('app',  'Author ID'),
+            'userlectureevaluation_id' => \Yii::t('app',  'Evaluation ID'),
+            'text' => \Yii::t('app',  'Reply text'),
+            'created' => \Yii::t('app',  'Date created'),
         ];
     }
 

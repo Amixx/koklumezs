@@ -72,18 +72,24 @@ class TestController extends Controller
      */
     public function actionIndex()
     {
-        // $isGuest = Yii::$app->user->isGuest;
-        // $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        // $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
 
-        // $school = null;
-        // if ($isTeacher) {
-        //     $school = School::getByTeacher(Yii::$app->user->identity->id);
-        // } else if ($isStudent) {
-        //     $school = School::getByStudent(Yii::$app->user->identity->id);
-        // }
-        // Yii::$app->view->params['school'] = $school;
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv-LV';
+        }
 
 
+        Yii::$app->language = 'lv-LV';
+        echo \Yii::t('app', 'Abilities');
     }
 }

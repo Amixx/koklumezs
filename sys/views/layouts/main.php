@@ -9,6 +9,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\models\Users;
 
 $isGuest = Yii::$app->user->isGuest;
 $isAdmin = !$isGuest && Yii::$app->user->identity->user_level == 'Admin';
@@ -105,63 +106,61 @@ AppAsset::register($this);
         $navItems = [];
         if ($isGuest) {
         } else {
-            $text = ($isAdmin || $isTeacher) ? '' : '/Sign out';
             $navEnd = '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    'Izrakstīties' . $text . ' (' . Yii::$app->user->identity->first_name . ' ' . Yii::$app->user->identity->last_name . ')',
+                    \Yii::t('app',  'Sign out') . ' (' . Yii::$app->user->identity->first_name . ' ' . Yii::$app->user->identity->last_name . ')',
                     ['class' => 'btn btn-link logout']
                 )
                 . Html::endForm()
                 . '</li>';
         }
         if ($isGuest) {
-            $navItems[] = ['label' => 'Pierakstīties/Log in', 'url' => ['/site/login']];
+            $navItems[] = ['label' => \Yii::t('app',  'Log in'), 'url' => ['/site/login']];
         } elseif ($isAdmin) {
             $navItems[] = ['label' => 'Piešķiršana', 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),];
             $navItems[] = ['label' => 'Piešķirts', 'url' => ['/user-lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lectures']),];
-            $navItems[] = ['label' => 'Nodarbības', 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
+            $navItems[] = ['label' => \Yii::t('app',  'Lessons'), 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
             $navItems[] = ['label' => 'Faili', 'url' => ['/lecturesfiles'], 'active' =>  in_array(\Yii::$app->controller->id, ['lecturesfiles']),];
             $navItems[] = ['label' => 'Parametri', 'url' => ['/difficulties'], 'active' =>  in_array(\Yii::$app->controller->id, ['difficulties']),];
-            $navItems[] = ['label' => 'Sekciju redzamība', 'url' => ['/sections'], 'active' =>  in_array(\Yii::$app->controller->id, ['sections']),];
-            //$navItems[] = ['label' => 'Kategorijas', 'url' => ['/handdifficulties'],'active' =>  in_array(\Yii::$app->controller->id,['handdifficulties']),];        
-            $navItems[] = ['label' => 'Novērtējumi', 'url' => ['/evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['evaluations'])];
+            $navItems[] = ['label' => \Yii::t('app',  'Section visibility'), 'url' => ['/sections'], 'active' =>  in_array(\Yii::$app->controller->id, ['sections']),];
+            $navItems[] = ['label' => \Yii::t('app',  'Evaluations'), 'url' => ['/evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['evaluations'])];
             $navItems[] = ['label' => 'Lietotāji', 'url' => ['/user'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])];
             $navItems[] = ['label' => 'Lietotāju vērtējumi', 'url' => ['/user-lecture-evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations'])];
             $navItems[] = ['label' => 'Izsūtītie e-pasti', 'url' => ['/sentlectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['sentlectures'])];
             $navItems[] = $navEnd;
         } elseif ($isTeacher) {
-            $navItems[] = ['label' => 'Skola', 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),];
+            $navItems[] = ['label' => \Yii::t('app',  'School'), 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),];
             $navItems[] = ['label' => '+', 'url' => ['/assign/userlectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),];
-            $navItems[] = ['label' => 'Community', 'url' => ['/user-lecture-evaluations/comments'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations']) and Yii::$app->controller->action->actionMethod == "actionComments"];
-            $navItems[] = ['label' => 'Skolēni', 'url' => ['/user'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])];
+            $navItems[] = ['label' => \Yii::t('app',  'Community'), 'url' => ['/user-lecture-evaluations/comments'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations']) and Yii::$app->controller->action->actionMethod == "actionComments"];
+            $navItems[] = ['label' => \Yii::t('app',  'Students'), 'url' => ['/user'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])];
             $navItems[] = ['label' => '+', 'url' => ['/user/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])];
-            $navItems[] = ['label' => 'Nodarbības', 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
+            $navItems[] = ['label' => \Yii::t('app',  'Lessons'), 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
             $navItems[] = ['label' => '+', 'url' => ['/lectures/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
-            $navItems[] = ['label' => 'Metrikas', 'url' => ['/user-lecture-evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations']) and Yii::$app->controller->action->actionMethod != "actionComments"];
-            $navItems[] = ['label' => 'Iestatījumi', 'url' => ['/school-settings'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-settings'])];
+            $navItems[] = ['label' => \Yii::t('app',  'Metrics'), 'url' => ['/user-lecture-evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations']) and Yii::$app->controller->action->actionMethod != "actionComments"];
+            $navItems[] = ['label' => \Yii::t('app',  'Settings'), 'url' => ['/school-settings'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-settings'])];
 
             $navItems[] = $navEnd;
         } elseif ($isStudent) {
-            $commentsItemText = 'Jaunākie komentāri/Newest comments';
+            $commentsItemText = \Yii::t('app',  'Newest comments');
             $unseenResponsesCount = array_key_exists('unseen_responses_count', $this->params) ? $this->params['unseen_responses_count'] : null;
             if ($unseenResponsesCount && $unseenResponsesCount > 0) {
                 $commentsItemText .= " ($unseenResponsesCount)";
             }
 
             $navItems[] = [
-                'label' => 'Nodarbības/Lessons',
+                'label' => \Yii::t('app',  'Lessons'),
                 'active' =>  in_array(\Yii::$app->controller->id, ['lekcijas']),
                 'items' => [
-                    ['label' => 'Jaunās nodarbības/New lessons', 'url' => ['/lekcijas?type=new']],
-                    ['label' => 'Šobrīd mācos/Currently learning', 'url' => ['/lekcijas?type=learning']],
-                    ['label' => 'Mīļākās nodarbības/Favourite lessons', 'url' => ['/lekcijas?type=favourite']]
+                    ['label' => \Yii::t('app',  'New lessons'), 'url' => ['/lekcijas?type=new']],
+                    ['label' => \Yii::t('app',  'Currently learning'), 'url' => ['/lekcijas?type=learning']],
+                    ['label' => \Yii::t('app',  'Favourite lessons'), 'url' => ['/lekcijas?type=favourite']]
                 ],
                 'options' => ['class' => 'navbar-lessons-dropdown-toggle']
             ];
-            $navItems[] = ['label' => 'Notis/Sheet music', 'url' => ['/file'], 'active' =>  in_array(\Yii::$app->controller->id, ['file'])];
+            $navItems[] = ['label' => \Yii::t('app',  'Sheet music'), 'url' => ['/file'], 'active' =>  in_array(\Yii::$app->controller->id, ['file'])];
             $navItems[] = ['label' => $commentsItemText, 'url' => ['/comment-responses'], 'active' =>  in_array(\Yii::$app->controller->id, ['comment-responses'])];
-            $navItems[] = ['label' => 'Arhīvs/Archive', 'url' => ['/archive'], 'active' =>  in_array(\Yii::$app->controller->id, ['archive'])];
+            $navItems[] = ['label' => \Yii::t('app',  'Archive'), 'url' => ['/archive'], 'active' =>  in_array(\Yii::$app->controller->id, ['archive'])];
 
             $navItems[] = $navEnd;
         }
@@ -195,7 +194,7 @@ AppAsset::register($this);
         </div>
     </footer>
 
-    <div id="install-prompt" class="a2hs">Pievienot sākuma ekrānam</div>
+    <div id="install-prompt" class="a2hs"><?= \Yii::t('app',  'Add to home screen') ?></div>
 
     <?php $this->endBody() ?>
 
@@ -223,7 +222,6 @@ AppAsset::register($this);
             }
         });
 
-
         document.getElementById("install-prompt").addEventListener('click', (e) => {
             // Hide the app provided install promotion
             document.getElementById("install-prompt").style.background = "gainsboro";
@@ -232,10 +230,8 @@ AppAsset::register($this);
             // Wait for the user to respond to the prompt
             deferredPrompt.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
                     document.getElementById("install-prompt").style.display = "none";
                 } else {
-                    console.log('User dismissed the install prompt');
                     document.getElementById("install-prompt").style.background = "goldenrod";
                 }
             });
