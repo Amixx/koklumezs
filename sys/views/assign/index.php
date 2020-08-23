@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <th><?= \Yii::t('app', 'Times played') ?></th>
                 <th><?= \Yii::t('app', 'Difficulty') ?></th>
                 <?php foreach ($evaluationsTitles as $et) { ?>
-                    <th><?= $et ?></th>
+                    <th><?= \Yii::t('app', $et) ?></th>
                 <?php } ?>
                 <th><?= \Yii::t('app', 'Abilities') ?></th>
                 <th class="action-column"><?= \Yii::t('app', 'Actions') ?></th>
