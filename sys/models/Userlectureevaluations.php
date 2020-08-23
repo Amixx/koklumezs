@@ -137,7 +137,7 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
         $timeToStartShowingComments = new \DateTime('2019-06-27'); //for debugging
         $timeFormatted = $timeToStartShowingComments->format('Y-m-d');
         // $subquery = new Query()->select(['commentresponses.userlectureevaluation_id'])->from('commentresponses')->where();
-        return self::find()->where(['user_id' => Yii::$app->user->identity->id, 'evaluation_id' => 4])->andWhere(['>=', 'created', $timeFormatted])->andWhere(['id', $subquery])->with('commentresponses')->asArray()->all();
+        return self::find()->where(['user_id' => Yii::$app->user->identity->id, 'evaluation_id' => 4])->andWhere(['>=', 'created', $timeFormatted])->with('commentresponses')->asArray()->all();
     }
 
     public function getComments($id)
