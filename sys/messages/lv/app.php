@@ -203,7 +203,7 @@ return [
     'Student' => 'Students',
     'Student evaluations' => 'Studentu novērtējumi',
     'Student selection' => 'Studentu atlase',
-    'Students' => 'Students',
+    'Students' => 'Studenti',
     'Submit' => 'Iesniegt',
     'Suitable lessons' => 'Piemērotas nodarbības',
     'Summer' => 'Vasara',
