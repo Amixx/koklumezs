@@ -167,9 +167,9 @@ a.desc:after {
 .sort-ordinal a.desc:after {
     content: "\e156";
 }
-.grid-view {
+/* .grid-view {
     overflow-x:auto;
-}
+} */
 
 .grid-view th {
     white-space: nowrap;
