@@ -32,35 +32,35 @@ $(document).ready(function() {
 
     setupArchiveSearchByCategory();
 
-    makeNavbarMultilineForStudents();
+    // makeNavbarMultilineForStudents();
 
     setupLectureFilterByDifficulty();
 
     setupAssignUserListFilters();
 });
 
-function makeNavbarMultilineForStudents(){
-    var navbarItemsSelector = ".navbar-nav.for-students li a";
+// function makeNavbarMultilineForStudents(){
+//     var navbarItemsSelector = ".navbar-nav.for-students li a";
 
-    $(navbarItemsSelector).each(function (_, item) {
-        makeItemMultiline(item);       
-    });
+//     $(navbarItemsSelector).each(function (_, item) {
+//         makeItemMultiline(item);       
+//     });
 
-    function makeItemMultiline(item){
-        item.innerHTML = textToMultiline(item.innerText.split("/"));;
-        item.style.lineHeight = "10px";
-    }
+//     function makeItemMultiline(item){
+//         item.innerHTML = textToMultiline(item.innerText.split("/"));;
+//         item.style.lineHeight = "10px";
+//     }
 
-    function textToMultiline(parts){
-        var newText = "";
+//     function textToMultiline(parts){
+//         var newText = "";
 
-        parts.forEach(function(part){
-            newText += "<p>" + part + "</p>";
-        });
+//         parts.forEach(function(part){
+//             newText += "<p>" + part + "</p>";
+//         });
 
-        return newText;
-    }
-}
+//         return newText;
+//     }
+// }
 
 function setupArchiveSearchByCategory(){
     var selectors = {
