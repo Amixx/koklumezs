@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Evaluations */
 
-$this->title = \Yii::t('app',  'Edit evaluation') . ': ' . $model->title;
+$this->title = \Yii::t('app',  'Edit school evaluation') . ': ' . $model->title;
 $this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Evaluations'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');

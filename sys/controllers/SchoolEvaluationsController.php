@@ -4,8 +4,6 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Users;
-use app\models\Evaluations;
-use app\models\EvaluationsSearch;
 use app\models\School;
 use app\models\SchoolEvaluations;
 use app\models\SchoolTeacher;
@@ -45,10 +43,6 @@ class SchoolEvaluationsController extends Controller
         ];
     }
 
-    /**
-     * Lists all Evaluations models.
-     * @return mixed
-     */
     public function actionIndex()
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -76,12 +70,6 @@ class SchoolEvaluationsController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Evaluations model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -104,11 +92,6 @@ class SchoolEvaluationsController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Evaluations model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate()
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -126,10 +109,13 @@ class SchoolEvaluationsController extends Controller
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
-        $model = new Evaluations();
+        $model = new SchoolEvaluations();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->school_id = $school['id'];
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
@@ -137,13 +123,6 @@ class SchoolEvaluationsController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing Evaluations model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -161,16 +140,14 @@ class SchoolEvaluationsController extends Controller
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
-        // $E = array("Viss tik viegls, ka garlaicīgi","Ļoti ļoti viegli, noteikti vajag grūtāk","Izspēlēju vienu reizi un jau viss skaidrs","Diezgan vienkārši","Nācās pastrādāt, bet tiku galā bez milzīgas piepūles","Tiku galā","Diezgan grūti","Itkā saprotu, bet pirksti neklausa","Kaut ko mēģinu, bet pārāk nesanāk","Vispār neko nesaprotu");
-        // $s = serialize($E);
-        // var_dump($s);die;
+
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
         if ($post) {
             $model->load($post);
-            $model->stars = isset($post["Evaluations"]["stars"]) ? $post["Evaluations"]["stars"] : null;
-            $model->is_scale = isset($post["Evaluations"]["is_scale"]) ? $post["Evaluations"]["is_scale"] : null;
-            $model->is_video_param = isset($post["Evaluations"]["is_video_param"]) ? $post["Evaluations"]["is_video_param"] : null;
+            $model->stars = isset($post["SchoolEvaluations"]["stars"]) ? $post["SchoolEvaluations"]["stars"] : null;
+            $model->is_scale = isset($post["SchoolEvaluations"]["is_scale"]) ? $post["SchoolEvaluations"]["is_scale"] : null;
+            $model->is_video_param = isset($post["SchoolEvaluations"]["is_video_param"]) ? $post["SchoolEvaluations"]["is_video_param"] : null;
             $model->star_text = isset($post['stars_texts']) ? serialize($post['stars_texts']) : null;
             $model->save();
             return $this->redirect(['view', 'id' => $model->id]);
@@ -183,13 +160,6 @@ class SchoolEvaluationsController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing Evaluations model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($id)
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -212,16 +182,9 @@ class SchoolEvaluationsController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the Evaluations model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Evaluations the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
-        if (($model = Evaluations::findOne($id)) !== null) {
+        if (($model = SchoolEvaluations::findOne($id)) !== null) {
             return $model;
         }
 
