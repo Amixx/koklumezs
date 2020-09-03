@@ -5,29 +5,13 @@ namespace app\models;
 use Yii;
 use yii\helpers\ArrayHelper;
 
-/**
- * This is the model class for table "evaluations".
- *
- * @property int $id
- * @property string $title Virsraksts
- * @property string $type Tips
- *
- * @property Lecturesevaluations[] $lecturesevaluations
- * @property Userlectureevaluations[] $userlectureevaluations
- */
 class SchoolEvaluations extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'schoolevaluations';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -36,9 +20,6 @@ class SchoolEvaluations extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
@@ -53,34 +34,21 @@ class SchoolEvaluations extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getLecturesevaluations()
     {
         return $this->hasMany(Lecturesevaluations::className(), ['evaluation_id' => 'id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getUserlectureevaluations()
     {
         return $this->hasMany(Userlectureevaluations::className(), ['evaluation_id' => 'id']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEvaluations()
     {
-        return self::find()->where(['!=', 'id', 5])->asArray()->all();
+        return self::find()->asArray()->all();
     }
 
-
-    /**
-     * {@inheritdoc}
-     */
     public function getEvaluationsValueTexts()
     {
         $result = [];
@@ -98,14 +66,14 @@ class SchoolEvaluations extends \yii\db\ActiveRecord
         return $result;
     }
 
-
-
-    /**
-     * {@inheritdoc}
-     */
     public function getEvaluationsTitles()
     {
         return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'title');
+    }
+
+    public function getForSchool($schoolId)
+    {
+        return self::find()->where(['school_id' => $schoolId]);
     }
 
     public function getScaleParam()
