@@ -6,6 +6,7 @@ use Yii;
 use yii\db\Query;
 use yii\db\Connection;
 use app\models\Difficulties;
+use app\models\LecturesDifficulties;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
@@ -87,5 +88,25 @@ class TestController extends Controller
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
+
+        // $lectures = Lectures::getLecturesObjectsForUser([]);
+        // foreach ($lectures as $lecture) {
+        //     $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($lecture['id']);
+        //     $lecture = Lectures::findOne(['id', $lecture['id']]);
+        //     $difficultySum = 0;
+        //     foreach ($lectureDifficulties as $difficulty) {
+        //         if (is_numeric($difficulty)) {
+        //             $difficultySum += (10 * pow(2, ($difficulty / 3)));
+        //         }
+        //     }
+        //     $difficultiesCount = count($lectureDifficulties);
+        //     $newComplexity = 0;
+        //     if ($difficultiesCount > 0) {
+        //         $newComplexity = (int) round($difficultySum / count($lectureDifficulties));
+        //     }
+        //     $lecture['complexity'] = $newComplexity;
+        // //     echo $lecture->update();
+        //     echo "<br>";
+        // }
     }
 }
