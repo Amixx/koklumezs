@@ -235,5 +235,6 @@ return [
     'Video size' => 'Video apjoms',
     'stars' => 'zvaigznes',
     'text' => 'teksts',
-    'School ID' => 'Skolas ID'
+    'School ID' => 'Skolas ID',
+    'Should this parameter be used' => 'Vai lietot šo parametru'
 ];

@@ -3,7 +3,10 @@
 <?php
 foreach ($difficulties as $id => $name) {  ?>
     <div class="form-group field-studentgoals">
-        <label class="control-label" for="difficulties-title<?= $id ?>"><?= \Yii::t('app', $name) ?></label>
+        <label class="control-label" for="difficulties-title<?= $id ?>">
+            <input type="checkbox" name="difficultiesSelected[<?= $id ?>]" title="<?= \Yii::t('app', 'Should this parameter be used') ?>?" value="1">&nbsp;<?= \Yii::t('app', $name) ?>
+        </label>
+
         <select id="difficulties-title<?= $id ?>" class="form-control" name="difficulties[<?= $id ?>]" aria-required="true" aria-invalid="false">
             <option value=""></option>
             <?php for ($a = 1; $a <= 10; $a++) { ?>

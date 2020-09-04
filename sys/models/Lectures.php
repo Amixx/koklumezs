@@ -22,9 +22,9 @@ class Lectures extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'author',  'season'], 'required'], //'complexity',
-            [['title', 'description', 'complexity', 'season', 'file', 'thumb'], 'string'],
+            [['title', 'description', 'season', 'file', 'thumb'], 'string'],
             [['created', 'updated'], 'safe'],
-            [['author'], 'integer'],
+            [['author', 'complexity'], 'integer'],
             [['author'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['author' => 'id']],
         ];
     }

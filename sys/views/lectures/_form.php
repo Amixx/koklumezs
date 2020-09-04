@@ -65,7 +65,6 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                 'multiple' => false, // возможность выбора нескольких файлов
             ]); ?>
             <small><?= \Yii::t('app', 'If you need to add more files, go to section "Files"') ?></small><br /><br />
-            <?= $form->field($model, 'complexity')->dropDownList(Lectures::getComplexity(), ['prompt' => '']) ?>
             <?= $form->field($model, 'season')->dropDownList(Lectures::getSeasons()) ?>
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">

@@ -10,8 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\base\Event;
 use yii\web\View;
-use app\Models\SchoolStudent;
-use app\Models\CommentResponses;
+use app\models\SchoolStudent;
+use app\models\CommentResponses;
 
 class SchoolSettingsController extends Controller
 {

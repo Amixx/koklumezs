@@ -154,6 +154,20 @@ class LecturesController extends Controller
         $model->author = Yii::$app->user->identity->id;
         $model->created = date('Y-m-d H:i:s', time());
         $model->complexity = 1;
+        if (isset($post['difficulties']) && isset($post['difficultiesSelected'])) {
+            $sum = 0;
+            foreach ($post['difficulties'] as $pid => $value) {
+                $difficultySelected = isset($post['difficultiesSelected'][$pid]) && $post['difficultiesSelected'][$pid];
+                if ($difficultySelected) {
+                    $value = $value ?? 0;
+                    if (is_numeric($value)) {
+                        $sum += $value;
+                    }
+                }
+            }
+            $model->complexity = (int) $sum;
+        }
+
         if ($model->load($post) && $model->save()) {
             if (Users::isCurrentUserTeacher()) {
                 $newSchoolLecture = new SchoolLecture();
@@ -162,20 +176,20 @@ class LecturesController extends Controller
                 $newSchoolLecture->lecture_id = $model->id;
                 $newSchoolLecture->save();
             }
-            if (isset($post['difficulties'])) {
-                $sum = 0;
+            if (isset($post['difficulties']) && isset($post['difficultiesSelected'])) {
                 foreach ($post['difficulties'] as $pid => $value) {
-                    $difficulty = new LecturesDifficulties();
-                    $difficulty->diff_id = $pid;
-                    $difficulty->lecture_id = $model->id;
-                    $difficulty->value = $value ?? 0;
-                    if (is_numeric($difficulty->value)) {
-                        $sum += $difficulty->value;
+                    $difficultySelected = isset($post['difficultiesSelected'][$pid]) && $post['difficultiesSelected'][$pid];
+                    if ($difficultySelected) {
+                        $difficulty = new LecturesDifficulties();
+                        $difficulty->diff_id = $pid;
+                        $difficulty->lecture_id = $model->id;
+                        $difficulty->value = $value ?? 0;
+                        if (is_numeric($difficulty->value)) {
+                            $sum += $difficulty->value;
+                        }
+                        $difficulty->save();
                     }
-                    $difficulty->save();
                 }
-                $model->complexity = (int) $sum;
-                $model->update();
             }
             if (isset($post['handdifficulties'])) {
                 foreach ($post['handdifficulties'] as $pid => $value) {
@@ -213,13 +227,6 @@ class LecturesController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing Lectures model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         $post = Yii::$app->request->post();

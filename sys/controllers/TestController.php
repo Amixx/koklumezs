@@ -21,9 +21,9 @@ use yii\web\NotFoundHttpException;
 use app\models\CommentresponsesSearch;
 use yii\base\Event;
 use yii\web\View;
-use app\Models\School;
-use app\Models\SchoolStudent;
-use app\Models\CommentResponses;
+use app\models\School;
+use app\models\SchoolStudent;
+use app\models\CommentResponses;
 use app\models\UserLectures;
 use app\models\Userlectureevaluations;
 
@@ -89,7 +89,7 @@ class TestController extends Controller
         }
 
 
-        Yii::$app->language = 'lv-LV';
-        echo \Yii::t('app', 'Abilities');
+        // var_dump(Difficulties::getDifficultiesForSchool($school->id));
+        var_dump($school->id);
     }
 }
