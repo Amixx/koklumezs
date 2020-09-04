@@ -236,5 +236,6 @@ return [
     'stars' => 'zvaigznes',
     'text' => 'teksts',
     'School ID' => 'Skolas ID',
-    'Should this parameter be used' => 'Vai lietot šo parametru'
+    'Should this parameter be used' => 'Vai lietot šo parametru',
+    'Difficulties' => 'Sarežģītības'
 ];
