@@ -19,7 +19,7 @@ class Difficulties extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'difficulties';
+        return 'schooldifficulties';
     }
 
     /**
@@ -40,6 +40,7 @@ class Difficulties extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'school_id' => \Yii::t('app',  'School ID'),
             'name' => \Yii::t('app',  'Parameter'),
         ];
     }
@@ -50,5 +51,10 @@ class Difficulties extends \yii\db\ActiveRecord
     public function getDifficulties()
     {
         return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'name');
+    }
+
+    public function getDifficultiesForSchool()
+    {
+        return ArrayHelper::map(self::find()->where(['school_id' => $schoolId])->asArray()->all(), 'id', 'name');
     }
 }

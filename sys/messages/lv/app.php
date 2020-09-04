@@ -235,4 +235,5 @@ return [
     'Video size' => 'Video apjoms',
     'stars' => 'zvaigznes',
     'text' => 'teksts',
+    'School ID' => 'Skolas ID'
 ];
