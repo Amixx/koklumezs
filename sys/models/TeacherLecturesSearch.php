@@ -63,6 +63,7 @@ class TeacherLecturesSearch extends Lectures
         ];
 
         $this->load($params);
+        var_dump($params);
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -83,7 +84,8 @@ class TeacherLecturesSearch extends Lectures
         $query->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'created', $this->created])
-            ->andFilterWhere(['like', 'updated', $this->updated]);
+            ->andFilterWhere(['like', 'updated', $this->updated])
+            ->andFilterWhere(['like', 'complexity', $this->complexity]);
 
         return $dataProvider;
     }

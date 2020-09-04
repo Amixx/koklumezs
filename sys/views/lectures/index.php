@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'author',
                 'format' => 'raw',
                 'value' => 'users.email',
-                'filter' => Html::dropDownList('LecturesSearch[author]', isset($get['LecturesSearch']['author']) ? $get['LecturesSearch']['author'] : '', $admins, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('TeacherLecturesSearch[author]', isset($get['TeacherLecturesSearch']['author']) ? $get['TeacherLecturesSearch']['author'] : '', $admins, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'complexity',
@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($dataProvider) {
                     return $dataProvider->complexity;
                 },
-                'filter' => Html::dropDownList('LecturesSearch[complexity]', isset($get['LecturesSearch']['complexity']) ? $get['LecturesSearch']['complexity'] : '', Lectures::getComplexity(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('TeacherLecturesSearch[complexity]', isset($get['TeacherLecturesSearch']['complexity']) ? $get['TeacherLecturesSearch']['complexity'] : '', Lectures::getComplexity(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'season',
@@ -74,7 +74,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($dataProvider) {
                     return $dataProvider->season;
                 },
-                'filter' => Html::dropDownList('LecturesSearch[season]', isset($get['LecturesSearch']['season']) ? $get['LecturesSearch']['season'] : '', Lectures::getSeasons(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList('TeacherLecturesSearch[season]', isset($get['TeacherLecturesSearch']['season']) ? $get['TeacherLecturesSearch']['season'] : '', Lectures::getSeasons(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
