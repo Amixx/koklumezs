@@ -31,7 +31,8 @@ if ($hasFiles) {
                 <script>
                     var player = videojs('my-player<?= $id ?>', {
                         responsive: true,
-                        width: 400
+                        width: 400,
+                        playbackRates: [0.5, 1, 1.5, 2]
                     });
                 </script>
             </div>
