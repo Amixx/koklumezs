@@ -54,6 +54,7 @@ class Users extends ActiveRecord implements IdentityInterface
             [['phone_number'], 'string', 'max' => 30],
             [['password', 'first_name', 'last_name'], 'string', 'max' => 250],
             [['email'], 'string', 'max' => 500],
+            [['username'], 'string', 'max' => 500],
         ];
     }
 
@@ -68,6 +69,7 @@ class Users extends ActiveRecord implements IdentityInterface
             'language' => \Yii::t('app',  'User language'),
             'subscription_type' => \Yii::t('app',  'Abonement type'),
             'email' => \Yii::t('app',  'E-mail'),
+            'username' => \Yii::t('app',  'Username'),
             'phone_number' => \Yii::t('app',  'Phone number'),
             'first_name' => \Yii::t('app',  'Name'),
             'last_name' => \Yii::t('app',  'Surname'),

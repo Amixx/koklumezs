@@ -51,6 +51,7 @@ class User extends ActiveRecord implements IdentityInterface
             'id' => 'ID',
             'user_level' => \Yii::t('app',  'Access level'),
             'email' => \Yii::t('app',  'E-mail'),
+            'username' => \Yii::t('app',  'Username'),
             'phone_number' => \Yii::t('app',  'Phone number'),
             'first_name' => 'Vārds',
             'last_name' => 'Uzvārds',

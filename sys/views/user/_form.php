@@ -29,6 +29,8 @@ $isTeacher = Users::isCurrentUserTeacher();
 
             <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
+            <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
+
             <?= $form->field($model, 'password')->passwordInput(['maxlength' => true, 'value' => ""]) ?>
 
             <?php if (!$isTeacher) {
