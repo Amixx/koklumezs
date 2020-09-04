@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="lectures-index">
     <div class="LectureOverview__Section LectureOverview__Section--new">
         <h3><?= \Yii::t('app', 'New lessons') ?></h3>
-        <h4 style="float:right; margin-top:-32px; cursor:pointer;">
+        <h4 class="LectureOverview__LinkToAll">
             <a><?= Html::a(\Yii::t('app', 'All new lessons'), ['?type=new']) ?></a>
         </h4>
         <?php if (count($newLectures) == 0) { ?>
@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="LectureOverview__Section LectureOverview__Section--favourite">
         <h3> <?= \Yii::t('app',  'Lessons I\'m still learning') ?></h3>
-        <h4 style="float:right; margin-top:-32px; cursor:pointer;">
+        <h4 class="LectureOverview__LinkToAll">
             <a><?= Html::a(\Yii::t('app', 'All lessons I\'m still learning'), ['?type=learning']) ?></a>
         </h4>
         <?php if (count($stillLearningLectures) == 0) { ?>
@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="LectureOverview__Section LectureOverview__Section--learning">
         <h3><?= \Yii::t('app',  'Favourite lessons') ?></h3>
-        <h4 style="float:right; margin-top:-32px; cursor:pointer;">
+        <h4 class="LectureOverview__LinkToAll">
             <a><?= Html::a(\Yii::t('app', 'All favourite lessons'), ['?type=favourite']) ?></a>
         </h4>
         <?php if (count($favouriteLectures) == 0) { ?>

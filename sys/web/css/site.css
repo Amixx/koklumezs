@@ -410,3 +410,14 @@ background: rgba(0,0,0,0.1);
 .LectureOverview__EmptyText {
     margin-bottom:200px;
 }
+
+.LectureOverview__LinkToAll {
+    float:right; margin-top:-32px; cursor:pointer;
+}
+
+
+@media (max-width: 767px) {
+ .LectureOverview__LinkToAll {
+        float:none; margin-top:0;
+    }   
+}
