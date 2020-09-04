@@ -53,7 +53,7 @@ class Difficulties extends \yii\db\ActiveRecord
         return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'name');
     }
 
-    public function getDifficultiesForSchool()
+    public function getDifficultiesForSchool($schoolId)
     {
         return ArrayHelper::map(self::find()->where(['school_id' => $schoolId])->asArray()->all(), 'id', 'name');
     }

@@ -127,14 +127,25 @@ class LecturesController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Lectures model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate()
     {
-        $difficulties = Difficulties::getDifficulties();
+        $isGuest = Yii::$app->user->isGuest;
+        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
+        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
+
+        $school = null;
+        if ($isTeacher) {
+            $school = School::getByTeacher(Yii::$app->user->identity->id);
+        } else if ($isStudent) {
+            $school = School::getByStudent(Yii::$app->user->identity->id);
+        }
+        Yii::$app->view->params['school'] = $school;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
+        }
+
+        $difficulties = Difficulties::getDifficultiesForSchool($school->id);
         $handdifficulties = Handdifficulties::getDifficulties();
         $evaluations = Evaluations::getEvaluations();
         $lectures = Lectures::getLectures();
@@ -193,21 +204,6 @@ class LecturesController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         return $this->render('create', [
             'model' => $model,
             'difficulties' => $difficulties,
