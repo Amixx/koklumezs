@@ -29,13 +29,13 @@ class School extends \yii\db\ActiveRecord
 
     public function getByTeacher($teacherId)
     {
-        $schoolId = SchoolTeacher::getSchoolTeacher($teacherId);
+        $schoolId = SchoolTeacher::getSchoolTeacher($teacherId)->school_id;
         return self::findOne(['id' => $schoolId]);
     }
 
     public function getByStudent($studentId)
     {
-        $schoolId = SchoolStudent::getSchoolStudent($studentId);
+        $schoolId = SchoolStudent::getSchoolStudent($studentId)->school_id;
         return self::findOne(['id' => $schoolId]);
     }
 

@@ -87,9 +87,5 @@ class TestController extends Controller
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
-
-
-        // var_dump(Difficulties::getDifficultiesForSchool($school->id));
-        var_dump($school->id);
     }
 }
