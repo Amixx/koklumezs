@@ -66,7 +66,7 @@ class Lectures extends \yii\db\ActiveRecord
     public function getComplexity()
     {
         $complex = [];
-        for ($x = 1; $x <= 50; $x++) {
+        for ($x = 1; $x <= 101; $x++) {
             $complex[$x] = $x;
         }
         return $complex;
