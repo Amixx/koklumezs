@@ -27,9 +27,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <!-- <?php if ($filterSubTypes) { ?>
         <div class="col-sm-3">Abonementa veids/i: <?= $subscriptionTypeText ?></div>
     <?php } ?> -->
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
         <?= $currentUserIndex + 1 ?>/<?= $userCount ?>
-    </div>
+    </div> -->
 </div>
 <div style="min-height: 50px;">
     <?php
@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </span>
     <?php } ?>
 
-    <h1 style="display:inline"><?= $this->title . " (<span class='text-" . $subscriptionTypeClassSuffix . "'>" . $subscriptionTypeText . "</span>)" ?></h1>
+    <h1 style="display:inline"><span>(<?= $currentUserIndex + 1 ?>/<?= $userCount ?>)</span> <?= $this->title . " (<span class='text-" . $subscriptionTypeClassSuffix . "'>" . $subscriptionTypeText . "</span>)" ?></h1>
 
     <?php
     if ($nextUserId) { ?>
