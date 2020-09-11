@@ -238,4 +238,6 @@ return [
     'Video size' => 'Video apjoms',
     'stars' => 'zvaigznes',
     'text' => 'teksts',
+    'Global files' => 'Globāli faili',
+    'My files' => 'Mani faili'
 ];

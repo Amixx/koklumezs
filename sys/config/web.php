@@ -78,13 +78,13 @@ $config = [
                     'baseUrl' => '@web',
                     'basePath' => '@webroot',
                     'path' => 'files/global',
-                    'name' => 'Global'
+                    'name' => Yii::t('app', 'Global files')
                 ],
-                // [
-                //     'class' => 'mihaildev\elfinder\volume\UserPath',
-                //     'path'  => 'files/user_{id}',
-                //     'name'  => 'My Documents'
-                // ],
+                [
+                    'class' => 'mihaildev\elfinder\volume\UserPath',
+                    'path'  => 'files/user_{id}',
+                    'name'  =>  Yii::t('app', 'My files')
+                ],
                 // [
                 //     'path' => 'files/some',
                 //     'name' => ['category' => 'my','message' => 'Some Name'] //перевод Yii::t($category, $message)
