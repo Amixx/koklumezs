@@ -55,17 +55,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                 'buttonOptions' => ['class' => 'btn btn-default'],
                 'multiple' => false, // возможность выбора нескольких файлов
             ]); ?>
-            <?= $form->field($model, 'thumb')->widget(InputFile::className(), [
-                'language' => 'lv',
-                'controller' => 'elfinder', // вставляем название контроллера, по умолчанию равен elfinder
-                'filter' => ['image'], // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
-                'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
-                'options' => ['class' => 'form-control'],
-                'buttonOptions' => ['class' => 'btn btn-default'],
-                'multiple' => false, // возможность выбора нескольких файлов
-            ]); ?>
             <small><?= \Yii::t('app', 'If you need to add more files, go to section "Files"') ?></small><br /><br />
-            <?= $form->field($model, 'season')->dropDownList(Lectures::getSeasons()) ?>
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
             <?php if ($difficulties) {  ?>
