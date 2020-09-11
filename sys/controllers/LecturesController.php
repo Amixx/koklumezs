@@ -214,7 +214,7 @@ class LecturesController extends Controller
                     $relation->save();
                 }
             }
-            // return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [

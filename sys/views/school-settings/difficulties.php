@@ -50,16 +50,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                     if ($action === 'view') {
-                        $url = '/difficulties/view/' . $model['id'];
+                        $url = '/sys/difficulties/view/' . $model['id'];
                         return $url;
                     }
 
                     if ($action === 'update') {
-                        $url = '/difficulties/update/' . $model['id'];
+                        $url = '/sys/difficulties/update/' . $model['id'];
                         return $url;
                     }
                     if ($action === 'delete') {
-                        $url = '/difficulties/delete/' . $model['id'];
+                        $url = '/sys/difficulties/delete/' . $model['id'];
                         return $url;
                     }
                 }
