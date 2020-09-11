@@ -200,13 +200,11 @@ class LecturesController extends Controller
                     $handdifficulty->save();
                 }
             }
-            if (isset($post['evaluations'])) {
-                foreach ($post['evaluations'] as $eid => $value) {
-                    $evaluation = new Lecturesevaluations();
-                    $evaluation->evaluation_id = $eid;
-                    $evaluation->lecture_id = $model->id;
-                    $evaluation->save();
-                }
+            foreach ($evaluations as $eval) {
+                $evaluation = new Lecturesevaluations();
+                $evaluation->evaluation_id = (int) $eval['id'];
+                $evaluation->lecture_id = $model->id;
+                $evaluation->save();
             }
             if (isset($post['relatedLectures'])) {
                 foreach ($post['relatedLectures'] as $rid) {
@@ -216,7 +214,7 @@ class LecturesController extends Controller
                     $relation->save();
                 }
             }
-            return $this->redirect(['view', 'id' => $model->id]);
+            // return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [

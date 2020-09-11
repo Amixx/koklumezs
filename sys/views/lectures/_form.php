@@ -30,9 +30,9 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
         <li class="nav-item">
             <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false"><?= \Yii::t('app', 'Parameters') ?></a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link" id="evaluations-tab" data-toggle="tab" href="#evaluations" role="tab" aria-controls="evaluations" aria-selected="false"><?= \Yii::t('app', 'Evaluations') ?></a>
-        </li>
+        </li> -->
         <li class="nav-item">
             <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false"><?= \Yii::t('app', 'Files') ?></a>
         </li>
@@ -62,11 +62,11 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                 <?= $this->render('difficulties', ['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>
             <?php } ?>
         </div>
-        <div class="tab-pane fade" id="evaluations" role="tabpanel" aria-labelledby="evaluations-tab">
+        <!-- <div class="tab-pane fade" id="evaluations" role="tabpanel" aria-labelledby="evaluations-tab">
             <?php if ($evaluations) {  ?>
                 <?= $this->render('evaluations', ['evaluations' => $evaluations, 'lectureEvaluations' => $lectureEvaluations]) ?>
             <?php } ?>
-        </div>
+        </div> -->
         <div class="tab-pane fade" id="files" role="tabpanel" aria-labelledby="files-tab">
             <?php $link = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/create', 'lecture_id' => $model->id]) ?>
             <?= $this->render('files', ['lecturefiles' => $lecturefiles, 'link' => $link]) ?>

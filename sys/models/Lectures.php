@@ -21,8 +21,8 @@ class Lectures extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'author',  'season'], 'required'], //'complexity',
-            [['title', 'description', 'season', 'file', 'thumb'], 'string'],
+            [['title', 'author'], 'required'], //'complexity',
+            [['title', 'description', 'file'], 'string'],
             [['created', 'updated'], 'safe'],
             [['author', 'complexity'], 'integer'],
             [['author'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['author' => 'id']],

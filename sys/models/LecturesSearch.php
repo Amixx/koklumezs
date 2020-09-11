@@ -19,7 +19,7 @@ class LecturesSearch extends Lectures
     {
         return [
             [['id', 'author'], 'integer'],
-            [['title', 'description', 'created', 'updated', 'complexity', 'author','users','season'], 'safe'],
+            [['title', 'description', 'created', 'updated', 'complexity', 'author', 'users'], 'safe'],
         ];
     }
 
@@ -51,7 +51,7 @@ class LecturesSearch extends Lectures
 
         //relations
         $query->joinWith(['users']);
-        
+
         $dataProvider->sort->attributes['users'] = [
             // The tables are the ones our relation are configured to
             'asc' => ['u2.email' => SORT_ASC],
@@ -70,14 +70,13 @@ class LecturesSearch extends Lectures
         $query->andFilterWhere([
             'id' => $this->id,
             'author' => $this->author,
-            'season' => $this->season,
             'complexity' => $this->complexity
         ]);
         $query->andFilterWhere(
             ['like', 'u2.email', $this->users]
         );
         $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'description', $this->description])           
+            ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'created', $this->created])
             ->andFilterWhere(['like', 'updated', $this->updated]);
 

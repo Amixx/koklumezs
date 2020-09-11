@@ -63,7 +63,7 @@ class Evaluations extends \yii\db\ActiveRecord
      */
     public function getEvaluations()
     {
-        return self::find()->where(['!=', 'id', 5])->asArray()->all();
+        return self::find()->where(['not like', 'id', [3, 5]])->asArray()->all();
     }
 
 
