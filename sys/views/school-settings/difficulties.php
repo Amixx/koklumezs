@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h2><?= Html::encode($this->title) ?></h2>
 
     <p>
-        <?= Html::a(\Yii::t('app', 'Create parameter'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(\Yii::t('app', 'Create parameter'), ['/difficulties/create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -23,7 +23,47 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'name',
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-eye-open"> </span>',
+                            $url,
+                            ['title' => 'View', 'data-pjax' => '0']
+                        );
+                    },
+                    'update' => function ($url, $model) {
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-pencil"> </span>',
+                            $url,
+                            ['title' => 'Update', 'data-pjax' => '0']
+                        );
+                    },
+                    'delete' => function ($url, $model) {
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-trash"> </span>',
+                            $url,
+                            ['title' => 'Delete', 'data-pjax' => '0']
+                        );
+                    },
+                ],
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    if ($action === 'view') {
+                        $url = '/difficulties/view/' . $model['id'];
+                        return $url;
+                    }
+
+                    if ($action === 'update') {
+                        $url = '/difficulties/update/' . $model['id'];
+                        return $url;
+                    }
+                    if ($action === 'delete') {
+                        $url = '/difficulties/delete/' . $model['id'];
+                        return $url;
+                    }
+                }
+            ],
         ],
     ]); ?>
 
