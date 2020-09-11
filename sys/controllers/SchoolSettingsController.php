@@ -12,6 +12,9 @@ use yii\base\Event;
 use yii\web\View;
 use app\models\SchoolStudent;
 use app\models\CommentResponses;
+use app\models\Difficulties;
+use app\models\DifficultiesSearch;
+use yii\data\ActiveDataProvider;
 
 class SchoolSettingsController extends Controller
 {
@@ -62,8 +65,12 @@ class SchoolSettingsController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $settings = School::getSettings(Yii::$app->user->identity->id);
+        $difficultiesDataProvider = new ActiveDataProvider([
+            'query' => Difficulties::find()->where(['school_id' => $school->id]),
+        ]);
         return $this->render('index', [
             'settings' => $settings,
+            'difficultiesDataProvider' => $difficultiesDataProvider
         ]);
     }
 

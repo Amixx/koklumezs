@@ -27,8 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             'first_name',
             'last_name',
-            'phone_number',
-            'email:email',
+            // 'phone_number',
+            // 'email:email',
             'username',
             [
                 'attribute' => 'user_level',
@@ -48,14 +48,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'filter' => Html::dropDownList('UserSearch[user_level]', isset($get['UserSearch']['user_level']) ? $get['UserSearch']['user_level'] : '', app\models\Users::getLevels(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
-            [
-                'attribute' => 'language',
-                'format' => 'raw',
-                'value' => function ($dataProvider) {
-                    return $dataProvider->language == 'lv' ? \Yii::t('app',  'Latvian') : \Yii::t('app',  'English');
-                },
-                'filter' => Html::dropDownList('UserSearch[language]', isset($get['UserSearch']['language']) ? $get['UserSearch']['language'] : '', app\models\Users::getLanguages(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
-            ],
+            // [
+            //     'attribute' => 'language',
+            //     'format' => 'raw',
+            //     'value' => function ($dataProvider) {
+            //         return $dataProvider->language == 'lv' ? \Yii::t('app',  'Latvian') : \Yii::t('app',  'English');
+            //     },
+            //     'filter' => Html::dropDownList('UserSearch[language]', isset($get['UserSearch']['language']) ? $get['UserSearch']['language'] : '', app\models\Users::getLanguages(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+            // ],
             [
                 'attribute' => 'subscription_type',
                 'format' => 'raw',
@@ -95,12 +95,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]),
                 'format' => ['date', 'php:Y-m-d H:i:s']
             ],
-            [
-                'attribute' => 'last_lecture',
-                'format' => 'raw',
-                'value' => 'lecture.title',
-                'filter' => Html::dropDownList('UserSearch[last_lecture]', isset($get['UserSearch']['last_lecture']) ? $get['UserSearch']['last_lecture'] : '', $lectures, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
-            ],
+            // [
+            //     'attribute' => 'last_lecture',
+            //     'format' => 'raw',
+            //     'value' => 'lecture.title',
+            //     'filter' => Html::dropDownList('UserSearch[last_lecture]', isset($get['UserSearch']['last_lecture']) ? $get['UserSearch']['last_lecture'] : '', $lectures, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+            // ],
             [
                 'attribute' => 'dont_bother',
                 'value' => 'dont_bother',
@@ -112,11 +112,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]),
                 'format' => ['date', 'php:Y-m-d H:i:s']
             ],
-            [
-                'attribute' => 'allowed_to_download_files',
-                'value' => 'allowed_to_download_files',
-                'filter' => Html::dropDownList('UserSearch[allowed_to_download_files]', isset($get['UserSearch']['allowed_to_download_files']) ? $get['UserSearch']['allowed_to_download_files'] : '', [0 => \Yii::t('app',  'No'), 1 => \Yii::t('app',  'Yes')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
-            ],
+            // [
+            //     'attribute' => 'allowed_to_download_files',
+            //     'value' => 'allowed_to_download_files',
+            //     'filter' => Html::dropDownList('UserSearch[allowed_to_download_files]', isset($get['UserSearch']['allowed_to_download_files']) ? $get['UserSearch']['allowed_to_download_files'] : '', [0 => \Yii::t('app',  'No'), 1 => \Yii::t('app',  'Yes')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+            // ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

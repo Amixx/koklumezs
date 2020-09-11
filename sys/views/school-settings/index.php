@@ -31,4 +31,8 @@ $this->params['breadcrumbs'][] = $this->title;
         </tr>
     </table>
     <?= Html::a(\Yii::t('app',  'Edit'), ['update'], ['class' => 'btn btn-primary']) ?>
+
+    <?= $this->render("difficulties", [
+        'dataProvider' => $difficultiesDataProvider
+    ]) ?>
 </div>
