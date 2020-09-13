@@ -17,9 +17,9 @@ if ($hasFiles) {
             }
         }
 ?>
-    <?= isset($file['thumb']) && $file['thumb'] ? $file['thumb'] : $baseUrl . '/files/cover.jpg' ?>
+    <?= isset($file['thumb']) && $file['thumb'] ? $file['thumb'] : "" ?>
 <?php break;
     }
 } else {
-    echo isset($file['thumb']) && $file['thumb'] ? $file['thumb'] : $baseUrl . '/files/cover.jpg';
+    echo isset($file['thumb']) && $file['thumb'] ? $file['thumb'] : "";
 }

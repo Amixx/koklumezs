@@ -239,5 +239,7 @@ return [
     'stars' => 'zvaigznes',
     'text' => 'teksts',
     'Global files' => 'Globāli faili',
-    'My files' => 'Mani faili'
+    'My files' => 'Mani faili',
+    'Page background image' => 'Lapas fona attēls',
+    'Video thumbnail' => 'Video attēls'
 ];

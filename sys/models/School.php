@@ -24,6 +24,8 @@ class School extends \yii\db\ActiveRecord
             'id' => 'ID',
             'instrument' => \Yii::t('app',  'Instrument'),
             'created' => \Yii::t('app',  'Creation date'),
+            'background_image' => \Yii::t('app',  'Page background image'),
+            'video_thumbnail' => \Yii::t('app',  'Video thumbnail'),
         ];
     }
 
@@ -42,7 +44,16 @@ class School extends \yii\db\ActiveRecord
     public function getSettings($teacherId)
     {
         $school = self::getByTeacher($teacherId);
-        return [\Yii::t('app',  'School background image') => $school->background_image];
+        return [
+            \Yii::t('app',  'School background image') => $school->background_image,
+            \Yii::t('app',  'Video thumbnail') => $school->video_thumbnail,
+        ];
+    }
+
+    public function getVideoThumb($studentId)
+    {
+        $school = self::getByStudent($studentId);
+        return $school->video_thumbnail;
     }
 
     // public function getTeachers()

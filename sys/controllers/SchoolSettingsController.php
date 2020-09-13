@@ -103,7 +103,13 @@ class SchoolSettingsController extends Controller
         $post = Yii::$app->request->post();
         if (isset($post) && count($post) > 0) {
             $model = School::getByTeacher(Yii::$app->user->identity->id);
-            $model->background_image = $post["School"]["background_image"];
+            if ($post["School"]["background_image"]) {
+                $model->background_image = $post["School"]["background_image"];
+            }
+            if ($post["School"]["video_thumbnail"]) {
+                $model->video_thumbnail = $post["School"]["video_thumbnail"];
+            }
+
             $saved = $model->save();
             if ($saved) {
                 Yii::$app->session->setFlash('success', 'Izmaiņas saglabātas!');

@@ -85,6 +85,9 @@ class LekcijasController extends Controller
         $pages = [];
         $user = Yii::$app->user->identity;
         // $modelsIds = UserLectures::getUserLectures($user->id);
+
+        $videoThumb = School::getVideoThumb(Yii::$app->user->identity->id);
+
         if ($type) {
             $modelsIds = UserLectures::getLecturesOfType($user->id, $type);
             if ($modelsIds) {
@@ -106,6 +109,8 @@ class LekcijasController extends Controller
                 $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
                 $baseUrl = Yii::$app->request->baseUrl;
 
+
+
                 return $this->render('index', [
                     'models' => $models,
                     'type' => $type,
@@ -113,7 +118,8 @@ class LekcijasController extends Controller
                     'pages' => $pages,
                     'userLectureEvaluations' => $userLectureEvaluations,
                     'baseUrl' => $baseUrl,
-                    'videos' => self::VIDEOS
+                    'videos' => self::VIDEOS,
+                    'videoThumb' => $videoThumb
                 ]);
             }
         } else {
@@ -136,7 +142,8 @@ class LekcijasController extends Controller
                 'pages' => $pages,
                 'userLectureEvaluations' => $userLectureEvaluations,
                 'baseUrl' => $baseUrl,
-                'videos' => self::VIDEOS
+                'videos' => self::VIDEOS,
+                'videoThumb' => $videoThumb
             ]);
         }
 
@@ -178,6 +185,9 @@ class LekcijasController extends Controller
         if (Yii::$app->user->identity->user_level == 'Student') {
             $uLecture = UserLectures::findOne(['user_id' => $user->id, 'lecture_id' => $id]);
         }
+
+        $videoThumb = School::getVideoThumb(Yii::$app->user->identity->id);
+
         $dbg = Yii::$app->request->get('dbg');
         $force = Yii::$app->request->get('force');
         if ($dbg) {
@@ -437,7 +447,8 @@ class LekcijasController extends Controller
                 'difficultiesVisible' => $difficultiesVisible,
                 'comments' => $userComments,
                 'uLecture' => $uLecture,
-                'userCanDownloadFiles' => $userCanDownloadFiles
+                'userCanDownloadFiles' => $userCanDownloadFiles,
+                'videoThumb' => $videoThumb
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');

@@ -27,6 +27,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => 'evalua.title',
                 'filter' => Html::dropDownList('UserlectureevaluationsSearch[evaluation_id]', isset($get['UserlectureevaluationsSearch']['evaluation_id']) ? $get['UserlectureevaluationsSearch']['evaluation_id'] : '', $evaluations, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'content' => function ($data) {
+                    return Yii::t('app', $data["evalua"]["title"]);
+                }
             ],
             [
                 'attribute' => 'user_id',
