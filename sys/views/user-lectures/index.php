@@ -33,13 +33,13 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'user_id',
                 'format' => 'raw',
-                'value' => 'student.email',
+                'value' => 'student.username',
                 'filter' => Html::dropDownList('UserLecturesSearch[user_id]', isset($get['UserLecturesSearch']['user_id']) ? $get['UserLecturesSearch']['user_id'] : '', $students, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
                 'attribute' => 'assigned',
                 'format' => 'raw',
-                'value' => 'admin.email',
+                'value' => 'admin.username',
                 'filter' => Html::dropDownList('UserLecturesSearch[assigned]', isset($get['UserLecturesSearch']['assigned']) ? $get['UserLecturesSearch']['assigned'] : '', $admins, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [

@@ -34,7 +34,7 @@ class UserController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
+                            return Users::isAdminOrTeacher(Yii::$app->user->identity->username);
                         }
                     ],
                     // everything else is denied
@@ -67,7 +67,7 @@ class UserController extends Controller
         }
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $get = Yii::$app->request->queryParams;
@@ -102,7 +102,7 @@ class UserController extends Controller
         }
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         return $this->render('view', [
@@ -129,16 +129,16 @@ class UserController extends Controller
         }
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = new Users();
         $difficulties = Difficulties::getDifficulties();
         $handdifficulties = Handdifficulties::getDifficulties();
         $post = Yii::$app->request->post();
-        $currentUserEmail = Yii::$app->user->identity->email;
-        $currentUser = Users::getByEmail($currentUserEmail);
-        $isCurrentUserTeacher = Users::isTeacher($currentUserEmail);
+        $currentUserUsername = Yii::$app->user->identity->username;
+        $currentUser = Users::getByUsername($currentUserUsername);
+        $isCurrentUserTeacher = Users::isTeacher($currentUserUsername);
 
         if ($model->load($post)) {
             $isNewUserTeacher = isset($post['Users']['user_level']) && $post['Users']['user_level'] == 'Teacher';
@@ -209,7 +209,7 @@ class UserController extends Controller
         }
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = $this->findModel($id);
@@ -295,7 +295,7 @@ class UserController extends Controller
         }
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $this->findModel($id)->delete();

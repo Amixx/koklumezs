@@ -31,7 +31,7 @@ class SentlecturesController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
+                            return Users::isAdminOrTeacher(Yii::$app->user->identity->username);
                         },
                     ],
                     // everything else is denied
@@ -64,7 +64,7 @@ class SentlecturesController extends Controller
         }
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $searchModel = new SentlecturesSearch();
@@ -101,7 +101,7 @@ class SentlecturesController extends Controller
         }
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         return $this->render('view', [
@@ -128,7 +128,7 @@ class SentlecturesController extends Controller
         }
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = new Sentlectures();
@@ -163,7 +163,7 @@ class SentlecturesController extends Controller
         }
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = $this->findModel($id);
@@ -198,7 +198,7 @@ class SentlecturesController extends Controller
         }
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $this->findModel($id)->delete();

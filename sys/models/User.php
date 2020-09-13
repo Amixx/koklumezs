@@ -30,15 +30,16 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_PASSIVE]],
-            [['email'], 'required'],
+            [['username'], 'required'],
             [['user_level'], 'string'],
             ['user_level', 'default', 'value' => self::ROLE_USER],
             ['user_level', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN, self::ROLE_TEACHER]],
             [['email'], 'email'],
-            [['email'], 'unique'],
+            [['username'], 'unique'],
             [['phone_number'], 'string', 'max' => 30],
             [['password', 'first_name', 'last_name'], 'string', 'max' => 250],
             [['email'], 'string', 'max' => 500],
+            [['username'], 'string', 'max' => 500],
         ];
     }
 
@@ -96,6 +97,19 @@ class User extends ActiveRecord implements IdentityInterface
         $user = self::find()
             ->where([
                 "email" => $email,
+            ])
+            ->one();
+        if (empty($user)) {
+            return null;
+        }
+        return new static($user);
+    }
+
+    public static function findByUsername($username)
+    {
+        $user = self::find()
+            ->where([
+                "username" => $username,
             ])
             ->one();
         if (empty($user)) {
@@ -232,27 +246,27 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password = Yii::$app->security->generatePasswordHash($password);
     }
 
-    public static function isUserAdmin($email)
+    public static function isUserAdmin($username)
     {
-        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN])) {
+        if (static::findOne(['username' => $username, 'user_level' => self::ROLE_ADMIN])) {
             return true;
         } else {
             return false;
         }
     }
 
-    public static function isStudent($email)
+    public static function isStudent($username)
     {
-        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_USER])) {
+        if (static::findOne(['username' => $username, 'user_level' => self::ROLE_USER])) {
             return true;
         } else {
             return false;
         }
     }
 
-    public static function isTeacher($email)
+    public static function isTeacher($username)
     {
-        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER])) {
+        if (static::findOne(['username' => $username, 'user_level' => self::ROLE_TEACHER])) {
             return true;
         } else {
             return false;

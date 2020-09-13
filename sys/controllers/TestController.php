@@ -41,7 +41,7 @@ class TestController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
+                            return Users::isAdminOrTeacher(Yii::$app->user->identity->username);
                         },
                     ],
                     // everything else is denied
@@ -85,7 +85,7 @@ class TestController extends Controller
         }
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
@@ -107,6 +107,15 @@ class TestController extends Controller
         //     $lecture['complexity'] = $newComplexity;
         // //     echo $lecture->update();
         //     echo "<br>";
+        // }
+
+        // $users = Users::find()->asArray()->all();
+        // foreach ($users as $user) {
+        //     if ($user['username'] == null) {
+        //         $newUser = Users::findOne(['id', $user['id']]);
+        //         $newUser['username'] = $user['email'];
+        // //         echo $newUser->update();
+        //     }
         // }
     }
 }

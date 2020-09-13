@@ -17,7 +17,7 @@ if ($user['subscription_type'] == 'free') {
     $subscriptionTypeClassSuffix = "warning";
 }
 
-$this->title = $user['email'];
+$this->title = $user['username'];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">

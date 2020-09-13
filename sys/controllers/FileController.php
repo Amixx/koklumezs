@@ -44,7 +44,7 @@ class FileController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return !empty(Yii::$app->user->identity); //Users::isStudent(Yii::$app->user->identity->email);
+                            return !empty(Yii::$app->user->identity); //Users::isStudent(Yii::$app->user->identity->username);
                         },
                     ],
                     // everything else is denied
@@ -72,7 +72,7 @@ class FileController extends Controller
         }
         Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $user = Yii::$app->user->identity;

@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'user_id',
                 'format' => 'raw',
-                'value' => 'student.email',
+                'value' => 'student.username',
                 'filter' => Html::dropDownList('SentlecturesSearch[user_id]', isset($get['SentlecturesSearch']['user_id']) ? $get['SentlecturesSearch']['user_id'] : '', $students, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
             [
