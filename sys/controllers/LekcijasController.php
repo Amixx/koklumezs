@@ -326,74 +326,15 @@ class LekcijasController extends Controller
                 array_push($difficultiesEng, $engName);
             }
             $evaluations = Evaluations::getEvaluations();
-            function toEng($starText)
-            {
-                $engText = "";
-                switch ($starText) {
-                    case "Viss tik viegls, ka garlaicīgi":
-                        $engText = "Super easy, boring";
-                        break;
-                    case "Ļoti ļoti viegli, noteikti vajag grūtāk":
-                        $engText = "Very easy";
-                        break;
-                    case "Izspēlēju vienu reizi un jau viss skaidrs":
-                        $engText = "Easy";
-                        break;
-                    case "Diezgan vienkārši":
-                        $engText = "Quite easy";
-                        break;
-                    case "Nācās pastrādāt, bet tiku galā bez milzīgas piepūles":
-                        $engText = "Doable";
-                        break;
-                    case "Tiku galā":
-                        $engText = "Perfect";
-                        break;
-                    case "Diezgan grūti":
-                        $engText = "Challenging";
-                        break;
-                    case "Itkā saprotu, bet pirksti neklausa":
-                        $engText = "Hard";
-                        break;
-                    case "Kaut ko mēģinu, bet pārāk nesanāk":
-                        $engText = "Very hard";
-                        break;
-                    case "Vispār neko nesaprotu":
-                        $engText = "Impossible";
-                        break;
-
-                    case "Par daudz, vajadzētu mazāk":
-                        $engText = "Too much";
-                        break;
-                    case "Tieši tik daudz ir labi":
-                        $engText = "Perfect amount";
-                        break;
-                    case "Par maz, vajadzētu vairāk":
-                        $engText = "Too little";
-                        break;
-
-                    case "Vajadzētu mazāk, bija par daudz":
-                        $engText = "Too much";
-                        break;
-                    case "Ideāli, tā turpināt":
-                        $engText = "Perfect amount";
-                        break;
-                    case "Bija par maz, dodiet uz nākamo reizi vairāk":
-                        $engText = "Too little";
-                        break;
-                }
-
-                return $engText;
-            };
             foreach ($evaluations as &$evaluation) {
                 if ($evaluation['star_text']) {
                     $starTextArray = unserialize($evaluation['star_text']);
                     foreach ($starTextArray as &$starText) {
-                        $starText = $starText . "/" . toEng($starText);
+                        $starText = Yii::t('app', $starText);
                     };
                     $evaluation['star_text'] = serialize($starTextArray);
                 }
             }
-            //$handdifficulties = Handdifficulties::getDifficulties();
             $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
             $lectureHandDifficulties = Lectureshanddifficulties::getLectureDifficulties($id);
             $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);

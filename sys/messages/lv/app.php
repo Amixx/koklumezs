@@ -15,7 +15,7 @@
  * Message string can be used with plural forms format. Check i18n section
  * of the guide for details.
  *
- * NOTE: this file must be saved in UTF-8 encoding.
+ * NOTE this file must be saved in UTF-8 encoding.
  */
 return [
     'Abilities' => 'Spējas',
@@ -241,5 +241,19 @@ return [
     'Global files' => 'Globāli faili',
     'My files' => 'Mani faili',
     'Page background image' => 'Lapas fona attēls',
-    'Video thumbnail' => 'Video attēls'
+    'Video thumbnail' => 'Video attēls',
+    "Super easy, boring" => "Viss tik viegls, ka garlaicīgi",
+    "Very easy" => "Ļoti ļoti viegli, noteikti vajag grūtāk",
+    "Easy" => "Izspēlēju vienu reizi un jau viss skaidrs",
+    "Quite easy" => "Diezgan vienkārši",
+    "Doable" => "Nācās pastrādāt, bet tiku galā bez milzīgas piepūles",
+    "Perfect" => "Tiku galā",
+    "Challenging" => "Diezgan grūti",
+    "Hard" => "Itkā saprotu, bet pirksti neklausa",
+    "Very hard" => "Kaut ko mēģinu, bet pārāk nesanāk",
+    "Impossible" => "Vispār neko nesaprotu",
+    "Too much" => "Par daudz, vajadzētu mazāk",
+    "Perfect amount" => "Tieši tik daudz ir labi",
+    "Too little" => "Par maz, vajadzētu vairāk",
+    "Perfect amount" => "Ideāli, tā turpināt"
 ];
