@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = $model->title;
 
         <?php } ?>
         <?php if ($difficulties and $lectureDifficulties and $difficultiesVisible) { ?>
-            <?= $this->render('difficulties', ['difficulties' => $difficulties, 'difficultiesEng' => $difficultiesEng, 'lectureDifficulties' => $lectureDifficulties]) ?>
+            <?= $this->render('difficulties', ['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>
         <?php } ?>
         <?php if ($comments) { ?>
             <?= $this->render('comments', ['comments' => $comments]); ?>

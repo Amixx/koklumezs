@@ -295,36 +295,6 @@ class LekcijasController extends Controller
                 UserLectures::setSeenByUser($user->id, $id);
             }
             $difficulties = Difficulties::getDifficulties();
-            $difficultiesEng = array();
-            foreach ($difficulties as $name) {
-                $engName = "";
-                switch ($name) {
-                    case "Ritms":
-                        $engName = "rhythm";
-                        break;
-
-                    case "Labā roka":
-                        $engName = "right hand";
-                        break;
-
-                    case "Kreisā roka":
-                        $engName = "left hand";
-                        break;
-
-                    case "Akordu maiņas biežums":
-                        $engName = "chord change frequency";
-                        break;
-
-                    case "Akordi":
-                        $engName = "chords";
-                        break;
-
-                    default:
-                        break;
-                }
-
-                array_push($difficultiesEng, $engName);
-            }
             $evaluations = Evaluations::getEvaluations();
             foreach ($evaluations as &$evaluation) {
                 if ($evaluation['star_text']) {
@@ -370,7 +340,6 @@ class LekcijasController extends Controller
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,
-                'difficultiesEng' => $difficultiesEng,
                 'evaluations' => $evaluations,
                 'lectureDifficulties' => $lectureDifficulties,
                 'lectureHandDifficulties' => $lectureHandDifficulties,

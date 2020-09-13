@@ -20,7 +20,7 @@ foreach ($difficulties as $id => $name) {
         }
     ?>
         <div class="col-md-3 text-center">
-            <?= \Yii::t('app',  $name) ?>/<?= ucfirst($difficultiesEng[$id - 1]) ?>: <?= $lectureDifficulties[$id] ?>
+            <?= \Yii::t('app',  $name) ?>: <?= $lectureDifficulties[$id] ?>
         </div>
     <?php } ?>
 </div>
