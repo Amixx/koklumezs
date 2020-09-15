@@ -50,9 +50,16 @@ class School extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getVideoThumb($studentId)
+    public function getVideoThumb($userId)
     {
-        $school = self::getByStudent($studentId);
+        $isTeacher = Users::isCurrentUserTeacher();
+        $school = null;
+        if ($isTeacher) {
+            $school = self::getByTeacher($userId);
+        } else {
+            $school = self::getByStudent($userId);
+        }
+
         return $school->video_thumbnail;
     }
 

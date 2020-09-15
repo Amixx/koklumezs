@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $model->title;
         </h2>
 
         <?php if ($model->file) { ?>
-            <?= $this->render('video', ['lecturefiles' => [0 => ['title' => $model->title, 'file' => $model->file, 'thumb' => $model->thumb ?? '']], 'videos' => $videos, 'baseUrl' => $baseUrl]); ?>
+            <?= $this->render('video', ['lecturefiles' => [0 => ['title' => $model->title, 'file' => $model->file]], 'videos' => $videos, 'baseUrl' => $baseUrl, 'thumbnail' => $videoThumb ?? '']); ?>
         <?php } ?>
         <?php if ($model->file && $userCanDownloadFiles && SectionsVisible::isVisible("Video lejupielādes poga")) { ?>
             <a href="<?= $model->file ?> " target="_blank" download><?= \Yii::t('app',  'Download lesson video file') ?></a>
