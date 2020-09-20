@@ -40,9 +40,6 @@ class TestController extends Controller
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
-                            return Users::isAdminOrTeacher(Yii::$app->user->identity->username);
-                        },
                     ],
                     // everything else is denied
                 ],
@@ -117,5 +114,18 @@ class TestController extends Controller
         // //         echo $newUser->update();
         //     }
         // }
+
+        $user = Users::findByUsername(Yii::$app->user->identity->username);
+        $userLectures = UserLectures::find()->where(['user_id' => 220])->asArray()->all();
+        $opentimes = array_map(function ($ulecture) {
+            return $ulecture['opentime'];
+        }, $userLectures);
+        $firstOpenTime = null;
+        foreach ($opentimes as $time) {
+            if ($firstOpenTime == null || ($time !== null && $time < $firstOpenTime)) {
+                $firstOpenTime = $time;
+            }
+        }
+        return $firstOpenTime;
     }
 }

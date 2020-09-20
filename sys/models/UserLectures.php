@@ -277,6 +277,22 @@ class UserLectures extends \yii\db\ActiveRecord
         return self::findOne(['user_id' => $user_id, 'lecture_id' => $lecture_id]);
     }
 
+    public function getFirstOpentime($user_id)
+    {
+        $userLectures = self::find()->where(['user_id' => $user_id])->asArray()->all();
+        $opentimes = array_map(function ($ulecture) {
+            return $ulecture['opentime'];
+        }, $userLectures);
+
+        $firstOpenTime = null;
+        foreach ($opentimes as $time) {
+            if ($firstOpenTime == null || ($time !== null && $time < $firstOpenTime)) {
+                $firstOpenTime = $time;
+            }
+        }
+        return $firstOpenTime;
+    }
+
     /**
      * Sends confirmation email to user
      *

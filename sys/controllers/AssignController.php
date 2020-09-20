@@ -217,8 +217,10 @@ class AssignController extends \yii\web\Controller
         $nextUserId = key_exists($currentUserKey + 1, $userIds) ? $userIds[$currentUserKey + 1] : null;
         $userCount = count($users);
 
-
         $videotexts = unserialize($videoParam->star_text);
+
+        $firstOpenTime = UserLectures::getFirstOpentime($currentUserId);
+
         $options['id'] = $id;
         $options['videoparamtexts'] = $videotexts;
         $options['goalsum'] = $goalsum;
@@ -243,6 +245,8 @@ class AssignController extends \yii\web\Controller
         $options['filterSubTypes'] = isset($filterSubTypes) ? implode(",", $filterSubTypes) : null;
         $options['currentUserIndex'] = $currentUserKey;
         $options['userCount'] = $userCount;
+        $options['firstOpenTime'] = $firstOpenTime;
+
         return $this->render('userlectures', $options);
     }
 }

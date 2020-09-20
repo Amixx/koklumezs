@@ -255,5 +255,7 @@ return [
     'Too much' => 'Par daudz, vajadzētu mazāk',
     'Perfect amount' => 'Tieši tik daudz ir labi',
     'Too little' => 'Par maz, vajadzētu vairāk',
-    'Perfect amount' => 'Ideāli, tā turpināt'
+    'Perfect amount' => 'Ideāli, tā turpināt',
+    'User has not opened any lessons yet' => 'Lietotājs vēl nav atvēris nevienu nodarbību',
+    'First lesson opened' => 'Pirmā nodarbība atvērta'
 ];

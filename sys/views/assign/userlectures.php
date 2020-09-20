@@ -138,6 +138,11 @@ $this->params['breadcrumbs'][] = $this->title;
     </table>
     <!-- <p>Spēles reizes pēdējās 7 dienās: <strong><?= $sevenDayResult ?></strong></p>
     <p>Spēles reizes pēdējās 30 dienās: <strong><?= $thirtyDayResult ?></strong> </p> -->
+    <?php if ($firstOpenTime !== null) { ?>
+        <p><?= \Yii::t('app', 'First lesson opened') ?>: <?= $firstOpenTime ?></p>
+    <?php } else { ?>
+        <p><?= \Yii::t('app', 'User has not opened any lessons yet') ?>!</p>
+    <?php } ?>
     <p><?= \Yii::t('app', 'Abilities now') ?>:<?= isset($goals[$goalsnow]) ? '<strong>' . $goalsum . '</strong>' : '<code>Not set</code>' ?></p>
     <?php if (is_array($PossibleThreeLectures)) {
         $limit = 3;
