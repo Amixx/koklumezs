@@ -19,8 +19,8 @@ class TeacherUserSearch extends Users
     public function rules()
     {
         return [
-            [['id', 'last_lecture'], 'integer'],
-            [['first_name', 'last_name', 'phone_number', 'email', 'language', 'subscription_type', 'status', 'last_login', 'last_lecture', 'dont_bother', 'goal', 'allowed_to_download_files'], 'safe'],
+            [['id'], 'integer'],
+            [['first_name', 'last_name', 'username', 'language', 'subscription_type', 'status', 'last_login', 'dont_bother', 'user_level'], 'safe'],
         ];
     }
 
@@ -75,14 +75,13 @@ class TeacherUserSearch extends Users
 
         $query->andFilterWhere(['like', 'first_name', $this->first_name])
             ->andFilterWhere(['like', 'last_name', $this->last_name])
-            ->andFilterWhere(['like', 'phone_number', $this->phone_number])
-            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'last_name', $this->username])
             ->andFilterWhere(['like', 'language', $this->language])
+            ->andFilterWhere(['like', 'user_level', $this->user_level])
             ->andFilterWhere(['like', 'subscription_type', $this->subscription_type])
             ->andFilterWhere(['like', 'status', $this->status])
             ->andFilterWhere(['like', 'last_login', $this->last_login])
-            ->andFilterWhere(['like', 'dont_bother', $this->dont_bother])
-            ->andFilterWhere(['like', 'allowed_to_download_files', $this->allowed_to_download_files]);
+            ->andFilterWhere(['like', 'dont_bother', $this->dont_bother]);
 
         return $dataProvider;
     }

@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $model->title;
             <a href="<?= $model->file ?> " target="_blank" download><?= \Yii::t('app',  'Download lesson video file') ?></a>
         <?php } ?>
         <?php if ($lecturefiles) { ?>
-            <?= $this->render('video', ['lecturefiles' => $lecturefiles, 'videos' => $videos, 'baseUrl' => $baseUrl]); ?>
+            <?= $this->render('video', ['lecturefiles' => $lecturefiles, 'videos' => $videos, 'baseUrl' => $baseUrl, 'thumbnail' => $videoThumb ?? '']); ?>
             <?= $this->render('audio', ['lecturefiles' => $lecturefiles, 'audio' => $audio]); ?>
         <?php } ?>
         <?= $model->description ?>
