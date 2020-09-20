@@ -10,6 +10,7 @@ use app\models\LecturesDifficulties;
 use app\models\Lecturesevaluations;
 use app\models\Lecturesfiles;
 use app\models\Lectureshanddifficulties;
+use app\models\LectureViews;
 use app\models\RelatedLectures;
 use app\models\Studentgoals;
 use app\models\Userlectureevaluations;
@@ -184,6 +185,11 @@ class LekcijasController extends Controller
         $uLecture = null;
         if (Yii::$app->user->identity->user_level == 'Student') {
             $uLecture = UserLectures::findOne(['user_id' => $user->id, 'lecture_id' => $id]);
+
+            $lectureView = new LectureViews;
+            $lectureView->user_id = $user->id;
+            $lectureView->lecture_id = $id;
+            $lectureView->save();
         }
 
         $videoThumb = School::getVideoThumb(Yii::$app->user->identity->id);

@@ -14,6 +14,7 @@ use app\models\SchoolLecture;
 use app\models\SchoolTeacher;
 use app\models\SchoolStudent;
 use app\models\School;
+use app\models\LectureViews;
 use Yii;
 use yii\web\Controller;
 
@@ -221,6 +222,9 @@ class AssignController extends \yii\web\Controller
 
         $firstOpenTime = UserLectures::getFirstOpentime($currentUserId);
 
+        $openTimes['seven'] = LectureViews::getDayResult($currentUserId, 7);
+        $openTimes['thirty'] = LectureViews::getDayResult($currentUserId, 30);
+
         $options['id'] = $id;
         $options['videoparamtexts'] = $videotexts;
         $options['goalsum'] = $goalsum;
@@ -246,6 +250,7 @@ class AssignController extends \yii\web\Controller
         $options['currentUserIndex'] = $currentUserKey;
         $options['userCount'] = $userCount;
         $options['firstOpenTime'] = $firstOpenTime;
+        $options['openTimes'] = $openTimes;
 
         return $this->render('userlectures', $options);
     }

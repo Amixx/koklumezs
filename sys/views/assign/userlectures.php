@@ -136,10 +136,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ?>
         </tbody>
     </table>
-    <!-- <p>Spēles reizes pēdējās 7 dienās: <strong><?= $sevenDayResult ?></strong></p>
-    <p>Spēles reizes pēdējās 30 dienās: <strong><?= $thirtyDayResult ?></strong> </p> -->
+    <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['seven'], 7]); ?>.</p>
+    <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['thirty'], 30]); ?>.</p>
     <?php if ($firstOpenTime !== null) { ?>
-        <p><?= \Yii::t('app', 'First lesson opened') ?>: <?= $firstOpenTime ?></p>
+        <p><?= \Yii::t('app', 'First lesson opened') ?>: <?= $firstOpenTime ?>.</p>
     <?php } else { ?>
         <p><?= \Yii::t('app', 'User has not opened any lessons yet') ?>!</p>
     <?php } ?>
