@@ -112,6 +112,17 @@ $this->params['breadcrumbs'][] = $this->title;
                         </td>
                     <?php } ?>
                     <td align="center"><?= isset($lecture->user_difficulty) ? $lecture->user_difficulty : '<code>Not set</code>' ?></td>
+                    <td><?= Html::a(
+                            '<span>Dzēst</span>',
+                            ['/user-lectures/delete', 'id' => $lecture->id],
+                            [
+                                'data' => [
+                                    'confirm' => Yii::t('app', 'Are you sure?'),
+                                    'pjax' => 0,
+                                    'method' => 'post'
+                                ]
+                            ]
+                        ) ?> </td>
                     <?php /*
                 <td align="center">
                     <?= Html::a('<span class="glyphicon glyphicon-eye-open"> </span>', 

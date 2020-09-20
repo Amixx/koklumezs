@@ -313,9 +313,10 @@ class UserLecturesController extends Controller
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
+
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(Yii::$app->request->referrer);
     }
 
     /**
