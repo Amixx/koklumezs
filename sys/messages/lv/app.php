@@ -259,5 +259,6 @@ return [
     'stars' => 'zvaigznes',
     'text' => 'teksts',
     'Message for student' => 'Ziņa skolēnam',
-    'About user' => 'Par lietotāju'
+    'About user' => 'Par lietotāju',
+    'Send message to student' => 'Nosūtīt skolēnam ziņu'
 ];

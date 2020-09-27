@@ -306,7 +306,7 @@ class UserLectures extends \yii\db\ActiveRecord
      *
      * @return bool whether the email was sent
      */
-    public function sendEmail($id, $lectureName, $teacherMessage = null)
+    public function sendEmail($id, $teacherMessage = null)
     {
         $user = Users::findOne([
             'id' => $id,
@@ -315,14 +315,13 @@ class UserLectures extends \yii\db\ActiveRecord
         if ($user === null) {
             return false;
         }
-        //$lecture = Lectures::findOne($lecture_id);
+
         return Yii::$app
             ->mailer
             ->compose(
                 ['html' => 'lekcija-html', 'text' => 'lekcija-text'],
                 [
                     'userFirstName' => $user->first_name,
-                    'lectureName' => $lectureName,
                     'teacherMessage' => $teacherMessage
                 ]
             )

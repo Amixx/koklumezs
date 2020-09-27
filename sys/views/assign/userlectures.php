@@ -187,6 +187,9 @@ $this->params['breadcrumbs'][] = $this->title;
             $lectureTexts,
             ['prompt' => '']
         ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
+    <label for="sendEmail"><?= Yii::t('app', 'Send message to student') ?>
+        <input type="checkbox" name="sendEmail">
+    </label>
     <label for="teacherMessage"><?= Yii::t('app', 'Message for student') ?></label>
     <textarea name="teacherMessage" style="width: 100%" rows="5"></textarea>
 </div>

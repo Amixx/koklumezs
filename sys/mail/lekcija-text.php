@@ -1,6 +1,6 @@
-Sveiki <?= $userFirstName ?>,
+Sveiki,
 
-Jums ir piešķirta jauna nodarbība - <?= $lectureName ?>
+Jums ir piešķirta jauna nodarbība!
 
 <?php if (isset($teacherMessage) && $teacherMessage) {
     echo $teacherMessage;
