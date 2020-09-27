@@ -258,4 +258,5 @@ return [
     'Video size' => 'Video apjoms',
     'stars' => 'zvaigznes',
     'text' => 'teksts',
+    'Message for student' => 'Ziņa skolēnam'
 ];

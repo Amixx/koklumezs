@@ -298,7 +298,7 @@ class UserLectures extends \yii\db\ActiveRecord
      *
      * @return bool whether the email was sent
      */
-    public function sendEmail($id) //, $lecture_id
+    public function sendEmail($id, $lectureName, $teacherMessage = null)
     {
         $user = Users::findOne([
             'id' => $id,
@@ -312,9 +312,13 @@ class UserLectures extends \yii\db\ActiveRecord
             ->mailer
             ->compose(
                 ['html' => 'lekcija-html', 'text' => 'lekcija-text'],
-                ['user' => $user/*, 'lecture' => $lecture*/]
+                [
+                    'userFirstName' => $user->first_name,
+                    'lectureName' => $lectureName,
+                    'teacherMessage' => $teacherMessage
+                ]
             )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name])
+            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
             ->setTo($user->email)
             ->setSubject('Jaunas nodarbības - ' . Yii::$app->name)
             ->send();
@@ -341,7 +345,7 @@ class UserLectures extends \yii\db\ActiveRecord
                 ['html' => 'japieskir-lekcija-html', 'text' => 'japieskir-lekcija-text'],
                 ['user' => $user, 'lecture' => $lecture, 'x' => $x]
             )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name])
+            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
             ->setTo(Yii::$app->params['adminEmail'])
             ->setSubject('Jāpiešķir nodarbība - ' . Yii::$app->name)
             ->send();

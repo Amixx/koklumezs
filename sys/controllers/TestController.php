@@ -129,6 +129,18 @@ class TestController extends Controller
         // }
         // return $firstOpenTime;
 
-        var_dump(LectureViews::getDayResult(Yii::$app->user->identity->id));
+        // var_dump(LectureViews::getDayResult(Yii::$app->user->identity->id));
+
+        $user = Users::findByUsername(Yii::$app->user->identity->username);
+        echo Yii::$app
+            ->mailer
+            ->compose(
+                ['html' => 'lecture-assigned-html', 'text' => 'lecture-assigned-text'],
+                ['user' => $user/*, 'lecture' => $lecture*/]
+            )
+            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+            ->setTo('liepinsimantsimis2001@gmail.com')
+            ->setSubject('Jaunas nodarbības - ' . Yii::$app->name)
+            ->send();
     }
 }

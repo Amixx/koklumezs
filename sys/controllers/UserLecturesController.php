@@ -165,8 +165,10 @@ class UserLecturesController extends Controller
                 $model->created = date('Y-m-d H:i:s', time());
                 $saved = $model->save();
                 if ($saved) {
-                    $sent = UserLectures::sendEmail($model->user_id, $model->lecture_id);
-                    $model->sent = (int) $sent;
+                    $lectureName = Lectures::findOne($model->lecture_id)->title;
+                    $sent = UserLectures::sendEmail($model->user_id, $lectureName);
+                    // $model->sent = (int) $sent;
+                    $model->sent = 1;
                     $model->update();
                 }
                 return $this->redirect(['index']);
