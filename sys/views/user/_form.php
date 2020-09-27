@@ -47,7 +47,7 @@ $isTeacher = Users::isCurrentUserTeacher();
 
             <?= $form->field($model, 'status')->dropDownList([Users::STATUS_INACTIVE => \Yii::t('app',  'Inactive'), Users::STATUS_ACTIVE => \Yii::t('app',  'Active'), Users::STATUS_PASSIVE => \Yii::t('app',  'Passive')], ['prompt' => '']) ?>
 
-            <?= $form->field($model, 'goal')->textArea(['rows' => 6]) ?>
+            <?= $form->field($model, 'about')->textArea(['rows' => 6]) ?>
 
             <?= $form->field($model, 'dont_bother')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv']) ?>
 

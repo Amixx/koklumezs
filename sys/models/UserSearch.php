@@ -20,7 +20,7 @@ class UserSearch extends Users
     {
         return [
             [['id', 'last_lecture'], 'integer'],
-            [['first_name', 'last_name', 'phone_number', 'email', 'user_level', 'language', 'subscription_type', 'status', 'user_level', 'last_login', 'last_lecture', 'dont_bother', 'goal', 'allowed_to_download_files'], 'safe'],
+            [['first_name', 'last_name', 'phone_number', 'email', 'user_level', 'language', 'subscription_type', 'status', 'user_level', 'last_login', 'last_lecture', 'dont_bother', 'allowed_to_download_files'], 'safe'],
         ];
     }
 

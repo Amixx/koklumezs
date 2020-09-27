@@ -75,9 +75,9 @@ class LectureAssignment extends \yii\db\ActiveRecord
         //$dbg = false;
         ob_start();
         $modelsIds = [];
-        
+
         if ($result) {
-            
+
             //Ja ķēdē iekļaujas līdzīgi uzdevumi, tad liekam līdzīgus no vienas ķēdes, bet ja ķēdē nav līdzīgā sarežģītībā (jo ķēdes pērsvarā attīstas sarežģītībā), tad sūtam ko jaunu.
             $nextLectures = $lecture_id ? RelatedLectures::getRelations($lecture_id) : [];
             $foundNext = false;
@@ -127,7 +127,8 @@ class LectureAssignment extends \yii\db\ActiveRecord
                  */
                 $kids = [];
                 if ($lecture_id) {
-                    if (($x == 1) or ($x == 10)) {} else {
+                    if (($x == 1) or ($x == 10)) {
+                    } else {
                         $kids = self::getKidRelation($lecture_id);
                         if ($dbg and !empty($kids)) {
                             echo 'KIDS<pre>';
@@ -169,16 +170,16 @@ class LectureAssignment extends \yii\db\ActiveRecord
                 //not found relations, check new random lecture chain.
                 if ($foundKid === false) {
                     $ids = LecturesDifficulties::getLecturesByDifficulty($result);
-                    
+
                     //remove current lecture if found
-                    if($lecture_id){
+                    if ($lecture_id) {
                         $ids = array_diff($ids, [$lecture_id]);
                     }
                     //check if user is not already signed to found lectures
                     $newIds = UserLectures::getNewLectures($user_id, $ids);
-                    if($dbg){
+                    if ($dbg) {
                         echo 'random new';
-                        var_dump($newIds );
+                        var_dump($newIds);
                     }
                     $newLecture = null;
                     if (!empty($newIds)) {
@@ -225,13 +226,13 @@ class LectureAssignment extends \yii\db\ActiveRecord
         }
         if (empty($modelsIds)) {
             echo "<br /><span style='color:red'>NOT FOUND ANY NEW LECTURE by difficulty:<strong> $result </strong></span>";
-        }else{
+        } else {
             echo "<br /><span style='color:green'>FOUND NEW LECTURE by difficulty:<strong> $result </strong></span>";
         }
         $log = ob_get_clean();
-        if($dbg){
+        if ($dbg) {
             echo 'random ids23';
-            var_dump($log );
+            var_dump($log);
         }
         Yii::$app->session->setFlash('assignmentlog',  $log);
         return $modelsIds;
@@ -252,9 +253,9 @@ class LectureAssignment extends \yii\db\ActiveRecord
             } else {
                 $x = Studentgoals::getUserDifficultyCoef($user_id);
             }
-            $result = self::giveNewAssignment($user_id, $x, $last->lecture_id, $spam, $dbg, true);            
+            $result = self::giveNewAssignment($user_id, $x, $last->lecture_id, $spam, $dbg, true);
         } else {
-            $result = self::getSameDiffLectures($user_id, $spam, $dbg );
+            $result = self::getSameDiffLectures($user_id, $spam, $dbg);
         }
         return $result;
     }
@@ -262,7 +263,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
     public function getSameDiffLectures($user_id = null, $spam = false, $dbg = false)
     {
         $result = [];
-        $x = 0;//Studentgoals::getUserDifficultyCoef($user_id);
+        $x = 0; //Studentgoals::getUserDifficultyCoef($user_id);
         $predefinedResult = Studentgoals::getUserDifficulty($user_id);
         $result = self::giveNewAssignment($user_id, $x, null, $spam, $dbg, true, $predefinedResult);
         return $result;
@@ -291,7 +292,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
         }
         if ($dbg) {
             echo 'User difficulty:' . $userDifficulty . '<br />';
-            echo 'Lecture difficulty:' . $lectureDifficulty . '<br />';           
+            echo 'Lecture difficulty:' . $lectureDifficulty . '<br />';
         }
         $nextLectures = $lecture_id ? RelatedLectures::getRelations($lecture_id) : [];
         $difficulty = $nextLectures ? $lectureDifficulty : $userDifficulty;
@@ -299,64 +300,64 @@ class LectureAssignment extends \yii\db\ActiveRecord
         /**
          * minimum difficulty
          * 1 + 1 + 1 + 1 +1
-         */        
+         */
         $minimumDifficulty = self::MINIMUM;
         switch ($x) {
-            /**
+                /**
                  * 1 (Viss tik viegls, ka garlaicīgi, vajag pieslēgties manuāli)
                  */
             case 1:
                 $result = 0;
                 break;
-            /**
+                /**
                  * 2 (ļoti ļoti viegli, neoteikti vajag grūāk) MAXIMUM-x+4 (jāpieliek 4 sarežģītības punkti klāt kopumā. Piemēram ja bija 45345, tad tagad varētu būt 56455 vai 35566)
                  */
             case 2:
                 $result = $difficulty - $x + 4;
                 break;
-            /**
+                /**
                  * 3 (izspēlēju vienu reizi un jau viss skaidrs) MAXIMUM-x+3
                  */
             case 3:
                 $result = $difficulty - $x + 3; // -3 + 3 lol, it cancels out :D
                 break;
-            /**
+                /**
                  * 4 (Diezgan vienkārši)        MAXIMUM-x+2
                  */
             case 4:
                 $result = $difficulty - $x + 2;
                 break;
-            /**
+                /**
                  * 5 (nācās pastrādāt, bet tiku galā bez milzīgas piepūles) MAXIMUM-x+1 vai MAXIMUM-x+2 ( ja ir jauns ķēdes uzdevums)
                  */
             case 5:
                 $result = $nextLecture ? $difficulty - $x + 2 : $difficulty - $x + 1;
                 break;
-            /**
+                /**
                  * 6 (Tiku galā): |Paliek tas pats MAXIMUM-x vai arī MAXIMUM-x+1 (jau ir nākamais ķēdes uzdevums)
                  */
             case 6:
                 $result = $nextLecture ? $difficulty - $x + 1 : $difficulty - $x;
                 break;
-            /**
+                /**
                  * 7 (diezgan gŗūti) MAXIMUM-x-1
                  */
             case 7:
                 $result = $difficulty - $x - 1;
                 break;
-            /**
+                /**
                  * 8 (itkā saprotu, ebt pirksti neklausa) MAXIMUM-x-2/3
                  */
             case 8:
                 $result = ceil($difficulty - $x - 2 / 3);
                 break;
-            /**
+                /**
                  * 9 (kaut ko mēģinu, bet pārāk nesanāk): MAXIMUM-x-4
                  */
             case 9:
                 $result = $difficulty - $x - 4;
                 break;
-            /**
+                /**
                  * 10 (vispār neko nesaprotu): Manuāli
                  */
             case 10:
@@ -377,7 +378,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
 
     public function giveNewAssignment($user = null, $x = 0, $id = null, $spam = false, $dbg = false, $returnIds = false, int $predefinedResult = 0)
     {
-        $result =  ($predefinedResult > 0) ? $predefinedResult : self::getNewUserDifficulty($user, $x, $id, $dbg);      
+        $result =  ($predefinedResult > 0) ? $predefinedResult : self::getNewUserDifficulty($user, $x, $id, $dbg);
         if ($result) {
             if ($dbg) {
                 echo 'New difficulty:<strong>' . $result . '</strong><br />';
@@ -386,51 +387,51 @@ class LectureAssignment extends \yii\db\ActiveRecord
             if ($ids) {
                 //check if user is not already signed to found lectures
                 $newIds = UserLectures::getNewLectures($user, $ids);
-                
+
                 if (!empty($newIds) and !$dbg) {
-                    foreach ($newIds as $lec) {
-                        $skipErrors = true;
-                        $model = new UserLectures();
-                        $model->user_id = $user;
-                        $model->lecture_id = $lec;
-                        $model->assigned = 1;
-                        $model->created = date('Y-m-d H:i:s', time());
-                        $model->user_difficulty = self::$sum ?? 0;
-                        $saved = $model->save($skipErrors);
-                        //dont send now, only when needed, twice a week or smthn..
-                        $sendNow = false;
-                        if ($saved and ($sendNow or $spam)) {
-                            //noņemt e-pastu automātisko sūtīšanu. Cilvēkiem uzrādās tie kā "Nedroši"
-                            //$sent = UserLectures::sendEmail($model->user_id, $model->lecture_id);
-                            $sent = 1;
-                            $model->sent = (int) $sent;
-                            $model->update();
-                            //from cron call
-                            if ($spam) {
-                                $m = new Sentlectures();
-                                $m->user_id = $model->user_id;
-                                $m->lecture_id = $model->lecture_id;
-                                $m->created = date('Y-m-d H:i:s', time());
-                                //noņemt e-pastu automātisko sūtīšanu. Cilvēkiem uzrādās tie kā "Nedroši"
-                                /*$sent = UserLectures::sendEmail($model->user_id, $model->lecture_id);
-                                if (!$sent) {
-                                    UserLectures::sendAdminEmail($model->user_id, $model->lecture_id, 0);
-                                }*/
-                                $m->sent = (int) $sent;
-                                $m->save();
-                            }
-                        }
-                    }
-                    if ($returnIds) {
-                        return $ids;
-                    }
+                    // foreach ($newIds as $lec) {
+                    //     $skipErrors = true;
+                    //     $model = new UserLectures();
+                    //     $model->user_id = $user;
+                    //     $model->lecture_id = $lec;
+                    //     $model->assigned = 1;
+                    //     $model->created = date('Y-m-d H:i:s', time());
+                    //     $model->user_difficulty = self::$sum ?? 0;
+                    //     $saved = $model->save($skipErrors);
+                    //     //dont send now, only when needed, twice a week or smthn..
+                    //     $sendNow = false;
+                    //     if ($saved and ($sendNow or $spam)) {
+                    //         //noņemt e-pastu automātisko sūtīšanu. Cilvēkiem uzrādās tie kā "Nedroši"
+                    //         //$sent = UserLectures::sendEmail($model->user_id, $model->lecture_id);
+                    //         $sent = 1;
+                    //         $model->sent = (int) $sent;
+                    //         $model->update();
+                    //         //from cron call
+                    //         if ($spam) {
+                    //             $m = new Sentlectures();
+                    //             $m->user_id = $model->user_id;
+                    //             $m->lecture_id = $model->lecture_id;
+                    //             $m->created = date('Y-m-d H:i:s', time());
+                    //             //noņemt e-pastu automātisko sūtīšanu. Cilvēkiem uzrādās tie kā "Nedroši"
+                    //             /*$sent = UserLectures::sendEmail($model->user_id, $model->lecture_id);
+                    //             if (!$sent) {
+                    //                 UserLectures::sendAdminEmail($model->user_id, $model->lecture_id, 0);
+                    //             }*/
+                    //             $m->sent = (int) $sent;
+                    //             $m->save();
+                    //         }
+                    //     }
+                    // }
+                    // if ($returnIds) {
+                    //     return $ids;
+                    // }
                 } elseif ($dbg) {
                     echo '<pre>';
                     print_r($newIds);
                     echo '</pre>';
                 } elseif (!$returnIds) {
                     //recursion till the end of time..
-                    if($result < self::MAXIMUM){
+                    if ($result < self::MAXIMUM) {
                         $result++;
                         return self::giveNewAssignment($user, $x, $id, false, false, false, $result);
                     }
@@ -443,11 +444,10 @@ class LectureAssignment extends \yii\db\ActiveRecord
                 }
             } elseif (!$returnIds) {
                 //recursion till the end of time..
-                if($result < self::MAXIMUM){
+                if ($result < self::MAXIMUM) {
                     $result++;
                     return self::giveNewAssignment($user, $x = 0, $id, false, false, false, $result);
-                }
-                elseif ($dbg) {
+                } elseif ($dbg) {
                     echo '<br />SPAM TO ADMIN';
                 } else {
                     //spam admin about manual involvement

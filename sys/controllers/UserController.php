@@ -152,6 +152,12 @@ class UserController extends Controller
             $model->password = \Yii::$app->security->generatePasswordHash($model->password);
             $model->created_at = date('Y-m-d H:i:s', time());
             $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
+            if (isset($post['Users']['allowed_to_download_files'])) {
+                $model->allowed_to_download_files = $post['Users']['allowed_to_download_files'];
+            }
+            if (isset($post['Users']['about'])) {
+                $model->about = $post['Users']['about'];
+            }
             $created = $model->save();
             if ($isNewUserTeacher) {
                 $newSchool = new School;
@@ -260,6 +266,9 @@ class UserController extends Controller
             $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
             if (isset($post['Users']['allowed_to_download_files'])) {
                 $model->allowed_to_download_files = $post['Users']['allowed_to_download_files'];
+            }
+            if (isset($post['Users']['about'])) {
+                $model->about = $post['Users']['about'];
             }
 
             $model->update();

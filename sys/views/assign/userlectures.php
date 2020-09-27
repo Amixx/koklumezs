@@ -123,30 +123,14 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ]
                             ]
                         ) ?> </td>
-                    <?php /*
-                <td align="center">
-                    <?= Html::a('<span class="glyphicon glyphicon-eye-open"> </span>', 
-                    ['/assign/userlectures','id' => $id], 
-                    [
-                        'title' => 'Apskatīt',                        
-                    ]) ?> 
-                    <?= Html::a('<span class="glyphicon glyphicon-wrench"> </span>', 
-                    ['/cron/userlectures','id' => $id], 
-                    [
-                        'title' => 'Automātiska piešķiršana',
-                        'data' => [
-                            'confirm' => 'Are you sure ?',
-                        ]
-                    ]) ?> 
-                </td>
-                */ ?>
                 </tr>
             <?php $a++;
-            }
-
-            ?>
+            } ?>
         </tbody>
     </table>
+    <?php if (isset($user) && $user->about) { ?>
+        <p>Par lietotāju: <b><?= $user->about ?></b>.</p>
+    <?php } ?>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['seven'], 7]); ?>.</p>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['thirty'], 30]); ?>.</p>
     <?php if ($firstOpenTime !== null) { ?>

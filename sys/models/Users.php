@@ -42,7 +42,7 @@ class Users extends ActiveRecord implements IdentityInterface
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_PASSIVE]],
             [['username'], 'required'],
-            [['user_level', 'goal'], 'string'],
+            [['user_level'], 'string'],
             ['user_level', 'default', 'value' => self::ROLE_USER],
             ['user_level', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN, self::ROLE_TEACHER]],
             ['language', 'default', 'value' => self::LANG_LV],
@@ -74,11 +74,11 @@ class Users extends ActiveRecord implements IdentityInterface
             'first_name' => \Yii::t('app',  'Name'),
             'last_name' => \Yii::t('app',  'Surname'),
             'password' => \Yii::t('app',  'Password'),
+            'about' => \Yii::t('app',  'About user'),
             'last_login' => \Yii::t('app',  'Last logged in'),
             'last_lecture' => \Yii::t('app',  'Last lesson'),
             'dont_bother' => \Yii::t('app',  'Do not bother'),
             'status' => \Yii::t('app',  'Status'),
-            'goal' => \Yii::t('app',  'Goal'),
             'allowed_to_download_files' => \Yii::t('app',  'Allowed to download files'),
         ];
     }
