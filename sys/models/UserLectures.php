@@ -155,6 +155,14 @@ class UserLectures extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getAllLectures($id)
+    {
+        return self::find()->where(['user_id' => $id])->orderBy(['id' => SORT_DESC])->all();
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getDayResult($id, $days = 7)
     {
         $result = 0;

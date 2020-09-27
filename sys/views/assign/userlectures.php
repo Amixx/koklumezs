@@ -78,56 +78,58 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div class="grid-view" id="assign-page-main">
-    <table class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th><?= \Yii::t('app', 'Last lesson') ?></th>
-                <th><?= \Yii::t('app', 'Opened') ?></th>
-                <th><?= \Yii::t('app', 'Times played') ?></th>
-                <th><?= \Yii::t('app', 'Difficulty') ?></th>
-                <?php foreach ($evaluationsTitles as $et) { ?>
-                    <th><?= \Yii::t('app', $et) ?></th>
-                <?php } ?>
-                <th><?= \Yii::t('app', 'Abilities') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            $a = 1;
-            foreach ($lastlectures as $lecture) { ?>
+    <div class="TableContainer" style="max-height:500px; overflow-y:scroll">
+        <table class="table table-striped table-bordered">
+            <thead>
                 <tr>
-                    <td><?= $a ?></td>
-                    <td><?= $lecture->lecture->title ?></td>
-                    <td align="center"><?= (int) $lecture->opened ? 'Jā' : 'Nē' ?></td>
-                    <td align="center"><?= $lecture->open_times ?></td>
-                    <td align="center"><?= $lecture->lecture->complexity ? $lecture->lecture->complexity : '<code>Not set</code>' ?></td>
-                    <?php foreach ($evaluationsTitles as $etid => $et) { ?>
-                        <td align="center">
-                            <?php if (isset($evaluations[$lecture->lecture_id][$etid])) {
-                                echo isset($evaluationsValues[$etid]) ? (isset($evaluationsValues[$etid][$evaluations[$lecture->lecture_id][$etid]]) ? $evaluationsValues[$etid][$evaluations[$lecture->lecture_id][$etid]] : '<code>Not set</code>') : (isset($evaluations[$lecture->lecture_id][$etid]) ? $evaluations[$lecture->lecture_id][$etid] : '<code>Not set</code>');
-                            } else {
-                                echo '<code>Not set</code>';
-                            }  ?>
-                        </td>
+                    <th>#</th>
+                    <th><?= \Yii::t('app', 'Last lesson') ?></th>
+                    <th><?= \Yii::t('app', 'Opened') ?></th>
+                    <th><?= \Yii::t('app', 'Times played') ?></th>
+                    <th><?= \Yii::t('app', 'Difficulty') ?></th>
+                    <?php foreach ($evaluationsTitles as $et) { ?>
+                        <th><?= \Yii::t('app', $et) ?></th>
                     <?php } ?>
-                    <td align="center"><?= isset($lecture->user_difficulty) ? $lecture->user_difficulty : '<code>Not set</code>' ?></td>
-                    <td><?= Html::a(
-                            '<span>Dzēst</span>',
-                            ['/user-lectures/delete', 'id' => $lecture->id],
-                            [
-                                'data' => [
-                                    'confirm' => Yii::t('app', 'Are you sure?'),
-                                    'pjax' => 0,
-                                    'method' => 'post'
-                                ]
-                            ]
-                        ) ?> </td>
+                    <th><?= \Yii::t('app', 'Abilities') ?></th>
                 </tr>
-            <?php $a++;
-            } ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php
+                $a = 1;
+                foreach ($lastlectures as $lecture) { ?>
+                    <tr>
+                        <td><?= $a ?></td>
+                        <td><?= $lecture->lecture->title ?></td>
+                        <td align="center"><?= (int) $lecture->opened ? 'Jā' : 'Nē' ?></td>
+                        <td align="center"><?= $lecture->open_times ?></td>
+                        <td align="center"><?= $lecture->lecture->complexity ? $lecture->lecture->complexity : '<code>Not set</code>' ?></td>
+                        <?php foreach ($evaluationsTitles as $etid => $et) { ?>
+                            <td align="center">
+                                <?php if (isset($evaluations[$lecture->lecture_id][$etid])) {
+                                    echo isset($evaluationsValues[$etid]) ? (isset($evaluationsValues[$etid][$evaluations[$lecture->lecture_id][$etid]]) ? $evaluationsValues[$etid][$evaluations[$lecture->lecture_id][$etid]] : '<code>Not set</code>') : (isset($evaluations[$lecture->lecture_id][$etid]) ? $evaluations[$lecture->lecture_id][$etid] : '<code>Not set</code>');
+                                } else {
+                                    echo '<code>Not set</code>';
+                                }  ?>
+                            </td>
+                        <?php } ?>
+                        <td align="center"><?= isset($lecture->user_difficulty) ? $lecture->user_difficulty : '<code>Not set</code>' ?></td>
+                        <td><?= Html::a(
+                                '<span>Dzēst</span>',
+                                ['/user-lectures/delete', 'id' => $lecture->id],
+                                [
+                                    'data' => [
+                                        'confirm' => Yii::t('app', 'Are you sure?'),
+                                        'pjax' => 0,
+                                        'method' => 'post'
+                                    ]
+                                ]
+                            ) ?> </td>
+                    </tr>
+                <?php $a++;
+                } ?>
+            </tbody>
+        </table>
+    </div>
     <?php if (isset($user) && $user->about) { ?>
         <p>Par lietotāju: <b><?= $user->about ?></b>.</p>
     <?php } ?>

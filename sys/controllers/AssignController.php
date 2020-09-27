@@ -180,7 +180,8 @@ class AssignController extends \yii\web\Controller
         $videoParam = Evaluations::getVideoParam();
         $evaluationsTitles = Evaluations::getEvaluationsTitles();
         $evaluationsValues = Evaluations::getEvaluationsValueTexts();
-        $lastlectures = UserLectures::getLastTenLectures($id); //UserLectures::getLastTenEvaluatedLectures($id);
+        // $lastlectures = UserLectures::getLastTenLectures($id); //UserLectures::getLastTenEvaluatedLectures($id);
+        $lastlectures = UserLectures::getAllLectures($id);
         $sevenDayResult = UserLectures::getDayResult($id, 7);
         $thirtyDayResult = UserLectures::getDayResult($id, 30);
         $PossibleThreeLectures = LectureAssignment::getPossibleThreeLectures($id);
