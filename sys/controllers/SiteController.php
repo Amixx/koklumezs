@@ -67,16 +67,6 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
@@ -100,16 +90,6 @@ class SiteController extends Controller
     public function actionRequestPasswordReset()
     {
         $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
@@ -137,16 +117,6 @@ class SiteController extends Controller
     public function actionResetPassword($token)
     {
         $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
@@ -174,16 +144,6 @@ class SiteController extends Controller
     public function actionVerifyEmail($token)
     {
         $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
@@ -210,16 +170,6 @@ class SiteController extends Controller
     public function actionResendVerificationEmail()
     {
         $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
@@ -245,16 +195,6 @@ class SiteController extends Controller
     public function actionLogin()
     {
         $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
@@ -278,16 +218,6 @@ class SiteController extends Controller
     public function actionLogout()
     {
         $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';

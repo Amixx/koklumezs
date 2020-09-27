@@ -46,16 +46,6 @@ class SchoolEvaluationsController extends Controller
     public function actionIndex()
     {
         $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
@@ -73,16 +63,6 @@ class SchoolEvaluationsController extends Controller
     public function actionView($id)
     {
         $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
@@ -95,16 +75,6 @@ class SchoolEvaluationsController extends Controller
     public function actionCreate()
     {
         $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
@@ -126,16 +96,6 @@ class SchoolEvaluationsController extends Controller
     public function actionUpdate($id)
     {
         $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
@@ -163,16 +123,6 @@ class SchoolEvaluationsController extends Controller
     public function actionDelete($id)
     {
         $isGuest = Yii::$app->user->isGuest;
-        $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
-        $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
-
-        $school = null;
-        if ($isTeacher) {
-            $school = School::getByTeacher(Yii::$app->user->identity->id);
-        } else if ($isStudent) {
-            $school = School::getByStudent(Yii::$app->user->identity->id);
-        }
-        Yii::$app->view->params['school'] = $school;
         if (!$isGuest) {
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';

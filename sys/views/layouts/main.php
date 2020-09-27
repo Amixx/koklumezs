@@ -9,14 +9,19 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
-use app\models\Users;
+use app\models\School;
 
 $isGuest = Yii::$app->user->isGuest;
 $isAdmin = !$isGuest && Yii::$app->user->identity->user_level == 'Admin';
 $isTeacher = !$isGuest && Yii::$app->user->identity->user_level == 'Teacher';
 $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
 
-$school = isset(Yii::$app->view->params['school']) ? Yii::$app->view->params['school'] : null;
+$school = null;
+if ($isTeacher) {
+    $school = School::getByTeacher(Yii::$app->user->identity->id);
+} else if ($isStudent) {
+    $school = School::getByStudent(Yii::$app->user->identity->id);
+}
 
 $wrapperBackground = $school != null && $school->background_image != null ? "url($school->background_image)" : "white";
 
