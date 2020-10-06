@@ -50,7 +50,7 @@ class SchoolEvaluationsController extends Controller
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
-        $schoolId = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
+        $schoolId = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id)->school_id;
         $dataProvider = new ActiveDataProvider([
             'query' => SchoolEvaluations::getForSchool($schoolId),
         ]);

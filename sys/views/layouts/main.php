@@ -142,6 +142,8 @@ AppAsset::register($this);
             $navItems[] = ['label' => '+', 'url' => ['/user/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])];
             $navItems[] = ['label' => \Yii::t('app',  'Lessons'), 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
             $navItems[] = ['label' => '+', 'url' => ['/lectures/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
+            $navItems[] = ['label' => \Yii::t('app',  'Subscription plans'), 'url' => ['/school-sub-plans'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-sub-plans']),];
+            $navItems[] = ['label' => '+', 'url' => ['/school-sub-plans/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-sub-plans']),];
             $navItems[] = ['label' => \Yii::t('app',  'Metrics'), 'url' => ['/user-lecture-evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations']) and Yii::$app->controller->action->actionMethod != "actionComments"];
             $navItems[] = ['label' => \Yii::t('app',  'Settings'), 'url' => ['/school-settings'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-settings'])];
 

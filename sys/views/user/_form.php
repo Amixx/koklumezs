@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\models\Users;
 use  yii\jui\DatePicker;
+use mihaildev\elfinder\InputFile;
 
 $isTeacher = Users::isCurrentUserTeacher();
 ?>
@@ -18,6 +19,11 @@ $isTeacher = Users::isCurrentUserTeacher();
         <li class="nav-item">
             <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false"><?= \Yii::t('app',  'Parameters') ?></a>
         </li>
+        <?php if ($model->id) { ?>
+            <li class="nav-item">
+                <a class="nav-link" id="plan-tab" data-toggle="tab" href="#plan" role="tab" aria-controls="plan" aria-selected="false"><?= \Yii::t('app', 'Student\'s subscription plan') ?></a>
+            </li>
+        <?php } ?>
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -58,7 +64,24 @@ $isTeacher = Users::isCurrentUserTeacher();
                 <?= $this->render('difficulties', ['difficulties' => $difficulties, 'studentGoals' => $studentGoals]) ?>
             <?php } ?>
         </div>
+        <div class="tab-pane fade" id="plan" role="tabpanel" aria-labelledby="plan-tab">
+            <?php if (isset($schoolSubPlans) && $schoolSubPlans) { ?>
+                <?= $form->field($model, 'subplan[plan_id]')->dropDownList($schoolSubPlans, ['prompt' => ''])->label(Yii::t('app', 'Subscription plan')) ?>
+                <?= $form->field($model, 'subplan[start_date]')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])->label(Yii::t('app', 'Start date')) ?>
+                <?= $form->field($model, 'subplan[invoice_url]')->widget(InputFile::className(), [
+                    'language' => 'lv',
+                    'controller' => 'elfinder', // вставляем название контроллера, по умолчанию равен elfinder
+                    // 'filter' => ['pdf'], // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
+                    'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
+                    'options' => ['class' => 'form-control'],
+                    'buttonOptions' => ['class' => 'btn btn-default'],
+                    'multiple' => false, // возможность выбора нескольких файлов
+                ])->label(Yii::t('app', 'Rēķins')) ?>
+                <?= $form->field($model, 'subplan[times_paid]')->textInput(['type' => 'number'])->label(Yii::t('app', 'Times paid')) ?>
+            <?php } ?>
+        </div>
     </div>
+
     <div class="form-group">
         <?= Html::submitButton(\Yii::t('app',  'Save'), ['class' => 'btn btn-success']) ?>
     </div>

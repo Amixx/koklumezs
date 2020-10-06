@@ -55,8 +55,9 @@ class SchoolSettingsController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $settings = School::getSettings(Yii::$app->user->identity->id);
+        $schoolId = SchoolTeacher::getCurrentSchoolId();
         $difficultiesDataProvider = new ActiveDataProvider([
-            'query' => Difficulties::find()->where(['school_id' => $school->id]),
+            'query' => Difficulties::find()->where(['school_id' => $schoolId]),
         ]);
         return $this->render('index', [
             'settings' => $settings,

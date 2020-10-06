@@ -11,12 +11,16 @@ use app\models\Studentgoals;
 use app\models\Difficulties;
 use app\models\Handdifficulties;
 use app\models\Studenthandgoals;
+use app\models\SchoolSubPlans;
 use app\models\School;
 use app\models\SchoolTeacher;
 use app\models\SchoolStudent;
+use app\models\StudentSubPlans;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
+use yii\helpers\ArrayHelper;
 
 /**
  * UserController implements the CRUD actions for Users model.
@@ -85,8 +89,12 @@ class UserController extends Controller
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
+
+        $studentSubPlan = StudentSubPlans::getForStudent($id);
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'studentSubPlan' => $studentSubPlan
         ]);
     }
 
@@ -122,6 +130,7 @@ class UserController extends Controller
             $model->password = \Yii::$app->security->generatePasswordHash($model->password);
             $model->created_at = date('Y-m-d H:i:s', time());
             $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
+            $model->allowed_to_download_files = false;
             if (isset($post['Users']['allowed_to_download_files'])) {
                 $model->allowed_to_download_files = $post['Users']['allowed_to_download_files'];
             }
@@ -165,12 +174,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing User model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
     public function actionUpdate($id)
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -184,6 +187,7 @@ class UserController extends Controller
         $studentHandGoals = Studenthandgoals::getUserGoals($id);
         $difficulties = Difficulties::getDifficulties();
         $handdifficulties = Handdifficulties::getDifficulties();
+        $schoolSubPlans = SchoolSubPlans::getMappedForSelection();
 
         if ($model->load($post)) {
             if (!empty($post['Users']['password'])) {
@@ -224,14 +228,36 @@ class UserController extends Controller
                 }
             }
             $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
+            $model->allowed_to_download_files = false;
             if (isset($post['Users']['allowed_to_download_files'])) {
                 $model->allowed_to_download_files = $post['Users']['allowed_to_download_files'];
             }
             if (isset($post['Users']['about'])) {
                 $model->about = $post['Users']['about'];
             }
+            if (isset($post['Users']['subplan'])) {
+                $postData = $post['Users']['subplan'];
+
+                $subplan = StudentSubPlans::getForStudent($model->id);
+                if ($subplan) {
+                    $subplan->plan_id = $postData["plan_id"];
+                    $subplan->start_date = $postData["start_date"];
+                    $subplan->invoice_url = $postData["invoice_url"];
+                    $subplan->times_paid = $postData["times_paid"];
+                    $subplan->update();
+                } else {
+                    $subplan = new StudentSubPlans;
+                    $subplan->user_id = $model->id;
+                    $subplan->plan_id = $postData["plan_id"];
+                    $subplan->start_date = $postData["start_date"];
+                    $subplan->invoice_url = $postData["invoice_url"];
+                    $subplan->times_paid = $postData["times_paid"];
+                    $subplan->save();
+                }
+            }
 
             $model->update();
+
             return $this->redirect(['update', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -239,7 +265,8 @@ class UserController extends Controller
                 'studentGoals' => $studentGoals,
                 'studentHandGoals' => $studentHandGoals,
                 'difficulties' => $difficulties,
-                'handdifficulties' => $handdifficulties
+                'handdifficulties' => $handdifficulties,
+                'schoolSubPlans' => $schoolSubPlans
             ]);
         }
     }
@@ -271,7 +298,7 @@ class UserController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Users::findOne($id)) !== null) {
+        if (($model = Users::find()->where(['users.id' => $id])->joinWith('subplan')->one()) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

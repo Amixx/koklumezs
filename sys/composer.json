@@ -21,7 +21,8 @@
         "yiisoft/yii2-jui": "~2.0.0",
         "yii2mod/yii2-star-rating": "*",
         "mihaildev/yii2-elfinder": "*",
-        "mihaildev/yii2-ckeditor": "*"
+        "mihaildev/yii2-ckeditor": "*",
+        "kartik-v/yii2-mpdf": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

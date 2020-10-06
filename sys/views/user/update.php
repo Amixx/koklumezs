@@ -10,6 +10,8 @@ $this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Users'), 'url' => 
 $this->params['breadcrumbs'][] = ['label' => $model->username, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
 
+$subPlans = isset($schoolSubPlans) ? $schoolSubPlans : null;
+
 ?>
 <div class="user-update">
 
@@ -19,7 +21,8 @@ $this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
         'model' => $model,
         'studentGoals' => $studentGoals,
         'studentHandGoals' => $studentHandGoals,
-        'difficulties' => $difficulties
+        'difficulties' => $difficulties,
+        'schoolSubPlans' => $subPlans
     ]) ?>
 
 </div>

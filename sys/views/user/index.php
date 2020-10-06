@@ -13,7 +13,6 @@ $this->title = \Yii::t('app',  'Users');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
-
     <p>
         <?= Html::a(\Yii::t('app',  'Create user'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>

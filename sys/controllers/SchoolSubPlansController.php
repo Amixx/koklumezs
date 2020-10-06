@@ -2,25 +2,35 @@
 
 namespace app\controllers;
 
-use Yii;
-use app\models\Users;
+use yii\data\ActiveDataProvider;
 use app\models\Difficulties;
-use app\models\DifficultiesSearch;
-use app\models\School;
+use app\models\Evaluations;
+use app\models\LectureAssignment;
+use app\models\Lectures;
 use app\models\SchoolTeacher;
+use app\models\LecturesDifficulties;
+use app\models\Lecturesevaluations;
+use app\models\Lecturesfiles;
+use app\models\Lectureshanddifficulties;
+use app\models\RelatedLectures;
+use app\models\Studentgoals;
+use app\models\Userlectureevaluations;
+use app\models\UserLectures;
+use app\models\Users;
+use app\models\SchoolSubPlans;
+use app\models\SectionsVisible;
+use app\models\School;
+use Yii;
+use yii\data\Pagination;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\data\ActiveDataProvider;
-use yii\filters\VerbFilter;
 
 /**
- * DifficultiesController implements the CRUD actions for Difficulties model.
+ * ArchiveController implements the actions for Lectures model by student.
  */
-class DifficultiesController extends Controller
+class SchoolSubPlansController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
@@ -32,25 +42,20 @@ class DifficultiesController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Users::isAdminOrTeacher(Yii::$app->user->identity->username);
-                        }
+                            return !empty(Yii::$app->user->identity); //Users::isStudent(Yii::$app->user->identity->username);
+                        },
                     ],
                     // everything else is denied
                 ],
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
+                'actions' => [],
             ],
         ];
     }
 
-    /**
-     * Lists all Difficulties models.
-     * @return mixed
-     */
+
     public function actionIndex()
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -59,13 +64,12 @@ class DifficultiesController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
-        $schoolId = SchoolTeacher::getCurrentSchoolId();
         $dataProvider = new ActiveDataProvider([
-            'query' => Difficulties::find()->where(['school_id' => $schoolId]),
+            'query' => SchoolSubPlans::getForCurrentSchool(),
         ]);
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider
         ]);
     }
 
@@ -76,16 +80,12 @@ class DifficultiesController extends Controller
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
 
-    /**
-     * Creates a new Difficulties model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate()
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -93,10 +93,11 @@ class DifficultiesController extends Controller
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
-        $model = new Difficulties();
 
+        $model = new SchoolSubPlans();
         $schoolId = SchoolTeacher::getCurrentSchoolId();
-        if ($model->load(Yii::$app->request->post())) {
+        $post = Yii::$app->request->post();
+        if ($model->load($post)) {
             $model->school_id = $schoolId;
             if ($model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -108,13 +109,6 @@ class DifficultiesController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing Difficulties model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -122,8 +116,8 @@ class DifficultiesController extends Controller
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
-        $model = $this->findModel($id);
 
+        $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -133,13 +127,6 @@ class DifficultiesController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing Difficulties model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($id)
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -147,21 +134,14 @@ class DifficultiesController extends Controller
             $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
-        $this->findModel($id)->delete();
 
+        $this->findModel($id)->delete();
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the Difficulties model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Difficulties the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
-        if (($model = Difficulties::findOne($id)) !== null) {
+        if (($model = SchoolSubPlans::findOne($id)) !== null) {
             return $model;
         }
 

@@ -93,6 +93,11 @@ class Users extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public function getSubplan()
+    {
+        return $this->hasOne(StudentSubPlans::className(), ['user_id' => 'id']);
+    }
+
     public static function getByUsername($username)
     {
         return static::findOne(['username' => $username]);
