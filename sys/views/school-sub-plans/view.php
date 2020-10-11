@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'description:html',
             'monthly_cost',
+            'discount',
             'months',
         ],
     ]) ?>

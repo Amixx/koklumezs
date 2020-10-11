@@ -68,15 +68,6 @@ $isTeacher = Users::isCurrentUserTeacher();
             <?php if (isset($schoolSubPlans) && $schoolSubPlans) { ?>
                 <?= $form->field($model, 'subplan[plan_id]')->dropDownList($schoolSubPlans, ['prompt' => ''])->label(Yii::t('app', 'Subscription plan')) ?>
                 <?= $form->field($model, 'subplan[start_date]')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])->label(Yii::t('app', 'Start date')) ?>
-                <?= $form->field($model, 'subplan[invoice_url]')->widget(InputFile::className(), [
-                    'language' => 'lv',
-                    'controller' => 'elfinder', // вставляем название контроллера, по умолчанию равен elfinder
-                    // 'filter' => ['pdf'], // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
-                    'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
-                    'options' => ['class' => 'form-control'],
-                    'buttonOptions' => ['class' => 'btn btn-default'],
-                    'multiple' => false, // возможность выбора нескольких файлов
-                ])->label(Yii::t('app', 'Rēķins')) ?>
                 <?= $form->field($model, 'subplan[times_paid]')->textInput(['type' => 'number'])->label(Yii::t('app', 'Times paid')) ?>
             <?php } ?>
         </div>

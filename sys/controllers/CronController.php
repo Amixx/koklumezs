@@ -8,10 +8,13 @@ use app\models\Studentgoals;
 use app\models\UserLectures;
 use app\models\Lectures;
 use app\models\Users;
+use app\models\StudentSubPlans;
 use app\models\School;
+use app\models\SchoolSubPlans;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use kartik\mpdf\Pdf;
 
 /**
  * CronController sends spam a lot.
@@ -279,5 +282,136 @@ class CronController extends Controller
         return $this->renderPartial('index', [
             'log' => $log,
         ]);
+    }
+
+    public function actionTest()
+    {
+        $users = Users::getActiveStudents(true);
+        $inlineCss = '
+            body {
+                font-family: Arial, serif;
+                color: rgb(0, 0, 0);
+                font-weight: normal;
+                font-style: normal;
+                text-decoration: none
+            }
+
+            .bordered-table {
+                width: 100%; border: 1px solid black;
+                border-collapse:collapse;
+            }
+
+            .bordered-table td, th {
+                border: 1px solid black;
+                text-align:center;
+            }
+
+            .bordered-table th {
+                font-weight:normal;
+                padding:8px 4px;
+            }
+
+            .bordered-table td {
+                padding: 32px 4px;
+            }
+
+            .font-l {
+                font-size: 18px;
+            }
+
+            .font-m {
+                font-size: 15px;
+            }
+
+            .font-s {
+                font-size: 14px;
+            }
+
+            .font-xs {
+                font-size: 13px;
+            }
+
+            .align-center {
+                text-align:center;
+            }
+
+            .align-right {
+                text-align:right;
+            }
+
+            .lh-2 {
+                line-height:2;
+            }
+
+            .leftcol {
+                width:140px;
+            }
+
+            .info {
+                line-height:unset;
+                margin-top:16px;
+            }
+        ';
+
+
+        foreach ($users as $user) {
+            $studentSubplan = StudentSubPlans::getForStudent($user["id"]);
+            if ($studentSubplan !== null) {
+                $today = date('d.m.Y');
+                $match_date = date('d.m.Y', strtotime($studentSubplan["start_date"]));
+
+                $today_split = explode(".", $today);
+                $match_date_split = explode(".", $match_date);
+
+                if ($today_split[0] === $match_date_split[0]) {
+                    $userFullName = $user['first_name'] . " " . $user['last_name'];
+
+                    $subplan = SchoolSubPlans::findOne($studentSubplan['plan_id']);
+
+                    $id = mt_rand(10000000, 99999999);
+                    $title = "rekins-$id.pdf";
+
+                    $content = $this->renderPartial('invoiceTemplate', [
+                        'id' => $id,
+                        'fullName' => $userFullName,
+                        'email' => $user['email'],
+                        'subplan' => $subplan
+                    ]);
+
+                    $pdf = new Pdf([
+                        'mode' => Pdf::MODE_UTF8,
+                        'format' => Pdf::FORMAT_A4,
+                        'orientation' => Pdf::ORIENT_PORTRAIT,
+                        'destination' => Pdf::DEST_FILE,
+                        'filename' => $title,
+                        'content' => $content,
+                        'cssInline' => $inlineCss,
+                        'options' => ['title' => $title],
+                    ]);
+
+                    $pdf->render();
+
+                    $sent = Yii::$app
+                        ->mailer
+                        ->compose(
+                            ['html' => 'lekcija-html', 'text' => 'lekcija-text'],
+                            [
+                                'teacherMessage' => ""
+                            ]
+                        )
+                        ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+                        ->setTo($user['email'])
+                        ->setSubject("Rēķins $id - " . Yii::$app->name)
+                        ->attach($title)
+                        ->send();
+
+                    if ($sent) {
+                        $planModel = StudentSubPlans::findOne($studentSubplan['id']);
+                        $planModel['sent_invoices_count'] += 1;
+                        $planModel->update();
+                    }
+                }
+            }
+        }
     }
 }

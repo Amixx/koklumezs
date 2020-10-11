@@ -70,6 +70,10 @@ $this->params['breadcrumbs'][] = $this->title;
                             'value' => $studentSubPlan->plan->monthly_cost,
                         ],
                         [
+                            'label' => Yii::t('app', 'Plan discount (percentage)'),
+                            'value' => $studentSubPlan->plan->discount,
+                        ],
+                        [
                             'label' => Yii::t('app', 'Plan months count'),
                             'value' => $studentSubPlan->plan->months,
                         ],

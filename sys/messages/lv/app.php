@@ -280,4 +280,6 @@ return [
     'Video size' => 'Video apjoms',
     'stars' => 'zvaigznes',
     'text' => 'teksts',
+    'Discount (percentage)' => 'Atlaide (procentos)',
+    'Plan discount (percentage)' => 'Plāna atlaide (procentos)'
 ];

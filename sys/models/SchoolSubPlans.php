@@ -24,7 +24,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
         return [
             [['school_id', 'name', 'monthly_cost', 'months'], 'required'],
             [['monthly_cost'], 'double'],
-            [['school_id', 'months'], 'number'],
+            [['school_id', 'months', 'discount'], 'number'],
             [['name', 'description'], 'string'],
         ];
     }
@@ -40,6 +40,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
             'name' => \Yii::t('app',  'Title'),
             'description' => \Yii::t('app',  'Description'),
             'monthly_cost' => \Yii::t('app',  'Monthly cost'),
+            'discount' => \Yii::t('app',  'Discount (percentage)'),
             'months' => \Yii::t('app',  'Months'),
         ];
     }

@@ -17,6 +17,7 @@ use app\models\Lectures;
 use app\models\SchoolTeacher;
 use app\models\SchoolLecture;
 use app\models\Users;
+use app\models\StudentSubPlans;
 use yii\data\Pagination;
 use yii\web\NotFoundHttpException;
 use app\models\CommentresponsesSearch;
@@ -28,6 +29,7 @@ use app\models\SchoolStudent;
 use app\models\CommentResponses;
 use app\models\UserLectures;
 use app\models\Userlectureevaluations;
+use kartik\mpdf\Pdf;
 
 class TestController extends Controller
 {
@@ -121,16 +123,18 @@ class TestController extends Controller
 
         // var_dump(LectureViews::getDayResult(Yii::$app->user->identity->id));
 
-        $user = Users::findByUsername(Yii::$app->user->identity->username);
-        echo Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'lecture-assigned-html', 'text' => 'lecture-assigned-text'],
-                ['user' => $user/*, 'lecture' => $lecture*/]
-            )
-            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
-            ->setTo('liepinsimantsimis2001@gmail.com')
-            ->setSubject('Jaunas nodarbības - ' . Yii::$app->name)
-            ->send();
+        // $user = Users::findByUsername(Yii::$app->user->identity->username);
+        // echo Yii::$app
+        //     ->mailer
+        //     ->compose(
+        //         ['html' => 'lecture-assigned-html', 'text' => 'lecture-assigned-text'],
+        //         ['user' => $user/*, 'lecture' => $lecture*/]
+        //     )
+        //     ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+        //     ->setTo('liepinsimantsimis2001@gmail.com')
+        //     ->setSubject('Jaunas nodarbības - ' . Yii::$app->name)
+        //     ->send();
+
+
     }
 }

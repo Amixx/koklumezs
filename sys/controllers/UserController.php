@@ -242,7 +242,6 @@ class UserController extends Controller
                 if ($subplan) {
                     $subplan->plan_id = $postData["plan_id"];
                     $subplan->start_date = $postData["start_date"];
-                    $subplan->invoice_url = $postData["invoice_url"];
                     $subplan->times_paid = $postData["times_paid"];
                     $subplan->update();
                 } else {
@@ -250,7 +249,6 @@ class UserController extends Controller
                     $subplan->user_id = $model->id;
                     $subplan->plan_id = $postData["plan_id"];
                     $subplan->start_date = $postData["start_date"];
-                    $subplan->invoice_url = $postData["invoice_url"];
                     $subplan->times_paid = $postData["times_paid"];
                     $subplan->save();
                 }
