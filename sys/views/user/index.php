@@ -62,6 +62,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     return "<a href='/sys/school-sub-plans/view?id=".$dataProvider["subplan"]["plan"]["id"]."'>".$dataProvider["subplan"]["plan"]["name"]."</a>";
                 },
                 'format' => 'html',
+                'filter' => Html::dropDownList(
+                    'TeacherUserSearch[subplan_name]',
+                    isset($get['TeacherUserSearch']['subplan_name']) ? $get['TeacherUserSearch']['subplan_name'] : '',
+                    $schoolSubPlans,
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
              [
                 'attribute' => 'Plan end date',

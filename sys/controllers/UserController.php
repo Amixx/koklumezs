@@ -69,11 +69,13 @@ class UserController extends Controller
         $isCurrentUserTeacher = Users::isCurrentUserTeacher();
         $searchModel = $isCurrentUserTeacher ? new TeacherUserSearch() : new UserSearch();
         $dataProvider = $searchModel->search($get);
+        $schoolSubPlans = SchoolSubPlans::getMappedForSelection();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'get' => $get,
-            'lectures' => $lectures
+            'lectures' => $lectures,
+            'schoolSubPlans' => $schoolSubPlans,
         ]);
     }
 

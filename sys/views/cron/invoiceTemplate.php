@@ -4,6 +4,7 @@ $dateToday = Date("d.m.yy.");
 $payDate = date_create($dateToday);
 date_add($payDate, date_interval_create_from_date_string("14 days"));
 $payDateString = date_format($payDate, "d.m.Y.");
+$payAmount = number_format($subplan['monthly_cost'], 2);
 
 ?>
 
@@ -96,13 +97,13 @@ $payDateString = date_format($payDate, "d.m.Y.");
                 </tr>
                 <tr>
                     <td><?= $subplan['name'] ?></td>
-                    <td><?= $subplan['monthly_cost'] ?></td>
+                    <td><?= $payAmount ?></td>
                 </tr>
             </table>
             <div class="lh-2 align-right">
-                <div class="font-s">Summa bez PVN (Eur) <?= $subplan['monthly_cost'] ?></div>
+                <div class="font-s">Summa bez PVN (Eur) <?= $payAmount ?></div>
                 <div class="font-xs">PVN (Eur) 0,00</div>
-                <div class="font-s"><strong>Summa apmaksai (Eur) <?= $subplan['monthly_cost'] ?></strong></div>
+                <div class="font-s"><strong>Summa apmaksai (Eur) <?= $payAmount ?></strong></div>
                 <!-- <div class="font-xs">Apmaksas summa vārdiem: viens simts piecdesmit eiro un nulle centi</div> -->
             </div>
             <div class="lh-2">

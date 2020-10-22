@@ -73,6 +73,8 @@ class TeacherUserSearch extends Users
             'last_lecture' => $this->last_lecture
         ]);
 
+
+
         $query->andFilterWhere(['like', 'first_name', $this->first_name])
             ->andFilterWhere(['like', 'last_name', $this->last_name])
             ->andFilterWhere(['like', 'username', $this->username])
@@ -82,6 +84,10 @@ class TeacherUserSearch extends Users
             ->andFilterWhere(['like', 'status', $this->status])
             ->andFilterWhere(['like', 'last_login', $this->last_login])
             ->andFilterWhere(['like', 'dont_bother', $this->dont_bother]);
+
+        if(isset($params["TeacherUserSearch"]) && isset($params["TeacherUserSearch"]["subplan_name"])) {
+            $query->andFilterWhere(['like', 'schoolsubplans.id', $params["TeacherUserSearch"]["subplan_name"]]);
+        }
 
         return $dataProvider;
     }
