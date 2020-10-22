@@ -20,7 +20,7 @@ class TeacherUserSearch extends Users
     {
         return [
             [['id'], 'integer'],
-            [['first_name', 'last_name', 'username', 'language', 'subscription_type', 'status', 'last_login', 'dont_bother', 'user_level'], 'safe'],
+            [['first_name', 'last_name', 'username', 'language', 'subscription_type', 'status', 'last_login', 'dont_bother', 'user_level',], 'safe'],
         ];
     }
 
@@ -45,7 +45,7 @@ class TeacherUserSearch extends Users
         $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
 
-        $query = Users::find()->where(['in', 'users.id', $schoolStudentIds]);
+        $query = Users::find()->where(['in', 'users.id', $schoolStudentIds])->joinWith("subplan");
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -75,7 +75,7 @@ class TeacherUserSearch extends Users
 
         $query->andFilterWhere(['like', 'first_name', $this->first_name])
             ->andFilterWhere(['like', 'last_name', $this->last_name])
-            ->andFilterWhere(['like', 'last_name', $this->username])
+            ->andFilterWhere(['like', 'username', $this->username])
             ->andFilterWhere(['like', 'language', $this->language])
             ->andFilterWhere(['like', 'user_level', $this->user_level])
             ->andFilterWhere(['like', 'subscription_type', $this->subscription_type])

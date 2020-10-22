@@ -24,7 +24,6 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
         'editorOptions' => $ckeditorOptions,
     ]) ?>
     <?= $form->field($model, 'monthly_cost')->textInput() ?>
-    <?= $form->field($model, 'discount')->textInput(['value' => isset($model->discount) && $model->discount ? $model->discount : 0]) ?>
     <?= $form->field($model, 'months')->textInput() ?>
 
     <div class="form-group">

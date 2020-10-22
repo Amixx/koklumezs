@@ -242,6 +242,7 @@ return [
     'Monthly cost' => 'Mēneša maksa',
     'Months' => 'Mēneši',
     'Plan start date' => 'Plāna sākuma datums',
+    'Plan end date' => 'Plāna beigu datums',
     'Rēķins' => 'Rēķins',
     'Sent invoices count' => 'Nosūtīto rēķinu skaits',
     'Start date' => 'Sākuma datums',
@@ -281,5 +282,10 @@ return [
     'stars' => 'zvaigznes',
     'text' => 'teksts',
     'Discount (percentage)' => 'Atlaide (procentos)',
-    'Plan discount (percentage)' => 'Plāna atlaide (procentos)'
+    'Plan discount (percentage)' => 'Plāna atlaide (procentos)',
+    'Remove subscription plan' => 'Noņemt abonēšanas plānu',
+    'Invoice number' => 'Rēķina numurs',
+    'Plan title' => 'Plāna nosaukums',
+    'Plan price (monthly)' => 'Plāna cena (mēnesī)',
+    'Sent date' => 'Nosūtīšanas datums'
 ];

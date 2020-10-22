@@ -2,10 +2,8 @@
 
 $dateToday = Date("d.m.yy.");
 $payDate = date_create($dateToday);
-date_add($payDate, date_interval_create_from_date_string("20 days"));
-$payDateString = date_format($payDate, "d.m.yy.");
-
-$payAmount = $subplan['pay_amount'] * $subplan['discount'] / 100;
+date_add($payDate, date_interval_create_from_date_string("14 days"));
+$payDateString = date_format($payDate, "d.m.Y.");
 
 ?>
 
@@ -22,7 +20,7 @@ $payAmount = $subplan['pay_amount'] * $subplan['discount'] / 100;
             <div class="font-xs align-right lh-2">
                 <div>Rēķina datums: <span class="font-m"><?= $dateToday ?></span></div>
                 <div>Apmaksāt līdz: <span class="font-m"><?= $payDateString ?></span></div>
-                <div>Apmaksas termiņš: <span class="font-m">20 dienu laikā</span></div>
+                <div>Apmaksas termiņš: <span class="font-m">14 dienu laikā</span></div>
             </div>
             <hr>
             <table class="lh-2">
@@ -94,23 +92,17 @@ $payAmount = $subplan['pay_amount'] * $subplan['discount'] / 100;
             <table class="bordered-table">
                 <tr>
                     <th>Nosaukums</th>
-                    <th>Cena (Eur)</th>
-                    <th>Atlaide (%)</th>
-                    <th>PVN (%)</th>
                     <th>Summa (Eur)</th>
                 </tr>
                 <tr>
                     <td><?= $subplan['name'] ?></td>
-                    <td><?= $subplan['pay_amount'] ?></td>
-                    <td><?= $subplan['discount'] ?></td>
-                    <td></td>
-                    <td><?= $payAmount ?></td>
+                    <td><?= $subplan['monthly_cost'] ?></td>
                 </tr>
             </table>
             <div class="lh-2 align-right">
-                <div class="font-s">Summa bez PVN (Eur) <?= $payAmount ?></div>
+                <div class="font-s">Summa bez PVN (Eur) <?= $subplan['monthly_cost'] ?></div>
                 <div class="font-xs">PVN (Eur) 0,00</div>
-                <div class="font-s"><strong>Summa apmaksai (Eur) <?= $payAmount ?></strong></div>
+                <div class="font-s"><strong>Summa apmaksai (Eur) <?= $subplan['monthly_cost'] ?></strong></div>
                 <!-- <div class="font-xs">Apmaksas summa vārdiem: viens simts piecdesmit eiro un nulle centi</div> -->
             </div>
             <div class="lh-2">

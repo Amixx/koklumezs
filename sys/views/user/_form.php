@@ -65,11 +65,16 @@ $isTeacher = Users::isCurrentUserTeacher();
             <?php } ?>
         </div>
         <div class="tab-pane fade" id="plan" role="tabpanel" aria-labelledby="plan-tab">
-            <?php if (isset($schoolSubPlans) && $schoolSubPlans) { ?>
-                <?= $form->field($model, 'subplan[plan_id]')->dropDownList($schoolSubPlans, ['prompt' => ''])->label(Yii::t('app', 'Subscription plan')) ?>
-                <?= $form->field($model, 'subplan[start_date]')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])->label(Yii::t('app', 'Start date')) ?>
-                <?= $form->field($model, 'subplan[times_paid]')->textInput(['type' => 'number'])->label(Yii::t('app', 'Times paid')) ?>
-            <?php } ?>
+            <div class="form-group">
+                <?php if (isset($schoolSubPlans) && $schoolSubPlans) { ?>
+                    <?= $form->field($model, 'subplan[plan_id]')->dropDownList($schoolSubPlans, ['prompt' => ''])->label(Yii::t('app', 'Subscription plan')) ?>
+                    <?= $form->field($model, 'subplan[start_date]')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])->label(Yii::t('app', 'Start date')) ?>
+                    <?= $form->field($model, 'subplan[times_paid]')->textInput(['type' => 'number'])->label(Yii::t('app', 'Times paid')) ?>
+                <?php } ?>
+            </div>
+            <div class="form-group">
+                <?= Html::a(\Yii::t('app',  'Remove subscription plan'), ["/student-sub-plans/delete?userId=".$model["id"]], ['class' => 'btn btn-danger']) ?>
+            </div>
         </div>
     </div>
 

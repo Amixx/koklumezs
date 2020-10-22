@@ -28,24 +28,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'last_name',
             'username',
             [
-                'attribute' => 'user_level',
-                'format' => 'raw',
-                'value' => function ($dataProvider) {
-                    switch ($dataProvider->user_level) {
-                        case 'Student':
-                            return \Yii::t('app',  'Student');
-                            break;
-                        case 'Admin':
-                            return \Yii::t('app',  'Administrator');
-                            break;
-                        case 'Teacher':
-                            return \Yii::t('app',  'Teacher');
-                            break;
-                    }
-                },
-                'filter' => Html::dropDownList('TeacherUserSearch[user_level]', isset($get['TeacherUserSearch']['user_level']) ? $get['TeacherUserSearch']['user_level'] : '', app\models\Users::getLevels(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
-            ],
-            [
                 'attribute' => 'subscription_type',
                 'format' => 'raw',
                 'value' => function ($dataProvider) {
@@ -73,27 +55,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'filter' => Html::dropDownList('TeacherUserSearch[status]', isset($get['TeacherUserSearch']['status']) ? $get['TeacherUserSearch']['status'] : '', app\models\Users::getStatus(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
-            [
-                'attribute' => 'last_login',
-                'value' => 'last_login',
-                'filter' => DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'last_login',
-                    'language' => 'lv',
-                    'dateFormat' => 'yyyy-MM-dd',
-                ]),
-                'format' => ['date', 'php:Y-m-d H:i:s']
+             [
+                'attribute' => 'Plan name',
+                'label' => Yii::t('app', 'Plan name'),
+                'value' => function ($dataProvider) {
+                    return "<a href='/sys/school-sub-plans/view?id=".$dataProvider["subplan"]["plan"]["id"]."'>".$dataProvider["subplan"]["plan"]["name"]."</a>";
+                },
+                'format' => 'html',
             ],
-            [
-                'attribute' => 'dont_bother',
-                'value' => 'dont_bother',
-                'filter' => DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'dont_bother',
-                    'language' => 'lv',
-                    'dateFormat' => 'yyyy-MM-dd',
-                ]),
-                'format' => ['date', 'php:Y-m-d H:i:s']
+             [
+                'attribute' => 'Plan end date',
+                'label' => Yii::t('app', 'Plan end date'),
+                'value' => function ($dataProvider) {
+                    if(!$dataProvider['subplan']['plan']['months']) return;
+                    return date_format(date_add(date_create($dataProvider["subplan"]["start_date"]), date_interval_create_from_date_string($dataProvider['subplan']['plan']['months']." months")), 'd-m-Y');
+                },
+                'format' => 'raw'
             ],
             ['class' => 'yii\grid\ActionColumn'],
         ],

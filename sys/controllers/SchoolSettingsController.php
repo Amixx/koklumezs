@@ -13,6 +13,7 @@ use yii\web\View;
 use app\models\SchoolStudent;
 use app\models\CommentResponses;
 use app\models\Difficulties;
+use app\models\SchoolTeacher;
 use app\models\DifficultiesSearch;
 use yii\data\ActiveDataProvider;
 

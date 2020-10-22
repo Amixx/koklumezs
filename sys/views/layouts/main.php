@@ -206,17 +206,17 @@ AppAsset::register($this);
     <?php $this->endBody() ?>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/pwabuilder-sw.js', {
-                    scope: "/"
-                })
-                .then(function(registration) {
-                    // console.log('Service worker registration successful, scope is: ', registration.scope);
-                })
-                .catch(function(error) {
-                    // console.log('Service worker registration failed, error: ', error);
-                });
-        }
+        // if ('serviceWorker' in navigator) {
+        //     navigator.serviceWorker.register('/pwabuilder-sw.js', {
+        //             scope: "/"
+        //         })
+        //         .then(function(registration) {
+        //             // console.log('Service worker registration successful, scope is: ', registration.scope);
+        //         })
+        //         .catch(function(error) {
+        //             // console.log('Service worker registration failed, error: ', error);
+        //         });
+        // }
 
         window.addEventListener('beforeinstallprompt', function(e) {
             // Prevent Chrome 67 and earlier from automatically showing the prompt

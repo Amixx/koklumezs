@@ -95,7 +95,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public function getSubplan()
     {
-        return $this->hasOne(StudentSubPlans::className(), ['user_id' => 'id']);
+        return $this->hasOne(StudentSubPlans::className(), ['user_id' => 'id'])->joinWith("plan");
     }
 
     public static function getByUsername($username)
@@ -151,6 +151,23 @@ class Users extends ActiveRecord implements IdentityInterface
             $users = ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'username');
         }
         return $dont_bother ? $result : $users;
+    }
+
+    public static function getAllStudents(){
+        $users = self::find()->where(['user_level' => self::ROLE_USER])->asArray()->all();
+        $result = [];
+        foreach ($users as $u) {
+            if ($u['dont_bother'] != null) {
+                $time = time();
+                $check = strtotime($u['dont_bother']);
+                if ($check < $time) {
+                    $result[$u['id']] = $u;
+                }
+            } else {
+                $result[$u['id']] = $u;
+            }
+        }
+        return $result;
     }
 
     public static function getStudents($dont_bother = false)

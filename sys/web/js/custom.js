@@ -201,25 +201,34 @@ function setupAssignUserListFilters(){
 
         function shouldHideRow(lang, langText, subTypes, subTypeText, isUserPassive) {
             var hideRow;
+            
+            if (
+                isUserPassive && subTypes.indexOf("pausing") === -1 ||
+                !isUserPassive && subTypes.indexOf("pausing") > -1
+            ) {
+                return true;
+            }
+
             var showAllSubTypes = subTypes.length === 0 || subTypes.length === 4;
+            var onlyPausing = subTypes.length === 1 && subTypes[0] === "pausing";
 
             if (lang === "all") {
                 if (showAllSubTypes) {
                     hideRow = false;
+                } else if (onlyPausing) {
+                    hideRow = !isUserPassive;
                 } else {
                     hideRow = subTypes.indexOf(subTypeText) === -1;
                 }
             } else {
                 if (showAllSubTypes) {
                     hideRow = lang !== langText;
+                } else if (onlyPausing) {
+                    hideRow = lang !== langText && !isUserPassive;
                 } else {
                     hideRow = lang !== langText || subTypes.indexOf(subTypeText) === -1;
                 }
-            }
-
-            if (isUserPassive && subTypes.indexOf("pausing") === -1) {
-                hideRow = true;
-            }
+            }           
 
             return hideRow;
         }

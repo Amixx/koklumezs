@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\LectureAssignment;
+use app\models\SentInvoices;
 use app\models\Sentlectures;
 use app\models\Studentgoals;
 use app\models\UserLectures;
@@ -286,7 +287,7 @@ class CronController extends Controller
 
     public function actionTest()
     {
-        $users = Users::getActiveStudents(true);
+        $users = Users::getAllStudents();
         $inlineCss = '
             body {
                 font-family: Arial, serif;
@@ -393,12 +394,7 @@ class CronController extends Controller
 
                     $sent = Yii::$app
                         ->mailer
-                        ->compose(
-                            ['html' => 'lekcija-html', 'text' => 'lekcija-text'],
-                            [
-                                'teacherMessage' => ""
-                            ]
-                        )
+                        ->compose(['html' => 'rekins-html', 'text' => 'rekins-text'])
                         ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
                         ->setTo($user['email'])
                         ->setSubject("Rēķins $id - " . Yii::$app->name)
@@ -409,6 +405,23 @@ class CronController extends Controller
                         $planModel = StudentSubPlans::findOne($studentSubplan['id']);
                         $planModel['sent_invoices_count'] += 1;
                         $planModel->update();
+
+                        $invoice = new SentInvoices;
+                        $invoice->user_id = $user['id'];
+                        $invoice->invoice_number = $id;
+                        $invoice->plan_name = $subplan['name'];
+                        $invoice->plan_price = $subplan['monthly_cost'];
+                        $invoice->plan_start_date = $studentSubplan['start_date'];
+                        $invoice->save();
+
+                        Yii::$app
+                            ->mailer
+                            ->compose(['html' => 'rekins-html', 'text' => 'rekins-text'])
+                            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+                            ->setTo(Yii::$app->params['senderEmail'])
+                            ->setSubject("Skolēnam nosūtītās vēstules kopija (rēķins nr. " . $id . ")")
+                            ->attach($title)
+                            ->send();
                     }
                 }
             }
