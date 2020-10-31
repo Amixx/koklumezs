@@ -57,7 +57,7 @@ $fieldOptions2 = [
         <?= $form
             ->field($model, 'email', $fieldOptions1)
             ->label(false)
-            ->textInput(['placeholder' => Yii::t('app', 'Email')]) ?>
+            ->textInput(['placeholder' => Yii::t('app', 'E-mail')]) ?>
 
         <?= $form
             ->field($model, 'language')

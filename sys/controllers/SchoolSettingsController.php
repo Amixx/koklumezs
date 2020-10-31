@@ -62,7 +62,8 @@ class SchoolSettingsController extends Controller
         ]);
         return $this->render('index', [
             'settings' => $settings,
-            'difficultiesDataProvider' => $difficultiesDataProvider
+            'difficultiesDataProvider' => $difficultiesDataProvider,
+            'schoolId' => $schoolId,
         ]);
     }
 

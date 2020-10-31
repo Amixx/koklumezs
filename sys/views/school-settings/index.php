@@ -30,7 +30,15 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php } ?>
         </tr>
     </table>
+
     <?= Html::a(\Yii::t('app',  'Edit'), ['update'], ['class' => 'btn btn-primary']) ?>
+
+    <hr>
+    <p>
+        <strong><?= Yii::t('app', 'The link that students can use to join this school'); ?>: </strong>
+        <code>https://skola.koklumezs.lv/sys/site/sign-up?s=<?= $schoolId ?></code>
+    </p>
+    <hr>    
 
     <?= $this->render("difficulties", [
         'dataProvider' => $difficultiesDataProvider
