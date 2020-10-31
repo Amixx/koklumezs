@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <hr>
     <p>
         <strong><?= Yii::t('app', 'The link that students can use to join this school'); ?>: </strong>
-        <code>https://skola.koklumezs.lv/sys/site/sign-up?s=<?= $schoolId ?></code>
+        <code>https://skola.koklumezs.lv/sys/site/sign-up?s=<?= $schoolId ?>?l=<?= Yii::$app->language ?></code>
     </p>
     <hr>    
 

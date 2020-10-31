@@ -168,6 +168,7 @@ AppAsset::register($this);
             $navItems[] = ['label' => \Yii::t('app',  'Sheet music'), 'url' => ['/file'], 'active' =>  in_array(\Yii::$app->controller->id, ['file'])];
             $navItems[] = ['label' => $commentsItemText, 'url' => ['/comment-responses'], 'active' =>  in_array(\Yii::$app->controller->id, ['comment-responses'])];
             $navItems[] = ['label' => \Yii::t('app',  'Archive'), 'url' => ['/archive'], 'active' =>  in_array(\Yii::$app->controller->id, ['archive'])];
+            $navItems[] = ['label' => \Yii::t('app',  'Subscription plan'), 'url' => ['/student-sub-plans/view/?id='.Yii::$app->user->identity->id], 'active' =>  in_array(\Yii::$app->controller->id, ['student-sub-plans'])];
 
             $navItems[] = $navEnd;
         }

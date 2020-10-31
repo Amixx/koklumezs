@@ -21,9 +21,6 @@ class StudentSubPlansController extends Controller
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
-                            return Users::isAdminOrTeacher(Yii::$app->user->identity->username);
-                        }
                     ],
                     // everything else is denied
                 ],
@@ -35,6 +32,20 @@ class StudentSubPlansController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actionView($id){
+        $isGuest = Yii::$app->user->isGuest;
+        if (!$isGuest) {
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
+        }
+
+        $subplan = StudentSubPlans::getForStudent($id);
+
+        return $this->render('view', [
+            'subplan' => $subplan,
+        ]);
     }
 
     public function actionDelete($userId)
