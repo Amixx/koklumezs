@@ -9,9 +9,11 @@ use app\models\TeacherUserlectureevaluationsSearch;
 use app\models\Users;
 use app\models\Lectures;
 use app\models\Evaluations;
+use app\models\SentInvoices;
 use app\models\School;
 use app\models\CommentResponses;
 use app\models\CommentresponsesSearch;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -60,6 +62,9 @@ class UserLectureEvaluationsController extends Controller
         }
         $get = Yii::$app->request->queryParams;
         $commentResponsesDataProvider = CommentResponses::getAllCommentResponses();
+        $sentInvoices = new ActiveDataProvider([
+            'query' => SentInvoices::getForCurrentSchool()
+        ]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -69,7 +74,8 @@ class UserLectureEvaluationsController extends Controller
             'evaluations' => $evaluations,
             'get' => $get,
             'commentResponsesDataProvider' => $commentResponsesDataProvider,
-            'isTeacher' => $isTeacher
+            'isTeacher' => $isTeacher,
+            'sentInvoices' => $sentInvoices,
         ]);
     }
 

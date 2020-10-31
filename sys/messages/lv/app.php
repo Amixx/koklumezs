@@ -245,6 +245,7 @@ return [
     'Plan end date' => 'Plāna beigu datums',
     'Rēķins' => 'Rēķins',
     'Sent invoices count' => 'Nosūtīto rēķinu skaits',
+    'Sent invoices' => 'Nosūtītie rēķini',
     'Start date' => 'Sākuma datums',
     'Student ID' => 'Skolēna ID',
     'Student\'s subscription plan' => 'Skolēna abonēšanas plāns',

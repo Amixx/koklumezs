@@ -421,3 +421,9 @@ background: rgba(0,0,0,0.1);
         float:none; margin-top:0;
     }   
 }
+
+.Comments {
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+}

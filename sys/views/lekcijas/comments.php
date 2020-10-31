@@ -8,8 +8,9 @@ use yii\helpers\Html;
     <div class="col-md-12">
         <h3><?= \Yii::t('app',  'Comments') ?></h3>
     </div>
-    <?php foreach ($comments as $comment) { ?>
-        <div class="col-md-12">
+    <div class="Comments">
+        <?php foreach ($comments as $comment) { ?>
+        <div>
             <div>
                 <div class="LessonComments__Container">
                     <span><strong><?= $comment['student']['first_name'] ?></strong>: </span>
@@ -21,7 +22,7 @@ use yii\helpers\Html;
         </div>
         <?php if ($comment['responses']) { ?>
             <?php foreach ($comment['responses'] as $response) { ?>
-                <div class="col-md-12">
+                <div>
                     <div class="LessonComments__Container LessonComments__Container--response">
                         <span><strong><?= $response['author']['first_name'] ?></strong>: </span>
                         <span><?= $response['text'] ?></span>
@@ -32,12 +33,13 @@ use yii\helpers\Html;
 
         <?php } ?>
 
-        <div class="col-md-12 hidden response-<?= $comment['id'] ?>">
+        <div class="hidden response-<?= $comment['id'] ?>">
             <?= Html::beginForm(['/comment-responses/create'], 'post') ?>
             <textarea name="response_text" placeholder="Atbilde" class="LessonComments__Response"></textarea>
             <input type="hidden" name="evaluation_id" value="<?= $comment['id'] ?>" />
             <?= Html::submitButton(\Yii::t('app',  'Send'), ['class' => 'btn btn-primary btn-sm']) ?>
             <?= Html::endForm() ?>
         </div>
-    <?php } ?>
+        <?php } ?>
+    </div>    
 </div>

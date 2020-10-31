@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+use app\models\SchoolTeacher;
 
 use Yii;
 
@@ -47,11 +48,10 @@ class SentInvoices extends \yii\db\ActiveRecord
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCommentResponses($id)
-    {
-        return self::find()->where(['userlectureevaluation_id' => $id])->joinWith('author')->asArray()->all();
+    public function getForCurrentSchool(){
+        $schoolId = SchoolTeacher::getCurrentSchoolId();
+        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($schoolId);
+
+        return self::find()->where(['in', 'user_id', $schoolStudentIds])->joinWith('student');
     }
 }
