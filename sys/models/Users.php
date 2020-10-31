@@ -293,6 +293,19 @@ class Users extends ActiveRecord implements IdentityInterface
         return new static($user);
     }
 
+    public static function findById($id)
+    {
+        $user = self::find()
+            ->where([
+                "id" => $id,
+            ])
+            ->one();
+        if (empty($user)) {
+            return null;
+        }
+        return new static($user);
+    }
+
     /**
      * @inheritdoc
      */
@@ -461,6 +474,13 @@ class Users extends ActiveRecord implements IdentityInterface
         } else {
             return false;
         }
+    }
+
+    public static function getAllUsernames(){
+        return array_map(
+            function($user){ return $user["username"]; },
+            self::find()->asArray()->all()
+        );
     }
 
     public static function getStatus()

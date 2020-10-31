@@ -136,27 +136,6 @@ class TestController extends Controller
         //     ->setSubject('Jaunas nodarbības - ' . Yii::$app->name)
         //     ->send();
 
-         $schoolId = SchoolTeacher::getCurrentSchoolId();
-        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($schoolId);
-
-        // var_dump(array_map(function($item){
-        //     var_dump($item);
-        //     return $item;
-        // }, $schoolStudentIds));
-
-        $ids = array();
-        foreach($schoolStudentIds as $id){
-            $ids[] = $id;
-        }
-
-
-
-
-        var_dump(SentInvoices::find()->where(['in', 'user_id', $ids])->joinWith('student')->asArray()->all());
-        var_dump(SentInvoices::find()->where(['in', 'user_id', ["454"]])->joinWith('student')->asArray()->all());
-
-        // var_dump($schoolStudentIds);
-
-
+        var_dump(Users::getAllUsernames());
     }
 }

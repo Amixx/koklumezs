@@ -8,6 +8,8 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
+use app\models\SignUpForm;
+use app\models\SchoolStudent;
 use app\models\School;
 use app\models\Users;
 use app\models\PasswordResetRequestForm;
@@ -225,5 +227,39 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function actionSignUp($s)
+    {
+        $isGuest = Yii::$app->user->isGuest;
+        if (!$isGuest) {
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
+        }
+
+        $model = new SignUpForm();
+        if ($model->load(Yii::$app->request->post())) {
+            $userId = $model->signUp();
+
+            if($userId){
+                $schoolStudent = new SchoolStudent;
+
+                $schoolStudent->school_id = $s;
+                $schoolStudent->user_id = $userId;
+
+                $saved = $schoolStudent->save();
+
+                if($saved){
+                    $user = Users::findById($userId);
+                    Yii::$app->user->login($user);
+                    $this->redirect(["index"]);
+                }
+            }            
+        }
+
+        $model->password = '';
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
     }
 }
