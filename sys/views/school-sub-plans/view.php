@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Difficulties */
@@ -34,8 +35,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'description:html',
             'monthly_cost',
             'months',
-            'files',
         ],
     ]) ?>
+<h3><?= Yii::t('app', 'Plan files') ?></h3>
+    <?= GridView::widget([
+        'dataProvider' => $planFiles,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            'title',
+            'file',
+        ],
+    ]); ?>
 
 </div>

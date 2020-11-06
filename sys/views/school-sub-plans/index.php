@@ -22,7 +22,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'description:html',
             'monthly_cost',
             'months',
-            'files',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

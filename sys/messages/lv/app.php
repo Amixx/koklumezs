@@ -294,4 +294,7 @@ return [
     'Video size' => 'Video apjoms',
     'stars' => 'zvaigznes',
     'text' => 'teksts',
+    'File title' => 'Faila nosaukums',
+    'Plan files' => 'Plāna faili',
+    'Plan' => 'Plāns',
 ];

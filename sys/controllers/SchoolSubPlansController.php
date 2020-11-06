@@ -7,6 +7,7 @@ use app\models\Difficulties;
 use app\models\Evaluations;
 use app\models\LectureAssignment;
 use app\models\Lectures;
+use app\models\PlanFiles;
 use app\models\SchoolTeacher;
 use app\models\LecturesDifficulties;
 use app\models\Lecturesevaluations;
@@ -81,8 +82,15 @@ class SchoolSubPlansController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
+        $model =  $this->findModel($id);
+
+        $planFiles = new ActiveDataProvider([
+            'query' => PlanFiles::getFilesForPlan($model->id),
+        ]);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'planFiles' => $planFiles,
         ]);
     }
 
@@ -100,6 +108,13 @@ class SchoolSubPlansController extends Controller
         if ($model->load($post)) {
             $model->school_id = $schoolId;
             if ($model->save()) {
+                if(isset($post["file-title"]) && isset($post["file"])){
+                    $planFile = new PlanFiles();
+                    $planFile->plan_id = $model->id;
+                    $planFile->title = $post["file-title"];
+                    $planFile->file = $post["file"];
+                    $planFile->save();
+                }
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }
@@ -117,13 +132,27 @@ class SchoolSubPlansController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
+        $post = Yii::$app->request->post();
+
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $saved = $model->load($post) && $model->save();
+        if(isset($post["file-title"]) && isset($post["file"])){
+            $planFile = new PlanFiles();
+            $planFile->plan_id = $model->id;
+            $planFile->title = $post["file-title"];
+            $planFile->file = $post["file"];
+            $planFile->save();
         }
+
+        if($saved) return $this->redirect(['view', 'id' => $model->id]);
+
+        $planFiles = new ActiveDataProvider([
+            'query' => PlanFiles::getFilesForPlan($model->id),
+        ]);
 
         return $this->render('update', [
             'model' => $model,
+            'planFiles' => $planFiles,
         ]);
     }
 
