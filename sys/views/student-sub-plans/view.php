@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Difficulties */
@@ -20,19 +21,16 @@ $this->title = $subplan['plan']['name'];
             'sent_invoices_count',
             'times_paid',
             'plan.name',
-            [
-                'attribute' => 'plan.files',
-                'value' => function($subplan){
-                    if(!$subplan['plan']['files']) return "";
-                    $files = explode(", ", $subplan['plan']['files']);
-                    $html = "";
-                    foreach($files as $file){
-                        $html .= "<a href=". $file .">". $file ."</a> ";
-                    }
-                    return $html;
-                },
-                'format' => 'html'
-            ]
         ],
     ]) ?>
+
+    <h3><?= Yii::t('app', 'Plan files') ?></h3>
+    <?php 
+    foreach($planFiles as $file){ ?>
+    <p>
+        <a href="<?= $file['file'] ?>" target="_blank"><?= $file['title'] ?></a>
+    </p>
+        
+    <?php }
+    ?>
 </div>

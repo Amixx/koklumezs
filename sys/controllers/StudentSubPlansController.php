@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\StudentSubPlans;
 use app\models\Users;
+use app\models\PlanFiles;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -42,9 +43,11 @@ class StudentSubPlansController extends Controller
         }
 
         $subplan = StudentSubPlans::getForStudent($id);
+        $planFiles = PlanFiles::getFilesForPlan($subplan["plan_id"])->asArray()->all();
 
         return $this->render('view', [
             'subplan' => $subplan,
+            'planFiles' => $planFiles,
         ]);
     }
 

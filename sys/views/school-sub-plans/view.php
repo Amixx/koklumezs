@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'months',
         ],
     ]) ?>
-<h3><?= Yii::t('app', 'Plan files') ?></h3>
+    <h3><?= Yii::t('app', 'Plan files') ?></h3>
     <?= GridView::widget([
         'dataProvider' => $planFiles,
         'columns' => [
