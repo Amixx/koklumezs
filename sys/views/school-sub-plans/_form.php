@@ -26,7 +26,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
     ]) ?>
     <?= $form->field($model, 'monthly_cost')->textInput() ?>
     <?= $form->field($model, 'months')->textInput() ?>
-    <?= $form->field($model, 'file')->widget(InputFile::className(), [
+    <?= $form->field($model, 'files')->widget(InputFile::className(), [
         'language' => 'lv',
         'controller' => 'elfinder', // вставляем название контроллера, по умолчанию равен elfinder
         'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',

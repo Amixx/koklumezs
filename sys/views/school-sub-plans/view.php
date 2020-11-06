@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'description:html',
             'monthly_cost',
             'months',
-            'file',
+            'files',
         ],
     ]) ?>
 
