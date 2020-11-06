@@ -2,7 +2,6 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-use  yii\jui\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\TeacherUserSearch */
@@ -11,6 +10,8 @@ use  yii\jui\DatePicker;
 
 $this->title = \Yii::t('app',  'Users');
 $this->params['breadcrumbs'][] = $this->title;
+
+$planEndMonths = [];
 ?>
 <div class="user-index">
     <p>
@@ -73,8 +74,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('app', 'Plan end date'),
                 'value' => function ($dataProvider) {
                     if(!$dataProvider['subplan']['plan']['months']) return;
-                    return date_format(date_add(date_create($dataProvider["subplan"]["start_date"]), date_interval_create_from_date_string($dataProvider['subplan']['plan']['months']." months")), 'd-m-Y');
+                    $date = date_create($dataProvider["subplan"]["start_date"]);
+                    $date->modify("+" . $dataProvider['subplan']['plan']['months'] . "month");
+                    return date_format($date, 'd-m-Y');
                 },
+                'filter' => Html::dropDownList(
+                    'TeacherUserSearch[subplan_end_date]',
+                    isset($get['TeacherUserSearch']['subplan_end_date']) ? $get['TeacherUserSearch']['subplan_end_date'] : '',
+                    $planEndDates,
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
                 'format' => 'raw'
             ],
             ['class' => 'yii\grid\ActionColumn'],

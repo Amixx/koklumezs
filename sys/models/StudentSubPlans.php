@@ -44,4 +44,24 @@ class StudentSubPlans extends \yii\db\ActiveRecord
     {
         return self::find()->where(['user_id' => $studentId]);
     }
+
+    public function getPlanEndDatesForCurrentSchoolStudents(){
+        $schoolId = SchoolTeacher::getCurrentSchoolId();
+        $studentPlans = self::find()->joinWith("plan")->andFilterWhere(['schoolsubplans.school_id' => $schoolId])->asArray()->all();
+        $planEndDates = array_map(function ($studentPlan) {
+            $date = date_create($studentPlan["start_date"]);
+            $date->modify("+" . $studentPlan['plan']['months'] . "month");
+            return date_format($date, 'd-m-Y');
+        }, $studentPlans);
+        return $planEndDates;
+    }
+
+    public function getReadablePlanEndDates(){
+        $endDates = self::getPlanEndDatesForCurrentSchoolStudents();
+        $endDatesMapped = array_map(function($date){
+            $timestamp = strtotime($date);
+            return date("M", $timestamp) . " " . date("Y", $timestamp);
+        }, $endDates);
+        return array_combine($endDates, $endDatesMapped);
+    }
 }

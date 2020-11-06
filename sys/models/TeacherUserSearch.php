@@ -73,6 +73,7 @@ class TeacherUserSearch extends Users
             'last_lecture' => $this->last_lecture
         ]);
 
+        
 
 
         $query->andFilterWhere(['like', 'first_name', $this->first_name])
@@ -87,6 +88,17 @@ class TeacherUserSearch extends Users
 
         if(isset($params["TeacherUserSearch"]) && isset($params["TeacherUserSearch"]["subplan_name"])) {
             $query->andFilterWhere(['like', 'schoolsubplans.id', $params["TeacherUserSearch"]["subplan_name"]]);
+        }
+        if(isset($params["TeacherUserSearch"]) && isset($params["TeacherUserSearch"]["subplan_end_date"]) && $params["TeacherUserSearch"]["subplan_end_date"]) {
+            $firstDayOfMonth = date_format((new \DateTime($params["TeacherUserSearch"]["subplan_end_date"]))
+                ->modify('first day of this month'), 'Y-m-d');
+            $lastDayOfMonth = date_format((new \DateTime($params["TeacherUserSearch"]["subplan_end_date"]))
+                ->modify('last day of this month'), 'Y-m-d');
+
+            if($firstDayOfMonth && $lastDayOfMonth){
+                $query->andFilterWhere(['between', 'DATE_ADD(studentsubplans.start_date, INTERVAL schoolsubplans.months MONTH)', $firstDayOfMonth, $lastDayOfMonth]);
+            }
+            
         }
 
         return $dataProvider;
