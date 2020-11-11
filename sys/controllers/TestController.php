@@ -135,7 +135,5 @@ class TestController extends Controller
         //     ->setTo('liepinsimantsimis2001@gmail.com')
         //     ->setSubject('Jaunas nodarbības - ' . Yii::$app->name)
         //     ->send();
-
-        var_dump(Users::getAllUsernames());
     }
 }

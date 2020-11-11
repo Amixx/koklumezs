@@ -11,6 +11,7 @@ use app\models\Lectures;
 use app\models\Users;
 use app\models\StudentSubPlans;
 use app\models\School;
+use app\models\SchoolTeacher;
 use app\models\SchoolSubPlans;
 use Yii;
 use yii\web\Controller;
@@ -354,6 +355,10 @@ class CronController extends Controller
             }
         ';
 
+        $timestamp = time();
+        $folderUrl = 'invoices/'.date("M", $timestamp) . "_" . date("Y", $timestamp);
+        if (!is_dir($folderUrl)) mkdir($folderUrl, 0777, true);
+        $invoiceBasePath = $folderUrl . "/";
 
         foreach ($users as $user) {
             $studentSubplan = StudentSubPlans::getForStudent($user["id"]);
@@ -371,6 +376,7 @@ class CronController extends Controller
 
                     $id = mt_rand(10000000, 99999999);
                     $title = "rekins-$id.pdf";
+                    $invoicePath = $invoiceBasePath.$title;
 
                     $content = $this->renderPartial('invoiceTemplate', [
                         'id' => $id,
@@ -384,7 +390,7 @@ class CronController extends Controller
                         'format' => Pdf::FORMAT_A4,
                         'orientation' => Pdf::ORIENT_PORTRAIT,
                         'destination' => Pdf::DEST_FILE,
-                        'filename' => $title,
+                        'filename' => $invoicePath,
                         'content' => $content,
                         'cssInline' => $inlineCss,
                         'options' => ['title' => $title],
@@ -398,7 +404,7 @@ class CronController extends Controller
                         ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
                         ->setTo($user['email'])
                         ->setSubject("Rēķins $id - " . Yii::$app->name)
-                        ->attach($title)
+                        ->attach($invoicePath)
                         ->send();
 
                     if ($sent) {
@@ -413,14 +419,19 @@ class CronController extends Controller
                         $invoice->plan_price = $subplan['monthly_cost'];
                         $invoice->plan_start_date = $studentSubplan['start_date'];
                         $invoice->save();
-
+                    }else{
                         Yii::$app
                             ->mailer
-                            ->compose(['html' => 'rekins-html', 'text' => 'rekins-text'])
+                            ->compose([
+                                'html' => 'invoice-not-sent-html', 
+                                'text' => 'invoice-not-sent-text'
+                            ], [
+                                'username' => $user['username'],
+                                'email' => $user['email'],
+                            ])
                             ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
                             ->setTo(Yii::$app->params['senderEmail'])
-                            ->setSubject("Skolēnam nosūtītās vēstules kopija (rēķins nr. " . $id . ")")
-                            ->attach($title)
+                            ->setSubject("Skolēnam nenosūtījās rēķins!")
                             ->send();
                     }
                 }
