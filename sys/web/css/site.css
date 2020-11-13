@@ -424,6 +424,6 @@ background: rgba(0,0,0,0.1);
 
 .Comments {
     width: 100%;
-    max-height: 200px;
+    max-height: 400px;
     overflow-y: auto;
 }

@@ -145,6 +145,6 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
         $timeToStartShowingComments = new \DateTime('2020-06-27');
         // $timeToStartShowingComments = new \DateTime('2019-06-27'); for debugging
         $timeFormatted = $timeToStartShowingComments->format('Y-m-d');
-        return self::find()->where(['evaluation_id' => 4, 'lecture_id' => $id])->andWhere(['>=', 'created', $timeFormatted])->joinWith('student')->asArray()->all();
+        return self::find()->where(['evaluation_id' => 4, 'lecture_id' => $id])->andWhere(['>=', 'created', $timeFormatted])->orderBy(['created' => SORT_DESC])->joinWith('student')->asArray()->all();
     }
 }
