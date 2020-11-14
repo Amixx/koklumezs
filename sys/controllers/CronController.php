@@ -398,42 +398,52 @@ class CronController extends Controller
 
                     $pdf->render();
 
-                    $sent = Yii::$app
-                        ->mailer
-                        ->compose(['html' => 'rekins-html', 'text' => 'rekins-text'])
-                        ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
-                        ->setTo($user['email'])
-                        ->setSubject("Rēķins $id - " . Yii::$app->name)
-                        ->attach($invoicePath)
-                        ->send();
+                    $planModel = StudentSubPlans::findOne($studentSubplan['id']);
+                    $planEnded = $planModel['sent_invoices_count'] == $subplan['months'];
+                    $hasPaidInAdvance = $planModel['times_paid'] > $planModel['sent_invoices_count'];
 
-                    if ($sent) {
-                        $planModel = StudentSubPlans::findOne($studentSubplan['id']);
-                        $planModel['sent_invoices_count'] += 1;
-                        $planModel->update();
+                    if(!$planEnded){
+                        if(!$hasPaidInAdvance){
+                            $sent = Yii::$app
+                                ->mailer
+                                ->compose(['html' => 'rekins-html', 'text' => 'rekins-text'])
+                                ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+                                ->setTo($user['email'])
+                                ->setSubject("Rēķins $id - " . Yii::$app->name)
+                                ->attach($invoicePath)
+                                ->send();
 
-                        $invoice = new SentInvoices;
-                        $invoice->user_id = $user['id'];
-                        $invoice->invoice_number = $id;
-                        $invoice->plan_name = $subplan['name'];
-                        $invoice->plan_price = $subplan['monthly_cost'];
-                        $invoice->plan_start_date = $studentSubplan['start_date'];
-                        $invoice->save();
-                    }else{
-                        Yii::$app
-                            ->mailer
-                            ->compose([
-                                'html' => 'invoice-not-sent-html', 
-                                'text' => 'invoice-not-sent-text'
-                            ], [
-                                'username' => $user['username'],
-                                'email' => $user['email'],
-                            ])
-                            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
-                            ->setTo(Yii::$app->params['senderEmail'])
-                            ->setSubject("Skolēnam nenosūtījās rēķins!")
-                            ->send();
-                    }
+                            if ($sent) {
+                                $planModel['sent_invoices_count'] += 1;
+                                $planModel->update();
+
+                                $invoice = new SentInvoices;
+                                $invoice->user_id = $user['id'];
+                                $invoice->invoice_number = $id;
+                                $invoice->plan_name = $subplan['name'];
+                                $invoice->plan_price = $subplan['monthly_cost'];
+                                $invoice->plan_start_date = $studentSubplan['start_date'];
+                                $invoice->save();
+                            }else{
+                                Yii::$app
+                                    ->mailer
+                                    ->compose([
+                                        'html' => 'invoice-not-sent-html', 
+                                        'text' => 'invoice-not-sent-text'
+                                    ], [
+                                        'username' => $user['username'],
+                                        'email' => $user['email'],
+                                    ])
+                                    ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+                                    ->setTo(Yii::$app->params['senderEmail'])
+                                    ->setSubject("Skolēnam nenosūtījās rēķins!")
+                                    ->send();
+                            }
+                        }else{
+                            $planModel['sent_invoices_count'] += 1;
+                            $planModel->update();
+                        }
+                    }                                       
                 }
             }
         }
