@@ -62,4 +62,18 @@ class StudentSubPlansController extends Controller
 
         return $this->redirect(Yii::$app->request->referrer);
     }
+
+    public function actionIncreaseTimesPaid($userId)
+    {
+        $isGuest = Yii::$app->user->isGuest;
+        if (!$isGuest) {
+            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
+        }
+        $plan = StudentSubPlans::findOne(['user_id' => $userId]);
+        $plan->times_paid += 1;
+        $plan->save();
+
+        return $this->redirect(Yii::$app->request->referrer);
+    }
 }

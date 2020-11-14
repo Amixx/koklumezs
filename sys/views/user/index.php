@@ -27,7 +27,6 @@ $planEndMonths = [];
             ['class' => 'yii\grid\SerialColumn'],
             'first_name',
             'last_name',
-            'username',
             [
                 'attribute' => 'subscription_type',
                 'format' => 'raw',
@@ -57,19 +56,19 @@ $planEndMonths = [];
                 'filter' => Html::dropDownList('TeacherUserSearch[status]', isset($get['TeacherUserSearch']['status']) ? $get['TeacherUserSearch']['status'] : '', app\models\Users::getStatus(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
              [
-                'attribute' => 'Plan name',
-                'label' => Yii::t('app', 'Plan name'),
+                'attribute' => 'Plan price',
+                'label' => Yii::t('app', 'Payment'),
                 'value' => function ($dataProvider) {
-                    return "<a href='/sys/school-sub-plans/view?id=".$dataProvider["subplan"]["plan"]["id"]."'>".$dataProvider["subplan"]["plan"]["name"]."</a>";
+                    return "<a href='/sys/school-sub-plans/view?id=".$dataProvider["subplan"]["plan"]["id"]."'>".$dataProvider["subplan"]["plan"]["monthly_cost"]."</a>";
                 },
                 'format' => 'html',
                 'filter' => Html::dropDownList(
-                    'TeacherUserSearch[subplan_name]',
-                    isset($get['TeacherUserSearch']['subplan_name']) ? $get['TeacherUserSearch']['subplan_name'] : '',
-                    $schoolSubPlans,
+                    'TeacherUserSearch[subplan_monthly_cost]',
+                    isset($get['TeacherUserSearch']['subplan_monthly_cost']) ? $get['TeacherUserSearch']['subplan_monthly_cost'] : '',
+                    $schoolSubPlanPrices,
                     ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
-             [
+            [
                 'attribute' => 'Plan end date',
                 'label' => Yii::t('app', 'Plan end date'),
                 'value' => function ($dataProvider) {
@@ -84,6 +83,18 @@ $planEndMonths = [];
                     $planEndDates,
                     ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
                 'format' => 'raw'
+            ],
+            [
+                'attribute' => 'Payments',
+                'label' => Yii::t('app', 'Paid/Has to pay'),
+                'value' => function ($dataProvider) {
+                    if(!$dataProvider['subplan']) return;
+                    $color = "#99ff9c";
+                    if($dataProvider['subplan']["times_paid"] < $dataProvider['subplan']["sent_invoices_count"]) $color = "#ff9a99";
+                    if($dataProvider['subplan']["times_paid"] > $dataProvider['subplan']["sent_invoices_count"]) $color = "#99cfff";
+                    return "<div style='text-align:center;background:" . $color . "'>" . $dataProvider['subplan']["times_paid"] . "/" . $dataProvider['subplan']["sent_invoices_count"] . "</div><div style='display:block;text-align:center;' title='Palielināt samaksāto mēnešu skaitu'><a href='/student-sub-plans/increase-times-paid?userId=" .$dataProvider["id"] . "' class='glyphicon glyphicon-plus'></a></div>";
+                },
+                'format' => 'html',
             ],
             ['class' => 'yii\grid\ActionColumn'],
         ],

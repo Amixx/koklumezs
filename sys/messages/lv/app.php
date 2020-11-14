@@ -297,4 +297,6 @@ return [
     'File title' => 'Faila nosaukums',
     'Plan files' => 'Plāna faili',
     'Plan' => 'Plāns',
+    'Payment' => 'Maksājums',
+    'Paid/Has to pay' => 'Samaksāts/Jāmaksā'
 ];

@@ -60,4 +60,9 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
     {
         return ArrayHelper::map(self::getForCurrentSchool()->asArray()->all(), 'id', 'name');
     }
+
+    public function getPrices()
+    {
+        return ArrayHelper::map(self::getForCurrentSchool()->asArray()->all(), 'id', 'monthly_cost');
+    }
 }

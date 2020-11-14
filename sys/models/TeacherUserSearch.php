@@ -86,8 +86,8 @@ class TeacherUserSearch extends Users
             ->andFilterWhere(['like', 'last_login', $this->last_login])
             ->andFilterWhere(['like', 'dont_bother', $this->dont_bother]);
 
-        if(isset($params["TeacherUserSearch"]) && isset($params["TeacherUserSearch"]["subplan_name"])) {
-            $query->andFilterWhere(['like', 'schoolsubplans.id', $params["TeacherUserSearch"]["subplan_name"]]);
+        if(isset($params["TeacherUserSearch"]) && isset($params["TeacherUserSearch"]["subplan_monthly_cost"])) {
+            $query->andFilterWhere(['like', 'schoolsubplans.id', $params["TeacherUserSearch"]["subplan_monthly_cost"]]);
         }
         if(isset($params["TeacherUserSearch"]) && isset($params["TeacherUserSearch"]["subplan_end_date"]) && $params["TeacherUserSearch"]["subplan_end_date"]) {
             $firstDayOfMonth = date_format((new \DateTime($params["TeacherUserSearch"]["subplan_end_date"]))

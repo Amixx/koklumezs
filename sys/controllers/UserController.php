@@ -69,7 +69,7 @@ class UserController extends Controller
         $isCurrentUserTeacher = Users::isCurrentUserTeacher();
         $searchModel = $isCurrentUserTeacher ? new TeacherUserSearch() : new UserSearch();
         $dataProvider = $searchModel->search($get);
-        $schoolSubPlans = SchoolSubPlans::getMappedForSelection();
+        $schoolSubPlanPrices = SchoolSubPlans::getPrices();
         $planEndDates = StudentSubPlans::getReadablePlanEndDates();
 
         return $this->render('index', [
@@ -77,7 +77,7 @@ class UserController extends Controller
             'dataProvider' => $dataProvider,
             'get' => $get,
             'lectures' => $lectures,
-            'schoolSubPlans' => $schoolSubPlans,
+            'schoolSubPlanPrices' => $schoolSubPlanPrices,
             'planEndDates' => $planEndDates,
         ]);
     }
