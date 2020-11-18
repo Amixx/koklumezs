@@ -19,7 +19,6 @@ $this->title = $subplan['plan']['name'];
         'attributes' => [
             'start_date',
             'sent_invoices_count',
-            'times_paid',
             'plan.name',
         ],
     ]) ?>

@@ -94,6 +94,15 @@ $planEndMonths = [];
                     if($dataProvider['subplan']["times_paid"] > $dataProvider['subplan']["sent_invoices_count"]) $color = "#99cfff";
                     return "<div style='text-align:center;background:" . $color . "'>" . $dataProvider['subplan']["times_paid"] . "/" . $dataProvider['subplan']["sent_invoices_count"] . "</div><div style='display:block;text-align:center;' title='Palielināt samaksāto mēnešu skaitu'><a href='/sys/student-sub-plans/increase-times-paid?userId=" .$dataProvider["id"] . "' class='glyphicon glyphicon-plus'></a></div>";
                 },
+                'filter' => Html::dropDownList(
+                    'TeacherUserSearch[subplan_paid_type]',
+                    isset($get['TeacherUserSearch']['subplan_paid_type']) ? $get['TeacherUserSearch']['subplan_paid_type'] : '',
+                    [
+                        'late' => Yii::t('app', 'Late'),
+                        'paid' => Yii::t('app', 'All paid'),
+                        'prepaid' => Yii::t('app', 'Prepaid'),
+                    ],
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
                 'format' => 'html',
             ],
             ['class' => 'yii\grid\ActionColumn'],

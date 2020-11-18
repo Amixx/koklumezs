@@ -298,5 +298,8 @@ return [
     'Plan files' => 'Plāna faili',
     'Plan' => 'Plāns',
     'Payment' => 'Maksājums',
-    'Paid/Has to pay' => 'Samaksāts/Jāmaksā'
+    'Paid/Has to pay' => 'Samaksāts/Jāmaksā',
+    'Late' => 'Kavē',
+    'All paid' => 'Samaksāts',
+    'Prepaid' => 'Samaksāts uz priekšu',
 ];

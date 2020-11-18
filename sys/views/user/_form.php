@@ -69,6 +69,7 @@ $isTeacher = Users::isCurrentUserTeacher();
                 <?php if (isset($schoolSubPlans) && $schoolSubPlans) { ?>
                     <?= $form->field($model, 'subplan[plan_id]')->dropDownList($schoolSubPlans, ['prompt' => ''])->label(Yii::t('app', 'Subscription plan')) ?>
                     <?= $form->field($model, 'subplan[start_date]')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])->label(Yii::t('app', 'Start date')) ?>
+                    <?= $form->field($model, 'subplan[sent_invoices_count]')->textInput(['type' => 'number'])->label(Yii::t('app', 'Sent invoices count')) ?>
                     <?= $form->field($model, 'subplan[times_paid]')->textInput(['type' => 'number'])->label(Yii::t('app', 'Times paid')) ?>
                 <?php } ?>
             </div>

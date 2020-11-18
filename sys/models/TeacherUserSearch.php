@@ -97,9 +97,20 @@ class TeacherUserSearch extends Users
 
             if($firstDayOfMonth && $lastDayOfMonth){
                 $query->andFilterWhere(['between', 'DATE_ADD(studentsubplans.start_date, INTERVAL schoolsubplans.months MONTH)', $firstDayOfMonth, $lastDayOfMonth]);
-            }
-            
+            }           
         }
+        if(isset($params["TeacherUserSearch"]) && isset($params["TeacherUserSearch"]["subplan_paid_type"]) && $params["TeacherUserSearch"]["subplan_paid_type"]) {
+            $type = $params["TeacherUserSearch"]["subplan_paid_type"];
+            if($type == "late"){
+                $sign = '<';
+            }else if($type == "paid"){
+                $sign = '=';
+            }else if($type == "prepaid"){
+                $sign = '>';
+            }
+
+            $query->andWhere('studentsubplans.times_paid ' . $sign . ' studentsubplans.sent_invoices_count');  
+        }        
 
         return $dataProvider;
     }

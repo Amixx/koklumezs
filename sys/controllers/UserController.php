@@ -247,6 +247,7 @@ class UserController extends Controller
                 if ($subplan) {
                     $subplan->plan_id = $postData["plan_id"];
                     $subplan->start_date = $postData["start_date"];
+                    $subplan->sent_invoices_count = $postData["sent_invoices_count"];
                     $subplan->times_paid = $postData["times_paid"];
                     $subplan->update();
                 } else {
