@@ -144,6 +144,7 @@ return [
     'Metrics' => 'Metrikas',
     'Monthly cost' => 'Mēneša maksa',
     'Months' => 'Mēneši',
+    'Months (0 - unlimited)' => 'Mēneši (0 - neierobežots)',
     'My files' => 'Mani faili',
     'Name' => 'Vārds',
     'Needed parameters' => 'Vajadzīgie parametri',

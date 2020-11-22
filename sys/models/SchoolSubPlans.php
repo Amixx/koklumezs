@@ -40,7 +40,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
             'name' => \Yii::t('app',  'Title'),
             'description' => \Yii::t('app',  'Description'),
             'monthly_cost' => \Yii::t('app',  'Monthly cost'),
-            'months' => \Yii::t('app',  'Months'),
+            'months' => \Yii::t('app',  'Months (0 - unlimited)'),
             'max_pause_weeks' => \Yii::t('app',  'Pause weeks'),
             'files' => \Yii::t('app',  'Files'),
         ];

@@ -11,4 +11,6 @@ use yii\helpers\Html;
     <?php if (isset($teacherMessage) && $teacherMessage) { ?>
         <p><?= $teacherMessage ?></p>
     <?php } ?>
+
+    <p><a href="https://skola.koklumezs.lv/" target="_blank">Iet uz skolu</a></p>
 </div>

@@ -399,10 +399,11 @@ class CronController extends Controller
                     $pdf->render();
 
                     $planModel = StudentSubPlans::findOne($studentSubplan['id']);
+                    $planUnlimited = $subplan['months'] === 0;
                     $planEnded = $planModel['sent_invoices_count'] == $subplan['months'];
                     $hasPaidInAdvance = $planModel['times_paid'] > $planModel['sent_invoices_count'];
 
-                    if(!$planEnded){
+                    if(!$planEnded || $planUnlimited){
                         if(!$hasPaidInAdvance){
                             $sent = Yii::$app
                                 ->mailer
