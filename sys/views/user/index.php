@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\StudentSubplanPauses;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\TeacherUserSearch */
@@ -73,8 +74,12 @@ $planEndMonths = [];
                 'label' => Yii::t('app', 'Plan end date'),
                 'value' => function ($dataProvider) {
                     if(!$dataProvider['subplan']['plan']['months']) return;
+                    $planPauses = StudentSubplanPauses::getForStudent($dataProvider['subplan']['user_id'])->asArray()->all();
                     $date = date_create($dataProvider["subplan"]["start_date"]);
                     $date->modify("+" . $dataProvider['subplan']['plan']['months'] . "month");
+                    foreach($planPauses as $pause){
+                        $date->modify("+" . $pause['weeks'] . "week");
+                    }
                     return date_format($date, 'd-m-Y');
                 },
                 'filter' => Html::dropDownList(

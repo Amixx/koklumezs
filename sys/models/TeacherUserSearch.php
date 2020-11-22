@@ -94,10 +94,17 @@ class TeacherUserSearch extends Users
                 ->modify('first day of this month'), 'Y-m-d');
             $lastDayOfMonth = date_format((new \DateTime($params["TeacherUserSearch"]["subplan_end_date"]))
                 ->modify('last day of this month'), 'Y-m-d');
-
+                
+            $dateFilterString = '
+                DATE_ADD(
+                    DATE_ADD(studentsubplans.start_date, INTERVAL schoolsubplans.months MONTH),
+                    INTERVAL (
+                        SELECT COALESCE(sum(weeks), 0) FROM studentsubplanpauses
+                        WHERE studentsubplan_id = studentsubplans.id) WEEK)
+            ';
             if($firstDayOfMonth && $lastDayOfMonth){
-                $query->andFilterWhere(['between', 'DATE_ADD(studentsubplans.start_date, INTERVAL schoolsubplans.months MONTH)', $firstDayOfMonth, $lastDayOfMonth]);
-            }           
+                $query->andFilterWhere(['between', $dateFilterString, $firstDayOfMonth, $lastDayOfMonth]);
+            }
         }
         if(isset($params["TeacherUserSearch"]) && isset($params["TeacherUserSearch"]["subplan_paid_type"]) && $params["TeacherUserSearch"]["subplan_paid_type"]) {
             $type = $params["TeacherUserSearch"]["subplan_paid_type"];

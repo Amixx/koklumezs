@@ -6,9 +6,11 @@ use Yii;
 use app\models\StudentSubPlans;
 use app\models\Users;
 use app\models\PlanFiles;
+use app\models\StudentSubplanPauses;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
 
 class StudentSubPlansController extends Controller
 {
@@ -44,10 +46,23 @@ class StudentSubPlansController extends Controller
 
         $subplan = StudentSubPlans::getForStudent($id);
         $planFiles = PlanFiles::getFilesForPlan($subplan["plan_id"])->asArray()->all();
+        $planPauses = null;
+        if(StudentSubplanPauses::studentHasAnyPauses($id)){
+            $planPauses = new ActiveDataProvider([
+                'query' => StudentSubplanPauses::getForStudent($id),
+            ]);
+        }
+        $newPause = new StudentSubplanPauses;    
+        $remainingPauseWeeks = StudentSubPlans::getRemainingPauseWeeks($id);
+        $planCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($id);
 
         return $this->render('view', [
             'subplan' => $subplan,
             'planFiles' => $planFiles,
+            'planPauses' => $planPauses,
+            'newPause' => $newPause,
+            'remainingPauseWeeks' => $remainingPauseWeeks,
+            'planCurrentlyPaused' => $planCurrentlyPaused,
         ]);
     }
 

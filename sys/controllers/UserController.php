@@ -136,7 +136,7 @@ class UserController extends Controller
             $model->created_at = date('Y-m-d H:i:s', time());
             $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
             $model->allowed_to_download_files = false;
-            if (isset($post['Users']['allowed_to_download_files'])) {
+            if (isset($post['Users']['allowed_to_download_files']) && $post['Users']['allowed_to_download_files']) {
                 $model->allowed_to_download_files = $post['Users']['allowed_to_download_files'];
             }
             if (isset($post['Users']['about'])) {

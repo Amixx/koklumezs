@@ -218,6 +218,15 @@ class Users extends ActiveRecord implements IdentityInterface
         return $dont_bother ? $result : $users;
     }
 
+    public static function getStudentsWithoutPausesForSchool(){
+        $students = self::getStudentsForSchool(true);
+        foreach($students as $key => $student){
+            $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($student['id']);
+            if($isPlanCurrentlyPaused) unset($students[$key]);
+        }
+        return $students;
+    }
+
     public static function getStudentsWithParams($dont_bother = false, $lang, $subTypes)
     {
         $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE]];

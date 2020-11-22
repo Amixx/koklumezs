@@ -24,7 +24,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
         return [
             [['school_id', 'name', 'monthly_cost', 'months'], 'required'],
             [['monthly_cost'], 'double'],
-            [['school_id', 'months'], 'number'],
+            [['school_id', 'months', 'max_pause_weeks'], 'number'],
             [['name', 'description', 'files'], 'string'],
         ];
     }
@@ -41,6 +41,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
             'description' => \Yii::t('app',  'Description'),
             'monthly_cost' => \Yii::t('app',  'Monthly cost'),
             'months' => \Yii::t('app',  'Months'),
+            'max_pause_weeks' => \Yii::t('app',  'Pause weeks'),
             'files' => \Yii::t('app',  'Files'),
         ];
     }
@@ -63,6 +64,11 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
 
     public function getPrices()
     {
-        return ArrayHelper::map(self::getForCurrentSchool()->asArray()->all(), 'id', 'monthly_cost');
+        $isAdmin = Yii::$app->user->identity->user_level == 'Admin';
+        if(!$isAdmin){
+            return ArrayHelper::map(self::getForCurrentSchool()->asArray()->all(), 'id', 'monthly_cost');
+        }else{
+            return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'monthly_cost');
+        }
     }
 }
