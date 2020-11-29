@@ -12,7 +12,9 @@ use yii\base\Event;
 use yii\web\View;
 use app\models\SchoolStudent;
 use app\models\CommentResponses;
+use app\models\StudentQuestions;
 use app\models\Difficulties;
+use app\models\SchoolFaqs;
 use app\models\SchoolTeacher;
 use app\models\DifficultiesSearch;
 use yii\data\ActiveDataProvider;
@@ -60,10 +62,19 @@ class SchoolSettingsController extends Controller
         $difficultiesDataProvider = new ActiveDataProvider([
             'query' => Difficulties::find()->where(['school_id' => $schoolId]),
         ]);
+        $faqsDataProvider = new ActiveDataProvider([
+            'query' => SchoolFaqs::find()->where(['school_id' => $schoolId]),
+        ]);
+        $studentQuestionsDataProvider = new ActiveDataProvider([
+            'query' => StudentQuestions::find()->where(['school_id' => $schoolId]),
+        ]);
+        
         return $this->render('index', [
             'settings' => $settings,
             'difficultiesDataProvider' => $difficultiesDataProvider,
+            'faqsDataProvider' => $faqsDataProvider,
             'schoolId' => $schoolId,
+            'studentQuestionsDataProvider' => $studentQuestionsDataProvider,
         ]);
     }
 

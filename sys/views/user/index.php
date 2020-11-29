@@ -97,7 +97,7 @@ $planEndMonths = [];
                     $color = "#99ff9c";
                     if($dataProvider['subplan']["times_paid"] < $dataProvider['subplan']["sent_invoices_count"]) $color = "#ff9a99";
                     if($dataProvider['subplan']["times_paid"] > $dataProvider['subplan']["sent_invoices_count"]) $color = "#99cfff";
-                    return "<div style='text-align:center;background:" . $color . "'>" . $dataProvider['subplan']["times_paid"] . "/" . $dataProvider['subplan']["sent_invoices_count"] . "</div><div style='display:block;text-align:center;' title='Palielināt samaksāto mēnešu skaitu'><a href='/sys/student-sub-plans/increase-times-paid?userId=" .$dataProvider["id"] . "' class='glyphicon glyphicon-plus'></a></div>";
+                    return "<div style='text-align:center;background:" . $color . "'>" . $dataProvider['subplan']["times_paid"] . "/" . $dataProvider['subplan']["sent_invoices_count"] . "</div><div style='text-align:center;' title='Nosūtīt atgādinājumu, ka jāmaksā'><a style='margin-right:32px;' href='/sys/student-sub-plans/increase-times-paid?userId=" .$dataProvider["id"] . "' class='glyphicon glyphicon-plus'></a><a href='/sys/cron/remind-to-pay?userId=" .$dataProvider["id"] . "' class='glyphicon glyphicon-envelope'></a></div>";
                 },
                 'filter' => Html::dropDownList(
                     'TeacherUserSearch[subplan_paid_type]',

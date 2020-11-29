@@ -53,7 +53,9 @@ class SchoolTeacher extends \yii\db\ActiveRecord
 
     public function getCurrentSchoolId()
     {
-        return self::getSchoolTeacher(Yii::$app->user->identity->id)->school_id;
+        $isCurrentUserTeacher = Yii::$app->user->identity->user_level == 'Teacher';
+        if($isCurrentUserTeacher) return self::getSchoolTeacher(Yii::$app->user->identity->id)->school_id;
+        else return SchoolStudent::getSchoolStudent(Yii::$app->user->identity->id)->school_id;
     }
 
     // public function getRelations($id): array

@@ -32,7 +32,7 @@ if ($hasFiles) {
                     var player = videojs('my-player<?= $id ?>', {
                         responsive: true,
                         width: 400,
-                        playbackRates: [0.5, 1, 1.5, 2]
+                        playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2]
                     });
                 </script>
             </div>

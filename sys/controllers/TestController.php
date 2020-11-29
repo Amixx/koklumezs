@@ -135,5 +135,12 @@ class TestController extends Controller
         //     ->setTo('liepinsimantsimis2001@gmail.com')
         //     ->setSubject('Jaunas nodarbības - ' . Yii::$app->name)
         //     ->send();
+
+
+        
+        $diffDays = 
+        
+        var_dump($payDate);
+        var_dump($diffDays);
     }
 }

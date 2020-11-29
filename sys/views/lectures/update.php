@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
         'lectureEvaluations' => $lectureEvaluations,
         'lecturefiles' => $lecturefiles,
         'lectures' => $lectures,
-        'relatedLectures' => $relatedLectures
+        'relatedLectures' => $relatedLectures,
     ]) ?>
 
 </div>

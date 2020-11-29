@@ -218,6 +218,21 @@ class LecturesController extends Controller
         $lectures = Lectures::getLecturesForRelations($id);
         $model = $this->findModel($id);
         $model->updated = date('Y-m-d H:i:s', time());
+        $model->complexity = 1;
+        if (isset($post['difficulties']) && isset($post['difficultiesSelected'])) {
+            $selectedDifficultiesCount = count($post['difficultiesSelected']);
+            $sum = 0;
+            foreach ($post['difficulties'] as $pid => $value) {
+                $difficultySelected = isset($post['difficultiesSelected'][$pid]) && $post['difficultiesSelected'][$pid];
+                if ($difficultySelected) {
+                    $value = $value ?? 0;
+                    if (is_numeric($value)) {
+                        $sum += (10 * pow(2, ($value / 3)));
+                    }
+                }
+            }
+            $model->complexity = round($sum / $selectedDifficultiesCount);
+        }
         if ($model->load($post) && $model->save()) {
             if (isset($post['difficulties'])) {
                 $sum = 0;
@@ -232,7 +247,6 @@ class LecturesController extends Controller
                     }
                     $difficulty->save();
                 }
-                $model->complexity = (int) $sum;
                 $model->updated = date('Y-m-d H:i:s', time());
                 $model->save(false);
             }

@@ -4,7 +4,7 @@
 foreach ($difficulties as $id => $name) {  ?>
     <div class="form-group field-studentgoals">
         <label class="control-label" for="difficulties-title<?= $id ?>">
-            <input type="checkbox" name="difficultiesSelected[<?= $id ?>]" title="<?= \Yii::t('app', 'Should this parameter be used') ?>?" checked value="1">&nbsp;<?= \Yii::t('app', $name) ?>
+            <input type="checkbox" name="difficultiesSelected[<?= $id ?>]" title="<?= \Yii::t('app', 'Should this parameter be used') ?>?" <?php if(count($lectureDifficulties) === 0 || isset($lectureDifficulties[$id])) echo 'checked' ?> value="1">&nbsp;<?= \Yii::t('app', $name) ?>
         </label>
 
         <select id="difficulties-title<?= $id ?>" class="form-control" name="difficulties[<?= $id ?>]" aria-required="true" aria-invalid="false">

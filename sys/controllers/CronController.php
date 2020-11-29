@@ -444,9 +444,30 @@ class CronController extends Controller
                             $planModel['sent_invoices_count'] += 1;
                             $planModel->update();
                         }
-                    }                                       
+                    }
                 }
             }
         }
+    }
+
+    public function actionRemindToPay($userId){    
+        $user = Users::findOne($userId);   
+        if($user){
+            $sent = Yii::$app
+                ->mailer
+                ->compose(['html' => 'reminder-to-pay-html', 'text' => 'reminder-to-pay-text'])
+                ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+                ->setTo($user['email'])
+                ->setSubject("Atgādinājums par rēķina apmaksu")
+                ->send();
+        };
+
+        if($sent) {
+            Yii::$app->session->setFlash('success', 'Atgādinājums nosūtīts!');
+        } else {
+            Yii::$app->session->setFlash('error', 'Atgādinājums netika nosūtīts!');
+        }
+        
+        return $this->redirect(Yii::$app->request->referrer);
     }
 }
