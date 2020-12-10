@@ -38,6 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
             <?= DetailView::widget([
                 'model' => $model,
+                'id' => 'student-info-details',
                 'attributes' => [
                     'id',
                     'first_name',
@@ -46,7 +47,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'email:email',
                     'username',
                     'user_level',
-                    'about'
+                    [
+                        'attribute' => 'about',
+                        'options' => ['class' => 'nigga']
+                    ],                    
                 ],
             ]) ?>
         </div>

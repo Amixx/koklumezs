@@ -14,6 +14,7 @@ use app\models\SchoolStudent;
 use app\models\CommentResponses;
 use app\models\StudentQuestions;
 use app\models\Difficulties;
+use app\models\SignupQuestions;
 use app\models\SchoolFaqs;
 use app\models\SchoolTeacher;
 use app\models\DifficultiesSearch;
@@ -68,6 +69,9 @@ class SchoolSettingsController extends Controller
         $studentQuestionsDataProvider = new ActiveDataProvider([
             'query' => StudentQuestions::find()->where(['school_id' => $schoolId]),
         ]);
+        $signupQuestionsDataProvider = new ActiveDataProvider([
+            'query' => SignupQuestions::find()->where(['school_id' => $schoolId]),
+        ]);
         
         return $this->render('index', [
             'settings' => $settings,
@@ -75,6 +79,7 @@ class SchoolSettingsController extends Controller
             'faqsDataProvider' => $faqsDataProvider,
             'schoolId' => $schoolId,
             'studentQuestionsDataProvider' => $studentQuestionsDataProvider,
+            'signupQuestionsDataProvider' => $signupQuestionsDataProvider,
         ]);
     }
 

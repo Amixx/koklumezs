@@ -58,6 +58,10 @@ class SchoolTeacher extends \yii\db\ActiveRecord
         else return SchoolStudent::getSchoolStudent(Yii::$app->user->identity->id)->school_id;
     }
 
+    public function getBySchoolId($schoolId){
+        return self::find()->where(['school_id' => $schoolId])->joinWith('school')->joinWith('user')->one();
+    }
+
     // public function getRelations($id): array
     // {
     //     return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'id', 'related_id');

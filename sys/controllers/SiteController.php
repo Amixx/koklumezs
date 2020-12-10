@@ -8,6 +8,13 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
+use app\models\RentOrBuyForm;
+use app\models\Lectures;
+use app\models\SchoolTeacher;
+use app\models\UserLectures;
+use app\models\SignupQuestions;
+use app\models\Evaluations;
+use app\models\Lecturesevaluations;
 use app\models\SignUpForm;
 use app\models\SchoolStudent;
 use app\models\School;
@@ -229,17 +236,15 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    public function actionSignUp($s)
+    public function actionSignUp($s, $l)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
+        Yii::$app->language = $l;
 
         $model = new SignUpForm();
         if ($model->load(Yii::$app->request->post())) {
             $userId = $model->signUp();
+            $hasOwnInstrument = Yii::$app->request->post() && Yii::$app->request->post()['has-own-instrument'];
+            $hasExperience = Yii::$app->request->post() && Yii::$app->request->post()['has-experience'];
 
             if($userId){
                 $schoolStudent = new SchoolStudent;
@@ -252,14 +257,121 @@ class SiteController extends Controller
                 if($saved){
                     $user = Users::findById($userId);
                     Yii::$app->user->login($user);
-                    $this->redirect(["index"]);
+
+                    $schoolTeacher = SchoolTeacher::getBySchoolId($s)["user"];
+                    $firstLectureIds = $hasExperience ? [301, 302, 303] : [703, 739, 17];
+                    $insertDate = date('Y-m-d H:i:s', time());
+                    $insertColumns = [];
+                    foreach($firstLectureIds as $lid){
+                        $insertColumns[] = [$schoolTeacher["id"], $userId, $lid, $insertDate, 0, 0, 1];
+                    }
+
+                    Yii::$app->db
+                        ->createCommand()
+                        ->batchInsert('userlectures', ['assigned', 'user_id', 'lecture_id', 'created', 'user_difficulty', 'open_times', 'sent'], $insertColumns)
+                        ->execute();
+
+                    if(!$hasOwnInstrument){
+                        $this->redirect(["rent-or-buy", 'u' => $user['id'], 'l' => $l]);
+                    } else if($hasExperience) {
+                        $this->redirect(["signup-questions", 'u' => $user['id'], 'l' => $l, 's' => $s]);
+                    }else {
+                        return $this->redirect(['lekcijas/index']);
+                    }
                 }
-            }            
+            }
+
         }
 
         $model->password = '';
         return $this->render('signup', [
             'model' => $model,
+            'defaultLanguage' => $l,
+        ]);
+    }
+
+    public function actionRentOrBuy($u, $l) {
+        Yii::$app->language = $l;
+
+        $user = Users::findOne($u);
+        $model = new RentOrBuyForm;
+        $model->fullname = $user['first_name'] . " " . $user['last_name'];
+        $model->email = $user['email'];
+        $model->phone_number = $user['phone_number'];
+        
+        if ($model->load(Yii::$app->request->post())) {
+            $sent = Yii::$app
+                ->mailer
+                ->compose(['html' => 'instrument-html', 'text' => 'instrument-text'], [
+                    'model' => $model,
+                ])
+                ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+                ->setTo(Yii::$app->params['senderEmail'])
+                ->setSubject("Par kokles iegādāšanos - " . $model['fullname'])
+                ->send();
+            if($sent){
+                Yii::$app->session->setFlash('success', 'Jūsu pieteikums ir saņemts!');
+                return $this->redirect(['lekcijas/index']);
+            }
+        }
+
+        return $this->render('rent-or-buy', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionSignupQuestions($u, $l, $s){
+        Yii::$app->language = $l;
+        $user = Users::findOne($u);
+        
+        $schoolSignupQuestions = SignupQuestions::getForSchool($s);
+
+        $post = Yii::$app->request->post();
+        if($post && isset($post['answers']) && count($post['answers']) > 0){
+            $aboutUser = "";
+            foreach($post['answers'] as $id => $answer){
+                if($answer !== ""){
+                    $index = array_search($id, array_column($schoolSignupQuestions, 'id'));
+                    $aboutUser .= $schoolSignupQuestions[$index]['text'] . ": ";
+                    $aboutUser .= "\n";
+                    $aboutUser .= $answer;
+                    $aboutUser .= "\n";
+                    $aboutUser .= "\n";
+                }
+            }
+            $user['about'] = $aboutUser;
+            $saved = $user->save();
+            if($saved){
+                Yii::$app->session->setFlash('success', 'Jūsu atbildes tika saglabātas!');
+                return $this->redirect(['lekcijas/index']);
+            }
+        }
+
+        return $this->render('signup-questions', [
+            'questions' => $schoolSignupQuestions,
+        ]);
+    }
+
+    public function actionFirstLecture($l, $u){
+        $lectureId = 192;
+        Yii::$app->language = $l;
+
+        $lecture = Lectures::findOne($lectureId);
+        $evaluations = Evaluations::getEvaluations();
+        $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($lectureId);
+        foreach ($evaluations as &$evaluation) {
+            if ($evaluation['star_text']) {
+                $starTextArray = unserialize($evaluation['star_text']);
+                foreach ($starTextArray as &$starText) {
+                    $starText = Yii::t('app', $starText);
+                };
+                $evaluation['star_text'] = serialize($starTextArray);
+            }
+        }
+        return $this->render('first-lecture', [
+            'model' => $lecture,
+            'evaluations' => $evaluations,
+            'lectureEvaluations' => $lectureEvaluations,
         ]);
     }
 }

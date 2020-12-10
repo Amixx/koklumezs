@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\ActiveForm;
 
 $this->title = \Yii::t('app',  'School settings');
 $this->params['breadcrumbs'][] = $this->title;
@@ -21,6 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
         </li>
         <li class="nav-item">
             <a class="nav-link" id="sqs-tab" data-toggle="tab" href="#sqs" role="tab" aria-controls="sqs" aria-selected="false"><?= \Yii::t('app', 'Student questions') ?></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="signup-questions-tab" data-toggle="tab" href="#signup-questions" role="tab" aria-controls="signup-questions" aria-selected="false"><?= \Yii::t('app', 'Questions after signup') ?></a>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -47,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <hr>
             <p>
                 <strong><?= Yii::t('app', 'The link that students can use to join this school'); ?>: </strong>
-                <code>https://skola.koklumezs.lv/sys/site/sign-up?s=<?= $schoolId ?>?l=<?= Yii::$app->language ?></code>
+                <code>https://skola.koklumezs.lv/sys/site/sign-up?s=<?= $schoolId ?>&l=<?= Yii::$app->language ?></code>
             </p>
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
@@ -83,6 +87,30 @@ $this->params['breadcrumbs'][] = $this->title;
                     'text',
                 ],
             ]); ?>
+        </div>
+          <div class="tab-pane fade" id="signup-questions" role="tabpanel" aria-labelledby="signup-questions-tab">
+            <h1><?= Yii::t("app", "Questions after signup") ?></h1>
+             <?= GridView::widget([
+                'dataProvider' => $signupQuestionsDataProvider,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
+                    'text',
+                ],
+            ]); ?>
+            <hr>
+            <h3><?= Yii::t('app', 'Add a new question') ?></h3>
+            <?php $form = ActiveForm::begin([
+                'action' => ['signup-questions/create'],
+                'method' => 'post',
+            ]); ?>
+            <label for="new-question-text">
+                <?= Yii::t('app', 'Question text') ?>: 
+            </label>
+             <?= Html::textarea('new-question-text', '', ['class' => 'signup-questions-textarea']) ?>
+            <div class="form-group">
+                <?= Html::submitButton(\Yii::t('app',  'Submit'), ['class' => 'btn btn-success']) ?>
+            </div>
+            <?php ActiveForm::end(); ?>
         </div>
     </div>    
 </div>

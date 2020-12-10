@@ -272,4 +272,21 @@ function setupAssignUserListFilters(){
 
     setupAssignFilterByLanguage();
     setupAssignFilterBySubscriptionType();
+
+    $("select[name='has-own-instrument']").on('change', function(){
+        if(parseInt(this.value) === 0){
+            $("div.has-experience").removeClass("active");
+        }else {
+            $("div.has-experience").addClass("active");
+        }
+    });
+
+    $(".info").popover({
+        html: true,
+        placement: 'bottom',
+        trigger: 'hover',
+        content: function(){
+        return "<p>Lietotājvārds jums būs jāizmanto, lai pieslēgtos platformai.</p><p>Tas nebūs redzams skolotājam, vai citiem skolēniem.</p>"
+        }
+    });
 }
