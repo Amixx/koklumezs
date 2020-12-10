@@ -53,7 +53,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
 
     public function getForCurrentSchool()
     {
-        $schoolId = SchoolTeacher::getCurrentSchoolId();
+        $schoolId = School::getCurrentSchoolId();
         return self::getForSchool($schoolId);
     }
 

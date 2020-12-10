@@ -49,7 +49,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         $isAdmin = \Yii::$app->user->identity->user_level == 'Admin';
         if($isAdmin) return [];
 
-        $schoolId = SchoolTeacher::getCurrentSchoolId();
+        $schoolId = School::getCurrentSchoolId();
         $studentPlans = self::find()->joinWith("plan")->andFilterWhere(['schoolsubplans.school_id' => $schoolId])->asArray()->all();
         $planEndDates = array_map(function ($studentPlan) {
             $planPauses = StudentSubplanPauses::getForStudent($studentPlan['user_id'])->asArray()->all();

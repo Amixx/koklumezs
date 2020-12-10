@@ -43,7 +43,7 @@ class SchoolFaqsController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
-        $schoolId = SchoolTeacher::getCurrentSchoolId();
+        $schoolId = School::getCurrentSchoolId();
         $dataProvider = new ActiveDataProvider([
             'query' => SchoolFaqs::find()->where(['school_id' => $schoolId]),
         ]);
@@ -74,7 +74,7 @@ class SchoolFaqsController extends Controller
         }
         $model = new SchoolFaqs();
 
-        $schoolId = SchoolTeacher::getCurrentSchoolId();
+        $schoolId = School::getCurrentSchoolId();
         if ($model->load(Yii::$app->request->post())) {
             $model->school_id = $schoolId;
             if ($model->save()) {

@@ -3,6 +3,7 @@
 
 return [
     'adminEmail' => 'jansonsansis@gmail.com',
+    //TODO: nomainīt uz kkādu @tutory.lv e-pastu
     'senderEmail' => 'skola@koklumezs.lv',
     'senderName' => 'Kokļu mežs',
     'supportEmail' => 'jansonsansis@gmail.com',

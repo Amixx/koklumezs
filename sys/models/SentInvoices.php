@@ -49,7 +49,7 @@ class SentInvoices extends \yii\db\ActiveRecord
     }
 
     public function getForCurrentSchool(){
-        $schoolId = SchoolTeacher::getCurrentSchoolId();
+        $schoolId = School::getCurrentSchoolId();
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($schoolId);
 
         return self::find()->where(['in', 'user_id', $schoolStudentIds])->joinWith('student');

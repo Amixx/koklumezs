@@ -54,7 +54,7 @@ class SignupQuestionsController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
-        $schoolId = SchoolTeacher::getCurrentSchoolId();
+        $schoolId = School::getCurrentSchoolId();
         $dataProvider = new ActiveDataProvider([
             'query' => Difficulties::find()->where(['school_id' => $schoolId]),
         ]);
@@ -86,7 +86,7 @@ class SignupQuestionsController extends Controller
 
         $model = new SignupQuestions();
 
-        $model['school_id'] = SchoolTeacher::getCurrentSchoolId();
+        $model['school_id'] = School::getCurrentSchoolId();
         $model['text'] = Yii::$app->request->post()['new-question-text'];
 
         if($model->save()) {

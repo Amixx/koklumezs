@@ -29,6 +29,15 @@ $this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
             'buttonOptions' => ['class' => 'btn btn-default'],
             'multiple' => false,
         ]); ?>
+        <?= $form->field($model, 'registration_background_image')->widget(InputFile::className(), [
+            'language' => 'lv',
+            'controller' => 'elfinder',
+            'filter' => ['image'],
+            'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
+            'options' => ['class' => 'form-control'],
+            'buttonOptions' => ['class' => 'btn btn-default'],
+            'multiple' => false,
+        ]); ?>
         <?= $form->field($model, 'video_thumbnail')->widget(InputFile::className(), [
             'language' => 'lv',
             'controller' => 'elfinder',
@@ -38,6 +47,18 @@ $this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
             'buttonOptions' => ['class' => 'btn btn-default'],
             'multiple' => false,
         ]); ?>
+        <?= $form->field($model, 'logo')->widget(InputFile::className(), [
+            'language' => 'lv',
+            'controller' => 'elfinder',
+            'filter' => ['image'],
+            'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
+            'options' => ['class' => 'form-control'],
+            'buttonOptions' => ['class' => 'btn btn-default'],
+            'multiple' => false,
+        ]); ?>
+        <?= $form->field($model, 'email')->textInput(['class' => 'form-control form-group has-feedback field-with-info-widget']) ?>
+
+        <span class="glyphicon glyphicon-info-sign info info-school-email" style="margin-top: -50px;"></span>
 
         <div class="form-group">
             <?= Html::submitButton(\Yii::t('app',  'Save'), ['class' => 'btn btn-success']) ?>

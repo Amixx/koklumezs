@@ -103,7 +103,7 @@ class SchoolSubPlansController extends Controller
         }
 
         $model = new SchoolSubPlans();
-        $schoolId = SchoolTeacher::getCurrentSchoolId();
+        $schoolId = School::getCurrentSchoolId();
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
             $model->school_id = $schoolId;

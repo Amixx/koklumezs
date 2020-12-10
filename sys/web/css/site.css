@@ -33,29 +33,6 @@ img[title]:hover:after {
     min-width: 600px;
 }
 
-.related-lectures-form #logo {
-    width: 70px;
-    height: 70px;
-    display: inline-block;
-    margin: 10px 15px;
-}
-
-#logo {
-    width: 70px;
-    height: 70px;
-    display: inline-block;
-    margin: 10px 15px;
-}
-
-#logo.admin {
-    margin-left: -50px;
-}
-
-#logo svg {
-    background: darkgoldenrod;
-    border-radius: 50%;
-}
-
 label {
     width: 100%;
 }
@@ -251,7 +228,7 @@ a.desc:after {
 }
 
 @media(max-width:1199px) {
-    #logo {
+    .school-logo {
         display: none;
     }
 }
@@ -267,9 +244,10 @@ a.desc:after {
         width: 100%;
         height: 300px;
     }
-    #logo {
+    .school-logo {
         width: 60px;
         height: 60px;
+        background-size: 60px;
         margin: 10px 15px;
         display: block;
     }
@@ -469,11 +447,22 @@ div.has-experience.active, div.rent-or-buy.active {
 
 .info {
     float: right;
-    margin-top: 8px;
     margin-right: 12px;
 }
 
-.field-signupform-username {
+.field-with-info-widget {
     display: inline-block;
     width: 95%;
+}
+
+.school-logo {
+    width: 70px;
+    height: 70px;
+    background-size: 70px;
+    display: inline-block;
+    margin: 10px 15px;
+}
+
+.school-logo.admin {
+    margin-left: -50px;
 }

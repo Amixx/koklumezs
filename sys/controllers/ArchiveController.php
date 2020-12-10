@@ -101,7 +101,7 @@ class ArchiveController extends Controller
             });
             $baseUrl = Yii::$app->request->baseUrl;
 
-            $videoThumb = School::getVideoThumb(Yii::$app->user->identity->id);
+            $videoThumb = School::getCurrentSchool()->video_thumbnail;
 
             return $this->render('index', [
                 'baseUrl' => $baseUrl,

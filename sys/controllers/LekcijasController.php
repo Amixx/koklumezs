@@ -77,7 +77,7 @@ class LekcijasController extends Controller
         $user = Yii::$app->user->identity;
         // $modelsIds = UserLectures::getUserLectures($user->id);
 
-        $videoThumb = School::getVideoThumb(Yii::$app->user->identity->id);
+        $videoThumb = School::getCurrentSchool()->video_thumbnail;
 
         if ($type) {
             $modelsIds = UserLectures::getLecturesOfType($user->id, $type);
@@ -172,7 +172,7 @@ class LekcijasController extends Controller
             $lectureView->save();
         }
 
-        $videoThumb = School::getVideoThumb(Yii::$app->user->identity->id);
+        $videoThumb = School::getCurrentSchool()->video_thumbnail;
 
         $dbg = Yii::$app->request->get('dbg');
         $force = Yii::$app->request->get('force');

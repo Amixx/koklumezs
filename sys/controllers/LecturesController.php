@@ -115,7 +115,7 @@ class LecturesController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
-        $schoolId = SchoolTeacher::getCurrentSchoolId();
+        $schoolId = School::getCurrentSchoolId();
         $difficulties = Difficulties::getDifficultiesForSchool($schoolId);
         $handdifficulties = Handdifficulties::getDifficulties();
         $evaluations = Evaluations::getEvaluations();
@@ -205,7 +205,7 @@ class LecturesController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
-        $schoolId = SchoolTeacher::getCurrentSchoolId();
+        $schoolId = School::getCurrentSchoolId();
         $post = Yii::$app->request->post();
         $difficulties = Difficulties::getDifficultiesForSchool($schoolId);
         $evaluations = Evaluations::getEvaluations();

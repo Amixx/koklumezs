@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use Yii;
+
 class School extends \yii\db\ActiveRecord
 {
     public static function tableName()
@@ -13,7 +15,7 @@ class School extends \yii\db\ActiveRecord
     {
         return [
             [['instrument'], 'required'],
-            [['instrument'], 'string'],
+            [['instrument', 'background_image', 'registration_background_image', 'logo', 'video_thumbnail', 'email'], 'string'],
             [['created'], 'safe'],
         ];
     }
@@ -24,8 +26,11 @@ class School extends \yii\db\ActiveRecord
             'id' => 'ID',
             'instrument' => \Yii::t('app',  'Instrument'),
             'created' => \Yii::t('app',  'Creation date'),
-            'background_image' => \Yii::t('app',  'Page background image'),
+            'background_image' => \Yii::t('app',  'School background image'),
+            'registration_background_image' => \Yii::t('app',  'Registration page background image'),
+            'logo' => \Yii::t('app',  'Logo (preferably in SVG format)'),
             'video_thumbnail' => \Yii::t('app',  'Video thumbnail'),
+            'email' => \Yii::t('app',  'E-mail'),
         ];
     }
 
@@ -46,8 +51,25 @@ class School extends \yii\db\ActiveRecord
         $school = self::getByTeacher($teacherId);
         return [
             \Yii::t('app',  'School background image') => $school->background_image,
+            \Yii::t('app',  'Registration page background image') => $school->registration_background_image,
             \Yii::t('app',  'Video thumbnail') => $school->video_thumbnail,
+            \Yii::t('app',  'Logo') => $school->logo,
+            \Yii::t('app',  'E-mail') => $school->email,
         ];
+    }
+
+    public function getCurrentSchool()
+    {
+        $userId = Yii::$app->user->identity->id;
+        $isTeacher = Users::isCurrentUserTeacher();
+        $school = null;
+        if ($isTeacher) {
+            $school = self::getByTeacher($userId);
+        } else {
+            $school = self::getByStudent($userId);
+        }
+
+        return $school;
     }
 
     public function getVideoThumb($userId)
@@ -61,6 +83,13 @@ class School extends \yii\db\ActiveRecord
         }
 
         return $school->video_thumbnail;
+    }
+
+    public function getCurrentSchoolId()
+    {
+        $userId = Yii::$app->user->identity->id;
+        if(Users::isCurrentUserTeacher()) return SchoolTeacher::getSchoolTeacher($userId)->school_id;
+        else return SchoolStudent::getSchoolStudent($userId)->school_id;
     }
 
     // public function getTeachers()

@@ -51,19 +51,7 @@ class SchoolTeacher extends \yii\db\ActiveRecord
         return self::find()->where(['user_id' => $teacherId])->joinWith('school')->joinWith('user')->one();
     }
 
-    public function getCurrentSchoolId()
-    {
-        $isCurrentUserTeacher = Yii::$app->user->identity->user_level == 'Teacher';
-        if($isCurrentUserTeacher) return self::getSchoolTeacher(Yii::$app->user->identity->id)->school_id;
-        else return SchoolStudent::getSchoolStudent(Yii::$app->user->identity->id)->school_id;
-    }
-
     public function getBySchoolId($schoolId){
         return self::find()->where(['school_id' => $schoolId])->joinWith('school')->joinWith('user')->one();
     }
-
-    // public function getRelations($id): array
-    // {
-    //     return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'id', 'related_id');
-    // }
 }

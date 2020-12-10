@@ -30,20 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
             <table class="table table-striped table-bordered">
-                <tr>
-                    <?php foreach ($settings as $key => $setting) { ?>
-                        <th>
-                            <?= $key ?>
-                        </th>
+                <?php foreach ($settings as $key => $value) { ?>
+                    <tr>
+                        <th><?= $key ?></th>
+                        <td><?= $value ?></td>
+                    </tr>
                     <?php } ?>
-                </tr>
-                <tr>
-                    <?php foreach ($settings as $setting) { ?>
-                        <td>
-                            <?= $setting ?>
-                        </td>
-                    <?php } ?>
-                </tr>
             </table>
 
             <?= Html::a(\Yii::t('app',  'Edit'), ['update'], ['class' => 'btn btn-primary']) ?>
@@ -51,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <hr>
             <p>
                 <strong><?= Yii::t('app', 'The link that students can use to join this school'); ?>: </strong>
-                <code>https://skola.koklumezs.lv/sys/site/sign-up?s=<?= $schoolId ?>&l=<?= Yii::$app->language ?></code>
+                <code><?= $signupUrl ?></code>
             </p>
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
@@ -88,7 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ]); ?>
         </div>
-          <div class="tab-pane fade" id="signup-questions" role="tabpanel" aria-labelledby="signup-questions-tab">
+        <div class="tab-pane fade" id="signup-questions" role="tabpanel" aria-labelledby="signup-questions-tab">
             <h1><?= Yii::t("app", "Questions after signup") ?></h1>
              <?= GridView::widget([
                 'dataProvider' => $signupQuestionsDataProvider,

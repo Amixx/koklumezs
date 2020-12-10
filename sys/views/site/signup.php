@@ -5,25 +5,23 @@ use yii\bootstrap\ActiveForm;
 
 $this->title = \Yii::t('app',  'Sign up');
 
-$fieldOptions1 = [
-    'options' => ['class' => 'form-group has-feedback'],
-    'inputTemplate' => "{input}<span class='glyphicon glyphicon-user form-control-feedback'></span>"
-];
+function getFieldOptions($fieldName, $hasInfo = false){
+    $glyphon = 'user';
+    $classes = 'form-group has-feedback';
 
-$fieldOptions2 = [
-    'options' => ['class' => 'form-group has-feedback'],
-    'inputTemplate' => "{input}<span class='glyphicon glyphicon-lock form-control-feedback'></span>"
-];
+    switch($fieldName) {
+        case 'password': $glyphon = 'lock'; break;
+        case 'email': $glyphon = 'envelope'; break;
+        case 'phone_number': $glyphon = 'earphone'; break;
+        default: break;
+    }
+    if($hasInfo) $classes .= ' field-with-info-widget';
 
-$fieldOptions3 = [
-    'options' => ['class' => 'form-group has-feedback'],
-    'inputTemplate' => "{input}<span class='glyphicon glyphicon-envelope form-control-feedback'></span>"
-];
-
-$fieldOptions4 = [
-    'options' => ['class' => 'form-group has-feedback'],
-    'inputTemplate' => "{input}<span class='glyphicon glyphicon-earphone form-control-feedback'></span>"
-];
+    return [
+        'options' => ['class' => $classes],
+        'inputTemplate' => "{input}<span class='glyphicon glyphicon-" . $glyphon . " form-control-feedback'></span>"
+    ];
+}
 ?>
 
 <div class="login-box">
@@ -32,34 +30,34 @@ $fieldOptions4 = [
         <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
 
         <?= $form
-            ->field($model, 'username', $fieldOptions1)
+            ->field($model, 'username', getFieldOptions('username', true))
             ->label(false)
             ->textInput(['placeholder' => Yii::t('app', 'Username')]) ?>
 
-        <span class="glyphicon glyphicon-info-sign info"></span>
+        <span class="glyphicon glyphicon-info-sign info info-username" style="margin-top: 8px;"></span>
 
         <?= $form
-            ->field($model, 'password', $fieldOptions2)
+            ->field($model, 'password', getFieldOptions('password'))
             ->label(false)
             ->passwordInput(['placeholder' => Yii::t('app', 'Password')]) ?>
 
         <?= $form
-            ->field($model, 'first_name', $fieldOptions1)
+            ->field($model, 'first_name', getFieldOptions('first_name'))
             ->label(false)
             ->textInput(['placeholder' => Yii::t('app', 'Name')]) ?>
 
         <?= $form
-            ->field($model, 'last_name', $fieldOptions1)
+            ->field($model, 'last_name', getFieldOptions('last_name'))
             ->label(false)
             ->textInput(['placeholder' => Yii::t('app', 'Surname')]) ?>
 
         <?= $form
-            ->field($model, 'email', $fieldOptions3)
+            ->field($model, 'email', getFieldOptions('email'))
             ->label(false)
             ->textInput(['placeholder' => Yii::t('app', 'E-mail')]) ?>
 
         <?= $form
-            ->field($model, 'phone_number', $fieldOptions4)
+            ->field($model, 'phone_number', getFieldOptions('phone_number'))
             ->label(false)
             ->textInput([
                 'placeholder' => Yii::t('app', 'Phone number')

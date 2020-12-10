@@ -238,6 +238,7 @@ class SiteController extends Controller
 
     public function actionSignUp($s, $l)
     {
+        $this->layout = '@app/views/layouts/signup';
         if(!Yii::$app->user->isGuest) Yii::$app->user->logout();
 
         Yii::$app->language = $l;

@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use yii\helpers\Url;
 use app\models\Users;
 use app\models\School;
 use yii\web\Controller;
@@ -59,7 +60,8 @@ class SchoolSettingsController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $settings = School::getSettings(Yii::$app->user->identity->id);
-        $schoolId = SchoolTeacher::getCurrentSchoolId();
+        $schoolId = School::getCurrentSchoolId();
+        $signupUrl = Url::base(true) . "/site/sign-up?s=" . $schoolId . "&l=" . Yii::$app->language;
         $difficultiesDataProvider = new ActiveDataProvider([
             'query' => Difficulties::find()->where(['school_id' => $schoolId]),
         ]);
@@ -80,6 +82,7 @@ class SchoolSettingsController extends Controller
             'schoolId' => $schoolId,
             'studentQuestionsDataProvider' => $studentQuestionsDataProvider,
             'signupQuestionsDataProvider' => $signupQuestionsDataProvider,
+            'signupUrl' => $signupUrl,
         ]);
     }
 
@@ -100,14 +103,10 @@ class SchoolSettingsController extends Controller
         }
         $model = new School;
         $post = Yii::$app->request->post();
-        if (isset($post) && count($post) > 0) {
-            $model = School::getByTeacher(Yii::$app->user->identity->id);
-            if ($post["School"]["background_image"]) {
-                $model->background_image = $post["School"]["background_image"];
-            }
-            if ($post["School"]["video_thumbnail"]) {
-                $model->video_thumbnail = $post["School"]["video_thumbnail"];
-            }
+        $model = School::getByTeacher(Yii::$app->user->identity->id);
+
+        if (count($post) > 0) {
+            $model->load($post);
 
             $saved = $model->save();
             if ($saved) {
@@ -119,13 +118,6 @@ class SchoolSettingsController extends Controller
         return $this->render('update', ['model' => $model]);
     }
 
-    /**
-     * Deletes an existing SectionsVisible model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($id)
     {
         $isGuest = Yii::$app->user->isGuest;

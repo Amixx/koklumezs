@@ -179,7 +179,6 @@ return [
     'Not opened' => 'Nav atvērts',
     'Opened' => 'Atvērts',
     'Opening time' => 'Atvēršanas laiks',
-    'Page background image' => 'Lapas fona attēls',
     'Paid' => 'Par maksu',
     'Paid/Has to pay' => 'Samaksāts/Jāmaksā',
     'Parameter' => 'Parametrs',
@@ -229,7 +228,7 @@ return [
     'Save' => 'Saglabāt',
     'School' => 'Skola',
     'School ID' => 'Skolas ID',
-    'School background image' => 'Skolas fona bilde',
+    'School background image' => 'Skolas fona attēls',
     'School evaluations' => 'Skolas novērtējumi',
     'School settings' => 'Skolas iestatījumi',
     'Search' => 'Meklēt',
@@ -341,4 +340,6 @@ return [
     'Your first lecture' => 'Tava pirmā nodarbība',
     'stars' => 'zvaigznes',
     'text' => 'teksts',
+    'Logo (preferably in SVG format)' => 'Logo (ieteicams SVG formātā)',
+    'Registration page background image' => 'Reģistrācijas lapas fona bilde',
 ];

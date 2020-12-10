@@ -59,7 +59,7 @@ class DifficultiesController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
-        $schoolId = SchoolTeacher::getCurrentSchoolId();
+        $schoolId = School::getCurrentSchoolId();
         $dataProvider = new ActiveDataProvider([
             'query' => Difficulties::find()->where(['school_id' => $schoolId]),
         ]);
@@ -95,7 +95,7 @@ class DifficultiesController extends Controller
         }
         $model = new Difficulties();
 
-        $schoolId = SchoolTeacher::getCurrentSchoolId();
+        $schoolId = School::getCurrentSchoolId();
         if ($model->load(Yii::$app->request->post())) {
             $model->school_id = $schoolId;
             if ($model->save()) {
