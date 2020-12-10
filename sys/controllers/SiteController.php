@@ -262,6 +262,7 @@ class SiteController extends Controller
                     $firstLectureIds = $hasExperience ? [301, 302, 303] : [703, 739, 17];
                     $insertDate = date('Y-m-d H:i:s', time());
                     $insertColumns = [];
+
                     foreach($firstLectureIds as $lid){
                         $insertColumns[] = [$schoolTeacher["id"], $userId, $lid, $insertDate, 0, 0, 1];
                     }
@@ -270,6 +271,16 @@ class SiteController extends Controller
                         ->createCommand()
                         ->batchInsert('userlectures', ['assigned', 'user_id', 'lecture_id', 'created', 'user_difficulty', 'open_times', 'sent'], $insertColumns)
                         ->execute();
+
+                    Yii::$app
+                        ->mailer
+                        ->compose(['html' => 'new-user-html', 'text' => 'new-user-text'], [
+                            'user' => $user,
+                        ])
+                        ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+                        ->setTo(Yii::$app->params['senderEmail'])
+                        ->setSubject("Reģistrējies jauns skolēns - " . $user['first_name'])
+                        ->send();
 
                     if(!$hasOwnInstrument){
                         $this->redirect(["rent-or-buy", 'u' => $user['id'], 'l' => $l]);
@@ -280,7 +291,6 @@ class SiteController extends Controller
                     }
                 }
             }
-
         }
 
         $model->password = '';
