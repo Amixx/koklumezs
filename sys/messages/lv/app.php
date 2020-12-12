@@ -342,4 +342,5 @@ return [
     'text' => 'teksts',
     'Logo (preferably in SVG format)' => 'Logo (ieteicams SVG formātā)',
     'Registration page background image' => 'Reģistrācijas lapas fona bilde',
+    'Message to send with the invoice' => 'Ziņa, ko nosūtīt kopā ar rēķinu'
 ];

@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'monthly_cost',
             'months',
             'max_pause_weeks',
+            'message',
         ],
     ]) ?>
     <h3><?= Yii::t('app', 'Plan files') ?></h3>

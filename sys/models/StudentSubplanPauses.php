@@ -35,18 +35,24 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
 
     public function getForStudent($studentId)
     {
-        $planId = StudentSubPlans::findOne(['user_id' => $studentId])->id;
-        return self::find()->where(['studentsubplan_id' => $planId])->joinWith('studentPlan');
+        $subplan = StudentSubPlans::findOne(['user_id' => $studentId]);
+        if($subplan == null) return null;
+
+        return self::find()->where(['studentsubplan_id' => $subplan['id']])->joinWith('studentPlan');
     }
 
     public function getMostRecentPauseForStudent($studentId){
-        $planId = StudentSubPlans::findOne(['user_id' => $studentId])->id;
-        return self::find()->where(['studentsubplan_id' => $planId])->orderBy(['start_date' => SORT_DESC])->asArray()->all()[0];
+        $subplan = StudentSubPlans::findOne(['user_id' => $studentId]);
+        if($subplan == null) return null;
+
+        return self::find()->where(['studentsubplan_id' => $subplan['id']])->orderBy(['start_date' => SORT_DESC])->asArray()->all()[0];
     }
 
     public function studentHasAnyPauses($studentId)
     {
-        $planId = StudentSubPlans::findOne(['user_id' => $studentId])['id'];
-        return self::find()->where(['studentsubplan_id' => $planId])->count() > 0;
+        $subplan = StudentSubPlans::findOne(['user_id' => $studentId]);
+        if($subplan == null) return null;
+
+        return self::find()->where(['studentsubplan_id' => $subplan['id']])->count() > 0;
     }
 }

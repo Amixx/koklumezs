@@ -23,6 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'monthly_cost',
             'months',
             'max_pause_weeks',
+            'message',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

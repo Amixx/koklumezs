@@ -405,9 +405,14 @@ class CronController extends Controller
 
                     if(!$planEnded || $planUnlimited){
                         if(!$hasPaidInAdvance){
+                            $message = "Nosūtam rēķinu par tekošā mēneša nodarbībām. Lai jauka diena!";
+                            if(isset($subplan['message']) && $subplan['message']) $message = $subplan['message'];
+                            
                             $sent = Yii::$app
                                 ->mailer
-                                ->compose(['html' => 'rekins-html', 'text' => 'rekins-text'])
+                                ->compose(
+                                    ['html' => 'rekins-html', 'text' => 'rekins-text'],
+                                    ['message' => $message])
                                 ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
                                 ->setTo($user['email'])
                                 ->setSubject("Rēķins $id - " . Yii::$app->name)

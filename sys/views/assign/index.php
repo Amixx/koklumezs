@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <td><?= $a ?></td>
                     <td><?= $user['username'] ?></td>
                     <td><?= isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->title : '<code>Not set</code>' ?></td>
-                    <td align="center"><?= $lastlectures[$id]['open_times'] ?></td>
+                    <td align="center"><?= isset($lastlectures[$id]) ? $lastlectures[$id]['open_times'] : '<code>Not set</code>' ?></td>
                     <td align="center"><?= isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->complexity : '<code>Not set</code>' ?></td>
                     <?php foreach ($evaluationsTitles as $etid => $et) { ?>
                         <td align="center">
