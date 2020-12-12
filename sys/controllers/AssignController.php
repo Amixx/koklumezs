@@ -125,10 +125,11 @@ class AssignController extends \yii\web\Controller
             $model->created = date('Y-m-d H:i:s', time());
             $model->user_difficulty = $goalsum;
             if (isset($post['UserLectures']['lecture_id']) && $model->load($post) && $model->save()) {
-                $teacherMessage = $post['teacherMessage'];
                 $shouldSendEmail = isset($post['sendEmail']) && $post['sendEmail'];
                 if ($shouldSendEmail) {
-                    UserLectures::sendEmail($model->user_id, $teacherMessage);
+                    $subject = isset($post['subject']) && $post['subject'] ? $post['subject'] : "Jaunas nodarbības";
+                    $teacherMessage = $post['teacherMessage'];
+                    UserLectures::sendEmail($model->user_id, $teacherMessage, $subject);
                 }
                 // $model->sent = (int) $sent;
                 $model->sent = 1;
@@ -145,10 +146,11 @@ class AssignController extends \yii\web\Controller
             $model->user_difficulty = $goalsum;
             $saved = $model->save();
             if ($saved) {
-                $teacherMessage = $post['teacherMessage'];
-                $shouldSendEmail = isset($post['sendEmail']) && $post['sendEmail'];
+                $shouldSendEmail = isset($post['sendEmail']) && $post['sendEmail'];               
                 if ($shouldSendEmail) {
-                    UserLectures::sendEmail($model->user_id, $teacherMessage);
+                    $teacherMessage = $post['teacherMessage'];
+                    $subject = isset($post['subject']) && $post['subject'] ? $post['subject'] : "Jaunas nodarbības";
+                    UserLectures::sendEmail($model->user_id, $teacherMessage, $subject);                    
                 }
                 // $model->sent = (int) $sent;
                 $model->sent = 1;

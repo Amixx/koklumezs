@@ -306,7 +306,7 @@ class UserLectures extends \yii\db\ActiveRecord
      *
      * @return bool whether the email was sent
      */
-    public function sendEmail($id, $teacherMessage = null)
+    public function sendEmail($id, $teacherMessage = null, $subject)
     {
         $user = Users::findOne([
             'id' => $id,
@@ -327,7 +327,7 @@ class UserLectures extends \yii\db\ActiveRecord
             )
             ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
             ->setTo($user->email)
-            ->setSubject('Jaunas nodarbības - ' . Yii::$app->name)
+            ->setSubject($subject . ' - ' . Yii::$app->name)
             ->send();
     }
 

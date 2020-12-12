@@ -190,6 +190,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <label for="sendEmail"><?= Yii::t('app', 'Send message to student') ?>
         <input type="checkbox" name="sendEmail">
     </label>
+    <label for="subject"><?= Yii::t('app', 'Subject') ?>
+        <input type="text" name="subject" class="form-control">
+    </label>
     <label for="teacherMessage"><?= Yii::t('app', 'Message for student') ?></label>
     <textarea name="teacherMessage" style="width: 100%" rows="5"></textarea>
 </div>
