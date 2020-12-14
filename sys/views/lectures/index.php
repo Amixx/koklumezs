@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use  yii\jui\DatePicker;
@@ -107,16 +108,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                     if ($action === 'view') {
-                        $url = '/sys/lekcijas/lekcija/' . $model->id . '?force=1';
+                        $url = Url::base(true).'/lekcijas/lekcija/' . $model->id . '?force=1';
                         return $url;
                     }
 
                     if ($action === 'update') {
-                        $url = '/sys/lectures/update/' . $model->id;
+                        $url = Url::base(true).'/lectures/update/' . $model->id;
                         return $url;
                     }
                     if ($action === 'delete') {
-                        $url = '/sys/lectures/delete/' . $model->id;
+                        $url = Url::base(true).'/lectures/delete/' . $model->id;
                         return $url;
                     }
                 }
