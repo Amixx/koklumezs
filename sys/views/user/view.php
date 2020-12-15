@@ -49,7 +49,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     'user_level',
                     [
                         'attribute' => 'about',
-                        'options' => ['class' => 'nigga']
                     ],                    
                 ],
             ]) ?>

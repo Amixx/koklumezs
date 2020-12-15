@@ -245,6 +245,7 @@ class SiteController extends Controller
 
         $model = new SignUpForm();
         if ($model->load(Yii::$app->request->post())) {
+            $model['language'] = $l;
             $userId = $model->signUp();
             $hasOwnInstrument = Yii::$app->request->post() && Yii::$app->request->post()['has-own-instrument'];
             $hasExperience = Yii::$app->request->post() && Yii::$app->request->post()['has-experience'];
@@ -310,7 +311,6 @@ class SiteController extends Controller
         $model = new RentOrBuyForm;
         $model->fullname = $user['first_name'] . " " . $user['last_name'];
         $model->email = $user['email'];
-        $model->phone_number = $user['phone_number'];
         
         if ($model->load(Yii::$app->request->post())) {
             $sent = Yii::$app
@@ -323,7 +323,7 @@ class SiteController extends Controller
                 ->setSubject("Par kokles iegādāšanos - " . $model['fullname'])
                 ->send();
             if($sent){
-                Yii::$app->session->setFlash('success', 'Jūsu pieteikums ir saņemts!');
+                Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam spēlēt!');
                 return $this->redirect(['lekcijas/index']);
             }
         }

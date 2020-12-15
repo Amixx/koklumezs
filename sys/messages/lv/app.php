@@ -84,7 +84,7 @@ return [
     'Description' => 'Apraksts',
     'Difficulty' => 'Sarežģītība',
     'Do not bother' => 'Netraucēt',
-    'Do you have your own kokle?' => 'Vai tev jaur ir kokle?',
+    'Do you have your own kokle?' => 'Vai tev jaur ir sava kokle?',
     'Do you really want to delete this entry?' => 'Vai tiešām vēlies dzēst šo ierakstu?',
     'Do you really want to delete this file?' => 'Vai tiešām vēlies dzēst šo failu?',
     'Do you want to buy or rent a kokle?' => 'Vēlies kokli pirkt vai īrēt?',
@@ -344,4 +344,5 @@ return [
     'Registration page background image' => 'Reģistrācijas lapas fona bilde',
     'Message to send with the invoice' => 'Ziņa, ko nosūtīt kopā ar rēķinu',
     'Subject' => 'Temats',
+    'Registration message' => 'Ziņa pēc reģistrācijas',
 ];

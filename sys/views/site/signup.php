@@ -27,46 +27,52 @@ function getFieldOptions($fieldName, $hasInfo = false){
 <div class="login-box">
     <div class="login-box-body login">
 
+        <h3>Prieks, ka vēlies pievienoties Kokļu Meža attālinātajām nodarbībām! Reģistrējies un – koklēsim!</h3>
+
         <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
 
-        <?= $form
+        <!-- <?= $form
             ->field($model, 'username', getFieldOptions('username', true))
             ->label(false)
-            ->textInput(['placeholder' => Yii::t('app', 'Username')]) ?>
+            ->textInput(['placeholder' => Yii::t('app', 'Username')]) ?> -->
 
-        <span class="glyphicon glyphicon-info-sign info info-username" style="margin-top: 8px;"></span>
+        <!-- <span class="glyphicon glyphicon-info-sign info info-username" style="margin-top: 8px;"></span> -->
+        <div class="signup-form-section">
+            <?= $form
+                ->field($model, 'email', getFieldOptions('email'))
+                ->label(false)
+                ->textInput(['placeholder' => Yii::t('app', 'E-mail')]) ?>
 
-        <?= $form
-            ->field($model, 'password', getFieldOptions('password'))
-            ->label(false)
-            ->passwordInput(['placeholder' => Yii::t('app', 'Password')]) ?>
+            <?= $form
+                ->field($model, 'password', getFieldOptions('password'))
+                ->label(false)
+                ->passwordInput(['placeholder' => Yii::t('app', 'Password')]) ?>
+        </div>
 
-        <?= $form
-            ->field($model, 'first_name', getFieldOptions('first_name'))
-            ->label(false)
-            ->textInput(['placeholder' => Yii::t('app', 'Name')]) ?>
+        <div class="signup-form-section">
+            <?= $form
+                ->field($model, 'first_name', getFieldOptions('first_name'))
+                ->label(false)
+                ->textInput(['placeholder' => Yii::t('app', 'Name')]) ?>
 
-        <?= $form
-            ->field($model, 'last_name', getFieldOptions('last_name'))
-            ->label(false)
-            ->textInput(['placeholder' => Yii::t('app', 'Surname')]) ?>
+            <?= $form
+                ->field($model, 'last_name', getFieldOptions('last_name'))
+                ->label(false)
+                ->textInput(['placeholder' => Yii::t('app', 'Surname')]) ?>
+        </div>      
 
-        <?= $form
-            ->field($model, 'email', getFieldOptions('email'))
-            ->label(false)
-            ->textInput(['placeholder' => Yii::t('app', 'E-mail')]) ?>
-
-        <?= $form
+        <!-- <?= $form
             ->field($model, 'phone_number', getFieldOptions('phone_number'))
             ->label(false)
             ->textInput([
                 'placeholder' => Yii::t('app', 'Phone number')
-            ]) ?>
+            ]) ?> -->
 
-        <?= $form
+        <!-- <?= $form
             ->field($model, 'language')
             ->label(false)
-            ->dropDownList(['lv' => \Yii::t('app',  'Latvian'), 'eng' => \Yii::t('app',  'English')], ['prompt' => '- - '.Yii::t('app', 'language').' - -', 'options'=>[$defaultLanguage => ["Selected" => true]]]) ?>
+            ->dropDownList(['lv' => \Yii::t('app',  'Latvian'), 'eng' => \Yii::t('app',  'English')], ['prompt' => '- - '.Yii::t('app', 'language').' - -', 'options'=>[$defaultLanguage => ["Selected" => true]]]) ?> -->
+
         <?= Html::label(Yii::t('app', 'Do you have your own kokle?'), 'has-own-instrument'); ?>
         <?= Html::dropDownList('has-own-instrument', null, [false => \Yii::t('app',  'No'), true => \Yii::t('app', 'Yes')], ['prompt' => '', 'style' => 'width: 64px !important']) ?>
         <div class="has-experience">

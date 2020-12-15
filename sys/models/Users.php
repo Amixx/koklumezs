@@ -33,9 +33,6 @@ class Users extends ActiveRecord implements IdentityInterface
         return 'users';
     }
 
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
@@ -58,9 +55,6 @@ class Users extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
@@ -83,9 +77,6 @@ class Users extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
@@ -103,33 +94,21 @@ class Users extends ActiveRecord implements IdentityInterface
         return static::findOne(['username' => $username]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function findIdentity($id)
     {
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getAdmins()
     {
         return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_ADMIN])->asArray()->all(), 'id', 'username');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getTeachers()
     {
         return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_TEACHER])->asArray()->all(), 'id', 'username');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getActiveStudents($dont_bother = false)
     {
         $params = ['user_level' => self::ROLE_USER, 'status' => self::STATUS_ACTIVE];
@@ -270,12 +249,6 @@ class Users extends ActiveRecord implements IdentityInterface
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
-    /**
-     * Finds user by username
-     *
-     * @param  string      $username
-     * @return static|null
-     */
     public static function findByEmail($email)
     {
         $user = self::find()

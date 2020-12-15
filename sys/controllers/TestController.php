@@ -137,10 +137,5 @@ class TestController extends Controller
         //     ->send();
 
 
-        
-        $diffDays = 
-        
-        var_dump($payDate);
-        var_dump($diffDays);
     }
 }

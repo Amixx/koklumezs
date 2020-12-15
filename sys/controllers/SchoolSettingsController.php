@@ -9,16 +9,10 @@ use app\models\School;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\base\Event;
-use yii\web\View;
-use app\models\SchoolStudent;
-use app\models\CommentResponses;
 use app\models\StudentQuestions;
 use app\models\Difficulties;
 use app\models\SignupQuestions;
 use app\models\SchoolFaqs;
-use app\models\SchoolTeacher;
-use app\models\DifficultiesSearch;
 use yii\data\ActiveDataProvider;
 
 class SchoolSettingsController extends Controller

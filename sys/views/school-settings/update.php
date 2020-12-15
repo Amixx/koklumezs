@@ -9,6 +9,15 @@ use mihaildev\elfinder\InputFile;
 /* @var $this yii\web\View */
 /* @var $model app\models\Difficulties */
 
+$ckeditorOptions = ElFinder::ckeditorOptions(
+    'elfinder',
+    [
+        'preset' => 'full', //разработанны стандартные настройки basic, standard, full данную возможность не обязательно использовать
+        'inline' => false, //по умолчанию false
+        'filter' => ['image', 'application/pdf', 'text', 'video'],    // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
+    ]
+);
+
 $this->title = \Yii::t('app',  'Edit school settings') . ': ';
 $this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
 ?>
@@ -57,6 +66,9 @@ $this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
             'multiple' => false,
         ]); ?>
         <?= $form->field($model, 'email')->textInput(['class' => 'form-control form-group has-feedback field-with-info-widget']) ?>
+         <?= $form->field($model, 'registration_message')->widget(CKEditor::className(), [
+            'editorOptions' => $ckeditorOptions,
+        ]) ?>
 
         <span class="glyphicon glyphicon-info-sign info info-school-email" style="margin-top: -50px;"></span>
 

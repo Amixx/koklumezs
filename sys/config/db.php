@@ -2,9 +2,10 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=skola_sys_db',
+    'dsn' => 'mysql:host=skola.koklumezs.lv;dbname=dev_skola_sys_db',
     'username' => 'skola',
-    'password' => 'nJ%k]AQn36vA',
+    'password' => 'skola',
+    // 'password' => 'nJ%k]AQn36vA',
     // 'username' => 'root',
     // 'password' => 'JbrGpS8sbBV',
     'charset' => 'utf8',

@@ -466,3 +466,8 @@ div.has-experience.active, div.rent-or-buy.active {
 .school-logo.admin {
     margin-left: -50px;
 }
+
+.signup-form-section {
+    margin-top: 36px;
+    margin-bottom: 32px;
+}

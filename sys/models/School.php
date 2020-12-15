@@ -15,7 +15,7 @@ class School extends \yii\db\ActiveRecord
     {
         return [
             [['instrument'], 'required'],
-            [['instrument', 'background_image', 'registration_background_image', 'logo', 'video_thumbnail', 'email'], 'string'],
+            [['instrument', 'background_image', 'registration_background_image', 'logo', 'video_thumbnail', 'email', 'registration_message'], 'string'],
             [['created'], 'safe'],
         ];
     }
@@ -31,6 +31,7 @@ class School extends \yii\db\ActiveRecord
             'logo' => \Yii::t('app',  'Logo (preferably in SVG format)'),
             'video_thumbnail' => \Yii::t('app',  'Video thumbnail'),
             'email' => \Yii::t('app',  'E-mail'),
+            'registration_message' => \Yii::t('app',  'Registration message'),
         ];
     }
 
@@ -55,6 +56,7 @@ class School extends \yii\db\ActiveRecord
             \Yii::t('app',  'Video thumbnail') => $school->video_thumbnail,
             \Yii::t('app',  'Logo') => $school->logo,
             \Yii::t('app',  'E-mail') => $school->email,
+            \Yii::t('app',  'Registration message') => $school->registration_message,
         ];
     }
 
