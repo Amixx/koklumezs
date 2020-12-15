@@ -32,7 +32,7 @@ $this->title = \Yii::t('app',  'Your first kokle');
             ->textInput() ?>
         </div>
         <div class="form-group col-sm-6">
-            <?= $form->field($model, 'payment_type')->radioList(['buy' => Yii::t('app', 'I would like to buy the kokle (starts at 120 euros)'), 'rent' => Yii::t('app', 'I would like to pay for the kokle in instalments')])->label(Yii::t('app', 'Choose payment type')); ?> 
+            <?= $form->field($model, 'payment_type')->radioList(['buy' => Yii::t('app', 'I would like to buy the kokle (starts at 120 euros)'), 'rent' => Yii::t('app', 'I would like to rent the kokle (10 euros per month)'), 'payments' => Yii::t('app', 'I would like to pay for the kokle in instalments')])->label(Yii::t('app', 'Choose payment type')); ?> 
 
             <?= $form->field($model, 'delivery_type')->radioList(['local' => Yii::t('app', 'I would like to receive it via Omniva or Latvian Post (5 euros)'), 'foreign' => Yii::t('app', 'I want to receive with delivery outside Latvia (price by agreement)')])->label(Yii::t('app', 'Choose delivery type')); ?> 
         </div>

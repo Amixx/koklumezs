@@ -129,6 +129,7 @@ return [
     'I want to receive with delivery outside Latvia (price by agreement)' => 'vēlos saņemt ar piegādi ārpus Latvijas (cena pēc vienošanās)',
     'I will start the pause by this date:' => 'Sākšu pauzīti ar šo datumu:',
     'I would like to buy the kokle (starts at 120 euros)' => 'Koklīti vēlos iegādāties (no 120 eiro)',
+    'I would like to rent the kokle (10 euros per month)' => 'Koklīti vēlos īrēt (10 eiro mēnesī)',
     'I would like to pay for the kokle in instalments' => 'Koklīti vēlos iegādāties uz nomaksu',
     'I would like to receive it via Omniva or Latvian Post (5 euros)' => 'vēlos saņemt ar Omnivas vai Latvijas pasta starpniecību (5 eiro)',
     'If you need to add more files, go to section "Files"' => 'Ja nepiecišams pievienot vēl failus, ej uz sekciju "Faili"',
