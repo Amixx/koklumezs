@@ -55,6 +55,7 @@ return [
     'Automatic assignment' => 'Automātiska piešķiršana',
     'Autumn' => 'Rudens',
     'Back' => 'Atpakaļ',
+    'Back to start'=>'Atpakaļ uz sākumu',
     'Buy' => 'Prikt',
     'Categories' => 'Kategorijas',
     'Category' => 'Kategorija',
