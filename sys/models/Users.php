@@ -44,7 +44,7 @@ class Users extends ActiveRecord implements IdentityInterface
             ['user_level', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN, self::ROLE_TEACHER]],
             ['language', 'default', 'value' => self::LANG_LV],
             ['language', 'in', 'range' => [self::LANG_LV, self::LANG_ENG]],
-            ['subscription_type', 'default', 'value' => self::SUBTYPE_PAID],
+            ['subscription_type', 'default', 'value' => self::SUBTYPE_LEAD],
             ['subscription_type', 'in', 'range' => [self::SUBTYPE_FREE, self::SUBTYPE_PAID, self::SUBTYPE_LEAD]],
             [['email'], 'email'],
             [['username'], 'unique'],
