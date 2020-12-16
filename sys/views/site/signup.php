@@ -31,12 +31,6 @@ function getFieldOptions($fieldName, $hasInfo = false){
 
         <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
 
-        <!-- <?= $form
-            ->field($model, 'username', getFieldOptions('username', true))
-            ->label(false)
-            ->textInput(['placeholder' => Yii::t('app', 'Username')]) ?> -->
-
-        <!-- <span class="glyphicon glyphicon-info-sign info info-username" style="margin-top: 8px;"></span> -->
         <div class="signup-form-section">
             <?= $form
                 ->field($model, 'email', getFieldOptions('email'))

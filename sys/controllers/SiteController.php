@@ -77,14 +77,14 @@ class SiteController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
-        $username = isset(Yii::$app->user->identity->username) ? Yii::$app->user->identity->username : null;
+        $email = isset(Yii::$app->user->identity->email) ? Yii::$app->user->identity->email : null;
 
-        if (Users::isAdminOrTeacher($username)) {
+        if (Users::isAdminOrTeacher($email)) {
             return $this->redirect(['/lectures']);
-        } elseif (Users::isStudent($username)) {
+        } elseif (Users::isStudent($email)) {
             return $this->redirect(['/lekcijas']);
         } else {
             return $this->redirect(['/site/login']);
@@ -100,7 +100,7 @@ class SiteController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = new PasswordResetRequestForm();
@@ -127,7 +127,7 @@ class SiteController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         try {
@@ -154,7 +154,7 @@ class SiteController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         try {
@@ -180,7 +180,7 @@ class SiteController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = new ResendVerificationEmailForm();
@@ -205,7 +205,7 @@ class SiteController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = new LoginForm();
@@ -228,7 +228,7 @@ class SiteController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         Yii::$app->user->logout();

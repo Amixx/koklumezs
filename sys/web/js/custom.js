@@ -293,10 +293,6 @@ function setupAssignUserListFilters(){
     });
 
     addPopoverToElement(
-        ".info-username",
-        "<p>Lietotājvārds jums būs jāizmanto, lai pieslēgtos platformai.</p><p>Tas nebūs redzams skolotājam, vai citiem skolēniem.</p>"
-    );
-    addPopoverToElement(
         ".info-school-email",
         "<p>Skolas e-pasts tiek izmantots ziņojumu nosūtīšanai skolēniem, kā arī uz šo e-pastu tiek sūtīti paziņojumi.</p>"
     );

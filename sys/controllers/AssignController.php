@@ -34,7 +34,7 @@ class AssignController extends \yii\web\Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Users::isAdminOrTeacher(Yii::$app->user->identity->username);
+                            return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         },
                     ],
                     // everything else is denied
@@ -47,7 +47,7 @@ class AssignController extends \yii\web\Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $options = [];
@@ -99,7 +99,7 @@ class AssignController extends \yii\web\Controller
 
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         if ($id == null) {

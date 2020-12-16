@@ -50,7 +50,7 @@ class SignupQuestionsController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
@@ -68,7 +68,7 @@ class SignupQuestionsController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         return $this->render('view', [
@@ -80,7 +80,7 @@ class SignupQuestionsController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
@@ -102,7 +102,7 @@ class SignupQuestionsController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = $this->findModel($id);
@@ -127,7 +127,7 @@ class SignupQuestionsController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $this->findModel($id)->delete();

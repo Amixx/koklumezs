@@ -50,7 +50,7 @@ class SchoolSettingsController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $settings = School::getSettings(Yii::$app->user->identity->id);
@@ -92,7 +92,7 @@ class SchoolSettingsController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = new School;
@@ -116,7 +116,7 @@ class SchoolSettingsController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $this->findModel($id)->delete();

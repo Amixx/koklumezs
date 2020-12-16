@@ -24,8 +24,8 @@ class UserTest extends \Codeception\Test\Unit
 
     public function testFindUserByUsername()
     {
-        expect_that($user = User::findByUsername('admin'));
-        expect_not(User::findByUsername('not-admin'));
+        expect_that($user = User::findByEmail('admin'));
+        expect_not(User::findByEmail('not-admin'));
     }
 
     /**
@@ -33,7 +33,7 @@ class UserTest extends \Codeception\Test\Unit
      */
     public function testValidateUser($user)
     {
-        $user = User::findByUsername('admin');
+        $user = User::findByEmail('admin');
         expect_that($user->validateAuthKey('test100key'));
         expect_not($user->validateAuthKey('test102key'));
 

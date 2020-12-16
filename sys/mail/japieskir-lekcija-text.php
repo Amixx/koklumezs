@@ -9,7 +9,7 @@ if ($lecture) {
     $link = Yii::$app->urlManager->createAbsoluteUrl(['lekcijas/lekcija', 'id' => $lecture->id]);
 }
 ?>
-Lietotājam <?= Html::encode($user->username) ?> ir manuāli jāpiešķir jauna nodarbība.
+Lietotājam <?= Html::encode($user->email) ?> ir manuāli jāpiešķir jauna nodarbība.
 
 <?php if ($lecture) { ?>
     Pēdējā nodarbība bija: <?= $lecture->title ?>(<?= $lecture->complexity ?>) <?= $link ?>.

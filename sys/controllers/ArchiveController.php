@@ -46,7 +46,7 @@ class ArchiveController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return !empty(Yii::$app->user->identity); //Users::isStudent(Yii::$app->user->identity->username);
+                            return !empty(Yii::$app->user->identity);
                         },
                     ],
                     // everything else is denied
@@ -64,7 +64,7 @@ class ArchiveController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 

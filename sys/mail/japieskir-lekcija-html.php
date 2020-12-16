@@ -17,7 +17,7 @@ if ($lecture) {
     <p><?= Html::a(Html::encode($link), $link) ?></p>
 </div>
 <div class="password-reset">
-    <p>Lietotājam <?= Html::encode($user->username) ?> ir manuāli jāpiešķir jauna nodarbība.</p>
+    <p>Lietotājam <?= Html::encode($user->email) ?> ir manuāli jāpiešķir jauna nodarbība.</p>
 
     <?php if ($lecture) { ?>
         <p>Pēdējā nodarbība bija: <?= $lecture->title ?>(<?= $lecture->complexity ?>) <?= $link ?>.</p>
