@@ -37,7 +37,34 @@ $(document).ready(function() {
     setupLectureFilterByDifficulty();
 
     setupAssignUserListFilters();
+
+    $("select[name='has-own-instrument']").on('change', function(){
+        if(parseInt(this.value) === 0){
+            $("div.has-experience").removeClass("active");
+        }else {
+            $("div.has-experience").addClass("active");
+        }
+    });
+
+    addPopoverToElement(
+        ".info-school-email",
+        "<p>Skolas e-pasts tiek izmantots ziņojumu nosūtīšanai skolēniem, kā arī uz šo e-pastu tiek sūtīti paziņojumi.</p>"
+    );
+
+    // FB.CustomerChat.show(true);
+    console.log(FB);
 });
+
+function addPopoverToElement($selector, html){
+    $($selector).popover({
+        html: true,
+        placement: 'bottom',
+        trigger: 'hover',
+        content: function(){
+            return html;
+        }
+    });
+}
 
 // function makeNavbarMultilineForStudents(){
 //     var navbarItemsSelector = ".navbar-nav.for-students li a";
@@ -270,30 +297,6 @@ function setupAssignUserListFilters(){
         })
     }
 
-    function addPopoverToElement($selector, html){
-        $($selector).popover({
-            html: true,
-            placement: 'bottom',
-            trigger: 'hover',
-            content: function(){
-                return html;
-            }
-        });
-    }
-
     setupAssignFilterByLanguage();
     setupAssignFilterBySubscriptionType();
-
-    $("select[name='has-own-instrument']").on('change', function(){
-        if(parseInt(this.value) === 0){
-            $("div.has-experience").removeClass("active");
-        }else {
-            $("div.has-experience").addClass("active");
-        }
-    });
-
-    addPopoverToElement(
-        ".info-school-email",
-        "<p>Skolas e-pasts tiek izmantots ziņojumu nosūtīšanai skolēniem, kā arī uz šo e-pastu tiek sūtīti paziņojumi.</p>"
-    );
 }
