@@ -22,6 +22,10 @@ $fieldOptions2 = [
 ?>
 
 <div class="login-box">
+    <p>
+        Hei! Sākot ar jauno gadu mainīsies veids kā varēsi tikt iekšā savā profilā - jau tagad vari izmantot epasta adresi, ko esi piereģistrējis un savu jau esošo paroli. 
+        Ja neatceries  - raksti uz <strong>skola@koklumezs.lv</strong>
+    </p>
     <div class="login-box-body login">
 
         <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>

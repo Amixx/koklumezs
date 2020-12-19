@@ -251,8 +251,10 @@ class Users extends ActiveRecord implements IdentityInterface
     public static function findByEmail($email)
     {
         $user = self::find()
-            ->where([
-                "email" => $email,
+            ->andWhere([
+                'or',
+                ['email' => $email],
+                ['username' => $email],
             ])
             ->one();
         if (empty($user)) {
