@@ -347,4 +347,9 @@ return [
     'Message to send with the invoice' => 'Ziņa, ko nosūtīt kopā ar rēķinu',
     'Subject' => 'Temats',
     'Registration message' => 'Ziņa pēc reģistrācijas',
+    'Chat' => 'Čats',
+    'Type message' => 'Raksti ziņu',
+    'Close' => 'Aizvērt',
+    'Chat with student' => 'Sarakste ar skolēnu',
+    'Chat with teacher' => 'Sarakste ar skolotāju',
 ];

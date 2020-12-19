@@ -4,12 +4,14 @@
 /* @var $content string */
 
 use app\widgets\Alert;
+use app\widgets\ChatRoom;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\School;
+use app\models\SchoolTeacher;
 
 $isGuest = Yii::$app->user->isGuest;
 $isAdmin = !$isGuest && Yii::$app->user->identity->user_level == 'Admin';
@@ -19,8 +21,11 @@ $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
 $school = null;
 if ($isTeacher) {
     $school = School::getByTeacher(Yii::$app->user->identity->id);
+    $chatButtonText = "Chat with student";
 } else if ($isStudent) {
     $school = School::getByStudent(Yii::$app->user->identity->id);
+    $chatButtonText = "Chat with teacher";
+    $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
 }
 
 $wrapperBackground = $school != null && $school->background_image != null ? "url($school->background_image)" : "white";
@@ -170,6 +175,23 @@ AppAsset::register($this);
             <?= Alert::widget() ?>
             <?= $content ?>
         </div>
+
+        <?php
+        $renderChat = $isStudent || (isset($this->params['renderChatForTeachers']) && $this->params['renderChatForTeachers'] == true);
+
+        if($renderChat){
+            $recipientId = $isStudent ? $schoolTeacher['user']['id'] : $this->params['chatRecipientId'];
+        ?>
+            <button class="btn btn-success teacher-communication-button" data-toggle="modal" data-target="#chatModal">
+                <?= \Yii::t('app',  $chatButtonText) ?>
+            </button>
+            <?=        
+            ChatRoom::widget([
+                'url' => \yii\helpers\Url::to(['/test/send-chat']),
+                'userModel' =>  \app\models\User::className(),
+                'recipientId' => $recipientId,
+            ]); ?>
+        <?php } ?>        
     </div>
 
     <footer class="footer">

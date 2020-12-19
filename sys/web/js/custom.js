@@ -50,9 +50,6 @@ $(document).ready(function() {
         ".info-school-email",
         "<p>Skolas e-pasts tiek izmantots ziņojumu nosūtīšanai skolēniem, kā arī uz šo e-pastu tiek sūtīti paziņojumi.</p>"
     );
-
-    // FB.CustomerChat.show(true);
-    console.log(FB);
 });
 
 function addPopoverToElement($selector, html){
@@ -300,3 +297,30 @@ function setupAssignUserListFilters(){
     setupAssignFilterByLanguage();
     setupAssignFilterBySubscriptionType();
 }
+
+function reloadchat(message, clearChat) {
+    var url = $(".btn-send-comment").data("url");
+    var model = $(".btn-send-comment").data("model");
+    var recipient_id = $(".btn-send-comment").data("recipient_id");
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: {message: message, model: model, recipient_id: recipient_id},
+        success: function (html) {
+            if (clearChat == true) {
+                $("#chat_message").val("");
+            }
+            $("#chat-box").html(html);
+        }
+    });
+}
+
+setInterval(function () {
+    if($("#chatModal:visible").length > 0) reloadchat('', false);
+}, 5000);
+
+$(".btn-send-comment").on("click", function () {
+    var message = $("#chat_message").val();
+    reloadchat(message, true);
+});

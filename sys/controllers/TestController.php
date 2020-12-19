@@ -31,6 +31,7 @@ use app\models\CommentResponses;
 use app\models\UserLectures;
 use app\models\Userlectureevaluations;
 use kartik\mpdf\Pdf;
+use app\widgets\ChatRoom;
 
 class TestController extends Controller
 {
@@ -136,6 +137,14 @@ class TestController extends Controller
         //     ->setSubject('Jaunas nodarbības - ' . Yii::$app->name)
         //     ->send();
 
+        return $this->render("index", [
+            'recipientId' => 478
+        ]);
 
+        
+    }
+
+    public function actionSendChat(){
+        echo ChatRoom::sendChat($_POST);
     }
 }
