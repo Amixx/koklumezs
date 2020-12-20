@@ -182,11 +182,41 @@ $this->params['breadcrumbs'][] = $this->title;
         return $lecture['title'] . " (" . $lecture['complexity'] . ")";
     }, $manualLectures);
     ?>
-    <?= $manualLectures ? $form->field($model, 'lecture_id')
-        ->dropDownList(
-            $lectureTexts,
-            ['prompt' => '']
-        ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
+
+    <div class="row">
+        <div class="col-md-3">
+            <?= $manualLectures ? $form->field($model, 'lecture_id[0]')
+                ->dropDownList(
+                    $lectureTexts,
+                    ['prompt' => '']
+                ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
+        </div>
+        <div class="col-md-3">
+            <?= $manualLectures ? $form->field($model, 'lecture_id[1]')
+                ->dropDownList(
+                    $lectureTexts,
+                    ['prompt' => '']
+                ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
+        </div>
+        <div class="col-md-3">
+            <?= $manualLectures ? $form->field($model, 'lecture_id[2]')
+                ->dropDownList(
+                    $lectureTexts,
+                    ['prompt' => '']
+                ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
+        </div>
+        <div class="col-md-3">
+            <?= $manualLectures ? $form->field($model, 'lecture_id[3]')
+                ->dropDownList(
+                    $lectureTexts,
+                    ['prompt' => '']
+                ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
+        </div>
+    </div>
+
+
+
+
     <label for="sendEmail"><?= Yii::t('app', 'Send message to student') ?>
         <input type="checkbox" name="sendEmail">
     </label>
