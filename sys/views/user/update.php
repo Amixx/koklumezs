@@ -5,9 +5,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Users */
 
-$this->title = \Yii::t('app',  'Edit user') . ': ' . $model->username;
+$this->title = \Yii::t('app',  'Edit user') . ': ' . $model->email;
 $this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Users'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->username, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->email, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
 
 $subPlans = isset($schoolSubPlans) ? $schoolSubPlans : null;

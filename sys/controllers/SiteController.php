@@ -26,9 +26,6 @@ use app\models\VerifyEmailForm;
 
 class SiteController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
@@ -52,9 +49,6 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function actions()
     {
         return [
@@ -68,39 +62,29 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
-        $username = isset(Yii::$app->user->identity->username) ? Yii::$app->user->identity->username : null;
+        $email = isset(Yii::$app->user->identity->email) ? Yii::$app->user->identity->email : null;
 
-        if (Users::isAdminOrTeacher($username)) {
+        if (Users::isAdminOrTeacher($email)) {
             return $this->redirect(['/lectures']);
-        } elseif (Users::isStudent($username)) {
+        } elseif (Users::isStudent($email)) {
             return $this->redirect(['/lekcijas']);
         } else {
             return $this->redirect(['/site/login']);
         }
     }
 
-    /**
-     * Requests password reset.
-     *
-     * @return mixed
-     */
     public function actionRequestPasswordReset()
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = new PasswordResetRequestForm();
@@ -116,18 +100,12 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
-    /**
-     * Resets password.
-     *
-     * @param string $token
-     * @return mixed
-     * @throws BadRequestHttpException
-     */
+
     public function actionResetPassword($token)
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         try {
@@ -143,18 +121,12 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
-    /**
-     * Verify email address
-     *
-     * @param string $token
-     * @throws BadRequestHttpException
-     * @return yii\web\Response
-     */
+
     public function actionVerifyEmail($token)
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         try {
@@ -171,16 +143,12 @@ class SiteController extends Controller
         Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with provided token.');
         return $this->goHome();
     }
-    /**
-     * Resend verification email
-     *
-     * @return mixed
-     */
+
     public function actionResendVerificationEmail()
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = new ResendVerificationEmailForm();
@@ -196,16 +164,11 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
     public function actionLogin()
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = new LoginForm();
@@ -219,16 +182,11 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
     public function actionLogout()
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         Yii::$app->user->logout();
@@ -242,6 +200,8 @@ class SiteController extends Controller
         if(!Yii::$app->user->isGuest) Yii::$app->user->logout();
 
         Yii::$app->language = $l;
+
+        $school = School::findOne($s);
 
         $model = new SignUpForm();
         if ($model->load(Yii::$app->request->post())) {
@@ -285,6 +245,18 @@ class SiteController extends Controller
                         ->setTo(Yii::$app->params['senderEmail'])
                         ->setSubject("Reģistrējies jauns skolēns - " . $user['first_name'])
                         ->send();
+
+                    if($school['registration_message'] != null){
+                        Yii::$app
+                            ->mailer
+                            ->compose(['html' => 'after-registration-html', 'text' => 'after-registration-text'], [
+                                'message' => $school['registration_message'],
+                            ])
+                            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+                            ->setTo(Yii::$app->params['senderEmail'])
+                            ->setSubject("Apsveicam ar reģistrēšanos - " . Yii::$app->name)
+                            ->send();
+                    }
 
                     if(!$hasOwnInstrument){
                         $this->redirect(["rent-or-buy", 'u' => $user['id'], 'l' => $l]);

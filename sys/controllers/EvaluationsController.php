@@ -30,7 +30,7 @@ class EvaluationsController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Users::isAdminOrTeacher(Yii::$app->user->identity->username);
+                            return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         }
                     ],
                     // everything else is denied
@@ -53,7 +53,7 @@ class EvaluationsController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $searchModel = new EvaluationsSearch();
@@ -76,7 +76,7 @@ class EvaluationsController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         return $this->render('view', [
@@ -93,7 +93,7 @@ class EvaluationsController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = new Evaluations();
@@ -118,7 +118,7 @@ class EvaluationsController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         // $E = array("Viss tik viegls, ka garlaicīgi","Ļoti ļoti viegli, noteikti vajag grūtāk","Izspēlēju vienu reizi un jau viss skaidrs","Diezgan vienkārši","Nācās pastrādāt, bet tiku galā bez milzīgas piepūles","Tiku galā","Diezgan grūti","Itkā saprotu, bet pirksti neklausa","Kaut ko mēģinu, bet pārāk nesanāk","Vispār neko nesaprotu");
@@ -154,7 +154,7 @@ class EvaluationsController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $this->findModel($id)->delete();

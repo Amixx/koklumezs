@@ -33,7 +33,7 @@ class UserLecturesController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Users::isAdminOrTeacher(Yii::$app->user->identity->username);
+                            return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         },
                     ],
                     // everything else is denied
@@ -56,7 +56,7 @@ class UserLecturesController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $searchModel = new UserLecturesSearch();
@@ -87,7 +87,7 @@ class UserLecturesController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         return $this->render('view', [
@@ -113,7 +113,7 @@ class UserLecturesController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $outofLectures = false;
@@ -144,7 +144,7 @@ class UserLecturesController extends Controller
                 return $this->redirect(['index']);
             } elseif (isset($post['UserLectures']['user_id'])) {
                 $user = Users::findOne($post['UserLectures']['user_id']);
-                $students = [$user->id => $user->username];
+                $students = [$user->id => $user->email];
                 $model->user_id = $user->id;
                 $userLecturesTimes = UserLectures::getUserLectureTimes($model->user_id);
                 $userLectures = UserLectures::getUserLectures($model->user_id);
@@ -211,7 +211,7 @@ class UserLecturesController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = $this->findModel($id);
@@ -262,7 +262,7 @@ class UserLecturesController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 

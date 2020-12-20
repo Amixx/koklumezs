@@ -31,6 +31,7 @@ use app\models\CommentResponses;
 use app\models\UserLectures;
 use app\models\Userlectureevaluations;
 use kartik\mpdf\Pdf;
+use app\widgets\ChatRoom;
 
 class TestController extends Controller
 {
@@ -76,7 +77,7 @@ class TestController extends Controller
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
-            $currentUser = Users::getByUsername(Yii::$app->user->identity->username);
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
@@ -109,7 +110,7 @@ class TestController extends Controller
         //     }
         // }
 
-        // $user = Users::findByUsername(Yii::$app->user->identity->username);
+        // $user = Users::findByEmail(Yii::$app->user->identity->username);
         // $userLectures = UserLectures::find()->where(['user_id' => 220])->asArray()->all();
         // $opentimes = array_map(function ($ulecture) {
         //     return $ulecture['opentime'];
@@ -124,7 +125,7 @@ class TestController extends Controller
 
         // var_dump(LectureViews::getDayResult(Yii::$app->user->identity->id));
 
-        // $user = Users::findByUsername(Yii::$app->user->identity->username);
+        // $user = Users::findByEmail(Yii::$app->user->identity->username);
         // echo Yii::$app
         //     ->mailer
         //     ->compose(
@@ -136,6 +137,14 @@ class TestController extends Controller
         //     ->setSubject('Jaunas nodarbības - ' . Yii::$app->name)
         //     ->send();
 
+        return $this->render("index", [
+            'recipientId' => 478
+        ]);
 
+        
+    }
+
+    public function actionSendChat(){
+        echo ChatRoom::sendChat($_POST);
     }
 }

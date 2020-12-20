@@ -37,7 +37,31 @@ $(document).ready(function() {
     setupLectureFilterByDifficulty();
 
     setupAssignUserListFilters();
+
+    $("select[name='has-own-instrument']").on('change', function(){
+        if(parseInt(this.value) === 0){
+            $("div.has-experience").removeClass("active");
+        }else {
+            $("div.has-experience").addClass("active");
+        }
+    });
+
+    addPopoverToElement(
+        ".info-school-email",
+        "<p>Skolas e-pasts tiek izmantots ziņojumu nosūtīšanai skolēniem, kā arī uz šo e-pastu tiek sūtīti paziņojumi.</p>"
+    );
 });
+
+function addPopoverToElement($selector, html){
+    $($selector).popover({
+        html: true,
+        placement: 'bottom',
+        trigger: 'hover',
+        content: function(){
+            return html;
+        }
+    });
+}
 
 // function makeNavbarMultilineForStudents(){
 //     var navbarItemsSelector = ".navbar-nav.for-students li a";
@@ -270,34 +294,33 @@ function setupAssignUserListFilters(){
         })
     }
 
-    function addPopoverToElement($selector, html){
-        $($selector).popover({
-            html: true,
-            placement: 'bottom',
-            trigger: 'hover',
-            content: function(){
-                return html;
-            }
-        });
-    }
-
     setupAssignFilterByLanguage();
     setupAssignFilterBySubscriptionType();
+}
 
-    $("select[name='has-own-instrument']").on('change', function(){
-        if(parseInt(this.value) === 0){
-            $("div.has-experience").removeClass("active");
-        }else {
-            $("div.has-experience").addClass("active");
+function reloadchat(message, clearChat) {
+    var url = $(".btn-send-comment").data("url");
+    var model = $(".btn-send-comment").data("model");
+    var recipient_id = $(".btn-send-comment").data("recipient_id");
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: {message: message, model: model, recipient_id: recipient_id},
+        success: function (html) {
+            if (clearChat == true) {
+                $("#chat_message").val("");
+            }
+            $("#chat-box").html(html);
         }
     });
-
-    addPopoverToElement(
-        ".info-username",
-        "<p>Lietotājvārds jums būs jāizmanto, lai pieslēgtos platformai.</p><p>Tas nebūs redzams skolotājam, vai citiem skolēniem.</p>"
-    );
-    addPopoverToElement(
-        ".info-school-email",
-        "<p>Skolas e-pasts tiek izmantots ziņojumu nosūtīšanai skolēniem, kā arī uz šo e-pastu tiek sūtīti paziņojumi.</p>"
-    );
 }
+
+setInterval(function () {
+    if($("#chatModal:visible").length > 0) reloadchat('', false);
+}, 5000);
+
+$(".btn-send-comment").on("click", function () {
+    var message = $("#chat_message").val();
+    reloadchat(message, true);
+});

@@ -38,13 +38,12 @@ class Users extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_PASSIVE]],
-            [['username'], 'required'],
             [['user_level'], 'string'],
             ['user_level', 'default', 'value' => self::ROLE_USER],
             ['user_level', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN, self::ROLE_TEACHER]],
             ['language', 'default', 'value' => self::LANG_LV],
             ['language', 'in', 'range' => [self::LANG_LV, self::LANG_ENG]],
-            ['subscription_type', 'default', 'value' => self::SUBTYPE_PAID],
+            ['subscription_type', 'default', 'value' => self::SUBTYPE_LEAD],
             ['subscription_type', 'in', 'range' => [self::SUBTYPE_FREE, self::SUBTYPE_PAID, self::SUBTYPE_LEAD]],
             [['email'], 'email'],
             [['username'], 'unique'],
@@ -89,9 +88,9 @@ class Users extends ActiveRecord implements IdentityInterface
         return $this->hasOne(StudentSubPlans::className(), ['user_id' => 'id'])->joinWith("plan");
     }
 
-    public static function getByUsername($username)
+    public static function getByEmail($email)
     {
-        return static::findOne(['username' => $username]);
+        return static::findOne(['email' => $email]);
     }
 
     public static function findIdentity($id)
@@ -101,12 +100,12 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function getAdmins()
     {
-        return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_ADMIN])->asArray()->all(), 'id', 'username');
+        return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_ADMIN])->asArray()->all(), 'id', 'email');
     }
 
     public static function getTeachers()
     {
-        return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_TEACHER])->asArray()->all(), 'id', 'username');
+        return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_TEACHER])->asArray()->all(), 'id', 'email');
     }
 
     public static function getActiveStudents($dont_bother = false)
@@ -127,7 +126,7 @@ class Users extends ActiveRecord implements IdentityInterface
                 }
             }
         } else {
-            $users = ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'username');
+            $users = ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'email');
         }
         return $dont_bother ? $result : $users;
     }
@@ -167,7 +166,7 @@ class Users extends ActiveRecord implements IdentityInterface
                 }
             }
         } else {
-            $users = ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'username');
+            $users = ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'email');
         }
         return $dont_bother ? $result : $users;
     }
@@ -192,7 +191,7 @@ class Users extends ActiveRecord implements IdentityInterface
                 }
             }
         } else {
-            $users = ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'username');
+            $users = ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'email');
         }
         return $dont_bother ? $result : $users;
     }
@@ -236,7 +235,7 @@ class Users extends ActiveRecord implements IdentityInterface
                 }
             }
         } else {
-            $users = ArrayHelper::map($query->asArray()->all(), 'id', 'username');
+            $users = ArrayHelper::map($query->asArray()->all(), 'id', 'email');
         }
         return $dont_bother ? $result : $users;
     }
@@ -252,21 +251,10 @@ class Users extends ActiveRecord implements IdentityInterface
     public static function findByEmail($email)
     {
         $user = self::find()
-            ->where([
-                "email" => $email,
-            ])
-            ->one();
-        if (empty($user)) {
-            return null;
-        }
-        return new static($user);
-    }
-
-    public static function findByUsername($username)
-    {
-        $user = self::find()
-            ->where([
-                "username" => $username,
+            ->andWhere([
+                'or',
+                ['email' => $email],
+                ['username' => $email],
             ])
             ->one();
         if (empty($user)) {
@@ -416,27 +404,27 @@ class Users extends ActiveRecord implements IdentityInterface
         $this->password = Yii::$app->security->generatePasswordHash($password);
     }
 
-    public static function isUserAdmin($username)
+    public static function isUserAdmin($email)
     {
-        if (static::findOne(['username' => $username, 'user_level' => self::ROLE_ADMIN])) {
+        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN])) {
             return true;
         } else {
             return false;
         }
     }
 
-    public static function isStudent($username)
+    public static function isStudent($email)
     {
-        if (static::findOne(['username' => $username, 'user_level' => self::ROLE_USER])) {
+        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_USER])) {
             return true;
         } else {
             return false;
         }
     }
 
-    public static function isTeacher($username)
+    public static function isTeacher($email)
     {
-        if (static::findOne(['username' => $username, 'user_level' => self::ROLE_TEACHER])) {
+        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER])) {
             return true;
         } else {
             return false;
@@ -445,24 +433,17 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function isCurrentUserTeacher()
     {
-        if (!isset(Yii::$app->user->identity->username)) return false;
-        return self::isTeacher(Yii::$app->user->identity->username);
+        if (!isset(Yii::$app->user->identity->email)) return false;
+        return self::isTeacher(Yii::$app->user->identity->email);
     }
 
-    public static function isAdminOrTeacher($username)
+    public static function isAdminOrTeacher($email)
     {
-        if (static::findOne(['username' => $username, 'user_level' => [self::ROLE_ADMIN, self::ROLE_TEACHER]])) {
+        if (static::findOne(['email' => $email, 'user_level' => [self::ROLE_ADMIN, self::ROLE_TEACHER]])) {
             return true;
         } else {
             return false;
         }
-    }
-
-    public static function getAllUsernames(){
-        return array_map(
-            function($user){ return $user["username"]; },
-            self::find()->asArray()->all()
-        );
     }
 
     public static function getStatus()

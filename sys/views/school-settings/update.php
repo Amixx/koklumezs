@@ -66,11 +66,11 @@ $this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
             'multiple' => false,
         ]); ?>
         <?= $form->field($model, 'email')->textInput(['class' => 'form-control form-group has-feedback field-with-info-widget']) ?>
+        <span class="glyphicon glyphicon-info-sign info info-school-email" style="margin-top: -50px;"></span>
+
          <?= $form->field($model, 'registration_message')->widget(CKEditor::className(), [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
-
-        <span class="glyphicon glyphicon-info-sign info info-school-email" style="margin-top: -50px;"></span>
 
         <div class="form-group">
             <?= Html::submitButton(\Yii::t('app',  'Save'), ['class' => 'btn btn-success']) ?>

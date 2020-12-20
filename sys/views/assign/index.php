@@ -31,20 +31,11 @@ $this->params['breadcrumbs'][] = $this->title;
     </label>
 </div>
 <div style="display:inline-block">
-    <label>
         <?= \Yii::t('app', 'Abonement types') ?>:
         <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-free"><?= \Yii::t('app', 'Free') ?></label>
         <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-paid"><?= \Yii::t('app', 'Paid') ?></label>
         <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-lead"><?= \Yii::t('app', 'Lead') ?></label>
         <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-pausing"><?= \Yii::t('app', 'Pausing') ?></label>
-
-        <!-- <select name="user-subscription-type-selector" id="UserSubscriptionTypeSelector">
-            <option value="all" selected>Visi</option>
-            <option value="free">Par brīvu</option>
-            <option value="paid">Par maksu</option>
-            <option value="lead">Izmēģina</option>
-        </select> -->
-    </label>
 </div>
 <div class="grid-view">
     <table class="table table-striped table-bordered" id="AssignTable">
@@ -67,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
             foreach ($users as $id => $user) { ?>
                 <tr>
                     <td><?= $a ?></td>
-                    <td><?= $user['username'] ?></td>
+                    <td><?= $user['email'] ?></td>
                     <td><?= isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->title : '<code>Not set</code>' ?></td>
                     <td align="center"><?= isset($lastlectures[$id]) ? $lastlectures[$id]['open_times'] : '<code>Not set</code>' ?></td>
                     <td align="center"><?= isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->complexity : '<code>Not set</code>' ?></td>

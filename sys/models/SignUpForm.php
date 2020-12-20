@@ -8,7 +8,6 @@ use yii\validators\EmailValidator;
 
 class SignUpForm extends Model
 {
-    public $username;
     public $password;
     public $first_name;
     public $last_name;
@@ -22,24 +21,12 @@ class SignUpForm extends Model
     public function rules()
     {
         return [
-            [['username', 'password', 'first_name', 'last_name', 'email', 'language'], 'required'],
+            [['email', 'password', 'first_name', 'last_name', 'language'], 'required'],
             ['rememberMe', 'boolean'],
-            ['username', 'validateUsername'],
             ['password', 'validatePassword'],
             ['phone_number', 'validatePhoneNumber'],
             ['email', 'email'],
         ];
-    }
-
-    public function validateUsername($attribute, $params)
-    {
-        if (!$this->hasErrors()) {
-            $takenUsernames = Users::getAllUsernames();
-            echo in_array($this->username, $takenUsernames);
-            if(in_array($this->username, $takenUsernames)){
-                $this->addError($attribute, Yii::t('app', 'Username already taken.'));
-            }
-        }
     }
 
     public function validatePassword($attribute, $params)
@@ -89,7 +76,6 @@ class SignUpForm extends Model
             // }
             // return $logged;
             $user = new Users();
-            $user->username = $this->username;
             $user->password = Yii::$app->security->generatePasswordHash($this->password);
             $user->first_name = $this->first_name;
             $user->last_name = $this->last_name;
