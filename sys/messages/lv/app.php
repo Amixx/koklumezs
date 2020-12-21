@@ -352,4 +352,5 @@ return [
     'Close' => 'Aizvērt',
     'Chat with student' => 'Sarakste ar skolēnu',
     'Chat with teacher' => 'Sarakste ar skolotāju',
+    'enter at least 4 symbols' => 'jāievada vismaz 4 simbolus',
 ];
