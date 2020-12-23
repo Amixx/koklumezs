@@ -259,7 +259,7 @@ return [
     'Stars' => 'Zvaigznes',
     'Start date' => 'Sākuma datums',
     'Status' => 'Statuss',
-    'Still have unanswered questions?' => 'Vai jums vēlaizvien ir jautājumi?',
+    'Still have unanswered questions?' => 'Vai jums vēl aizvien ir jautājumi?',
     'Still learning' => 'Vēl mācos',
     'Student' => 'Skolēns',
     'Student ID' => 'Skolēna ID',
