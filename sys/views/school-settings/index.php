@@ -63,7 +63,27 @@ $this->params['breadcrumbs'][] = $this->title;
                     ['class' => 'yii\grid\SerialColumn'],
                     'question',
                     'answer',
-                    ['class' => 'yii\grid\ActionColumn'],
+                    [
+                        'class' => 'yii\grid\ActionColumn',
+                        'template' => '{update} {delete}',
+                        'buttons' => [
+                            'update' => function ($url, $model) {
+                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, 
+                                    ['title' => Yii::t('app', 'update')] 
+                                );
+                            },    
+                        ],
+                        'urlCreator' => function ($action, $model) {
+                            if ($action === 'update') {
+                                $url ='/school-faqs/update?id=' . $model->id;
+                                return $url;
+                            }
+                            if ($action === 'delete') {
+                                $url ='/school-faqs/delete?id=' . $model->id;
+                                return $url;
+                            }
+                        },
+                    ],
                 ],
             ]); ?>
         </div>
