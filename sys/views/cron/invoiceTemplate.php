@@ -4,6 +4,9 @@ $dateToday = Date("d.m.yy.");
 $payDate = date_create($dateToday);
 date_add($payDate, date_interval_create_from_date_string("14 days"));
 $payDateString = date_format($payDate, "d.m.Y.");
+
+$pvnAmount = number_format($subplan['monthly_cost'] * ($subplan['pvn_percent'] / 100));
+$priceWithoutPvn = number_format($subplan['monthly_cost'] - $pvnAmount, 2);
 $payAmount = number_format($subplan['monthly_cost'], 2);
 
 ?>
@@ -17,7 +20,7 @@ $payAmount = number_format($subplan['monthly_cost'], 2);
 <body>
     <div>
         <div>
-            <h3 class="align-center font-l"><strong>Rēķins Nr. <?= $id ?></strong> </h3>
+            <h3 class="align-center font-l"><strong><?= $isAdvanceInvoice ? "Avansa rēķins" : "Rēķins" ?> Nr. <?= $id ?></strong></h3>
             <div class="font-xs align-right lh-2">
                 <div>Rēķina datums: <span class="font-m"><?= $dateToday ?></span></div>
                 <div>Apmaksāt līdz: <span class="font-m"><?= $payDateString ?></span></div>
@@ -43,6 +46,15 @@ $payAmount = number_format($subplan['monthly_cost'], 2);
                         44103120159
                     </td>
                 </tr>
+                <!-- <tr>
+                    <td class="leftcol">
+                       PVN reģistrācijas Nr.:   
+
+                    </td>
+                    <td>
+                        iedošu, kad VID mums viņu piešķirs
+                    </td>
+                </tr> -->
                 <tr>
                     <td class="leftcol">
                         Juridiskā adrese:
@@ -93,18 +105,23 @@ $payAmount = number_format($subplan['monthly_cost'], 2);
             <table class="bordered-table">
                 <tr>
                     <th>Nosaukums</th>
+                    <th>Cena bez PVN (Eur)</th>
+                    <th>PVN (<?= $subplan["pvn_percent"] ?>%)</th>
                     <th>Summa (Eur)</th>
                 </tr>
                 <tr>
                     <td><?= $subplan['name'] ?></td>
+                    <td><?= $priceWithoutPvn ?></td>
+                    <td><?= $pvnAmount ?></td>
                     <td><?= $payAmount ?></td>
                 </tr>
             </table>
             <div class="lh-2 align-right">
-                <div class="font-s">Summa bez PVN (Eur) <?= $payAmount ?></div>
-                <div class="font-xs">PVN (Eur) 0,00</div>
+                <div class="font-s">Summa bez PVN (Eur) <?= $priceWithoutPvn ?></div>
+                <div class="font-xs">PVN (Eur) <?= $pvnAmount ?></div>
                 <div class="font-s"><strong>Summa apmaksai (Eur) <?= $payAmount ?></strong></div>
                 <!-- <div class="font-xs">Apmaksas summa vārdiem: viens simts piecdesmit eiro un nulle centi</div> -->
+                <div class="font-m"><strong><?= $isAdvanceInvoice ? "Veicot maksājumu, lūdzu, norādīt rēķina numuru" : "Paldies, nosūtām rēķinu par veikto apmaksu" ?>.</strong></div>
             </div>
             <div class="lh-2">
                 <div>Sastādīja: <u>Laura Laugale (vārds, uzvārds)</u>

@@ -375,14 +375,15 @@ class CronController extends Controller
                     $subplan = SchoolSubPlans::findOne($studentSubplan['plan_id']);
 
                     $id = mt_rand(10000000, 99999999);
-                    $title = "rekins-$id.pdf";
+                    $title = "avansa-rekins-$id.pdf";
                     $invoicePath = $invoiceBasePath.$title;
 
                     $content = $this->renderPartial('invoiceTemplate', [
                         'id' => $id,
                         'fullName' => $userFullName,
                         'email' => $user['email'],
-                        'subplan' => $subplan
+                        'subplan' => $subplan,
+                        'isAdvanceInvoice' => true,
                     ]);
 
                     $pdf = new Pdf([
@@ -415,7 +416,7 @@ class CronController extends Controller
                                     ['message' => $message])
                                 ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
                                 ->setTo($user['email'])
-                                ->setSubject("Rēķins $id - " . Yii::$app->name)
+                                ->setSubject("Avansa rēķins $id - " . Yii::$app->name)
                                 ->attach($invoicePath)
                                 ->send();
 
@@ -426,6 +427,7 @@ class CronController extends Controller
                                 $invoice = new SentInvoices;
                                 $invoice->user_id = $user['id'];
                                 $invoice->invoice_number = $id;
+                                $invoice->is_advance = true;
                                 $invoice->plan_name = $subplan['name'];
                                 $invoice->plan_price = $subplan['monthly_cost'];
                                 $invoice->plan_start_date = $studentSubplan['start_date'];

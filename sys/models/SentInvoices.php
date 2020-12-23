@@ -23,7 +23,8 @@ class SentInvoices extends \yii\db\ActiveRecord
         return [
             [['user_id', 'invoice_number', 'plan_name', 'plan_price', 'plan_start_date'], 'required'],
             [['user_id', 'invoice_number', 'plan_price'], 'number'],
-            [['plan_name', 'plan_start_date', 'sent_date'], 'string']
+            [['plan_name', 'plan_start_date', 'sent_date'], 'string'],
+            [['is_advance'], 'boolean']
         ];
     }
 
@@ -36,6 +37,7 @@ class SentInvoices extends \yii\db\ActiveRecord
             'id' => 'ID',
             'user_id' => \Yii::t('app',  'Student ID'),
             'invoice_number' => \Yii::t('app',  'Invoice number'),
+            'is_advance' => \Yii::t('app',  'Is advance invoice'),
             'plan_name' => \Yii::t('app',  'Plan title'),
             'plan_price' => \Yii::t('app',  'Plan price (monthly)'),
             'plan_start_date' => \Yii::t('app',  'Plan start date'),
