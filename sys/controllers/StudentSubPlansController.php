@@ -92,75 +92,11 @@ class StudentSubPlansController extends Controller
         $plan = StudentSubPlans::findOne(['user_id' => $userId]);
         $plan->times_paid += 1;
 
-        $subplan = SchoolSubPlans::findOne($plan['plan_id']);
+        $subplan = $plan["plan"];
 
         $user = Users::findOne(['id' => $userId]);
 
-        $inlineCss = '
-            body {
-                font-family: Arial, serif;
-                color: rgb(0, 0, 0);
-                font-weight: normal;
-                font-style: normal;
-                text-decoration: none
-            }
-
-            .bordered-table {
-                width: 100%; border: 1px solid black;
-                border-collapse:collapse;
-            }
-
-            .bordered-table td, th {
-                border: 1px solid black;
-                text-align:center;
-            }
-
-            .bordered-table th {
-                font-weight:normal;
-                padding:8px 4px;
-            }
-
-            .bordered-table td {
-                padding: 32px 4px;
-            }
-
-            .font-l {
-                font-size: 18px;
-            }
-
-            .font-m {
-                font-size: 15px;
-            }
-
-            .font-s {
-                font-size: 14px;
-            }
-
-            .font-xs {
-                font-size: 13px;
-            }
-
-            .align-center {
-                text-align:center;
-            }
-
-            .align-right {
-                text-align:right;
-            }
-
-            .lh-2 {
-                line-height:2;
-            }
-
-            .leftcol {
-                width:140px;
-            }
-
-            .info {
-                line-height:unset;
-                margin-top:16px;
-            }
-        ';
+        $inlineCss = SentInvoices::getInvoiceCss();
 
         $message = "Nosūtam apmaksāto rēķinu par nodarbībām. Lai jauka diena!";
         if(isset($subplan['message']) && $subplan['message']) $message = $subplan['message'];

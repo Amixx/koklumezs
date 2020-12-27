@@ -289,71 +289,7 @@ class CronController extends Controller
     public function actionTest()
     {
         $users = Users::getAllStudents();
-        $inlineCss = '
-            body {
-                font-family: Arial, serif;
-                color: rgb(0, 0, 0);
-                font-weight: normal;
-                font-style: normal;
-                text-decoration: none
-            }
-
-            .bordered-table {
-                width: 100%; border: 1px solid black;
-                border-collapse:collapse;
-            }
-
-            .bordered-table td, th {
-                border: 1px solid black;
-                text-align:center;
-            }
-
-            .bordered-table th {
-                font-weight:normal;
-                padding:8px 4px;
-            }
-
-            .bordered-table td {
-                padding: 32px 4px;
-            }
-
-            .font-l {
-                font-size: 18px;
-            }
-
-            .font-m {
-                font-size: 15px;
-            }
-
-            .font-s {
-                font-size: 14px;
-            }
-
-            .font-xs {
-                font-size: 13px;
-            }
-
-            .align-center {
-                text-align:center;
-            }
-
-            .align-right {
-                text-align:right;
-            }
-
-            .lh-2 {
-                line-height:2;
-            }
-
-            .leftcol {
-                width:140px;
-            }
-
-            .info {
-                line-height:unset;
-                margin-top:16px;
-            }
-        ';
+        $inlineCss = SentInvoices::getInvoiceCss();
 
         $timestamp = time();
         $folderUrl = 'invoices/'.date("M", $timestamp) . "_" . date("Y", $timestamp);
@@ -371,8 +307,7 @@ class CronController extends Controller
 
                 if ($today_split[0] === $match_date_split[0]) {
                     $userFullName = $user['first_name'] . " " . $user['last_name'];
-
-                    $subplan = SchoolSubPlans::findOne($studentSubplan['plan_id']);
+                    $subplan = $studentSubplan["plan"];
 
                     $id = mt_rand(10000000, 99999999);
                     $title = "avansa-rekins-$id.pdf";
@@ -399,10 +334,9 @@ class CronController extends Controller
 
                     $pdf->render();
 
-                    $planModel = StudentSubPlans::findOne($studentSubplan['id']);
                     $planUnlimited = $subplan['months'] === 0;
-                    $planEnded = $planModel['sent_invoices_count'] == $subplan['months'];
-                    $hasPaidInAdvance = $planModel['times_paid'] > $planModel['sent_invoices_count'];
+                    $planEnded = $studentSubplan['sent_invoices_count'] == $subplan['months'];
+                    $hasPaidInAdvance = $studentSubplan['times_paid'] > $studentSubplan['sent_invoices_count'];
 
                     if(!$planEnded || $planUnlimited){
                         if(!$hasPaidInAdvance){
@@ -421,8 +355,8 @@ class CronController extends Controller
                                 ->send();
 
                             if ($sent) {
-                                $planModel['sent_invoices_count'] += 1;
-                                $planModel->update();
+                                $studentSubplan['sent_invoices_count'] += 1;
+                                $studentSubplan->update();
 
                                 $invoice = new SentInvoices;
                                 $invoice->user_id = $user['id'];
@@ -447,8 +381,8 @@ class CronController extends Controller
                                     ->send();
                             }
                         }else{
-                            $planModel['sent_invoices_count'] += 1;
-                            $planModel->update();
+                            $studentSubplan['sent_invoices_count'] += 1;
+                            $studentSubplan->update();
                         }
                     }
                 }
