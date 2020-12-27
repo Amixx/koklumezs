@@ -182,12 +182,12 @@ AppAsset::register($this);
         if($renderChat){
             $recipientId = $isStudent ? $schoolTeacher['user']['id'] : $this->params['chatRecipientId'];
         ?>
-            <button class="btn btn-success teacher-communication-button" data-toggle="modal" data-target="#chatModal">
+            <button class="btn btn-success teacher-communication-button" id="chat-toggle-button" data-toggle="modal" data-target="#chatModal">
                 <?= \Yii::t('app',  $chatButtonText) ?>
             </button>
             <?=        
             ChatRoom::widget([
-                'url' => \yii\helpers\Url::to(['/test/send-chat']),
+                'url' => \yii\helpers\Url::to(['/chat/send-chat']),
                 'userModel' =>  \app\models\User::className(),
                 'recipientId' => $recipientId,
             ]); ?>

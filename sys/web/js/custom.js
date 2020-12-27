@@ -307,11 +307,10 @@ function reloadchat(message, clearChat) {
         url: url,
         type: "POST",
         data: {message: message, model: model, recipient_id: recipient_id},
-        success: function (html) {
-            if (clearChat == true) {
-                $("#chat_message").val("");
-            }
-            $("#chat-box").html(html);
+        success: function (data) {
+            if (clearChat) $("#chat_message").val("");
+            $("#chat-box").html(data['content']);
+            $("#chat-unread-count").html(data['unreadCount'][0].count);
         }
     });
 }
@@ -339,4 +338,16 @@ $("input[name='sent-invoices-filter']").on("input", function(){
     }else{
         $sentInvoicesRows.show();
     }
+});
+
+$("#chat-toggle-button").on('click', function(){
+    var url = "/user/open-chat";
+    console.log("test")
+    $.ajax({
+        url: url,
+        type: "POST",
+        success: function (data) {
+            console.log(data);
+        }
+    });
 });

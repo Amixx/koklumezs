@@ -67,13 +67,13 @@ class ChatRoom extends Widget {
             $model->recipient_id = $recipient_id;
 
             if ($model->save()) {
-                echo $model->data($recipient_id);
+                return $model->data($recipient_id);
             } else {
                 print_r($model->getErrors());
                 exit(0);
             }
         } else {
-            echo $model->data($recipient_id);
+            return $model->data($recipient_id);
         }
     }
 }

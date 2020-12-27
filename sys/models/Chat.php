@@ -55,17 +55,34 @@ class Chat extends \yii\db\ActiveRecord {
             'or',
             ['author_id' => $authorId, 'recipient_id' => $recipientId],
             ['author_id' => $recipientId, 'recipient_id' => $authorId],
-        ])->orderBy('id desc')->limit(20)->all();
+        ])->orderBy('id desc')->all();
     }
 
     public static function records() {
         return static::find()->orderBy('id desc')->limit(10)->all();
     }
 
+    public static function unreadCountForTwoUsers($authorId, $recipientId){
+        $author = Users::findOne(['id' => $authorId]);
+        $res = static::find()
+            ->select(['COUNT(*) as count'])
+            ->where(['>', 'update_date', $author['last_opened_chat']])
+            ->andWhere([
+                'or',
+                ['author_id' => $authorId, 'recipient_id' => $recipientId],
+                ['author_id' => $recipientId, 'recipient_id' => $authorId],
+            ])
+            ->orderBy('id desc')
+            ->createCommand()->queryAll();
+
+        return $res;
+    }
+
     public function data($recipientId) {
         $output = '';
         $currentUserId = Yii::$app->user->identity->id;
         $messages = Chat::recordsForTwoUsers($currentUserId, $recipientId);
+        $unreadMessagesCount = Chat::unreadCountForTwoUsers($currentUserId, $recipientId);
 
         if ($messages)
             foreach ($messages as $message) {
@@ -79,6 +96,9 @@ class Chat extends \yii\db\ActiveRecord {
                 </p>
             </div>';
             }
-        return $output;
+        return [
+            'content' => $output,
+            'unreadCount' => $unreadMessagesCount,
+        ];
     }
 }

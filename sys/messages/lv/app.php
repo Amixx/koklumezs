@@ -355,4 +355,5 @@ return [
     'enter at least 4 symbols' => 'jāievada vismaz 4 simbolus',
     'PVN (percentage)' => 'PVN (procentos)',
     'Is advance invoice' => 'Vai ir avansa rēķins',
+    'Last time opened chat' => 'Pēdējā reize, kad atvēra čatu',
 ];

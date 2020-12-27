@@ -33,21 +33,21 @@ class UserController extends Controller
             'access' => [
                 'class' => \yii\filters\AccessControl::className(),
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
+                            // return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
+                            return true;
                         }
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                    'open-chat' => ['post'],
                 ],
             ],
         ];
@@ -275,12 +275,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Deletes an existing User model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
     public function actionDelete($id)
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -293,13 +287,16 @@ class UserController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the Users model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Users the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+    public function actionOpenChat(){
+        $model = $this->findModel(Yii::$app->user->identity->id);
+        $currentDateTime = date('Y-m-d H:i:s');
+        $model->last_opened_chat = $currentDateTime;
+        $saved = $model->save();
+        
+
+        return Yii::$app->user->identity->id;
+    }
+
     protected function findModel($id)
     {
         if (($model = Users::find()->where(['users.id' => $id])->joinWith('subplan')->one()) !== null) {
