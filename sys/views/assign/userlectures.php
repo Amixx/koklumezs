@@ -184,34 +184,18 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
 
     <div class="row">
-        <div class="col-md-3">
-            <?= $manualLectures ? $form->field($model, 'lecture_id[0]')
-                ->dropDownList(
-                    $lectureTexts,
-                    ['prompt' => '']
-                ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
-        </div>
-        <div class="col-md-3">
-            <?= $manualLectures ? $form->field($model, 'lecture_id[1]')
-                ->dropDownList(
-                    $lectureTexts,
-                    ['prompt' => '']
-                ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
-        </div>
-        <div class="col-md-3">
-            <?= $manualLectures ? $form->field($model, 'lecture_id[2]')
-                ->dropDownList(
-                    $lectureTexts,
-                    ['prompt' => '']
-                ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
-        </div>
-        <div class="col-md-3">
-            <?= $manualLectures ? $form->field($model, 'lecture_id[3]')
-                ->dropDownList(
-                    $lectureTexts,
-                    ['prompt' => '']
-                ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
-        </div>
+        <?php
+        $noOfTasks= 4;
+        for($x=0; $x<$noOfTasks; $x++){?>
+            <div class="col-md-3">
+                <?= $manualLectures ? $form->field($model, 'lecture_id[$noOfTasks]')
+                    ->dropDownList(
+                        $lectureTexts,
+                        ['prompt' => '']
+                    ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
+                
+            </div>
+        <?php } ?>
     </div>
 
 
