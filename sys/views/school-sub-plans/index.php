@@ -20,6 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             'name',
             'description:html',
+            'pvn_percent',
             'monthly_cost',
             'months',
             'max_pause_weeks',
