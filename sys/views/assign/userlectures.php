@@ -188,7 +188,7 @@ $this->params['breadcrumbs'][] = $this->title;
         $noOfTasks= 4;
         for($x=0; $x<$noOfTasks; $x++){?>
             <div class="col-md-3">
-                <?= $manualLectures ? $form->field($model, 'lecture_id[$noOfTasks]')
+                <?= $manualLectures ? $form->field($model, "lecture_id[$x]")
                     ->dropDownList(
                         $lectureTexts,
                         ['prompt' => '']

@@ -70,17 +70,15 @@ class Chat extends \yii\db\ActiveRecord {
         if ($messages)
             foreach ($messages as $message) {
                 $output .= '<div class="item">
-                <p class="message">
+                <p class="message">   
                     <a class="name" href="#">
                         <small class="text-muted pull-right" style="color:green"><i class="fa fa-clock-o"></i> ' . $message->update_date . '</small>
-                        ' . $message->author->email . '
+                         ' . $message->author->first_name .' '. $message->author->last_name . '                        
                     </a>
                    ' . $message->message . '
                 </p>
             </div>';
             }
-
         return $output;
     }
-
 }
