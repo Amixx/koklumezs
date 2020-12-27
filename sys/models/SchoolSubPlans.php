@@ -16,7 +16,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['school_id', 'name', 'monthly_cost', 'months'], 'required'],
+            [['school_id', 'name', 'monthly_cost', 'months', 'max_pause_weeks'], 'required'],
             [['monthly_cost'], 'double'],
             [['school_id', 'months', 'max_pause_weeks', 'pvn_percent'], 'number'],
             [['name', 'description', 'files', 'message'], 'string'],

@@ -479,3 +479,13 @@ div.has-experience.active, div.rent-or-buy.active {
     bottom: 100px;
     right: 100px;
 }
+
+ .chat-unread-count {
+    position: absolute;
+    top: -15px;
+    right: -10px;
+    padding: 0px 10px;
+    border-radius: 5px 20px 5px;
+    background-color: red;
+    color: white;
+  }
