@@ -184,6 +184,7 @@ AppAsset::register($this);
         ?>
             <button class="btn btn-success teacher-communication-button" data-toggle="modal" data-target="#chatModal">
                 <?= \Yii::t('app',  $chatButtonText) ?>
+                <span class="chat-unread-count">ziņa</span>
             </button>
             <?=        
             ChatRoom::widget([
