@@ -98,8 +98,7 @@ class StudentSubPlansController extends Controller
 
         $inlineCss = SentInvoices::getInvoiceCss();
 
-        $message = "Nosūtam apmaksāto rēķinu par nodarbībām. Lai jauka diena!";
-        if(isset($subplan['message']) && $subplan['message']) $message = $subplan['message'];
+        $message = "Paldies par avansa rēķina apmaksu. Pielikumā pievienojam rēķinu par veikto maksājumu - tam ir tikai informatīvs raksturs.";
 
         $timestamp = time();
         $folderUrl = 'invoices/'.date("M", $timestamp) . "_" . date("Y", $timestamp);
