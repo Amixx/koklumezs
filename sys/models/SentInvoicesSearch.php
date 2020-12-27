@@ -6,10 +6,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Handdifficulties;
 
-/**
- * HanddifficultiesSearch represents the model behind the search form of `app\models\Handdifficulties`.
- */
-class HanddifficultiesSearch extends SentInvoices
+class SentInvoicesSearch extends SentInvoices
 {
     public function rules()
     {
@@ -29,6 +26,7 @@ class HanddifficultiesSearch extends SentInvoices
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => false,
         ]);
 
         $this->load($params);

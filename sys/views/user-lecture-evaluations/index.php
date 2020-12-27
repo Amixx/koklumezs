@@ -84,8 +84,12 @@ $this->params['breadcrumbs'][] = $this->title;
             ?>
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
+        <label for="sent-invoices-filter"><?= Yii::t("app", "Search") ?>&nbsp;(<?= Yii::t("app", "enter at least 4 symbols") ?>): 
+        <input type="text" name="sent-invoices-filter" class="form-control">
+        </label>
             <?= GridView::widget([
                 'dataProvider' => $sentInvoices,
+                // 'filterModel' => $sentInvoicesSearch,
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
                     [
@@ -97,6 +101,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     'plan_name',
                     'plan_price',
                     'sent_date'
+                ],
+                'options' => [
+                    'id' => 'sent-invoices-table',
                 ],
             ]);
             ?>

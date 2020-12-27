@@ -324,3 +324,19 @@ $(".btn-send-comment").on("click", function () {
     var message = $("#chat_message").val();
     reloadchat(message, true);
 });
+
+var $sentInvoicesRows = $("#sent-invoices-table tbody tr");
+
+$("input[name='sent-invoices-filter']").on("input", function(){
+    var searchValue = this.value.toLowerCase();
+    if(searchValue.length >= 4){
+        $sentInvoicesRows.each(function(i, row){
+            var $row = $(row);
+            $rowText = $row.text().toLowerCase();
+            if($rowText.indexOf(searchValue) === -1) $row.hide();
+            else $row.show();
+        });
+    }else{
+        $sentInvoicesRows.show();
+    }
+});

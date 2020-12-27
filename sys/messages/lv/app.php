@@ -259,7 +259,7 @@ return [
     'Stars' => 'Zvaigznes',
     'Start date' => 'Sākuma datums',
     'Status' => 'Statuss',
-    'Still have unanswered questions?' => 'Vai jums vēlaizvien ir jautājumi?',
+    'Still have unanswered questions?' => 'Vai jums vēl aizvien ir jautājumi?',
     'Still learning' => 'Vēl mācos',
     'Student' => 'Skolēns',
     'Student ID' => 'Skolēna ID',
@@ -352,4 +352,5 @@ return [
     'Close' => 'Aizvērt',
     'Chat with student' => 'Sarakste ar skolēnu',
     'Chat with teacher' => 'Sarakste ar skolotāju',
+    'enter at least 4 symbols' => 'jāievada vismaz 4 simbolus',
 ];
