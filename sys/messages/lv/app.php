@@ -356,4 +356,5 @@ return [
     'PVN (percentage)' => 'PVN (procentos)',
     'Is advance invoice' => 'Vai ir avansa rēķins',
     'Last time opened chat' => 'Pēdējā reize, kad atvēra čatu',
+    'Show paused' => 'Parādīt nopauzētos',
 ];

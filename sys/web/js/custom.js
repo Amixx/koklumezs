@@ -225,14 +225,6 @@ function setupAssignUserListFilters(){
 
         function shouldHideRow(lang, langText, subTypes, subTypeText, isUserPassive) {
             var hideRow;
-            
-            if (
-                isUserPassive && subTypes.indexOf("pausing") === -1 ||
-                !isUserPassive && subTypes.indexOf("pausing") > -1
-            ) {
-                return true;
-            }
-
             var showAllSubTypes = subTypes.length === 0 || subTypes.length === 4;
             var onlyPausing = subTypes.length === 1 && subTypes[0] === "pausing";
 
@@ -241,6 +233,8 @@ function setupAssignUserListFilters(){
                     hideRow = false;
                 } else if (onlyPausing) {
                     hideRow = !isUserPassive;
+                } else if (isUserPassive && subTypes.indexOf("pausing") === -1 ) {
+                    return true;
                 } else {
                     hideRow = subTypes.indexOf(subTypeText) === -1;
                 }
