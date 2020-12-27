@@ -164,7 +164,7 @@ return [
     'Manually invoke automatic assignment for all students' => 'Manuāli izsaukt automātisko nodarbību piešķiršanu visiem skolēniem',
     'Message for student' => 'Ziņa skolēnam',
     'Metrics' => 'Metrikas',
-    'Monthly cost' => 'Mēneša maksa',
+    'Monthly cost (with PVN)' => 'Mēneša maksa (ar PVN)',
     'Months (0 - unlimited)' => 'Mēneši (0 - neierobežots)',
     'My files' => 'Mani faili',
     'Name' => 'Vārds',
@@ -353,4 +353,7 @@ return [
     'Chat with student' => 'Sarakste ar skolēnu',
     'Chat with teacher' => 'Sarakste ar skolotāju',
     'enter at least 4 symbols' => 'jāievada vismaz 4 simbolus',
+    'PVN (percentage)' => 'PVN (procentos)',
+    'Is advance invoice' => 'Vai ir avansa rēķins',
+    'Last time opened chat' => 'Pēdējā reize, kad atvēra čatu',
 ];

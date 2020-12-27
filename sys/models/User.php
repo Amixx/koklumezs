@@ -51,6 +51,7 @@ class User extends ActiveRecord implements IdentityInterface
             'last_name' => \Yii::t('app',  'Surname'),
             'password' => \Yii::t('app',  'Password'),
             'about' => \Yii::t('app',  'About user'),
+            'last_opened_chat' => \Yii::t('app',  'Last time opened chat'),
         ];
     }
 

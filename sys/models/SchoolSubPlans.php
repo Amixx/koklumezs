@@ -8,30 +8,21 @@ use Yii;
 
 class SchoolSubPlans extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'schoolsubplans';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
             [['school_id', 'name', 'monthly_cost', 'months', 'max_pause_weeks'], 'required'],
             [['monthly_cost'], 'double'],
-            [['school_id', 'months', 'max_pause_weeks'], 'number'],
+            [['school_id', 'months', 'max_pause_weeks', 'pvn_percent'], 'number'],
             [['name', 'description', 'files', 'message'], 'string'],
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
@@ -39,7 +30,8 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
             'school_id' => \Yii::t('app',  'School ID'),
             'name' => \Yii::t('app',  'Title'),
             'description' => \Yii::t('app',  'Description'),
-            'monthly_cost' => \Yii::t('app',  'Monthly cost'),
+            'pvn_percent' => \Yii::t('app',  'PVN (percentage)'),
+            'monthly_cost' => \Yii::t('app',  'Monthly cost (with PVN)'),
             'months' => \Yii::t('app',  'Months (0 - unlimited)'),
             'max_pause_weeks' => \Yii::t('app',  'Pause weeks'),
             'files' => \Yii::t('app',  'Files'),
