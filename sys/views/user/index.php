@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\StudentSubplanPauses;
+use app\models\SentInvoices;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\TeacherUserSearch */
@@ -95,10 +96,45 @@ $planEndMonths = [];
                 'label' => Yii::t('app', 'Paid/Has to pay'),
                 'value' => function ($dataProvider) {
                     if(!$dataProvider['subplan']) return;
+
                     $color = "#99ff9c";
                     if($dataProvider['subplan']["times_paid"] < $dataProvider['subplan']["sent_invoices_count"]) $color = "#ff9a99";
                     if($dataProvider['subplan']["times_paid"] > $dataProvider['subplan']["sent_invoices_count"]) $color = "#99cfff";
-                    return "<div style='text-align:center;background:" . $color . "'>" . $dataProvider['subplan']["times_paid"] . "/" . $dataProvider['subplan']["sent_invoices_count"] . "</div><div style='text-align:center;' title='Nosūtīt atgādinājumu, ka jāmaksā'><a style='margin-right:32px;' href='/sys/student-sub-plans/increase-times-paid?userId=" .$dataProvider["id"] . "' class='glyphicon glyphicon-plus'></a><a href='/sys/cron/remind-to-pay?userId=" .$dataProvider["id"] . "' class='glyphicon glyphicon-envelope'></a></div>";
+                    $unpaidInvoiceNumbers = SentInvoices::getUnpaidForStudent($dataProvider["id"]);
+                    $studentId = $dataProvider['id'];
+                    $timesPaid = $dataProvider['subplan']["times_paid"];
+                    $sentInvoices = $dataProvider['subplan']["sent_invoices_count"];
+
+                    $html = "";
+                    if($unpaidInvoiceNumbers){   
+                        foreach($unpaidInvoiceNumbers as $number){
+                            $value = $number['invoice_number'];
+                            $html .= "
+                            <p>
+                                <span><strong>$value</strong></span>
+                                <a
+                                    href='/sys/student-sub-plans/increase-times-paid?userId=$studentId&invoiceId=$value'
+                                    class='glyphicon glyphicon-check'
+                                    style='margin-left:16px;'
+                                    title='atzīmēt rēķinu kā apmaksātu'
+                                ></a>
+                            </p>
+                            ";
+                        }
+                    }
+                    
+                    return "
+                        <div style='text-align:center;background:" . $color . "'>" . $timesPaid . "/" . $sentInvoices . "</div>
+                        <div style='text-align:center;'>
+                            <p>Neapmaksātie rēķini: </p>
+                            $html
+                            <div><a
+                                href='/sys/cron/remind-to-pay?userId=" .$dataProvider["id"] . "'
+                                class='glyphicon glyphicon-envelope'                                
+                                title='Nosūtīt atgādinājumu, ka jāmaksā'
+                            ></a></div>                            
+                        </div>
+                    ";
                 },
                 'filter' => Html::dropDownList(
                     'TeacherUserSearch[subplan_paid_type]',

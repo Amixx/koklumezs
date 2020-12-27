@@ -5,7 +5,7 @@ $payDate = date_create($dateToday);
 date_add($payDate, date_interval_create_from_date_string("14 days"));
 $payDateString = date_format($payDate, "d.m.Y.");
 
-$pvnAmount = number_format($subplan['monthly_cost'] * ($subplan['pvn_percent'] / 100));
+$pvnAmount = number_format($subplan['monthly_cost'] * ($subplan['pvn_percent'] / 100), 2);
 $priceWithoutPvn = number_format($subplan['monthly_cost'] - $pvnAmount, 2);
 $payAmount = number_format($subplan['monthly_cost'], 2);
 

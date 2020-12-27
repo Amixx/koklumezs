@@ -63,6 +63,18 @@ class SentInvoices extends \yii\db\ActiveRecord
         else return null;
     }
 
+    public function getUnpaidForStudent($studentId){
+        $query = "SELECT invoice_number FROM sentinvoices
+            WHERE is_advance = true
+            AND user_id = $studentId
+            AND invoice_number
+            NOT IN ( SELECT invoice_number FROM sentinvoices WHERE is_advance = false )";
+        $data = Yii::$app->db->createCommand($query)->queryAll();
+
+        if($data && count($data) > 0) return $data;
+        else return null;
+    }
+
     public static function getInvoiceCss(){
         return '
             body {

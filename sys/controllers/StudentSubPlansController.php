@@ -152,6 +152,8 @@ class StudentSubPlansController extends Controller
             $invoice->plan_price = $subplan['monthly_cost'];
             $invoice->plan_start_date = $plan['start_date'];
             $invoice->save();
+
+            Yii::$app->session->setFlash('success', 'Rēķina apmaksa reģistrēta!');
         }else{
             Yii::$app
                 ->mailer
@@ -165,6 +167,8 @@ class StudentSubPlansController extends Controller
                 ->setTo(Yii::$app->params['senderEmail'])
                 ->setSubject("Skolēnam nenosūtījās rēķins!")
                 ->send();
+
+            Yii::$app->session->setFlash('error', 'Notikusi kļūda! Skolēnam netika nosūtīts e-pasts ar rēķinu!');
         }
         
         $plan->save();
