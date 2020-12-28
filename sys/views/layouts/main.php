@@ -11,6 +11,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\School;
+use app\models\Users;
 use app\models\SchoolTeacher;
 
 $isGuest = Yii::$app->user->isGuest;
@@ -177,14 +178,14 @@ AppAsset::register($this);
         </div>
 
         <?php
-        $renderChat = $isStudent || (isset($this->params['renderChatForTeachers']) && $this->params['renderChatForTeachers'] == true);
+        $renderChat = $isStudent || $isTeacher;
 
         if($renderChat){
             $recipientId = $isStudent ? $schoolTeacher['user']['id'] : $this->params['chatRecipientId'];
         ?>
             <button class="btn btn-success teacher-communication-button" id="chat-toggle-button" data-toggle="modal" data-target="#chatModal">
                 <?= \Yii::t('app',  $chatButtonText) ?>
-                <span class="chat-unread-count">ziņa</span>
+                <span class="chat-unread-count" style="display:none">&nbsp;&nbsp;</span>
             </button>
             <?=        
             ChatRoom::widget([

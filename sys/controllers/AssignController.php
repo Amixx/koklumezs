@@ -102,8 +102,6 @@ class AssignController extends \yii\web\Controller
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
-
-        $this->view->params['renderChatForTeachers'] = true;
         $this->view->params['chatRecipientId'] = $id;
 
         if ($id == null) {

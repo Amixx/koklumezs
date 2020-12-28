@@ -138,9 +138,13 @@ class TestController extends Controller
         //     ->setSubject('Jaunas nodarbības - ' . Yii::$app->name)
         //     ->send();
 
-        return $this->render("index", [
-            'recipientId' => 478
-        ]);
+        // return $this->render("index", [
+        //     'recipientId' => 478
+        // ]);
+
+        date_default_timezone_set('EET');
+        $time = time();
+        echo date("y-m-d H:i:s", $time);
     }
 
     public function actionTest()
