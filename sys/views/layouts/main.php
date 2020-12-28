@@ -13,6 +13,7 @@ use app\assets\AppAsset;
 use app\models\School;
 use app\models\Users;
 use app\models\SchoolTeacher;
+use app\models\Users;
 
 $isGuest = Yii::$app->user->isGuest;
 $isAdmin = !$isGuest && Yii::$app->user->identity->user_level == 'Admin';
@@ -185,7 +186,10 @@ AppAsset::register($this);
         ?>
             <button class="btn btn-success teacher-communication-button" id="chat-toggle-button" data-toggle="modal" data-target="#chatModal">
                 <?= \Yii::t('app',  $chatButtonText) ?>
-                <span class="chat-unread-count" style="display:none">&nbsp;&nbsp;</span>
+                <span class="chat-unread-count"></span>
+                <?php if (Users::isCurrentUserTeacher()) {?>     
+                    <span class="chat-unread-count-groups"></span>
+                <?php } ?>
             </button>
             <?=        
             ChatRoom::widget([
