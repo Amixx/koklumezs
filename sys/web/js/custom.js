@@ -225,14 +225,6 @@ function setupAssignUserListFilters(){
 
         function shouldHideRow(lang, langText, subTypes, subTypeText, isUserPassive) {
             var hideRow;
-            
-            if (
-                isUserPassive && subTypes.indexOf("pausing") === -1 ||
-                !isUserPassive && subTypes.indexOf("pausing") > -1
-            ) {
-                return true;
-            }
-
             var showAllSubTypes = subTypes.length === 0 || subTypes.length === 4;
             var onlyPausing = subTypes.length === 1 && subTypes[0] === "pausing";
 
@@ -241,6 +233,8 @@ function setupAssignUserListFilters(){
                     hideRow = false;
                 } else if (onlyPausing) {
                     hideRow = !isUserPassive;
+                } else if (isUserPassive && subTypes.indexOf("pausing") === -1 ) {
+                    return true;
                 } else {
                     hideRow = subTypes.indexOf(subTypeText) === -1;
                 }
@@ -296,9 +290,11 @@ function setupAssignUserListFilters(){
 
     setupAssignFilterByLanguage();
     setupAssignFilterBySubscriptionType();
+
+    loadUnreadMessagesCount();
 }
 
-function reloadchat(message, clearChat) {
+function reloadChat(message, clearChat) {
     var url = $(".btn-send-comment").data("url");
     var model = $(".btn-send-comment").data("model");
     var recipient_id = $(".btn-send-comment").data("recipient_id");
@@ -309,23 +305,61 @@ function reloadchat(message, clearChat) {
         data: {message: message, model: model, recipient_id: recipient_id},
         success: function (data) {
             if (clearChat) $("#chat_message").val("");
-            $("#chat-box").html(data['content']);
-            $("#chat-unread-count").html(data['unreadCount'][0].count);
+            $("#chat-box").html(data);
         }
     });
 }
 
+var $unreadCount = $(".chat-unread-count");
+
+function loadUnreadMessagesCount() {
+    var url = "/chat/get-unread-count";
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        success: function (count) {
+            if(parseInt(count) > 0){
+                $unreadCount.html(count);
+                $unreadCount.show();
+            }else{
+                $unreadCount.hide();
+            }
+        }
+    });
+}
+
+function isChatOpen(){
+    return $("#chatModal:visible").length > 0;
+}
+
+
 setInterval(function () {
-    if($("#chatModal:visible").length > 0) reloadchat('', false);
-}, 5000);
+    if(isChatOpen()) reloadChat('', false);
+}, 5000); // katru piekto sekundi
+
+setInterval(function () {
+    if(!isChatOpen()) loadUnreadMessagesCount();
+}, 60000); // katru minūti
 
 $(".btn-send-comment").on("click", function () {
     var message = $("#chat_message").val();
-    reloadchat(message, true);
+    $(".chat-unread-count").hide();
+    reloadChat(message, true);
+});
+
+
+$("#chat-toggle-button").on('click', function(){
+    $unreadCount.hide();
+
+    var url = "/user/open-chat";
+    $.ajax({
+        url: url,
+        type: "POST",
+    });
 });
 
 var $sentInvoicesRows = $("#sent-invoices-table tbody tr");
-
 $("input[name='sent-invoices-filter']").on("input", function(){
     var searchValue = this.value.toLowerCase();
     if(searchValue.length >= 4){
@@ -338,16 +372,4 @@ $("input[name='sent-invoices-filter']").on("input", function(){
     }else{
         $sentInvoicesRows.show();
     }
-});
-
-$("#chat-toggle-button").on('click', function(){
-    var url = "/user/open-chat";
-    console.log("test")
-    $.ajax({
-        url: url,
-        type: "POST",
-        success: function (data) {
-            console.log(data);
-        }
-    });
 });

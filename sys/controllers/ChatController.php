@@ -26,6 +26,7 @@ use app\models\CommentresponsesSearch;
 use yii\base\Event;
 use yii\web\View;
 use app\models\School;
+use app\models\Chat;
 use app\models\LectureViews;
 use app\models\SchoolStudent;
 use app\models\CommentResponses;
@@ -44,16 +45,12 @@ class ChatController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
                     ],
                 ],
             ],
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function actions()
     {
         return [
@@ -64,6 +61,11 @@ class ChatController extends Controller
     }
 
     public function actionSendChat(){
-        return json_encode(ChatRoom::sendChat($_POST));
+        return ChatRoom::sendChat($_POST);
+    }
+
+    public function actionGetUnreadCount(){
+        if(Yii::$app->user->isGuest) return 0;
+        return Chat::unreadCountForCurrentUser();
     }
 }

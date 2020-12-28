@@ -289,12 +289,12 @@ class UserController extends Controller
 
     public function actionOpenChat(){
         $model = $this->findModel(Yii::$app->user->identity->id);
-        $currentDateTime = date('Y-m-d H:i:s');
+        date_default_timezone_set('EET');   
+        $time = time();
+        $currentDateTime = date("Y-m-d H:i:s", $time);
         $model->last_opened_chat = $currentDateTime;
         $saved = $model->save();
-        
-
-        return Yii::$app->user->identity->id;
+        return $saved;
     }
 
     protected function findModel($id)

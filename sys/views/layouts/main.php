@@ -11,6 +11,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\School;
+use app\models\Users;
 use app\models\SchoolTeacher;
 use app\models\Users;
 
@@ -178,7 +179,7 @@ AppAsset::register($this);
         </div>
 
         <?php
-        $renderChat = $isStudent || (isset($this->params['renderChatForTeachers']) && $this->params['renderChatForTeachers'] == true);
+        $renderChat = $isStudent || $isTeacher;
 
         if($renderChat){
             $recipientId = $isStudent ? $schoolTeacher['user']['id'] : $this->params['chatRecipientId'];
