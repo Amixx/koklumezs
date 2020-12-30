@@ -1,3 +1,5 @@
+var IS_PROD = window.location.origin.indexOf("localhost") === -1;
+
 $(document).ready(function() {
     if ($('select').length) {
         $('select').select2();
@@ -321,7 +323,7 @@ function reloadChat(message, clearChat, showSpinner) {
 var $unreadCount = $(".chat-unread-count");
 
 function loadUnreadMessagesCount() {
-    var url = "/chat/get-unread-count";
+    var url = IS_PROD ? "/sys/chat/get-unread-count" : "/chat/get-unread-count";
 
     $.ajax({
         url: url,
@@ -364,7 +366,7 @@ $("#chat-toggle-button").on('click', function(){
 function openChat(){
     $unreadCount.hide();
 
-    var url = "/user/open-chat";
+    var url = IS_PROD ? "/sys/user/open-chat" : "/user/open-chat";
     $.ajax({
         url: url,
         type: "POST",

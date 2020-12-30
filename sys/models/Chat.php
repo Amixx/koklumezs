@@ -63,11 +63,19 @@ class Chat extends \yii\db\ActiveRecord {
         $currentUserId = Yii::$app->user->identity->id;
 
         $currentUser = Users::findOne(['id' => $currentUserId]);
-        $data = static::find()
-            ->select(['COUNT(*) as count'])
-            ->where(['>', 'update_date', $currentUser['last_opened_chat']])
-            ->andWhere(['recipient_id' => $currentUserId])
-            ->createCommand()->queryAll();
+        if($currentUser['last_opened_chat']){
+            $data = static::find()
+                ->select(['COUNT(*) as count'])
+                ->where(['>', 'update_date', $currentUser['last_opened_chat']])
+                ->andWhere(['recipient_id' => $currentUserId])
+                ->createCommand()->queryAll();
+        }else{
+            $data = static::find()
+                ->select(['COUNT(*) as count'])
+                ->andWhere(['recipient_id' => $currentUserId])
+                ->createCommand()->queryAll();
+        }
+        
 
         return (int) $data[0]["count"];
     }

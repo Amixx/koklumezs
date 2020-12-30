@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="tab-pane fade" id="pauses" role="tabpanel" aria-labelledby="pauses-tab">
             <p>
-                <?= Html::a(\Yii::t('app', 'Create plan pause'), [Url::to(['student-subplan-pauses/teacher-create'])], ['class' => 'btn btn-success']) ?>
+                <?= Html::a(\Yii::t('app', 'Create plan pause'), ['student-subplan-pauses/teacher-create'], ['class' => 'btn btn-success']) ?>
             </p>
 
             <?= GridView::widget([
