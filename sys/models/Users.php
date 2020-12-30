@@ -223,23 +223,37 @@ class Users extends ActiveRecord implements IdentityInterface
             $query->andWhere(['in', 'subscription_type', $subTypes]);
         }
 
+         $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
+        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
+
         if ($dont_bother) {
             $users = $query->asArray()->all();
 
             $result = [];
             foreach ($users as $u) {
-                if ($u['dont_bother'] != null) {
-                    $time = time();
-                    $check = strtotime($u['dont_bother']);
-                    if ($check < $time) {
+                $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($u['id']);
+                if(!$isPlanCurrentlyPaused){
+                    if ($u['dont_bother'] != null) {
+                        $time = time();
+                        $check = strtotime($u['dont_bother']);
+                        if ($check < $time) {
+                            $result[$u['id']] = $u;
+                        }
+                    } else {
                         $result[$u['id']] = $u;
                     }
-                } else {
-                    $result[$u['id']] = $u;
                 }
+                
             }
         } else {
-            $users = ArrayHelper::map($query->asArray()->all(), 'id', 'email');
+            $usersData = self::find()->where($params)->andWhere(['in', 'id', $schoolStudentIds])->asArray()->all();
+            $users = [];
+            foreach($usersData as $user){
+                $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($user['id']);
+                if(!$isPlanCurrentlyPaused) {
+                    $users[$user['id']] = $user['first_name'] . ' ' . $user['last_name']; 
+                }
+            }
         }
         return $dont_bother ? $result : $users;
     }

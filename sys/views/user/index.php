@@ -61,7 +61,7 @@ $planEndMonths = [];
                 'attribute' => 'Plan price',
                 'label' => Yii::t('app', 'Payment'),
                 'value' => function ($dataProvider) {
-                    if(!$dataProvider["subplan"]) return;
+                    if(!$dataProvider["subplan"] || !$dataProvider["subplan"]["plan"]) return;
                     return "<a href='/sys/school-sub-plans/view?id=".$dataProvider["subplan"]["plan"]["id"]."'>".$dataProvider["subplan"]["plan"]["monthly_cost"]."</a>";
                 },
                 'format' => 'html',
@@ -75,7 +75,7 @@ $planEndMonths = [];
                 'attribute' => 'Plan end date',
                 'label' => Yii::t('app', 'Plan end date'),
                 'value' => function ($dataProvider) {
-                    if(!$dataProvider['subplan'] || !$dataProvider['subplan']['plan']['months']) return;
+                    if(!$dataProvider['subplan'] || !$dataProvider['subplan']['plan'] || !$dataProvider['subplan']['plan']['months']) return;
                     $planPauses = StudentSubplanPauses::getForStudent($dataProvider['subplan']['user_id'])->asArray()->all();
                     $date = date_create($dataProvider["subplan"]["start_date"]);
                     $date->modify("+" . $dataProvider['subplan']['plan']['months'] . "month");

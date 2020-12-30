@@ -17,19 +17,13 @@ if ($user['subscription_type'] == 'free') {
     $subscriptionTypeClassSuffix = "warning";
 }
 
-$this->title = $user['email'];
+$this->title = $user['first_name'] . ' ' . $user['last_name'];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
     <?php if ($filterLang) { ?>
         <div class="col-sm-3"><?= \Yii::t('app', 'Language') ?>: <?= $filterLang ?></div>
     <?php } ?>
-    <!-- <?php if ($filterSubTypes) { ?>
-        <div class="col-sm-3">Abonementa veids/i: <?= $subscriptionTypeText ?></div>
-    <?php } ?> -->
-    <!-- <div class="col-sm-3">
-        <?= $currentUserIndex + 1 ?>/<?= $userCount ?>
-    </div> -->
 </div>
 <div style="min-height: 50px;">
     <?php
@@ -183,7 +177,8 @@ $this->params['breadcrumbs'][] = $this->title;
     }, $manualLectures);
     ?>
 
-    <div class="row">
+    <!-- noņemu pagaidām, jo nav sataisīts backends -->
+    <!-- <div class="row">
         <?php
         $noOfTasks= 4;
         for($x=0; $x<$noOfTasks; $x++){?>
@@ -196,8 +191,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 
             </div>
         <?php } ?>
-    </div>
+    </div> -->
 
+    <?= $manualLectures ? $form->field($model, 'lecture_id')
+        ->dropDownList(
+            $lectureTexts,
+            ['prompt' => '']
+        ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
   
     
     

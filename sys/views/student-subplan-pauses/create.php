@@ -2,9 +2,6 @@
 
 use yii\helpers\Html;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Difficulties */
-
 $this->title = \Yii::t('app', 'Create plan pause');
 $this->params['breadcrumbs'][] = ['label' => \Yii::t('app', 'Plan pauses'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;

@@ -107,7 +107,7 @@ class AssignController extends \yii\web\Controller
         if ($id == null) {
             $onlyThoseWithoutDontBother = true;
             if (Users::isCurrentUserTeacher()) {
-                $users = Users::getStudentsForSchool($onlyThoseWithoutDontBother);
+                $users = Users::getStudentsWithoutPausesForSchool();
             } else {
                 $users = Users::getStudents($onlyThoseWithoutDontBother);
             }

@@ -92,9 +92,9 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         if(!StudentSubplanPauses::studentHasAnyPauses($studentId)) return false;
 
         $mostRecentPause = StudentSubplanPauses::getMostRecentPauseForStudent($studentId);
-        $dateTwoWeeksLater = strtotime("+" . $mostRecentPause['weeks'] . " weeks", strtotime($mostRecentPause['start_date']));
+        $planEndDate = strtotime("+" . $mostRecentPause['weeks'] . " weeks", strtotime($mostRecentPause['start_date']));
         $time = time();
-        return $dateTwoWeeksLater > $time;
+        return $planEndDate > $time;
     }
 
     public static function getForCurrentSchool(){

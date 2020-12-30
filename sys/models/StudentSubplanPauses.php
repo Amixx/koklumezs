@@ -64,4 +64,21 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
         $schoolId = School::getCurrentSchoolId();
         return self::getForSchool($schoolId);
     }
+
+    public static function isStudentCurrentlyPaused($studentId){
+        $studentPauses = self::getForStudent($studentId);
+        if($studentPauses == null) return false;
+        $res = false;
+
+        date_default_timezone_set('EET');
+        foreach($studentPauses->asArray()->all() as $pause){
+            $weeks = $pause['weeks'];
+            if($weeks == 0) continue;
+
+            $date = date('Y-m-d H:m:s', strtotime("-$weeks week"));
+            if($pause['start_date'] > $date) $res = true;
+        }
+
+        return $res;
+    }
 }

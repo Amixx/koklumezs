@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'buttons' => [
                             'update' => function ($url, $model) {
                                 return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, 
-                                    ['title' => Yii::t('app', 'update')] 
+                                    ['title' => Yii::t('app', 'Update')] 
                                 );
                             },    
                         ],
