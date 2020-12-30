@@ -185,10 +185,12 @@ AppAsset::register($this);
         ?>
             <button class="btn btn-success teacher-communication-button" id="chat-toggle-button" data-toggle="modal" data-target="#chatModal">
                 <?= \Yii::t('app',  $chatButtonText) ?>
-                <span class="chat-unread-count"></span>
+                <div id="notification-badges">               
                 <?php if (Users::isCurrentUserTeacher()) {?>     
-                    <span class="chat-unread-count-groups"></span>
+                    <span class="chat-unread-count-groups">3</span>
                 <?php } ?>
+                <span class="chat-unread-count">3</span>
+                </div>
             </button>
             <?=        
             ChatRoom::widget([
