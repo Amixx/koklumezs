@@ -5,6 +5,8 @@ namespace app\widgets;
 use Yii;
 use yii\base\Widget;
 use app\models\Chat;
+use app\models\Users;
+use app\models\SchoolTeacher;
 
 class ChatRoom extends Widget {
 
@@ -30,6 +32,8 @@ class ChatRoom extends Widget {
         }
 
         $this->model->userModel = $this->userModel;
+
+        $this->recipientId = Users::isCurrentUserTeacher() ? Chat::findFirstRecipient() : SchoolTeacher::getByCurrentStudent()['user_id'];
 
         parent::init();
     }

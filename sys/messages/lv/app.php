@@ -351,6 +351,7 @@ return [
     'Type message' => 'Raksti ziņu',
     'Close' => 'Aizvērt',
     'Chat with student' => 'Sarakste ar skolēnu',
+    'Chat with students' => 'Sarakste ar skolēniem',
     'Chat with teacher' => 'Sarakste ar skolotāju',
     'enter at least 4 symbols' => 'jāievada vismaz 4 simbolus',
     'PVN (percentage)' => 'PVN (procentos)',

@@ -61,7 +61,7 @@ class ChatController extends Controller
     }
 
     public function actionSendChat(){
-        return ChatRoom::sendChat($_POST);
+        return json_encode(ChatRoom::sendChat($_POST));
     }
 
     public function actionGetUnreadCount(){

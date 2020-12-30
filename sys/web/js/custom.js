@@ -294,18 +294,26 @@ function setupAssignUserListFilters(){
     loadUnreadMessagesCount();
 }
 
-function reloadChat(message, clearChat) {
+function reloadChat(message, clearChat, showSpinner) {
     var url = $(".btn-send-comment").data("url");
     var model = $(".btn-send-comment").data("model");
     var recipient_id = $(".btn-send-comment").data("recipient_id");
+
+    if(showSpinner) hideChatContent();
 
     $.ajax({
         url: url,
         type: "POST",
         data: {message: message, model: model, recipient_id: recipient_id},
         success: function (data) {
+            data = JSON.parse(data);
             if (clearChat) $("#chat_message").val("");
-            $("#chat-box").html(data);
+            $("#chat-box").html(data.content);
+            if(data.userList){
+                $("#chat-user-list").html(data.userList);
+            }
+
+            if(showSpinner) showChatContent();
         }
     });
 }
@@ -335,7 +343,7 @@ function isChatOpen(){
 
 
 setInterval(function () {
-    if(isChatOpen()) reloadChat('', false);
+    if(isChatOpen()) reloadChat('', false, false);
 }, 5000); // katru piekto sekundi
 
 setInterval(function () {
@@ -345,11 +353,15 @@ setInterval(function () {
 $(".btn-send-comment").on("click", function () {
     var message = $("#chat_message").val();
     $(".chat-unread-count").hide();
-    reloadChat(message, true);
+    reloadChat(message, true, false);
 });
 
 
 $("#chat-toggle-button").on('click', function(){
+    openChat();
+});
+
+function openChat(){
     $unreadCount.hide();
 
     var url = "/user/open-chat";
@@ -357,7 +369,7 @@ $("#chat-toggle-button").on('click', function(){
         url: url,
         type: "POST",
     });
-});
+}
 
 var $sentInvoicesRows = $("#sent-invoices-table tbody tr");
 $("input[name='sent-invoices-filter']").on("input", function(){
@@ -373,3 +385,30 @@ $("input[name='sent-invoices-filter']").on("input", function(){
         $sentInvoicesRows.show();
     }
 });
+
+$(document).on('click', ".chat-user-item", function(){
+    var newRecipientId = $(this).data("userid");
+    $(".btn-send-comment").data("recipient_id", newRecipientId);
+
+    reloadChat("", true, true);
+})
+
+$(document).on('click', ".chat-with-student", function(){
+    var newRecipientId = $(this).data("userid");
+    $(".btn-send-comment").data("recipient_id", newRecipientId);
+
+    reloadChat("", true, true);
+    openChat();
+    $("#chatModal").modal('show');
+})
+
+var $chatSpinner = $("#chat-spinner");
+var $chatContent = $("#chat-content-container");
+function hideChatContent(){
+    $chatContent.hide();
+    $chatSpinner.show();
+}
+function showChatContent(){
+    $chatContent.show();
+    $chatSpinner.hide();
+}

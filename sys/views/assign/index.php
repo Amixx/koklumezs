@@ -73,6 +73,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php } ?>
                     <td align="center"><?= isset($goals[$id][$goalsnow]) ? array_sum($goals[$id][$goalsnow]) : '<code>Not set</code>' ?></td>
                     <td align="center">
+                        <span data-userid='<?= $user['id'] ?>' style='width: 41px;' class='btn btn-success glyphicon glyphicon-envelope chat-with-student'>&nbsp;</span>
+                    </td>
+                    <td align="center">
                         <?= Html::a(
                             '<span class="glyphicon glyphicon-eye-open"> </span>',
                             ['/assign/userlectures', 'id' => $id],

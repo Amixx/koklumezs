@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 class Chat extends \yii\db\ActiveRecord {
 
@@ -58,10 +59,6 @@ class Chat extends \yii\db\ActiveRecord {
         ])->orderBy('id desc')->all();
     }
 
-    public static function records() {
-        return static::find()->orderBy('id desc')->limit(10)->all();
-    }
-
     public static function unreadCountForCurrentUser(){
         $currentUserId = Yii::$app->user->identity->id;
 
@@ -75,10 +72,46 @@ class Chat extends \yii\db\ActiveRecord {
         return (int) $data[0]["count"];
     }
 
+    public static function getUsersWithConversations($authorId, $recipientId){
+        $userIdsData = static::find()
+            ->select(['recipient_id'])
+            ->distinct()
+            ->andWhere([
+                'or',
+                ['author_id' => $authorId],
+                ['recipient_id' => $authorId],
+            ])
+            ->orderBy('id desc')
+            ->asArray()
+            ->all();
+
+        $userIds = ArrayHelper::getColumn($userIdsData, 'recipient_id');
+        $userIds = array_filter($userIds, function($id) use($authorId) {
+            return $id != $authorId;
+        });
+        if(!in_array($recipientId, $userIds)) $userIds[] = $recipientId;
+
+        return Users::find()->where(["in", "id", $userIds])->asArray()->all();
+    }
+
+    public static function findFirstRecipient(){
+        $authorId = Yii::$app->user->identity->id;
+        return static::find()->where(['!=', 'recipient_id', $authorId])->andWhere([
+                'or',
+                ['author_id' => $authorId],
+                ['recipient_id' => $authorId],
+            ])->orderBy('id desc')
+            ->limit(1)
+            ->one()['recipient_id'];
+    }
+
     public function data($recipientId) {
-        $output = '';
+        $output = "";
+        $userList = null;
         $currentUserId = Yii::$app->user->identity->id;
+        $isTeacher = Users::isCurrentUserTeacher();
         $messages = Chat::recordsForTwoUsers($currentUserId, $recipientId);
+        $usersWithConversations = $isTeacher ? Chat::getUsersWithConversations($currentUserId, $recipientId) : null;
 
         if ($messages)
             foreach ($messages as $message) {
@@ -91,8 +124,24 @@ class Chat extends \yii\db\ActiveRecord {
                    ' . $message->message . '
                 </p>
             </div>';
-            }
+        }
 
-        return $output;
+        if($usersWithConversations){
+            foreach ($usersWithConversations as $user) {
+                $isActive = $user['id'] == $recipientId;
+                $style = $isActive ? "background-color:#b0f3fc;" : "";
+                $userList .= "
+                  <li class='chat-user-item' data-userid='" . $user['id'] . "' style='" . $style . "'>
+                    <span class='glyphicon glyphicon-user'></span>
+                    <span>" . $user['first_name'] . " " . $user['last_name'] . "</span>
+                  </li>
+            ";
+            }
+        }
+
+        return [
+            'content' => $output,
+            'userList' => $userList
+        ];
     }
 }

@@ -147,6 +147,17 @@ $planEndMonths = [];
                     ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
                 'format' => 'html',
             ],
+            [
+                'attribute' => 'Chat',
+                'label' => Yii::t('app', 'Chat'),
+                'value' => function ($dataProvider) {
+                    if(!$dataProvider) return;
+
+                    $userId = $dataProvider['id'];
+                    return "<span data-userid='$userId' style='width: 41px;' class='btn btn-success glyphicon glyphicon-envelope chat-with-student'>&nbsp;</span>";
+                },
+                'format' => 'raw',
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

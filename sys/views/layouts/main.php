@@ -22,7 +22,7 @@ $isStudent = !$isGuest && Yii::$app->user->identity->user_level == 'Student';
 $school = null;
 if ($isTeacher) {
     $school = School::getByTeacher(Yii::$app->user->identity->id);
-    $chatButtonText = "Chat with student";
+    $chatButtonText = "Chat with students";
 } else if ($isStudent) {
     $school = School::getByStudent(Yii::$app->user->identity->id);
     $chatButtonText = "Chat with teacher";
@@ -181,7 +181,7 @@ AppAsset::register($this);
         $renderChat = $isStudent || $isTeacher;
 
         if($renderChat){
-            $recipientId = $isStudent ? $schoolTeacher['user']['id'] : $this->params['chatRecipientId'];
+            $recipientId = $isStudent ? $schoolTeacher['user']['id'] : null;
         ?>
             <button class="btn btn-success teacher-communication-button" id="chat-toggle-button" data-toggle="modal" data-target="#chatModal">
                 <?= \Yii::t('app',  $chatButtonText) ?>
