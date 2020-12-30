@@ -96,13 +96,16 @@ class Chat extends \yii\db\ActiveRecord {
 
     public static function findFirstRecipient(){
         $authorId = Yii::$app->user->identity->id;
-        return static::find()->where(['!=', 'recipient_id', $authorId])->andWhere([
+        $data = static::find()->where(['!=', 'recipient_id', $authorId])->andWhere([
                 'or',
                 ['author_id' => $authorId],
                 ['recipient_id' => $authorId],
             ])->orderBy('id desc')
             ->limit(1)
-            ->one()['recipient_id'];
+            ->one();
+
+        if($data) return $data['recipient_id'];
+        else return null;
     }
 
     public function data($recipientId) {

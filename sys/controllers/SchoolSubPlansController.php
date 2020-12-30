@@ -19,6 +19,7 @@ use app\models\Userlectureevaluations;
 use app\models\UserLectures;
 use app\models\Users;
 use app\models\SchoolSubPlans;
+use app\models\StudentSubplanPauses;
 use app\models\SectionsVisible;
 use app\models\School;
 use Yii;
@@ -68,9 +69,14 @@ class SchoolSubPlansController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => SchoolSubPlans::getForCurrentSchool(),
         ]);
+        $pausesDataProvider = new ActiveDataProvider([
+            'query' => StudentSubplanPauses::getForCurrentSchool(),
+            'pagination' => false,
+        ]);
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'pausesDataProvider' => $pausesDataProvider,
         ]);
     }
 

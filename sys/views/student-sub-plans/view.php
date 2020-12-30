@@ -6,9 +6,6 @@ use yii\grid\GridView;
 use yii\widgets\ActiveForm;
 use  yii\jui\DatePicker;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Difficulties */
-
 $this->title = $subplan['plan']['name'];
 \yii\web\YiiAsset::register($this);
 ?>

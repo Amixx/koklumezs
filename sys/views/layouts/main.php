@@ -187,9 +187,9 @@ AppAsset::register($this);
                 <?= \Yii::t('app',  $chatButtonText) ?>
                 <div id="notification-badges">               
                 <?php if (Users::isCurrentUserTeacher()) {?>     
-                    <span class="chat-unread-count-groups">3</span>
+                    <span class="chat-unread-count-groups"></span>
                 <?php } ?>
-                <span class="chat-unread-count">3</span>
+                <span class="chat-unread-count"></span>
                 </div>
             </button>
             <?=        

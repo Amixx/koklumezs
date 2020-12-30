@@ -30,7 +30,7 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
 
     public function getStudentPlan()
     {
-        return $this->hasOne(StudentSubPlans::className(), ['id' => 'studentsubplan_id']);
+        return $this->hasOne(StudentSubPlans::className(), ['id' => 'studentsubplan_id'])->joinWith('plan')->joinWith('user');
     }
 
     public function getForStudent($studentId)
@@ -39,6 +39,10 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
         if($subplan == null) return null;
 
         return self::find()->where(['studentsubplan_id' => $subplan['id']])->joinWith('studentPlan');
+    }
+
+    public static function getForSchool($schoolId) {
+        return self::find()->joinWith('studentPlan')->where(['schoolsubplans.school_id' => $schoolId]);
     }
 
     public function getMostRecentPauseForStudent($studentId){
@@ -54,5 +58,10 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
         if($subplan == null) return null;
 
         return self::find()->where(['studentsubplan_id' => $subplan['id']])->count() > 0;
+    }
+
+    public static function getForCurrentSchool(){
+        $schoolId = School::getCurrentSchoolId();
+        return self::getForSchool($schoolId);
     }
 }

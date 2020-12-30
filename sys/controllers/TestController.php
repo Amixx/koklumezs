@@ -14,6 +14,7 @@ use yii\filters\VerbFilter;
 use app\models\LectureAssignment;
 use app\models\SectionsVisible;
 use app\models\SentInvoices;
+use app\models\StudentSubplanPauses;
 use app\models\Lectures;
 use app\models\SchoolTeacher;
 use app\models\SchoolLecture;
@@ -141,10 +142,6 @@ class TestController extends Controller
         // return $this->render("index", [
         //     'recipientId' => 478
         // ]);
-
-        date_default_timezone_set('EET');
-        $time = time();
-        echo date("y-m-d H:i:s", $time);
     }
 
     public function actionTest()

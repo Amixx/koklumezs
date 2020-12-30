@@ -191,7 +191,11 @@ class Users extends ActiveRecord implements IdentityInterface
                 }
             }
         } else {
-            $users = ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'email');
+            $usersData = self::find()->where($params)->andWhere(['in', 'id', $schoolStudentIds])->asArray()->all();
+            $users = [];
+            foreach($usersData as $user){
+                $users[$user['id']] = $user['first_name'] . ' ' . $user['last_name']; 
+            }
         }
         return $dont_bother ? $result : $users;
     }

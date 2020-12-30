@@ -35,6 +35,11 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $this->hasOne(SchoolSubPlans::className(), ['id' => 'plan_id']);
     }
 
+    public function getUser()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+    }
+
     public function getForStudent($studentId)
     {
         return self::find()->where(['user_id' => $studentId])->joinWith('plan')->one();
@@ -90,5 +95,10 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         $dateTwoWeeksLater = strtotime("+" . $mostRecentPause['weeks'] . " weeks", strtotime($mostRecentPause['start_date']));
         $time = time();
         return $dateTwoWeeksLater > $time;
+    }
+
+    public static function getForCurrentSchool(){
+        $schoolId = School::getCurrentSchoolId();
+        return self::find()->joinWith('plan')->where(['school_id' => $schoolId])->asArray()->all();
     }
 }
