@@ -139,7 +139,7 @@ class TestController extends Controller
         //     ->setSubject('Jaunas nodarbības - ' . Yii::$app->name)
         //     ->send();
 
-        // return $this->render("index", [
+        // return $this->render("index", [asd
         //     'recipientId' => 478
         // ]);
     }
