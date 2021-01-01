@@ -57,6 +57,13 @@ class SentInvoices extends \yii\db\ActiveRecord
         return self::find()->where(['in', 'user_id', $schoolStudentIds])->joinWith('student');
     }
 
+    public static function getRealForCurrentSchool(){
+        $schoolId = School::getCurrentSchoolId();
+        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($schoolId);
+
+        return self::find()->andWhere(['and', ['in', 'user_id', $schoolStudentIds], ['is_advance' => false]])->joinWith('student');
+    }
+
     public function getLatestForStudent($studentId){
         $studentInvoices = self::find()->where(['user_id' => $studentId])->orderBy(['sent_date' => SORT_DESC])->asArray()->all();
         if($studentInvoices && count($studentInvoices) > 0) return $studentInvoices[0];

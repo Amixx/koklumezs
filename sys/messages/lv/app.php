@@ -363,4 +363,6 @@ return [
     'Your first lecture' => 'Tava pirmā nodarbība',
     'stars' => 'zvaigznes',
     'text' => 'teksts',
+    'Choose year' => 'Izvēlieties gadu',
+    'Choose month' => 'Izvēlieties mēnesi',
 ];
