@@ -40,14 +40,31 @@ $(document).ready(function() {
 
     setupAssignUserListFilters();
 
-    $("select[name='has-own-instrument']").on('change', function(){
-        if(parseInt(this.value) === 0){
-            $("div.has-experience").removeClass("active");
-        }else {
+    $("select[name='has-own-instrument']").on('change', function(){  
+        if ($("span.select2").hasClass('select-warning')) {
+            $("span.select2").removeClass("select-warning");
+            let div = document.getElementById('has-instrument');
+            div.removeChild(div.lastChild);
+        }   
+        if(parseInt(this.value) === 1){
             $("div.has-experience").addClass("active");
+        }else {
+            $("div.has-experience").removeClass("active"); 
         }
     });
 
+    $('#registration-button').on('click', function(event){
+        let select = $("select[name='has-own-instrument']").val();
+        if ((select === '') && (!$("span.select2").hasClass('select-warning'))){
+            event.preventDefault();
+            $("span.select2").addClass("select-warning");
+            let errorMessage = document.createElement("p");
+            let text = document.createTextNode("Please check if you have or don't have youre own kokle");
+            errorMessage.appendChild(text);
+            document.getElementById('has-instrument').appendChild(errorMessage);
+        }
+    })
+    
     addPopoverToElement(
         ".info-school-email",
         "<p>Skolas e-pasts tiek izmantots ziņojumu nosūtīšanai skolēniem, kā arī uz šo e-pastu tiek sūtīti paziņojumi.</p>"
