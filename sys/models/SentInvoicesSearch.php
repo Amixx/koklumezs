@@ -22,7 +22,7 @@ class SentInvoicesSearch extends SentInvoices
 
     public function search($params)
     {
-        $query = SentInvoices::getForCurrentSchool();
+        $query = SentInvoices::getRealForCurrentSchool();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

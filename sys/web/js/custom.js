@@ -373,21 +373,6 @@ function openChat(){
     });
 }
 
-var $sentInvoicesRows = $("#sent-invoices-table tbody tr");
-$("input[name='sent-invoices-filter']").on("input", function(){
-    var searchValue = this.value.toLowerCase();
-    if(searchValue.length >= 4){
-        $sentInvoicesRows.each(function(i, row){
-            var $row = $(row);
-            $rowText = $row.text().toLowerCase();
-            if($rowText.indexOf(searchValue) === -1) $row.hide();
-            else $row.show();
-        });
-    }else{
-        $sentInvoicesRows.show();
-    }
-});
-
 $(document).on('click', ".chat-user-item", function(){
     var newRecipientId = $(this).data("userid");
     $(".btn-send-comment").data("recipient_id", newRecipientId);
@@ -428,3 +413,97 @@ $('.rent-or-buy-radio input[type="radio"]').click(function(){
         $('.buy-options input[type="radio"]').prop('checked', false);
     }
 })
+
+$("#export-sent-invoices").on("click", exportSentInvoices);
+
+function exportSentInvoices(){
+    var csvContent = "\uFEFF";
+
+    var $rows = $("#sent-invoices-table tr:visible:not(:first-child)");
+    $rows.each(function(i, row){
+        var r = [];
+        var $cols = $(row).find("td:not(:first-child)");
+        $cols.each(function(i, col){
+            r.push(col.innerText);
+        });
+        csvContent += r.join(",") + "\r\n";
+    });
+
+    exportToCSV(csvContent, 'dowload.csv', 'text/csv;encoding:utf-8,%EF%BB%BF');
+}
+
+var exportToCSV = function(content, fileName, mimeType) {
+  var a = document.createElement('a');
+  mimeType = mimeType || 'application/octet-stream';
+
+  if (navigator.msSaveBlob) { // IE10
+    navigator.msSaveBlob(new Blob([content], {
+      type: mimeType
+    }), fileName);
+  } else if (URL && 'download' in a) { //html5 A[download]
+    a.href = URL.createObjectURL(new Blob([content], {
+      type: mimeType
+    }));
+    a.setAttribute('download', fileName);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } else {
+    location.href = 'data:application/octet-stream,' + encodeURIComponent(content); // only this mime type is supported
+  }
+}
+
+var $sentInvoicesRows = $("#sent-invoices-table tbody tr");
+$("input[name='sent-invoices-filter']").on("input", fiterSentInvoices);
+$('#invoices-month-selector').on("select2:select", fiterSentInvoices);
+$('#invoices-year-selector').on("select2:select", fiterSentInvoices);
+
+function fiterSentInvoices(){
+    var searchValue = $("input[name='sent-invoices-filter']").val().toLowerCase();
+    var year = $('#invoices-year-selector').select2().val();
+    var month = $('#invoices-month-selector').select2().val();
+    
+    var filterByText = searchValue.length >= 4;
+    var filterByDate = year !== "" && month !== "";
+
+    if(filterByDate){
+        year = parseInt(year);
+        month = parseInt(month);
+        var firstDay = new Date(year, month, 1);
+        var lastDay = new Date(year, month + 1, 0);
+        lastDay.setHours("23");
+        lastDay.setMinutes("59");
+        lastDay.setSeconds("59");
+
+        var firstDayDate = makeDateString(firstDay);
+        var lastDayDate = makeDateString(lastDay);        
+    }
+    
+    if(filterByText || filterByDate){
+        $sentInvoicesRows.each(function(i, row){
+            var $row = $(row);
+            $rowText = $row.text().toLowerCase();
+            $rowDate = $row.find("td:last-child").text();
+
+            if(filterByText && $rowText.indexOf(searchValue) === -1) $row.hide();
+            else if(filterByDate && $rowDate < firstDayDate || $rowDate > lastDayDate){
+                $row.hide()
+            } else $row.show();
+        });
+    } else {
+        $sentInvoicesRows.show();
+    }
+}
+
+function makeDateString(date){
+    return date.getFullYear()
+        + '-' + leadingZero(date.getMonth()+1)
+        + '-' + leadingZero(date.getDate())
+        + " " + leadingZero(date.getHours())
+        + ":" + leadingZero(date.getMinutes())
+        + ":" + leadingZero(date.getSeconds());
+}
+
+function leadingZero(string){
+    return ('0' + String(string)).slice(-2);
+}

@@ -63,7 +63,7 @@ class UserLectureEvaluationsController extends Controller
         $get = Yii::$app->request->queryParams;
         $commentResponsesDataProvider = CommentResponses::getAllCommentResponses();
         $sentInvoices = new ActiveDataProvider([
-            'query' => SentInvoices::getForCurrentSchool(),
+            'query' => SentInvoices::getRealForCurrentSchool(),
             'pagination' => false,
         ]);
 
