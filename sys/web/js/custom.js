@@ -414,3 +414,17 @@ function showChatContent(){
     $chatContent.show();
     $chatSpinner.hide();
 }
+
+$('.rent-or-buy-radio input[type="radio"]').click(function(){
+    var paymentType = $(this).val();
+    if (paymentType=='buy' || 'payments'){ 
+        $('.buy-options input[type="radio"]').prop('disabled', false);
+        $('input[type="radio"][value="Omniva"]').prop('disabled', true); 
+        $('.buy-options input[type="radio"]').prop('checked', false);       
+    }
+    if (paymentType=='rent'){
+        $('.buy-options input[type="radio"]').prop('disabled', true);
+        $('input[type="radio"][value="Omniva"]').prop('disabled', false);
+        $('.buy-options input[type="radio"]').prop('checked', false);
+    }
+})
