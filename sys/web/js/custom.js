@@ -59,7 +59,7 @@ $(document).ready(function() {
             event.preventDefault();
             $("span.select2").addClass("select-warning");
             let errorMessage = document.createElement("p");
-            let text = document.createTextNode("Please check if you have or don't have youre own kokle");
+            let text = document.createTextNode("Lūdzu, izvēlieties vienu no variantiem");
             errorMessage.appendChild(text);
             document.getElementById('has-instrument').appendChild(errorMessage);
         }
