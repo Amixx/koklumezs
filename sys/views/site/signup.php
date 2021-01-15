@@ -76,7 +76,7 @@ function getFieldOptions($fieldName, $hasInfo = false){
 
         <div class="row" style="margin-top: 32px;">
             <div class="col-xs-12 col-md-4">
-                <?= Html::submitButton(\Yii::t('app',  'Sign up'), ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button']) ?>
+                <?= Html::submitButton(\Yii::t('app',  'Sign up'), ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'register-button', 'id' => 'register-button']) ?>
             </div>
         </div>
 

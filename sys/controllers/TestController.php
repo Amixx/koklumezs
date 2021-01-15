@@ -13,6 +13,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LectureAssignment;
 use app\models\SectionsVisible;
+use app\models\Chat;
 use app\models\SentInvoices;
 use app\models\StudentSubplanPauses;
 use app\models\Lectures;
@@ -142,6 +143,22 @@ class TestController extends Controller
         // return $this->render("index", [asd
         //     'recipientId' => 478
         // ]);
+
+        $currentUserId = Yii::$app->user->identity->id;
+        $usersWithConvos = Chat::find()
+            ->select(['author_id', 'recipient_id'])
+            ->distinct()
+            ->andWhere([
+                'or',
+                ['author_id' => $currentUserId],
+                ['recipient_id' => $currentUserId],
+            ])
+            ->orderBy('id desc')
+            ->asArray()
+            ->all();
+
+
+        var_dump($usersWithConvos);
     }
 
     public function actionTest()

@@ -82,7 +82,7 @@ class Chat extends \yii\db\ActiveRecord {
 
     public static function getUsersWithConversations($authorId, $recipientId){
         $userIdsData = static::find()
-            ->select(['recipient_id'])
+            ->select(['author_id', 'recipient_id'])
             ->distinct()
             ->andWhere([
                 'or',
@@ -93,11 +93,11 @@ class Chat extends \yii\db\ActiveRecord {
             ->asArray()
             ->all();
 
-        $userIds = ArrayHelper::getColumn($userIdsData, 'recipient_id');
-        $userIds = array_filter($userIds, function($id) use($authorId) {
-            return $id != $authorId;
-        });
-        if(!in_array($recipientId, $userIds)) $userIds[] = $recipientId;
+        $userIds = [];
+        foreach($userIdsData as $data){
+            if(!in_array($data['author_id'], $userIds) && $data['author_id'] != $authorId) $userIds[] = $data['author_id'];
+            if(!in_array($data['recipient_id'], $userIds) && $data['recipient_id'] != $authorId) $userIds[] = $data['recipient_id'];
+        }
 
         return Users::find()->where(["in", "id", $userIds])->asArray()->all();
     }

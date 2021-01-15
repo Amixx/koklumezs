@@ -493,3 +493,4 @@ function makeDateString(date){
 function leadingZero(string){
     return ('0' + String(string)).slice(-2);
 }
+
