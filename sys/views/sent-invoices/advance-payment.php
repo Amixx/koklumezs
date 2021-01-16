@@ -13,7 +13,7 @@ $this->title = \Yii::t('app', 'Register payment');
     <div>
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'paid_months')->textInput(['type' => 'number']) ?>
+        <?= $form->field($model, 'paid_months')->textInput(['type' => 'number'])->label(Yii::t('app', 'Paid months')) ?>
         <?= $form->field($model, 'paid_date')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])->label(Yii::t('app', 'Date of payment:')) ?>
         <?= Html::submitButton(\Yii::t('app', 'Submit'), ['class' => 'btn btn-success']) ?>
 

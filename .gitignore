@@ -10,3 +10,4 @@ protected/data/*.db
 themes/classic/views/
 icon/*
 sys/web/files/global/*
+sys/config/db.php

@@ -44,7 +44,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 ['class' => 'yii\grid\SerialColumn'],
                 [
                     'attribute' => 'sent_date',
-                        'filter' => DatePicker::widget([
+                    'value' => function($dataProvider){
+                        return explode(" ", $dataProvider['sent_date'])[0];
+                    },
+                    'filter' => DatePicker::widget([
                         'model' => $searchModel,
                         'attribute' => 'sent_date',
                         'language' => 'lv',
@@ -70,10 +73,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 [
                     'attribute' => 'is_advance',
+                    'label' => Yii::t('app', 'Invoice type'),
                     'value' => function($dataProvider){
-                        return $dataProvider['is_advance'] ? Yii::t('app', 'Yes') : Yii::t('app', 'No');
+                        return $dataProvider['is_advance'] ? Yii::t('app', 'Advance') : Yii::t('app', 'Final');
                     },
-                    'filter' => Html::dropDownList('SentInvoicesSearch[is_advance]', isset($get['SentInvoicesSearch[is_advance]']) ? $get['SentInvoicesSearch[is_advance]'] : '', [0 => Yii::t('app', 'No'), 1 => Yii::t('app', 'Yes')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                    'filter' => Html::dropDownList('SentInvoicesSearch[is_advance]', isset($get['SentInvoicesSearch[is_advance]']) ? $get['SentInvoicesSearch[is_advance]'] : '', [0 => Yii::t('app', 'Final'), 1 => Yii::t('app', 'Advance')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
                 ],
                 'plan_name',
                 'plan_price',
