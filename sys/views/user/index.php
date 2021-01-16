@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\StudentSubplanPauses;
 use app\models\SentInvoices;
+use  yii\jui\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\TeacherUserSearch */
@@ -111,13 +112,7 @@ $planEndMonths = [];
                             $value = $number['invoice_number'];
                             $html .= "
                             <p>
-                                <span><strong>$value</strong></span>
-                                <a
-                                    href='/sys/student-sub-plans/increase-times-paid?userId=$studentId&invoiceId=$value'
-                                    class='glyphicon glyphicon-check'
-                                    style='margin-left:16px;'
-                                    title='atzīmēt rēķinu kā apmaksātu'
-                                ></a>
+                                <a target='_blank' href='/sys/sent-invoices/update?number=$value'><strong>$value</strong></a>
                             </p>
                             ";
                         }
@@ -128,11 +123,14 @@ $planEndMonths = [];
                         <div style='text-align:center;'>
                             <p>Neapmaksātie rēķini: </p>
                             $html
-                            <div><a
-                                href='/sys/cron/remind-to-pay?userId=" .$dataProvider["id"] . "'
+                            <span style='margin-right:48px;'><a
+                                href='/sys/cron/remind-to-pay?userId=$studentId'
                                 class='glyphicon glyphicon-envelope'                                
                                 title='Nosūtīt atgādinājumu, ka jāmaksā'
-                            ></a></div>                            
+                            ></a></span>
+                            <span title='Reģistrēt maksājumu'>
+                                <a href='/sys/sent-invoices/register-advance-payment?userId=$studentId' class='glyphicon glyphicon-plus'></a>
+                            </span>
                         </div>
                     ";
                 },

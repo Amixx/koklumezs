@@ -7,17 +7,14 @@ use Yii;
 
 class SentInvoices extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+    public $paid_date = null;
+    public $paid_months = null;
+
     public static function tableName()
     {
         return 'sentinvoices';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -28,9 +25,6 @@ class SentInvoices extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
@@ -41,7 +35,7 @@ class SentInvoices extends \yii\db\ActiveRecord
             'plan_name' => \Yii::t('app',  'Plan title'),
             'plan_price' => \Yii::t('app',  'Plan price (monthly)'),
             'plan_start_date' => \Yii::t('app',  'Plan start date'),
-            'sent_date' => \Yii::t('app',  'Sent date'),
+            'sent_date' => \Yii::t('app',  'Sent/Paid date'),
         ];
     }
 
@@ -50,18 +44,11 @@ class SentInvoices extends \yii\db\ActiveRecord
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }
 
-    public function getForCurrentSchool(){
+    public static function getForCurrentSchool(){
         $schoolId = School::getCurrentSchoolId();
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($schoolId);
 
-        return self::find()->where(['in', 'user_id', $schoolStudentIds])->joinWith('student');
-    }
-
-    public static function getRealForCurrentSchool(){
-        $schoolId = School::getCurrentSchoolId();
-        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($schoolId);
-
-        return self::find()->andWhere(['and', ['in', 'user_id', $schoolStudentIds], ['is_advance' => false]])->joinWith('student');
+        return self::find()->andWhere(['and', ['in', 'user_id', $schoolStudentIds]])->joinWith('student');
     }
 
     public function getLatestForStudent($studentId){
@@ -80,6 +67,10 @@ class SentInvoices extends \yii\db\ActiveRecord
 
         if($data && count($data) > 0) return $data;
         else return null;
+    }
+    
+    public static function getRealInvoice($invoiceNumber){
+        return self::find()->where(['invoice_number' => $invoiceNumber, 'is_advance' => false])->one();
     }
 
     public static function getInvoiceCss(){

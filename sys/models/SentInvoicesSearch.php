@@ -11,7 +11,7 @@ class SentInvoicesSearch extends SentInvoices
     public function rules()
     {
         return [
-            [['invoice_number', 'plan_name', 'plan_price', 'plan_start_date', 'sent_date'], 'safe'],
+            [['invoice_number', 'is_advance', 'plan_name', 'plan_price', 'plan_start_date', 'sent_date'], 'safe'],
         ];
     }
 
@@ -22,7 +22,7 @@ class SentInvoicesSearch extends SentInvoices
 
     public function search($params)
     {
-        $query = SentInvoices::getRealForCurrentSchool();
+        $query = SentInvoices::getForCurrentSchool();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -36,6 +36,7 @@ class SentInvoicesSearch extends SentInvoices
         }
 
         $query->andFilterWhere(['like', 'invoice_number', $this->invoice_number])
+            ->andFilterWhere(['like', 'is_advance', $this->is_advance])
             ->andFilterWhere(['like', 'plan_name', $this->plan_name])
             ->andFilterWhere(['like', 'plan_price', $this->plan_price])
             ->andFilterWhere(['like', 'plan_start_date', $this->plan_start_date])

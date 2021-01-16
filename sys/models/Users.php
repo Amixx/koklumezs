@@ -28,6 +28,8 @@ class Users extends ActiveRecord implements IdentityInterface
     const SUBTYPE_PAID = 'paid';
     const SUBTYPE_LEAD = 'lead';
 
+    public $test_date;
+
     public static function tableName()
     {
         return 'users';
