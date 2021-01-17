@@ -83,57 +83,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ]);
             ?>
         </div>
-        <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
-            <label for="sent-invoices-filter"><?= Yii::t("app", "Search") ?>&nbsp;(<?= Yii::t("app", "enter at least 4 symbols") ?>): 
-                <input type="text" name="sent-invoices-filter" class="form-control">
-            </label>
-            <label for="invoices-year-selector">Meklēt pēc datuma. Jāizvēlās gan gadu, gan mēnesi: 
-            </label>
-            <?= Html::dropDownList('year', null, [
-                2020 => "2020",
-                2021 => "2021",
-                2022 => "2022",
-                2023 => "2023",
-            ], ['prompt' => Yii::t('app', 'Choose year'), 'id' => 'invoices-year-selector']) ?>
-            <?= Html::dropDownList('month', null, [
-                "Janvāris",
-                "Februāris",
-                "Marts",
-                "Aprīlis",
-                "Maijs",
-                "Jūnijs",
-                "Jūlijs",
-                "Augusts",
-                "Septembris",
-                "Oktobris",
-                "Novembris",
-                "Decembris"
-            ], ['prompt' => Yii::t('app', 'Choose month'), 'id' => 'invoices-month-selector']) ?>
-            <button class="btn btn-primary pull-right" id="export-sent-invoices">Eksportēt uz CSV (eksportētas tiks visas <strong>redzamās</strong> rindas</button>
-                <?= GridView::widget([
-                    'dataProvider' => $sentInvoices,
-                    'columns' => [
-                        ['class' => 'yii\grid\SerialColumn'],
-                            [
-                            'attribute' => 'user name',
-                            'value' => function($dataProvider){
-                                if(!$dataProvider['student']) return;
-                                
-                                return $dataProvider['student']['first_name'] . ' ' . $dataProvider['student']['last_name'];
-                            },
-                            'label' => Yii::t('app', 'Student')
-                        ],
-                        'invoice_number',
-                        'plan_name',
-                        'plan_price',
-                        'sent_date'
-                    ],
-                    'options' => [
-                        'id' => 'sent-invoices-table',
-                    ],
-                ]);
-                ?>
-        </div>
     </div>
 
     

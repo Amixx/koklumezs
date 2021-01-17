@@ -291,11 +291,6 @@ class CronController extends Controller
         $users = Users::getAllStudents();
         $inlineCss = SentInvoices::getInvoiceCss();
 
-        $timestamp = time();
-        $folderUrl = 'invoices/'.date("M", $timestamp) . "_" . date("Y", $timestamp);
-        if (!is_dir($folderUrl)) mkdir($folderUrl, 0777, true);
-        $invoiceBasePath = $folderUrl . "/";
-
         foreach ($users as $user) {
             $studentSubplan = StudentSubPlans::getForStudent($user["id"]);
             if ($studentSubplan !== null) {
@@ -308,38 +303,43 @@ class CronController extends Controller
                 if ($today_split[0] === $match_date_split[0]) {
                     $userFullName = $user['first_name'] . " " . $user['last_name'];
                     $subplan = $studentSubplan["plan"];
-
-                    $id = mt_rand(10000000, 99999999);
-                    $title = "avansa-rekins-$id.pdf";
-                    $invoicePath = $invoiceBasePath.$title;
-
-                    $content = $this->renderPartial('invoiceTemplate', [
-                        'id' => $id,
-                        'fullName' => $userFullName,
-                        'email' => $user['email'],
-                        'subplan' => $subplan,
-                        'isAdvanceInvoice' => true,
-                    ]);
-
-                    $pdf = new Pdf([
-                        'mode' => Pdf::MODE_UTF8,
-                        'format' => Pdf::FORMAT_A4,
-                        'orientation' => Pdf::ORIENT_PORTRAIT,
-                        'destination' => Pdf::DEST_FILE,
-                        'filename' => $invoicePath,
-                        'content' => $content,
-                        'cssInline' => $inlineCss,
-                        'options' => ['title' => $title],
-                    ]);
-
-                    $pdf->render();
-
                     $planUnlimited = $subplan['months'] === 0;
                     $planEnded = $studentSubplan['sent_invoices_count'] == $subplan['months'];
                     $hasPaidInAdvance = $studentSubplan['times_paid'] > $studentSubplan['sent_invoices_count'];
+                    $teacherId = Yii::$app->user->identity->id;
 
                     if(!$planEnded || $planUnlimited){
                         if(!$hasPaidInAdvance){
+                            $timestamp = time();
+                            $folderUrl = "files/user_$teacherId/invoices/".date("M", $timestamp) . "_" . date("Y", $timestamp)."/advance";
+                            if (!is_dir($folderUrl)) mkdir($folderUrl, 0777, true);
+                            $invoiceBasePath = $folderUrl . "/";
+
+                            $id = mt_rand(10000000, 99999999);
+                            $title = "avansa-rekins-$id.pdf";
+                            $invoicePath = $invoiceBasePath.$title;
+
+                            $content = $this->renderPartial('advanceInvoiceTemplate', [
+                                'id' => $id,
+                                'fullName' => $userFullName,
+                                'email' => $user['email'],
+                                'subplan' => $subplan,
+                                'payer' => $user['payer'],
+                            ]);
+
+                            $pdf = new Pdf([
+                                'mode' => Pdf::MODE_UTF8,
+                                'format' => Pdf::FORMAT_A4,
+                                'orientation' => Pdf::ORIENT_PORTRAIT,
+                                'destination' => Pdf::DEST_FILE,
+                                'filename' => $invoicePath,
+                                'content' => $content,
+                                'cssInline' => $inlineCss,
+                                'options' => ['title' => $title],
+                            ]);
+
+                            $pdf->render();
+
                             $message = "Nosūtam rēķinu par tekošā mēneša nodarbībām. Lai jauka diena!";
                             if(isset($subplan['message']) && $subplan['message']) $message = $subplan['message'];
                             

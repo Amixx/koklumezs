@@ -2,12 +2,16 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=skola.koklumezs.lv;dbname=dev_skola_sys_db',
+    ////datubāze no prod servera
+    // 'dsn' => 'mysql:host=skola.koklumezs.lv;dbname=dev_skola_sys_db',
+    // 'username' => 'skola',
+    // 'password' => 'skola',
+
+    ////lokālā datubāze
+    'dsn' => 'mysql:host=localhost;dbname=skola_sys_db',
     'username' => 'skola',
-    'password' => 'skola',
-    // 'password' => 'nJ%k]AQn36vA',
-    // 'username' => 'root',
-    // 'password' => 'JbrGpS8sbBV',
+    'password' => 'nJ%k]AQn36vA',
+
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)

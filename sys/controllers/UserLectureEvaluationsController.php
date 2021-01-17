@@ -62,11 +62,7 @@ class UserLectureEvaluationsController extends Controller
         }
         $get = Yii::$app->request->queryParams;
         $commentResponsesDataProvider = CommentResponses::getAllCommentResponses();
-        $sentInvoices = new ActiveDataProvider([
-            'query' => SentInvoices::getRealForCurrentSchool(),
-            'pagination' => false,
-        ]);
-
+      
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -76,7 +72,6 @@ class UserLectureEvaluationsController extends Controller
             'get' => $get,
             'commentResponsesDataProvider' => $commentResponsesDataProvider,
             'isTeacher' => $isTeacher,
-            'sentInvoices' => $sentInvoices,
         ]);
     }
 

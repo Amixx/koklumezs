@@ -14,6 +14,7 @@ use app\models\Studenthandgoals;
 use app\models\SchoolSubPlans;
 use app\models\School;
 use app\models\SchoolTeacher;
+use app\models\Payer;
 use app\models\SchoolStudent;
 use app\models\StudentSubPlans;
 use yii\web\Controller;
@@ -259,6 +260,33 @@ class UserController extends Controller
                     $subplan->save();
                 }
             }
+            if (isset($post['Users']['payer']) && $post['Users']['payer']) {
+                $postData = $post['Users']['payer'];
+
+                $payer = Payer::getForStudent($model->id);
+                $newPayer = false;
+                if(!$payer){
+                    $payer = new Payer;
+                    $newPayer = true;
+                }
+
+                $payer->name = $postData["name"];
+                $payer->address = $postData["address"];
+                $payer->personal_code = $postData["personal_code"];
+                $payer->registration_number = $postData["registration_number"];
+                $payer->pvn_registration_number = $postData["pvn_registration_number"];
+                $payer->bank = $postData["bank"];
+                $payer->swift = $postData["swift"];
+                $payer->account_number = $postData["swift"];
+
+                if($newPayer){
+                    $payer->save();
+                } else {
+                    $payer->update();
+                }
+
+                Yii::$app->session->setFlash('success', 'Maksātāja informācija saglabāta!');
+            }
 
             $model->update();
 
@@ -299,7 +327,7 @@ class UserController extends Controller
 
     protected function findModel($id)
     {
-        if (($model = Users::find()->where(['users.id' => $id])->joinWith('subplan')->one()) !== null) {
+        if (($model = Users::find()->where(['users.id' => $id])->joinWith('subplan')->joinWith("payer")->one()) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

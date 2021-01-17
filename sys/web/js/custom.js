@@ -486,21 +486,20 @@ function fiterSentInvoices(){
     if(filterByDate){
         year = parseInt(year);
         month = parseInt(month);
+        console.log(year, month);
         var firstDay = new Date(year, month, 1);
         var lastDay = new Date(year, month + 1, 0);
-        lastDay.setHours("23");
-        lastDay.setMinutes("59");
-        lastDay.setSeconds("59");
-
+       
         var firstDayDate = makeDateString(firstDay);
-        var lastDayDate = makeDateString(lastDay);        
+        var lastDayDate = makeDateString(lastDay);
     }
+
     
     if(filterByText || filterByDate){
         $sentInvoicesRows.each(function(i, row){
             var $row = $(row);
             $rowText = $row.text().toLowerCase();
-            $rowDate = $row.find("td:last-child").text();
+            $rowDate = $row.find("td:nth-child(2)").text();
 
             if(filterByText && $rowText.indexOf(searchValue) === -1) $row.hide();
             else if(filterByDate && $rowDate < firstDayDate || $rowDate > lastDayDate){
@@ -516,9 +515,6 @@ function makeDateString(date){
     return date.getFullYear()
         + '-' + leadingZero(date.getMonth()+1)
         + '-' + leadingZero(date.getDate())
-        + " " + leadingZero(date.getHours())
-        + ":" + leadingZero(date.getMinutes())
-        + ":" + leadingZero(date.getSeconds());
 }
 
 function leadingZero(string){
