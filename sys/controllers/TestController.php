@@ -71,17 +71,20 @@ class TestController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $isGuest = Yii::$app->user->isGuest;
         if (!$isGuest) {
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
+        }
+
+        $users = Users::getAllStudents();
+
+        foreach($users as $user){
+            $usePayer = $user['payer'] && $user['payer']['name'];
+            echo $usePayer;
+            echo "<hr>";
         }
     }
 }

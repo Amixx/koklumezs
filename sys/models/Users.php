@@ -28,8 +28,6 @@ class Users extends ActiveRecord implements IdentityInterface
     const SUBTYPE_PAID = 'paid';
     const SUBTYPE_LEAD = 'lead';
 
-    public $test_date;
-
     public static function tableName()
     {
         return 'users';
@@ -85,6 +83,11 @@ class Users extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public function getPayer()
+    {
+        return $this->hasOne(Payer::className(), ['user_id' => 'id']);
+    }
+
     public function getSubplan()
     {
         return $this->hasOne(StudentSubPlans::className(), ['user_id' => 'id'])->joinWith("plan");
@@ -134,7 +137,7 @@ class Users extends ActiveRecord implements IdentityInterface
     }
 
     public static function getAllStudents(){
-        $users = self::find()->where(['user_level' => self::ROLE_USER])->asArray()->all();
+        $users = self::find()->where(['user_level' => self::ROLE_USER])->joinWith("payer")->asArray()->all();
         $result = [];
         foreach ($users as $u) {
             if ($u['dont_bother'] != null) {

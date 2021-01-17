@@ -324,6 +324,7 @@ class CronController extends Controller
                                 'fullName' => $userFullName,
                                 'email' => $user['email'],
                                 'subplan' => $subplan,
+                                'payer' => $user['payer'],
                             ]);
 
                             $pdf = new Pdf([

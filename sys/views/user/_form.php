@@ -23,6 +23,9 @@ $isTeacher = Users::isCurrentUserTeacher();
             <li class="nav-item">
                 <a class="nav-link" id="plan-tab" data-toggle="tab" href="#plan" role="tab" aria-controls="plan" aria-selected="false"><?= \Yii::t('app', 'Student\'s subscription plan') ?></a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" id="payer-tab" data-toggle="tab" href="#payer" role="tab" aria-controls="payer" aria-selected="false"><?= \Yii::t('app', 'Payer') ?></a>
+            </li>
         <?php } ?>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -73,6 +76,19 @@ $isTeacher = Users::isCurrentUserTeacher();
             </div>
             <div class="form-group">
                 <?= Html::a(\Yii::t('app',  'Remove subscription plan'), ["/student-sub-plans/delete?userId=".$model["id"]], ['class' => 'btn btn-danger']) ?>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="payer" role="tabpanel" aria-labelledby="payer-tab">
+            <h4><?= Yii::t('app', 'The payer\'s information will be used if at least the name and address are filled in') ?>.</h4>
+            <div class="form-group">
+                <?= $form->field($model, 'payer[name]')->textInput()->label(Yii::t('app', 'Name/Title')) ?>
+                <?= $form->field($model, 'payer[personal_code]')->textInput()->label(Yii::t('app', 'Personal code')) ?>
+                <?= $form->field($model, 'payer[address]')->textInput()->label(Yii::t('app', 'Legal address')) ?>
+                <?= $form->field($model, 'payer[registration_number]')->textInput()->label(Yii::t('app', 'Registration number')) ?>
+                <?= $form->field($model, 'payer[pvn_registration_number]')->textInput()->label(Yii::t('app', 'PVN registration number')) ?>
+                <?= $form->field($model, 'payer[bank]')->textInput()->label(Yii::t('app', 'Bank')) ?>
+                <?= $form->field($model, 'payer[swift]')->textInput()->label('SWIFT') ?>
+                <?= $form->field($model, 'payer[account_number]')->textInput()->label(Yii::t('app', 'Account number')) ?>
             </div>
         </div>
     </div>

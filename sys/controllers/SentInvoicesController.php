@@ -125,7 +125,8 @@ class SentInvoicesController extends Controller
                 'email' => $model['student']['email'],
                 'subplan' => $subplan,
                 'datePaid' => $post['SentInvoices']['paid_date'],
-                'months' => 1, 
+                'months' => 1,
+                'payer' => $model['student']['payer'],
             ]);
 
             $pdf = new Pdf([
@@ -184,7 +185,7 @@ class SentInvoicesController extends Controller
 
             $subplan = $plan["plan"];
 
-            $user = Users::findOne(['id' => $userId]);
+            $user = Users::find()->where(['users.id' => $userId])->joinWith('payer')->one();
 
             $inlineCss = SentInvoices::getInvoiceCss();
 
@@ -206,6 +207,7 @@ class SentInvoicesController extends Controller
                 'subplan' => $subplan,
                 'datePaid' => $date,
                 'months' => $months, 
+                'payer' => $user['payer'],
             ]);
 
             $pdf = new Pdf([

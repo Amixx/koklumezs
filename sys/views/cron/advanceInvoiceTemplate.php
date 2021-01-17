@@ -9,6 +9,8 @@ $priceWithoutPvn = number_format($subplan['monthly_cost'] / 1.21, 2);
 $pvnAmount = number_format($subplan['monthly_cost'] - $priceWithoutPvn, 2);
 $payAmount = number_format($subplan['monthly_cost'], 2);
 
+$usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
+
 ?>
 
 <html>
@@ -87,17 +89,90 @@ $payAmount = number_format($subplan['monthly_cost'], 2);
                         Saņēmējs:
                     </td>
                     <td>
-                        <strong><?= $fullName ?></strong>
+                        <strong><?= $usePayer ? $payer['name'] : $fullName ?></strong>
                     </td>
                 </tr>
-                <tr>
-                    <td class="leftcol">
-                        Kontakti:
-                    </td>
-                    <td>
-                        <?= $email ?>
-                    </td>
-                </tr>
+                <?php if($usePayer){ ?>
+                    <?php if($payer['personal_code']) { ?>
+                        <tr>
+                            <td class="leftcol">
+                                Personas kods:
+                            </td>
+                            <td>
+                                <?= $payer['personal_code'] ?>
+                            </td>
+                        </tr>   
+                    <?php } ?>
+                    <?php if($payer['registration_number']) { ?>
+                        <tr>
+                            <td class="leftcol">
+                                Reģistrācijas Nr.:
+                            </td>
+                            <td>
+                                <?= $payer['registration_number'] ?>
+                            </td>
+                        </tr>   
+                    <?php } ?>
+                    <?php if($payer['pvn_registration_number']) { ?>
+                        <tr>
+                            <td class="leftcol">
+                                PVN reģistrācijas Nr.:
+                            </td>
+                            <td>
+                                <?= $payer['pvn_registration_number'] ?>
+                            </td>
+                        </tr>   
+                    <?php } ?>
+                    <?php if($payer['address']) { ?>
+                        <tr>
+                            <td class="leftcol">
+                                Adrese:
+                            </td>
+                            <td>
+                                <?= $payer['address'] ?>
+                            </td>
+                        </tr>   
+                    <?php } ?>
+                    <?php if($payer['bank']) { ?>
+                        <tr>
+                            <td class="leftcol">
+                                Banka: 
+                            </td>
+                            <td>
+                                <?= $payer['bank'] ?>
+                            </td>
+                        </tr>   
+                    <?php } ?>
+                    <?php if($payer['swift']) { ?>
+                        <tr>
+                            <td class="leftcol">
+                                SWIFT: 
+                            </td>
+                            <td>
+                                <?= $payer['swift'] ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                    <?php if($payer['account_number']) { ?>
+                        <tr>
+                            <td class="leftcol">
+                                Konta Nr.: 
+                            </td>
+                            <td>
+                                <strong><?= $payer['account_number'] ?></strong>
+                            </td>
+                        </tr>   
+                    <?php } ?>
+                <?php } else { ?>
+                    <tr>
+                        <td class="leftcol">
+                            Kontakti:
+                        </td>
+                        <td>
+                            <?= $email ?>
+                        </td>
+                    </tr>
+                <?php } ?>
             </table>
             <table class="bordered-table">
                 <tr>

@@ -380,4 +380,14 @@ return [
     'Invoice type' => 'Rēķina tips',
     'Advance' => 'Avansa',
     'Final' => 'Gala',
+    'Name/Title' => 'Vārds/Nosaukums',
+    'Identification number' => 'Identifikācijas numurs',
+    'Payer' => 'Maksātājs',
+    'Legal address' => 'Juridiskā adrese',
+    'Personal code' => 'Personas kods',
+    'Registration number' => 'Reģistrācijas numurs',
+    'PVN registration number' => 'PVN reģistrācijas numurs',
+    'Bank' => 'Banka',
+    'Account number' => 'Konta numurs',
+    'The payer\'s information will be used if at least the name and address are filled in' => 'Maksātāja informācija tiks izmantota, ja vismaz vārds/nosaukums un adrese būs aizpildīti'
 ];
