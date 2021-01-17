@@ -67,7 +67,7 @@ function getFieldOptions($fieldName, $hasInfo = false){
             ->label(false)
             ->dropDownList(['lv' => \Yii::t('app',  'Latvian'), 'eng' => \Yii::t('app',  'English')], ['prompt' => '- - '.Yii::t('app', 'language').' - -', 'options'=>[$defaultLanguage => ["Selected" => true]]]) ?> -->
         <div id="has-instrument">
-            <?= Html::label(Yii::t('app', 'Do you have your own kokle?'), 'has-own-instrument'); ?>
+            <?= Html::label(Yii::t('app', 'Do you have your own kokle?'), 'has-own-instrument', [ 'class' => 'do-you-have-your-own-kokle']);?>
             <?= Html::dropDownList('has-own-instrument', null, [false => \Yii::t('app',  'No'), true => \Yii::t('app', 'Yes')], ['prompt' => '', 'style' => 'width: 64px !important']) ?>      
         </div>
         <div class="has-experience">
