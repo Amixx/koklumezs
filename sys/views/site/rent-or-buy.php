@@ -31,16 +31,22 @@ $this->title = \Yii::t('app',  'Your first kokle');
             ->label(Yii::t('app', 'Address'))
             ->textInput() ?>
         </div>
-        <div class="form-group col-sm-6">
-            <?= $form->field($model, 'payment_type')->radioList(['buy' => Yii::t('app', 'I would like to buy the kokle (starts at 120 euros)'), 'rent' => Yii::t('app', 'I would like to rent the kokle (10 euros per month)'), 'payments' => Yii::t('app', 'I would like to pay for the kokle in instalments')])->label(Yii::t('app', 'Choose payment type')); ?> 
-
-            <?= $form->field($model, 'delivery_type')->radioList(['local' => Yii::t('app', 'I would like to receive it via Omniva or Latvian Post (5 euros)'), 'foreign' => Yii::t('app', 'I want to receive with delivery outside Latvia (price by agreement)')])->label(Yii::t('app', 'Choose delivery type')); ?> 
+        
+        <div class="form-group col-sm-6">            
+            <div class ='rent-or-buy-radio'>
+                <?= $form->field($model, 'payment_type')->radioList(['rent' => Yii::t('app', 'I would like to rent the kokle (10 euros per month)*'), 'buy' => Yii::t('app', 'I would like to buy the kokle (starts at 130 euros)'), 'payments' => Yii::t('app', 'I would like to pay for the kokle in 3 instalments (48euor/month)')])->label(Yii::t('app', 'Choose payment type')); ?> 
+            </div>           
+            <p style="color:red"> <?=Yii::t('app', '*Rent is available only in Latvia.')?> </p>                        
+            
+            <div class ='buy-options'>
+                <?= $form->field($model, 'delivery_type')->radioList(['Omniva' => Yii::t('app', 'I would like to receive it via Omniva (5 euros)'),'LVpost' => Yii::t('app', 'I would like to receive it via Latvian Post (5 euros)'),'express' => Yii::t('app','I would like to receive it via Express poastige (10 euros)'), 'foreign' => Yii::t('app', 'I want to receive with delivery outside Latvia (price by agreement)')])->label(Yii::t('app', 'Choose delivery type')); ?> 
+            </div>
         </div>
 
         <div class="col-sm-12 text-center">
             <div>
                 <?= Html::a(\Yii::t('app',  'Back to start'), ['index'], ['class' => 'btn btn-secondary']) ?> 
-                <?= Html::submitButton(\Yii::t('app',  'Submit'), ['class' => 'btn btn-primary btn-flat', 'name' => 'login-button']) ?>
+                <?= Html::submitButton(\Yii::t('app', 'Submit'), ['class' => 'btn btn-primary btn-flat', 'name' => 'login-button']) ?>
             </div>
         </div>
 
