@@ -78,13 +78,5 @@ class TestController extends Controller
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
-
-        $users = Users::getAllStudents();
-
-        foreach($users as $user){
-            $usePayer = $user['payer'] && $user['payer']['name'];
-            echo $usePayer;
-            echo "<hr>";
-        }
     }
 }

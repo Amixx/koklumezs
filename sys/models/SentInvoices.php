@@ -48,7 +48,7 @@ class SentInvoices extends \yii\db\ActiveRecord
         $schoolId = School::getCurrentSchoolId();
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($schoolId);
 
-        return self::find()->andWhere(['and', ['in', 'user_id', $schoolStudentIds]])->joinWith('student');
+        return self::find()->andWhere(['and', ['in', 'sentinvoices.user_id', $schoolStudentIds]])->joinWith('student');
     }
 
     public function getLatestForStudent($studentId){

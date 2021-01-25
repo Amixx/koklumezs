@@ -1,6 +1,6 @@
 <?php
 
-$dateToday = Date("d.m.yy.");
+$dateToday = Date("d.m.Y.");
 
 $totalCost = $subplan['monthly_cost'] * $months;
 $priceWithoutPvn = number_format($totalCost / 1.21, 2);

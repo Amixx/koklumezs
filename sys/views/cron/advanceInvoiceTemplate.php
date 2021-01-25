@@ -1,6 +1,6 @@
 <?php
 
-$dateToday = Date("d.m.yy.");
+$dateToday = Date("d.m.Y.");
 $payDate = date_create($dateToday);
 date_add($payDate, date_interval_create_from_date_string("14 days"));
 $payDateString = date_format($payDate, "d.m.Y.");

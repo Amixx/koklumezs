@@ -293,7 +293,7 @@ class CronController extends Controller
 
         foreach ($users as $user) {
             $studentSubplan = StudentSubPlans::getForStudent($user["id"]);
-            if ($studentSubplan !== null) {
+            if ($studentSubplan !== null && $studentSubplan["plan"] !== null) {
                 $today = date('d.m.Y');
                 $match_date = date('d.m.Y', strtotime($studentSubplan["start_date"]));
 
@@ -306,7 +306,9 @@ class CronController extends Controller
                     $planUnlimited = $subplan['months'] === 0;
                     $planEnded = $studentSubplan['sent_invoices_count'] == $subplan['months'];
                     $hasPaidInAdvance = $studentSubplan['times_paid'] > $studentSubplan['sent_invoices_count'];
-                    $teacherId = Yii::$app->user->identity->id;
+                    $school = School::getByStudent($user['id']);
+                    $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
+                    $teacherId = $schoolTeacher['user_id'];
 
                     if(!$planEnded || $planUnlimited){
                         if(!$hasPaidInAdvance){
