@@ -241,19 +241,19 @@ class SiteController extends Controller
                         ->compose(['html' => 'new-user-html', 'text' => 'new-user-text'], [
                             'user' => $user,
                         ])
-                        ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
-                        ->setTo(Yii::$app->params['senderEmail'])
+                        ->setFrom([$school['email'] => Yii::$app->name])
+                        ->setTo($school['email'])
                         ->setSubject("Reģistrējies jauns skolēns - " . $user['first_name'])
                         ->send();
 
-                    if($school['registration_message'] != null){
+                    if($school['registration_message'] != null && $hasOwnInstrument){
                         Yii::$app
                             ->mailer
                             ->compose(['html' => 'after-registration-html', 'text' => 'after-registration-text'], [
                                 'message' => $school['registration_message'],
                             ])
-                            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
-                            ->setTo(Yii::$app->params['senderEmail'])
+                            ->setFrom([$school['email'] => Yii::$app->name])
+                            ->setTo($user['email'])
                             ->setSubject("Apsveicam ar reģistrēšanos - " . Yii::$app->name)
                             ->send();
                     }
@@ -263,6 +263,7 @@ class SiteController extends Controller
                     } else if($hasExperience) {
                         $this->redirect(["signup-questions", 'u' => $user['id'], 'l' => $l, 's' => $s]);
                     }else {
+                        Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam koklēt! Turpmākās 2 nedēļas vari izmēģināt bez maksas!');
                         return $this->redirect(['lekcijas/index']);
                     }
                 }
@@ -278,24 +279,25 @@ class SiteController extends Controller
 
     public function actionRentOrBuy($u, $l) {
         Yii::$app->language = $l;
+        $school = School::getByStudent($u);
 
         $user = Users::findOne($u);
         $model = new RentOrBuyForm;
         $model->fullname = $user['first_name'] . " " . $user['last_name'];
         $model->email = $user['email'];
         
-        if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $sent = Yii::$app
                 ->mailer
                 ->compose(['html' => 'instrument-html', 'text' => 'instrument-text'], [
                     'model' => $model,
                 ])
-                ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
-                ->setTo(Yii::$app->params['senderEmail'])
+                ->setFrom([$school['email'] => Yii::$app->name])
+                ->setTo($school['email'])
                 ->setSubject("Par kokles iegādāšanos - " . $model['fullname'])
                 ->send();
             if($sent){
-                Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam spēlēt!');
+                Yii::$app->session->setFlash('success', 'Paldies par tavu pieteikumu! Tuvākajā laikā sazināsimies ar tevi uz tavu norādīto epastu. ');
                 return $this->redirect(['lekcijas/index']);
             }
         }
@@ -316,18 +318,13 @@ class SiteController extends Controller
             $aboutUser = "";
             foreach($post['answers'] as $id => $answer){
                 if($answer !== ""){
-                    $index = array_search($id, array_column($schoolSignupQuestions, 'id'));
-                    $aboutUser .= $schoolSignupQuestions[$index]['text'] . ": ";
-                    $aboutUser .= "\n";
                     $aboutUser .= $answer;
-                    $aboutUser .= "\n";
                     $aboutUser .= "\n";
                 }
             }
             $user['about'] = $aboutUser;
             $saved = $user->save();
             if($saved){
-                Yii::$app->session->setFlash('success', 'Jūsu atbildes tika saglabātas!');
                 return $this->redirect(['lekcijas/index']);
             }
         }

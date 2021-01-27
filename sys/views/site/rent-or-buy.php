@@ -39,7 +39,7 @@ $this->title = \Yii::t('app',  'Your first kokle');
             <p style="color:red"> <?=Yii::t('app', '*Rent is available only in Latvia.')?> </p>                        
             
             <div class ='buy-options'>
-                <?= $form->field($model, 'delivery_type')->radioList(['Omniva' => Yii::t('app', 'I would like to receive it via Omniva (5 euros)'),'LVpost' => Yii::t('app', 'I would like to receive it via Latvian Post (5 euros)'),'express' => Yii::t('app','I would like to receive it via Express poastige (10 euros)'), 'foreign' => Yii::t('app', 'I want to receive with delivery outside Latvia (price by agreement)')])->label(Yii::t('app', 'Choose delivery type')); ?> 
+                <?= $form->field($model, 'delivery_type')->radioList(['omniva' => Yii::t('app', 'I would like to receive it via Omniva (5 euros)'),'lvpost' => Yii::t('app', 'I would like to receive it via Latvian Post (5 euros)'),'express' => Yii::t('app','I would like to receive it via Express poastige (10 euros)'), 'foreign' => Yii::t('app', 'I want to receive with delivery outside Latvia (price by agreement)')])->label(Yii::t('app', 'Choose delivery type')); ?> 
             </div>
         </div>
 

@@ -26,6 +26,17 @@ class RentOrBuyForm extends Model
         ];
     }
 
+    public function attributeLabels() {
+        return [
+            'fullname' => \Yii::t('app',  'Name'),
+            'email' => \Yii::t('app',  'E-mail'),
+            'phone_number' => \Yii::t('app',  'Phone number'),
+            'address' => \Yii::t('app',  'Address'),
+            'payment_type' => \Yii::t('app',  'Payment type'),
+            'delivery_type' => \Yii::t('app',  'Delivery type'),
+        ];
+    }
+
     public function validatePhoneNumber($attribute, $params)
     {
         if (!$this->hasErrors()) {
