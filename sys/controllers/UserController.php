@@ -310,6 +310,12 @@ class UserController extends Controller
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
+        Yii::$app
+            ->db
+            ->createCommand()
+            ->delete('userlectureevaluations', ['user_id' => $id])
+            ->execute();
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
