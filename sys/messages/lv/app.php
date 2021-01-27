@@ -231,6 +231,7 @@ return [
     'Please contact us if you think this is a server error. Thank you.' => 'Sazinieties ar mums, ja jums liekas, ka šī ir servera vaina. Paldies.',
     'Please enter the new password' => 'Lūdzu ievadiet jauno paroli',
     'Please enter you e-mail address' => 'Lūdzu ievadiet savu e-pasta adresi',
+    'Please fill every field' => 'Lūdzu, aizpildiet visus lauciņus',
     'Prepaid' => 'Samaksāts uz priekšu',
     'Previous' => 'Iepriekšējais',
     'Question' => 'Jautājums',
@@ -401,5 +402,8 @@ return [
     'For students with experience' => 'Skolēniem ar pieredzi',
     'Lessons for students without experience' => 'Nodarbības skolēniem bez pieredzes',
     'Lessons for students with experience' => 'Nodarbības skolēniem ar pieredzi',
-    'Lessons to assign after registration' => 'Nodarbības, kuras skolēniem tiek piešķirtas pēc reģistrācijas'
+    'Lessons to assign after registration' => 'Nodarbības, kuras skolēniem tiek piešķirtas pēc reģistrācijas',
+    'Omniva address' => 'Omnivas pakomāta adrese',
+    'If you want to rent kokle (10 euro/month), after invoice payment we will send kokle to Omniva parcel machine of your choice (shipping 5 euro)' => 'Ja vēlies īrēt kokli (10 eur/mēnesī), tev tiks sagatavots rēķins un pēc rēķina apmaksas koklīti nosūtīsim uz tavu izvēlēto Omniva pakomātu (sūtīšanas izmaksas 5 eur). Kokles īre pieejama tikai Latvijas teritorijā.',
+    'Rent kokle' => 'Īrēt kokli',
 ];
