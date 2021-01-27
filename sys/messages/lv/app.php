@@ -26,6 +26,7 @@ return [
     'Access level' => 'Piekļuves līmenis',
     'Actions' => 'Darbības',
     'Active' => 'Aktīvs',
+    'Add' => 'Pievienot',
     'Add a new question' => 'Pievienot jautājumu',
     'Add category' => 'Pievienot kategoriju',
     'Add file' => 'Pievienot failu',
@@ -91,6 +92,7 @@ return [
     'Delete advance invoice' => 'Dzēst avansa rēķinu',
     'Delete real invoice' => 'Dzēst īsto rēķinu',
     'Deleted' => 'Dzēsts',
+    'Delivery type' => 'Piegādes veids',
     'Description' => 'Apraksts',
     'Difficulty' => 'Sarežģītība',
     'Do not bother' => 'Netraucēt',
@@ -213,6 +215,7 @@ return [
     'Pause the plan' => 'Vēlos paņemt pauzīti no jaunām nodarbībām',
     'Pause weeks' => 'Pauzes nedēļas',
     'Payment' => 'Maksājums',
+    'Payment type' => 'Sadarbības veids',
     'Phone number' => 'Telefona numurs',
     'Plan' => 'Plāns',
     'Plan end date' => 'Plāna beigu datums',
@@ -234,6 +237,7 @@ return [
     'Question text' => 'Jautājuma teksts',
     'Questions after signup' => 'Jautājumi pirms reģistrācijas',
     'Registration message' => 'Ziņa pēc reģistrācijas',
+    'Registration lessons' => 'Reģistrācijas nodarbības',
     'Registration page background image' => 'Reģistrācijas lapas fona bilde',
     'Related lesson' => 'Saistītā nodarbība',
     'Related lessons' => 'Saistītās nodarbības',
@@ -392,5 +396,10 @@ return [
     'PVN registration number' => 'PVN reģistrācijas numurs',
     'Bank' => 'Banka',
     'Account number' => 'Konta numurs',
-    'The payer\'s information will be used if at least the name and address are filled in' => 'Maksātāja informācija tiks izmantota, ja vismaz vārds/nosaukums un adrese būs aizpildīti'
+    'The payer\'s information will be used if at least the name and address are filled in' => 'Maksātāja informācija tiks izmantota, ja vismaz vārds/nosaukums un adrese būs aizpildīti',
+    'Lesson ID' => 'Nodarbības ID',
+    'For students with experience' => 'Skolēniem ar pieredzi',
+    'Lessons for students without experience' => 'Nodarbības skolēniem bez pieredzes',
+    'Lessons for students with experience' => 'Nodarbības skolēniem ar pieredzi',
+    'Lessons to assign after registration' => 'Nodarbības, kuras skolēniem tiek piešķirtas pēc reģistrācijas'
 ];

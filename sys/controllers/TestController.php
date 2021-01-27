@@ -12,6 +12,7 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LectureAssignment;
+use app\models\RegistrationLesson;
 use app\models\SectionsVisible;
 use app\models\Chat;
 use app\models\SentInvoices;
@@ -78,5 +79,9 @@ class TestController extends Controller
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
+
+        $firstLectureIds = RegistrationLesson::getLessonIds(1, true);
+
+        var_dump($firstLectureIds);
     }
 }
