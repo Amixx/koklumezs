@@ -26,6 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <li class="nav-item">
             <a class="nav-link" id="signup-questions-tab" data-toggle="tab" href="#signup-questions" role="tab" aria-controls="signup-questions" aria-selected="false"><?= \Yii::t('app', 'Questions after signup') ?></a>
         </li>
+        <li class="nav-item">
+            <?= Html::a(\Yii::t('app', 'Registration lessons'), ['/registration-lessons'], ['class' => 'nav-link']) ?>
+        </li>
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">

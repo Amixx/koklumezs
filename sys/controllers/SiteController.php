@@ -18,6 +18,7 @@ use app\models\Lecturesevaluations;
 use app\models\SignUpForm;
 use app\models\SchoolStudent;
 use app\models\School;
+use app\models\RegistrationLesson;
 use app\models\Users;
 use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
@@ -223,7 +224,7 @@ class SiteController extends Controller
                     Yii::$app->user->login($user);
 
                     $schoolTeacher = SchoolTeacher::getBySchoolId($s)["user"];
-                    $firstLectureIds = $hasExperience ? [301, 302, 303] : [703, 739, 17];
+                    $firstLectureIds = RegistrationLesson::getLessonIds($school['id'], $hasExperience);
                     $insertDate = date('Y-m-d H:i:s', time());
                     $insertColumns = [];
 
