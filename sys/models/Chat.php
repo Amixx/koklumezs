@@ -80,6 +80,26 @@ class Chat extends \yii\db\ActiveRecord {
         return (int) $data[0]["count"];
     }
 
+    public static function hasNewChats($senderId){
+        $currentUserId = Yii::$app->user->identity->id;
+        $currentUser = Users::findOne(['id' => $currentUserId]);
+
+        if($currentUser['last_opened_chat']){
+            $data = static::find()
+                ->select(['COUNT(*) as count'])
+                ->where(['>', 'update_date', $currentUser['last_opened_chat']])
+                ->andWhere(['author_id' => $senderId, 'recipient_id' => $currentUserId])
+                ->createCommand()->queryAll();
+        }else{
+            $data = static::find()
+                ->select(['COUNT(*) as count'])
+                ->andWhere(['author_id' => $senderId, 'recipient_id' => $currentUserId])
+                ->createCommand()->queryAll();
+        }
+        $count = (int) $data[0]["count"];
+        return $count > 0;
+    }
+
     public static function getUsersWithConversations($authorId, $recipientId){
         $userIdsData = static::find()
             ->select(['author_id', 'recipient_id'])
@@ -141,12 +161,15 @@ class Chat extends \yii\db\ActiveRecord {
             foreach ($usersWithConversations as $user) {
                 $isActive = $user['id'] == $recipientId;
                 $style = $isActive ? "background-color:#b0f3fc;" : "";
+                $hasNewChats = Chat::hasNewChats($user['id']);
+                if($hasNewChats)
+                   $style .= "font-weight: bold;";
                 $userList .= "
                   <li class='chat-user-item' data-userid='" . $user['id'] . "' style='" . $style . "'>
                     <span class='glyphicon glyphicon-user'></span>
                     <span>" . $user['first_name'] . " " . $user['last_name'] . "</span>
                   </li>
-            ";
+                ";
             }
         }
 
