@@ -101,4 +101,21 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         $schoolId = School::getCurrentSchoolId();
         return self::find()->joinWith('plan')->where(['school_id' => $schoolId])->asArray()->all();
     }
+
+    public function getEndDate($studentId){
+        $subplan = self::getForStudent($studentId);
+        if ($subplan == null) return null;
+        $planPauses = StudentSubplanPauses::getForStudent($subplan['user_id'])->asArray()->all();
+        $date = date_create($subplan["start_date"]);
+        $date->modify("+" . $subplan['plan']['months'] . "month");
+        foreach($planPauses as $pause){
+            $date->modify("+" . $pause['weeks'] . "week");
+        }
+        $date = date_format($date, 'Y-m-d');
+        $today = date('Y-m-d');
+        $warningDate = date('Y-m-d', strtotime($date. ' -7 days'));
+
+        if ($warningDate <= $today) return "<span style='background: red;'>".$date."</span>";
+        else return "<span>".$date."</span>";
+    }
 }

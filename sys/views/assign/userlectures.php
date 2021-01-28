@@ -135,6 +135,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <p><?= \Yii::t('app', 'User has not opened any lessons yet') ?>!</p>
     <?php } ?>
     <p><?= \Yii::t('app', 'Abilities now') ?>:<?= isset($goals[$goalsnow]) ? '<strong>' . $goalsum . '</strong>' : '<code>Not set</code>' ?></p>
+    <p><?= \Yii::t('app', 'Plan end date') ?>: <?= $endDate == null ? \Yii::t('app', 'no plan assigned to pupil') : $endDate  ?></p>
     <?php if (is_array($PossibleThreeLectures)) {
         $limit = 3;
     ?>

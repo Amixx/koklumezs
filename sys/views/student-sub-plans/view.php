@@ -4,7 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\grid\GridView;
 use yii\widgets\ActiveForm;
-use  yii\jui\DatePicker;
+use yii\jui\DatePicker;
+use app\models\StudentSubPlans;
 
 $this->title = $subplan['plan']['name'];
 \yii\web\YiiAsset::register($this);
@@ -17,6 +18,12 @@ $this->title = $subplan['plan']['name'];
         'model' => $subplan,
         'attributes' => [
             'start_date',
+            [
+                'attribute' => 'Plan end date',
+                'label' => Yii::t('app', 'Plan end date'),
+                'value' => function ($dataProvider) {return StudentSubPlans::getEndDate($dataProvider['user_id']);},
+                'format' => 'raw'
+            ],
             'sent_invoices_count',
             'plan.name',
         ],
