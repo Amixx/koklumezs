@@ -423,12 +423,12 @@ div.has-experience, div.rent-or-buy {
     background: rgb(171, 253, 160);
 }
 
-#has-instrument .select-warning {
+.select-warning-border {
     border: solid 1px #a94442;
     border-radius: 4px;
 }
 
-#has-instrument p {
+.select-warning-message {
     color: #a94442;
 }
 

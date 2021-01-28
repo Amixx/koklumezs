@@ -406,4 +406,5 @@ return [
     'Omniva address' => 'Omnivas pakomāta adrese',
     'If you want to rent kokle (10 euro/month), after invoice payment we will send kokle to Omniva parcel machine of your choice (shipping 5 euro)' => 'Ja vēlies īrēt kokli (10 eur/mēnesī), tev tiks sagatavots rēķins un pēc rēķina apmaksas koklīti nosūtīsim uz tavu izvēlēto Omniva pakomātu (sūtīšanas izmaksas 5 eur). Kokles īre pieejama tikai Latvijas teritorijā.',
     'Rent kokle' => 'Īrēt kokli',
+    'I agree to receive emails regarding information about lectures, the education process, and events' => 'Piekrītu, ka uz manu norādīto epastu tiks nosūtīta informācija par piešķirtajām nodarbībām, mācību procesu un dažādiem ar mācībām saistītiem organizētajiem pasākumiem',
 ];

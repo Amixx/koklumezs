@@ -53,7 +53,7 @@ function getFieldOptions($fieldName, $hasInfo = false){
                 ->field($model, 'last_name', getFieldOptions('last_name'))
                 ->label(false)
                 ->textInput(['placeholder' => Yii::t('app', 'Surname')]) ?>
-        </div>      
+        </div>    
 
         <!-- <?= $form
             ->field($model, 'phone_number', getFieldOptions('phone_number'))
@@ -74,8 +74,12 @@ function getFieldOptions($fieldName, $hasInfo = false){
             <?= Html::label(Yii::t('app', 'Have you played kokle before?'), 'has-experience', [ 'class' => 'signup-checkbox-label']); ?>
             <?= Html::dropDownList('has-experience', false, [false => \Yii::t('app',  'No'), true => \Yii::t('app', 'Yes')], ['style' => 'width: 64px !important', 'id'=>'has-experience']) ?>
         </div>
+        
+        <div style='margin-top: 16px;' id="signup-agree">
+            <label style="display:inline;" ><input type="checkbox" class="signup-agree" name="signup-agree" style="margin-right: 8px;"><?= \Yii::t('app','I agree to receive emails regarding information about lectures, the education process, and events') ?></label>
+        </div>  
 
-        <div class="row" style="margin-top: 32px;">
+        <div class="row" style="margin-top: 32px;"> 
             <div class="col-xs-12 col-md-4">
                 <?= Html::submitButton(\Yii::t('app',  'Sign up'), ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button', 'id' => 'registration-button']) ?>
             </div>
