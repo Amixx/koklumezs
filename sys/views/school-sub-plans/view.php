@@ -4,9 +4,6 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\grid\GridView;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Difficulties */
-
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => \Yii::t('app', 'Subscription plans'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
@@ -33,10 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'description:html',
-            'monthly_cost',
             'months',
             'max_pause_weeks',
             'message',
+            [
+                'attribute' => 'Monthly cost',
+                'label' => Yii::t('app',  'Monthly cost (with PVN)'),
+                'value' => $planTotalCost,
+            ]
         ],
     ]) ?>
     <h3><?= Yii::t('app', 'Plan files') ?></h3>
@@ -48,5 +49,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'file',
         ],
     ]); ?>
-
+    <h3><?= Yii::t('app', 'Plan parts') ?></h3>
+    <?= GridView::widget([
+        'dataProvider' => $planParts,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            'planpart.title',
+            'planpart.monthly_cost',
+        ],
+    ]); ?>
 </div>

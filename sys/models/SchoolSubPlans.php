@@ -16,8 +16,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['school_id', 'name', 'monthly_cost', 'months', 'max_pause_weeks'], 'required'],
-            [['monthly_cost'], 'double'],
+            [['school_id', 'name', 'months', 'max_pause_weeks'], 'required'],
             [['school_id', 'months', 'max_pause_weeks', 'pvn_percent'], 'number'],
             [['name', 'description', 'files', 'message'], 'string'],
         ];
@@ -31,7 +30,6 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
             'name' => \Yii::t('app',  'Title'),
             'description' => \Yii::t('app',  'Description'),
             'pvn_percent' => \Yii::t('app',  'PVN (percentage)'),
-            'monthly_cost' => \Yii::t('app',  'Monthly cost (with PVN)'),
             'months' => \Yii::t('app',  'Months (0 - unlimited)'),
             'max_pause_weeks' => \Yii::t('app',  'Pause weeks'),
             'files' => \Yii::t('app',  'Files'),

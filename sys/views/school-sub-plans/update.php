@@ -17,6 +17,9 @@ $this->params['breadcrumbs'][] = \Yii::t('app', 'Edit');
     <?= $this->render('_form', [
         'model' => $model,
         'planFiles' => $planFiles,
+        'subplanParts' => $subplanParts,
+        'newSubplanPart' => $newSubplanPart,
+        'schoolSubplanParts' => $schoolSubplanParts,
     ]) ?>
 
 </div>

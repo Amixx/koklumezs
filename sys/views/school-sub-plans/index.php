@@ -15,7 +15,10 @@ $this->params['breadcrumbs'][] = $this->title;
         <li class="nav-item active">
             <a class="nav-link active" id="plans-tab" data-toggle="tab" href="#plans" role="tab" aria-controls="plans" aria-selected="true"><?= \Yii::t('app', 'School subscription plans') ?></a>
         </li>
-         <li class="nav-item">
+        <li class="nav-item">
+            <?= Html::a(\Yii::t('app', 'Plan parts'), ['plan-parts/index'], ['class' => 'nav-link']) ?>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" id="pauses-tab" data-toggle="tab" href="#pauses" role="tab" aria-controls="pauses" aria-selected="false"><?= \Yii::t('app', 'Plan pauses') ?></a>
         </li>
     </ul>

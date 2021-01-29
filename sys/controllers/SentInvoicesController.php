@@ -7,6 +7,7 @@ use app\models\Users;
 use app\models\SentInvoices;
 use app\models\SentInvoicesSearch;
 use app\models\StudentSubPlans;
+use app\models\SchoolSubplanParts;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\data\ActiveDataProvider;
@@ -147,7 +148,7 @@ class SentInvoicesController extends Controller
             $invoice->invoice_number = $number;
             $invoice->is_advance = false;
             $invoice->plan_name = $subplan['name'];
-            $invoice->plan_price = $subplan['monthly_cost'];
+            $invoice->plan_price = SchoolSubplanParts::getPlanTotalCost($subplan['id']);
             $invoice->plan_start_date = $plan['start_date'];
             $invoice->sent_date = $post['SentInvoices']['paid_date'];
             $invoice->save();
@@ -228,7 +229,7 @@ class SentInvoicesController extends Controller
             $invoice->invoice_number = $number;
             $invoice->is_advance = false;
             $invoice->plan_name = $subplan['name'];
-            $invoice->plan_price = $subplan['monthly_cost'];
+            $invoice->plan_price = SchoolSubplanParts::getPlanTotalCost($subplan['id']);
             $invoice->plan_start_date = $plan['start_date'];
             $invoice->sent_date = $date;
             $invoice->save();

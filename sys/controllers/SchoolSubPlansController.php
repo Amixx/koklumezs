@@ -8,7 +8,8 @@ use app\models\Evaluations;
 use app\models\LectureAssignment;
 use app\models\Lectures;
 use app\models\PlanFiles;
-use app\models\SchoolTeacher;
+use app\models\SchoolSubplanParts;
+use app\models\PlanParts;
 use app\models\LecturesDifficulties;
 use app\models\Lecturesevaluations;
 use app\models\Lecturesfiles;
@@ -93,10 +94,16 @@ class SchoolSubPlansController extends Controller
         $planFiles = new ActiveDataProvider([
             'query' => PlanFiles::getFilesForPlan($model->id),
         ]);
+        $planParts = new ActiveDataProvider([
+            'query' => SchoolSubplanParts::getForSchoolSubplan($model->id),
+        ]);
+        $planTotalCost = SchoolSubplanParts::getPlanTotalCost($model->id);
 
         return $this->render('view', [
             'model' => $model,
             'planFiles' => $planFiles,
+            'planParts' => $planParts,
+            'planTotalCost' => $planTotalCost,
         ]);
     }
 
@@ -138,9 +145,18 @@ class SchoolSubPlansController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
+        $model = $this->findModel($id);
+        $schoolId = School::getCurrentSchoolId();
+        $planFiles = new ActiveDataProvider([
+            'query' => PlanFiles::getFilesForPlan($model->id),
+        ]);
+        $subplanParts = new ActiveDataProvider([
+            'query' => SchoolSubplanParts::getForSchoolSubplan($model->id),
+        ]);
+        $schoolSubplanParts = PlanParts::getForSchool($schoolId);
+        $newSubplanPart = new SchoolSubplanParts;
         $post = Yii::$app->request->post();
 
-        $model = $this->findModel($id);
         $saved = $model->load($post) && $model->save();
         if(isset($post["file-title"]) && isset($post["file"])){
             $planFile = new PlanFiles();
@@ -149,16 +165,25 @@ class SchoolSubPlansController extends Controller
             $planFile->file = $post["file"];
             $planFile->save();
         }
+        if($post && isset($post['SchoolSubplanParts']) && isset($post['SchoolSubplanParts']['planpart_id']) && $post['SchoolSubplanParts']['planpart_id']){
+            $newSubplanPart->schoolsubplan_id = $model->id;
+            $newSubplanPart->planpart_id = (int) $post['SchoolSubplanParts']['planpart_id'];
+
+            if($newSubplanPart->save()){
+                Yii::$app->session->setFlash('success', 'Plāna daļa pievienta!');
+                $newSubplanPart = new SchoolSubplanParts;
+            }             
+        }
 
         if($saved) return $this->redirect(['view', 'id' => $model->id]);
 
-        $planFiles = new ActiveDataProvider([
-            'query' => PlanFiles::getFilesForPlan($model->id),
-        ]);
-
+        
         return $this->render('update', [
             'model' => $model,
             'planFiles' => $planFiles,
+            'subplanParts' => $subplanParts,
+            'newSubplanPart' => $newSubplanPart,
+            'schoolSubplanParts' => $schoolSubplanParts,
         ]);
     }
 

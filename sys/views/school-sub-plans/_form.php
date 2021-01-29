@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use mihaildev\elfinder\InputFile;
 use mihaildev\ckeditor\CKEditor;
@@ -24,6 +25,11 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
         <li class="nav-item active">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><?= \Yii::t('app', 'Plan') ?></a>
         </li>
+        <?php if($model->id) { ?>
+            <li class="nav-item">
+                <a class="nav-link" id="parts-tab" data-toggle="tab" href="#parts" role="tab" aria-controls="parts" aria-selected="false"><?= \Yii::t('app', 'Add plan parts') ?></a>
+            </li>
+        <?php } ?>
         <li class="nav-item">
             <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false"><?= \Yii::t('app', 'Plan files') ?></a>
         </li>
@@ -85,6 +91,39 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                     'multiple' => false, // возможность выбора нескольких файлов
                 ]); ?>
             </label>
+        </div>
+        <div class="tab-pane fade active in" id="parts" role="tabpanel" aria-labelledby="parts-tab">
+            <?php if(isset($subplanParts) && $subplanParts) {
+                echo GridView::widget([
+                    'dataProvider' => $subplanParts,
+                    'columns' => [
+                        ['class' => 'yii\grid\SerialColumn'],
+                        'planpart.title',
+                        'planpart.monthly_cost',
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{delete}',
+                            'buttons' => [
+                                'delete' => function ($url, $model) {
+                                    return Html::a(
+                                        '<span class="glyphicon glyphicon-trash"> </span>',
+                                        $url,
+                                        ['title' => 'Delete', 'data-method' => 'post']
+                                    );
+                                },
+                            ],
+                            'urlCreator' => function ($action, $model) {
+                                if ($action === 'delete') {
+                                    return Url::to(['school-subplan-parts/delete', 'id' => $model["id"]]);
+                                }
+                            }
+                        ],
+                    ],
+                ]);
+            } ?>
+            <?php if(isset($newSubplanPart) && isset($schoolSubplanParts)) {?>
+                <?= $form->field($newSubplanPart, 'planpart_id')->dropDownList($schoolSubplanParts, ['prompt' => ''])->label(Yii::t('app', 'Plan part')) ?>
+            <?php } ?>
         </div>
         <div class="form-group">
             <?= Html::submitButton(\Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>

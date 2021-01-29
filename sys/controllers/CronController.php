@@ -13,6 +13,7 @@ use app\models\StudentSubPlans;
 use app\models\School;
 use app\models\SchoolTeacher;
 use app\models\SchoolSubPlans;
+use app\models\SchoolSubplanParts;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -309,6 +310,8 @@ class CronController extends Controller
                     $school = School::getByStudent($user['id']);
                     $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
                     $teacherId = $schoolTeacher['user_id'];
+                    $subplanParts = SchoolSubplanParts::getForSchoolSubplan($subplan['id']);
+                    $subplanCost = SchoolSubplanParts::getPlanTotalCost($subplan['id']);
 
                     if(!$planEnded || $planUnlimited){
                         if(!$hasPaidInAdvance){
@@ -326,6 +329,8 @@ class CronController extends Controller
                                 'fullName' => $userFullName,
                                 'email' => $user['email'],
                                 'subplan' => $subplan,
+                                'subplanCost' => $subplanCost,
+                                'subplanParts' => $subplanParts,
                                 'payer' => $user['payer'],
                             ]);
 
@@ -365,7 +370,7 @@ class CronController extends Controller
                                 $invoice->invoice_number = $id;
                                 $invoice->is_advance = true;
                                 $invoice->plan_name = $subplan['name'];
-                                $invoice->plan_price = $subplan['monthly_cost'];
+                                $invoice->plan_price = SchoolSubplanParts::getPlanTotalCost($subplan['id']);
                                 $invoice->plan_start_date = $studentSubplan['start_date'];
                                 $invoice->save();
                             }else{
