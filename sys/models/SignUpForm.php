@@ -23,10 +23,11 @@ class SignUpForm extends Model
     public function rules()
     {
         return [ 
-            [['email', 'password', 'first_name', 'last_name', 'language','agree' , 'hasKokle'], 'required'],
+            [['email', 'password', 'first_name', 'last_name', 'language','agree'], 'required'],
             [['rememberMe', 'agree'], 'boolean'],
             ['password', 'validatePassword'],
             ['phone_number', 'validatePhoneNumber'],
+            ['agree', 'validateAgree'],
             ['email', 'email'],
         ];
     }
@@ -45,6 +46,15 @@ class SignUpForm extends Model
         if (!$this->hasErrors()) {
             if($this->phone_number[0] !== '+' && strlen($this->phone_number) !== 8){
                 $this->addError($attribute, Yii::t('app', 'Invalid phone number.'));
+            }
+        }
+    }
+
+    public function validateAgree($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            if($this->agree  != true){
+                $this->addError($attribute, Yii::t('app', 'Please confirm.'));
             }
         }
     }
@@ -84,6 +94,7 @@ class SignUpForm extends Model
             $user->phone_number = $this->phone_number;
             $user->email = $this->email;
             $user->language = $this->language;
+            $user->agree = $this->agree;
 
             $user->status = Users::STATUS_ACTIVE;
 
