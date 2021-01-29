@@ -15,14 +15,16 @@ class SignUpForm extends Model
     public $email;
     public $language;
     public $rememberMe = true;
+    public $hasKokle;
+    public $agree;
 
     public $schoolId;
 
     public function rules()
     {
-        return [
-            [['email', 'password', 'first_name', 'last_name', 'language'], 'required'],
-            ['rememberMe', 'boolean'],
+        return [ 
+            [['email', 'password', 'first_name', 'last_name', 'language','agree' , 'hasKokle'], 'required'],
+            [['rememberMe', 'agree'], 'boolean'],
             ['password', 'validatePassword'],
             ['phone_number', 'validatePhoneNumber'],
             ['email', 'email'],

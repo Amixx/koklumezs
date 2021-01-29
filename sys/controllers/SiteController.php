@@ -205,7 +205,7 @@ class SiteController extends Controller
         $school = School::findOne($s);
 
         $model = new SignUpForm();
-        if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $model['language'] = $l;
             $userId = $model->signUp();
             $hasOwnInstrument = Yii::$app->request->post() && Yii::$app->request->post()['has-own-instrument'];

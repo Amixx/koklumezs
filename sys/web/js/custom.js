@@ -56,36 +56,19 @@ $(document).ready(function() {
     $('#registration-button').on('click', function(event){
         let select = $("select[name='has-own-instrument']").val();
 
-        if ((select === '') || (!$('input.signup-agree').is(':checked'))) {
+        if ((select === '') && (!$("span.select2").hasClass('select-warning-border'))){
             event.preventDefault();
-
-            if ((select === '') && (!$("span.select2").hasClass('select-warning-border'))){
-                $("span.select2").addClass("select-warning-border");
-                let errorMessage = document.createElement("p");
-                let text = document.createTextNode("Lūdzu, izvēlieties vienu no variantiem");
-                errorMessage.classList.add('select-warning-message');
-                errorMessage.appendChild(text);
-                document.getElementById('has-instrument').appendChild(errorMessage);
-            }
-
-            if (!$('input.signup-agree').is(':checked') && (!$("#signup-agree p").hasClass('select-warning-message'))) {
-                let errorMessage = document.createElement("p");
-                let text = document.createTextNode("Lūdzu, atzīmējiet rūtiņu");
-                errorMessage.classList.add('select-warning-message');
-                errorMessage.appendChild(text);
-                document.getElementById('signup-agree').appendChild(errorMessage);
-            }
-
+            $("span.select2").addClass("select-warning-border");
+            let errorMessage = document.createElement("p");
+            let text = document.createTextNode("Lūdzu, izvēlieties vienu no variantiem");
+            errorMessage.classList.add('select-warning-message');
+            errorMessage.appendChild(text);
+            document.getElementById('has-instrument').appendChild(errorMessage);
         }
 
         if ((select !== '') && ($("span.select2").hasClass('select-warning-border'))) {
             $("span.select2").removeClass("select-warning-border");
             let checkbox = document.getElementById('has-instrument');
-            checkbox.removeChild(checkbox.lastChild);
-        }
-
-        if ($('input.signup-agree').is(':checked') && ($("#signup-agree p").hasClass('select-warning-message'))) {
-            let checkbox = document.getElementById('signup-agree');
             checkbox.removeChild(checkbox.lastChild);
         }
         
