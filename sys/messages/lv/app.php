@@ -358,7 +358,7 @@ return [
     'no plan assigned to pupil' => 'skolēnam nav piešķirts plāns',
     'Aggree' => 'Piekrīt',
     'First name' => 'Vārds',
-    'If you wish to rent kokle (10 euro/month), after invoice payment we will send kokle to Omniva parcel machine of your choice (shipping 5 euro)' => '',
+    'If you wish to rent kokle (10 euro/month), after invoice payment we will send kokle to Omniva parcel machine of your choice (shipping 5 euro)' => 'Ja vēlies īrēt kokli (10 eur/mēnesī), tev tiks sagatavots rēķins un pēc rēķina apmaksas koklīti nosūtīsim uz tavu izvēlēto Omniva pakomātu (sūtīšanas izmaksas 5eur)',
     'Last name' => 'Uzvārds',
     'Owns instrument' => 'Ir savs instruments',
     'Please choose.' => 'Lūdzu izvēlieties.',
