@@ -55,28 +55,30 @@ function getFieldOptions($fieldName, $hasInfo = false){
                 ->textInput(['placeholder' => Yii::t('app', 'Surname')]) ?>
         </div>    
 
-        <!-- <?= $form
-            ->field($model, 'phone_number', getFieldOptions('phone_number'))
-            ->label(false)
-            ->textInput([
-                'placeholder' => Yii::t('app', 'Phone number')
-            ]) ?> -->
-
-        <!-- <?= $form
-            ->field($model, 'language')
-            ->label(false)
-            ->dropDownList(['lv' => \Yii::t('app',  'Latvian'), 'eng' => \Yii::t('app',  'English')], ['prompt' => '- - '.Yii::t('app', 'language').' - -', 'options'=>[$defaultLanguage => ["Selected" => true]]]) ?> -->
         <div id="has-instrument">
-            <?= Html::label(Yii::t('app', 'Do you have your own kokle?'), 'has-own-instrument', [ 'class' => 'signup-checkbox-label']);?>
-            <?= Html::dropDownList('has-own-instrument', null, [false => \Yii::t('app',  'No'), true => \Yii::t('app', 'Yes')], ['prompt' => '', 'style' => 'width: 64px !important']) ?>      
+            <?= $form->field(
+                $model, 
+                'ownsInstrument', 
+                ['labelOptions' => ['class' => 'signup-checkbox-label']]
+            )->dropDownList(
+                [false => \Yii::t('app',  'No'), true => \Yii::t('app', 'Yes')],
+                ['prompt' => '', 'class' => 'small-dropdown']
+            )->label(Yii::t('app', 'Do you have your own kokle?')) ?>
         </div>
         <div class="has-experience">
-            <?= Html::label(Yii::t('app', 'Have you played kokle before?'), 'has-experience', [ 'class' => 'signup-checkbox-label']); ?>
-            <?= Html::dropDownList('has-experience', false, [false => \Yii::t('app',  'No'), true => \Yii::t('app', 'Yes')], ['style' => 'width: 64px !important', 'id'=>'has-experience']) ?>
+            <?= $form->field(
+                $model, 
+                'hasExperience', 
+                ['labelOptions' => ['class' => 'signup-checkbox-label']]
+            )->dropDownList(
+                [false => \Yii::t('app',  'No'), true => \Yii::t('app', 'Yes')],
+                ['prompt' => '', 'class' => 'small-dropdown']
+            )->label(Yii::t('app', 'Have you played kokle before?')) ?>
         </div>
         
-        <div style='margin-top: 16px;' id="signup-agree">
-            <label style="display:inline;" ><input type="checkbox" class="signup-agree" name="signup-agree" style="margin-right: 8px;"><?= \Yii::t('app','I agree to receive emails regarding information about lectures, the education process, and events') ?></label>
+        <div style='margin-top: 16px;'>
+        <?= $form->field($model, 'agree')->checkBox()
+            ->label(\Yii::t('app','I agree to receive emails regarding information about lectures, the education process, and events')); ?>
         </div>  
 
         <div class="row" style="margin-top: 32px;"> 
