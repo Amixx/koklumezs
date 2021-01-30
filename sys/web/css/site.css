@@ -628,3 +628,11 @@ div.has-experience.active, div.rent-or-buy.active {
 .signup-checkbox-label {
     font-size: 18px;
 }
+
+.small-dropdown {
+    width: 64px !important;
+}
+
+.small-dropdown + span .select2-selection {
+    min-width: unset !important;
+}
