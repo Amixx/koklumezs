@@ -415,7 +415,7 @@ background: rgba(0,0,0,0.1);
     font-size: 16px;
 }
 
-div.has-experience, div.rent-or-buy {
+div.has-experience, div.rent {
     transition: opacity 1s ease-out, background-color 2s ease-in;
     opacity: 0;
     height: 0;
@@ -432,7 +432,7 @@ div.has-experience, div.rent-or-buy {
     color: #a94442;
 }
 
-div.has-experience.active, div.rent-or-buy.active {
+div.has-experience.active, div.rent.active {
     margin-top: 12px;
     opacity: 1;
     height: auto;

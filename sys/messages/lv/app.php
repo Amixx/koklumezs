@@ -376,7 +376,6 @@ return [
     'Chords' => 'Akordi',
     'Difficulties' => 'Sarežģītības',
     'Discount (percentage)' => 'Atlaide (procentos)',
-    'Do you want to buy or rent a kokle?' => 'Vēlies kokli pirkt vai īrēt?',
     'Doable' => 'Nācās pastrādāt, bet tiku galā bez milzīgas piepūles',
     'Easy' => 'Izspēlēju vienu reizi un jau viss skaidrs',
     'Goal' => 'Mērķis',

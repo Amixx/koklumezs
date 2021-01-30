@@ -4,9 +4,8 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
-use yii\validators\EmailValidator;
 
-class RentOrBuyForm extends Model
+class RentForm extends Model
 {
     public $fullname;
     public $email;
