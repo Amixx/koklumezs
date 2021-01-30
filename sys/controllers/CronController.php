@@ -350,7 +350,7 @@ class CronController extends Controller
                                 ->compose(
                                     ['html' => 'rekins-html', 'text' => 'rekins-text'],
                                     ['message' => $message])
-                                ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+                                ->setFrom([$school['email'] => Yii::$app->name])
                                 ->setTo($user['email'])
                                 ->setSubject("Avansa rēķins $id - " . Yii::$app->name)
                                 ->attach($invoicePath)
@@ -377,8 +377,8 @@ class CronController extends Controller
                                     ], [
                                         'email' => $user['email'],
                                     ])
-                                    ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
-                                    ->setTo(Yii::$app->params['senderEmail'])
+                                    ->setFrom([$school['email'] => Yii::$app->name])
+                                    ->setTo($school['email'])
                                     ->setSubject("Skolēnam nenosūtījās rēķins!")
                                     ->send();
                             }
@@ -393,12 +393,14 @@ class CronController extends Controller
     }
 
     public function actionRemindToPay($userId){    
-        $user = Users::findOne($userId);   
+        $user = Users::findOne($userId);  
+        $school = School::getByStudent($userId); 
+        
         if($user){
             $sent = Yii::$app
                 ->mailer
                 ->compose(['html' => 'reminder-to-pay-html', 'text' => 'reminder-to-pay-text'])
-                ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+                ->setFrom([$school['email'] => Yii::$app->name])
                 ->setTo($user['email'])
                 ->setSubject("Atgādinājums par rēķina apmaksu")
                 ->send();
