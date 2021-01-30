@@ -36,7 +36,15 @@ class SchoolSubplanParts extends \yii\db\ActiveRecord
         return self::find()->where(['schoolsubplan_id' => $schoolSubplanId])->joinWith('planpart');
     }
 
-    public function getPlanTotalCost($schoolSubplanId){
+    public static function getPartsForSubplan($schoolSubplanId){
+        $data = self::getForSchoolSubplan($schoolSubplanId)->asArray()->all();
+
+        return array_map(function($d){
+            return $d['planpart'];
+        }, $data);
+    }
+
+    public static function getPlanTotalCost($schoolSubplanId){
         $plans = self::getForSchoolSubplan($schoolSubplanId)->asArray()->all();
         $totalCost = 0;
 

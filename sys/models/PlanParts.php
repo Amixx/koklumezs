@@ -31,7 +31,23 @@ class PlanParts extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getForSchool($schoolId)
+    public static function getPriceWithoutPvn($monthlyCost, $pvnPercent, $months = 1){
+        $totalCost = $monthlyCost*$months;
+        $divider = 1 + ($pvnPercent/100);
+        return number_format($totalCost / $divider, 2);
+    }
+
+    public static function getPvnAmount($monthlyCost, $pvnPercent, $months = 1){
+        $totalCost = $monthlyCost*$months;
+        return number_format($totalCost - self::getPriceWithoutPvn($totalCost, $pvnPercent), 2);
+    }
+
+    public static function getPayAmount($monthlyCost, $months = 1){
+        $totalCost = $monthlyCost*$months;
+        return number_format($totalCost, 2);
+    }
+
+    public static function getForSchool($schoolId)
     {
         return ArrayHelper::map(self::find()->where(['school_id' => $schoolId])->asArray()->all(), 'id', 'title');
     }

@@ -137,7 +137,7 @@ class Users extends ActiveRecord implements IdentityInterface
     }
 
     public static function getAllStudents(){
-        $users = self::find()->where(['user_level' => self::ROLE_USER])->joinWith("payer")->asArray()->all();
+        $users = self::find()->where(['user_level' => self::ROLE_USER, 'users.id' => 478])->joinWith("payer")->asArray()->all();
         $result = [];
         foreach ($users as $u) {
             if ($u['dont_bother'] != null) {

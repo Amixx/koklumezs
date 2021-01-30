@@ -1,13 +1,16 @@
 <?php
 
+use app\models\PlanParts;
+
 $dateToday = Date("d.m.Y.");
 $payDate = date_create($dateToday);
 date_add($payDate, date_interval_create_from_date_string("14 days"));
 $payDateString = date_format($payDate, "d.m.Y.");
 
-$priceWithoutPvn = number_format($subplan['monthly_cost'] / 1.21, 2);
-$pvnAmount = number_format($subplan['monthly_cost'] - $priceWithoutPvn, 2);
-$payAmount = number_format($subplan['monthly_cost'], 2);
+$divider = 1 + ($subplan['pvn_percent']/100);
+$priceWithoutPvn = number_format($subplanCost / $divider, 2);
+$pvnAmount = number_format($subplanCost - $priceWithoutPvn, 2);
+$payAmount = number_format($subplanCost, 2);
 
 $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
 
@@ -181,12 +184,14 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                     <th>PVN (<?= $subplan["pvn_percent"] ?>%)</th>
                     <th>Summa (Eur)</th>
                 </tr>
-                <tr>
-                    <td><?= $subplan['name'] ?></td>
-                    <td><?= $priceWithoutPvn ?></td>
-                    <td><?= $pvnAmount ?></td>
-                    <td><?= $payAmount ?></td>
-                </tr>
+                <?php foreach($subplanParts as $part) { ?>
+                    <tr>
+                        <td><?= $part['title'] ?></td>
+                        <td><?= PlanParts::getPriceWithoutPvn($part['monthly_cost'], $subplan['pvn_percent']) ?></td>
+                        <td><?= PlanParts::getPvnAmount($part['monthly_cost'], $subplan['pvn_percent']) ?></td>
+                        <td><?= PlanParts::getPayAmount($part['monthly_cost']) ?></td>
+                    </tr>
+                <?php } ?>
             </table>
             <div class="lh-2 align-right">
                 <div class="font-s">Summa bez PVN (Eur) <?= $priceWithoutPvn ?></div>

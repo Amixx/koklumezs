@@ -119,12 +119,16 @@ class SentInvoicesController extends Controller
             $invoicePath = $invoiceBasePath.$title;
 
             $userFullName = $model['student']['first_name'] . " " . $model['student']['last_name'];
+            $subplanParts = SchoolSubplanParts::getPartsForSubplan($subplan['id']);
+            $subplanCost = SchoolSubplanParts::getPlanTotalCost($subplan['id']);
 
             $content = $this->renderPartial('realInvoiceTemplate', [
                 'number' => $number,
                 'fullName' => $userFullName,
                 'email' => $model['student']['email'],
                 'subplan' => $subplan,
+                'subplanParts' => $subplanParts,
+                'subplanCost' => $subplanCost,
                 'datePaid' => $post['SentInvoices']['paid_date'],
                 'months' => 1,
                 'payer' => $model['student']['payer'],
@@ -200,12 +204,16 @@ class SentInvoicesController extends Controller
             $invoicePath = $invoiceBasePath.$title;
 
             $userFullName = $user['first_name'] . " " . $user['last_name'];
+            $subplanParts = SchoolSubplanParts::getPartsForSubplan($subplan['id']);
+            $subplanCost = SchoolSubplanParts::getPlanTotalCost($subplan['id']);
 
             $content = $this->renderPartial('realInvoiceTemplate', [
                 'number' => $number,
                 'fullName' => $userFullName,
                 'email' => $user['email'],
                 'subplan' => $subplan,
+                'subplanParts' => $subplanParts,
+                'subplanCost' => $subplanCost,
                 'datePaid' => $date,
                 'months' => $months, 
                 'payer' => $user['payer'],

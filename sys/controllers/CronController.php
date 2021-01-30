@@ -300,7 +300,6 @@ class CronController extends Controller
 
                 $today_split = explode(".", $today);
                 $match_date_split = explode(".", $match_date);
-
                 if ($today_split[0] === $match_date_split[0]) {
                     $userFullName = $user['first_name'] . " " . $user['last_name'];
                     $subplan = $studentSubplan["plan"];
@@ -310,7 +309,7 @@ class CronController extends Controller
                     $school = School::getByStudent($user['id']);
                     $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
                     $teacherId = $schoolTeacher['user_id'];
-                    $subplanParts = SchoolSubplanParts::getForSchoolSubplan($subplan['id']);
+                    $subplanParts = SchoolSubplanParts::getPartsForSubplan($subplan['id']);
                     $subplanCost = SchoolSubplanParts::getPlanTotalCost($subplan['id']);
 
                     if(!$planEnded || $planUnlimited){
