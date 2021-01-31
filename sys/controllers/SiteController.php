@@ -5,13 +5,11 @@ namespace app\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\RentOrBuyForm;
+use app\models\RentForm;
 use app\models\Lectures;
 use app\models\SchoolTeacher;
-use app\models\UserLectures;
 use app\models\SignupQuestions;
 use app\models\Evaluations;
 use app\models\Lecturesevaluations;
@@ -259,7 +257,7 @@ class SiteController extends Controller
                     }
 
                     if(!$model->ownsInstrument){
-                        $this->redirect(["rent-or-buy", 'u' => $user['id'], 'l' => $l]);
+                        $this->redirect(["rent", 'u' => $user['id'], 'l' => $l]);
                     } else if($model->hasExperience) {
                         $this->redirect(["signup-questions", 'u' => $user['id'], 'l' => $l, 's' => $s]);
                     }else {
@@ -277,12 +275,12 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionRentOrBuy($u, $l) {
+    public function actionRent($u, $l) {
         Yii::$app->language = $l;
         $school = School::getByStudent($u);
 
         $user = Users::findOne($u);
-        $model = new RentOrBuyForm;
+        $model = new RentForm;
         $model->fullname = $user['first_name'] . " " . $user['last_name'];
         $model->email = $user['email'];
         
@@ -302,7 +300,7 @@ class SiteController extends Controller
             }
         }
 
-        return $this->render('rent-or-buy', [
+        return $this->render('rent', [
             'model' => $model,
         ]);
     }

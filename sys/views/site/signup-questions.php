@@ -8,8 +8,8 @@ $this->title = \Yii::t('app',  'A few questions before you begin');
 ?>
 
 <div class="login-box">
-    <div class="rent-or-buy-form row">
-        <?php $form = ActiveForm::begin(['id' => 'rent-or-buy-form', 'enableClientValidation' => false]); ?>
+    <div class="rent-form row">
+        <?php $form = ActiveForm::begin(['id' => 'rent-form', 'enableClientValidation' => false]); ?>
 
         <?php foreach($questions as $q) { ?>
             <div class="col-12">

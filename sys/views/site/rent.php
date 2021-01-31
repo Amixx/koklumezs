@@ -8,7 +8,7 @@ $this->title = \Yii::t('app',  'Your first kokle');
 ?>
 
 <div class="login-box">
-    <div class="rent-or-buy-form row">
+    <div class="rent-form row">
 
         <div class="container">
             <h2><?= Yii::t('app','Rent kokle') ?></h2>
@@ -16,7 +16,7 @@ $this->title = \Yii::t('app',  'Your first kokle');
             <p style="color:red"> <?=Yii::t('app', 'Please fill every field')?> </p>
         </div>    
 
-        <?php $form = ActiveForm::begin(['id' => 'rent-or-buy-form', 'enableClientValidation' => false]); ?>
+        <?php $form = ActiveForm::begin(['id' => 'rent-form', 'enableClientValidation' => false]); ?>
         <div class="form-group col-sm-6">
             <?= $form
                 ->field($model, 'fullname')
