@@ -27,6 +27,7 @@ class SignUpForm extends Model
             ['password', 'validatePassword'],
             ['agree', 'validateAgree'],
             ['email', 'email'],
+            ['email', 'checkIfUserExists'],
         ];
     }
 
@@ -57,6 +58,14 @@ class SignUpForm extends Model
                 $this->addError($attribute, Yii::t('app', 'Please confirm.'));
             }
         }       
+    }
+
+    public function checkIfUserExists($attribute, $params){
+        if (!$this->hasErrors()) {
+            if(Users::doesUserExist($this->first_name, $this->last_name, $this->email)){
+                $this->addError($attribute, Yii::t('app', 'A profile has already been registered using this e-mail! Have you forgotten your password?'));
+            }
+        }
     }
 
     public function signUp()

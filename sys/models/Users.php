@@ -349,6 +349,16 @@ class Users extends ActiveRecord implements IdentityInterface
         return Yii::$app->getSecurity()->validatePassword($password, $this->password);
     }
 
+    public static function doesUserExist($firstName, $lastName, $email){
+        $data = self::find()->where([
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'email' => $email
+        ])->one();
+
+        return $data !== null;
+    }
+
     /**
      * Finds user by password reset token
      *

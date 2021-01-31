@@ -299,7 +299,7 @@ class SiteController extends Controller
                 ->setSubject("Par kokles iegādāšanos - " . $model['fullname'])
                 ->send();
             if($sent){
-                Yii::$app->session->setFlash('success', 'Paldies par tavu pieteikumu! Tuvākajā laikā sazināsimies ar tevi uz tavu norādīto epastu. ');
+                Yii::$app->session->setFlash('success', 'Paldies par tavu pieteikumu! Tuvākajā laikā sazināsimies ar tevi uz tavu norādīto epastu. Tikmēr vari noskatīties video par to, kā darboties platformā!');
                 return $this->redirect(['lekcijas/index']);
             }
         }

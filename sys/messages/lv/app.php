@@ -424,4 +424,5 @@ return [
     'Registration title' => 'Reģistrācijas virsraksts',
     'Do you have your own instrument' => 'Vai tev jau ir savs instruments',
     'Create a plan part' => 'Izveidot plāna daļu',
+    'A profile has already been registered using this e-mail! Have you forgotten your password?' => 'Profils ar šādu e-pastu jau ir reģistrēts! Vai aizmirsi paroli?'
 ];
