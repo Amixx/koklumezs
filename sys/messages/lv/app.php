@@ -97,7 +97,8 @@ return [
     'Description' => 'Apraksts',
     'Difficulty' => 'Sarežģītība',
     'Do not bother' => 'Netraucēt',
-    'Do you have your own kokle?' => 'Vai tev jaur ir sava kokle?',
+    'Do you have your own' => 'Vai tev jau ir',
+    'Have you played this instrument before?' => 'Vai tu jau esi kādreiz spēlējis šo instrumentu?',
     'Do you really want to delete this entry?' => 'Vai tiešām vēlies dzēst šo ierakstu?',
     'Do you really want to delete this file?' => 'Vai tiešām vēlies dzēst šo failu?',
     'Download lesson video file' => 'Lejupielādēt nodarbības video failu',
@@ -140,7 +141,6 @@ return [
     'Global files' => 'Globāli faili',
     'Hand' => 'Roka',
     'Hand categories' => 'Roku kategorijas',
-    'Have you played kokle before?' => 'Vai jau esi kādreiz spēlējis kokli?',
     'I agree to receive emails regarding information about lectures, the education process, and events' => 'Piekrītu, ka uz manu norādīto epastu tiks nosūtīta informācija par piešķirtajām nodarbībām, mācību procesu un dažādiem ar mācībām saistītiem organizētajiem pasākumiem',
     'I will start the pause by this date:' => 'Sākšu pauzīti ar šo datumu:',
     'If you need to add more files, go to section "Files"' => 'Ja nepiecišams pievienot vēl failus, ej uz sekciju "Faili"',
@@ -421,4 +421,5 @@ return [
     'language' => 'valoda',
     'stars' => 'zvaigznes',
     'text' => 'teksts',
+    'Registration title' => 'Reģistrācijas virsraksts',
 ];
