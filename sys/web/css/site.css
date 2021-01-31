@@ -415,7 +415,7 @@ background: rgba(0,0,0,0.1);
     font-size: 16px;
 }
 
-div.has-experience, div.rent-or-buy {
+div.has-experience, div.rent {
     transition: opacity 1s ease-out, background-color 2s ease-in;
     opacity: 0;
     height: 0;
@@ -423,16 +423,16 @@ div.has-experience, div.rent-or-buy {
     background: rgb(171, 253, 160);
 }
 
-#has-instrument .select-warning {
+.select-warning-border {
     border: solid 1px #a94442;
     border-radius: 4px;
 }
 
-#has-instrument p {
+.select-warning-message {
     color: #a94442;
 }
 
-div.has-experience.active, div.rent-or-buy.active {
+div.has-experience.active, div.rent.active {
     margin-top: 12px;
     opacity: 1;
     height: auto;
@@ -627,4 +627,12 @@ div.has-experience.active, div.rent-or-buy.active {
 /******************** END OF SPINNER *************/
 .signup-checkbox-label {
     font-size: 18px;
+}
+
+.small-dropdown {
+    width: 64px !important;
+}
+
+.small-dropdown + span .select2-selection {
+    min-width: unset !important;
 }

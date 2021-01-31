@@ -51,12 +51,14 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                         44103120159
                     </td>
                 </tr>
-                <td class="leftcol">
-                    PVN reģistrācijas Nr.:
-                </td>
-                <td>
-                    LV44103120159
-                </td>
+                <tr>
+                    <td class="leftcol">
+                        PVN reģistrācijas Nr.:
+                    </td>
+                    <td>
+                        LV44103120159
+                    </td>
+                </tr>               
                 <tr>
                     <td class="leftcol">
                         Juridiskā adrese:

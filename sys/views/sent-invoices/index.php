@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'attribute' => 'invoice_number',
                     'value' => function($dataProvider){    
                         $number = $dataProvider['invoice_number'];
-                        return "<a target='_blank' href='/sys/sent-invoices/update?number=$number'>$number</a>";
+                        return "<a target='_blank' href='/sys/sent-invoices/update?invoiceNumber=$number'>$number</a>";
                     },
                     'format' => 'raw',
                 ],

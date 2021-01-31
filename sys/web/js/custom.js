@@ -40,7 +40,7 @@ $(document).ready(function() {
 
     setupAssignUserListFilters();
 
-    $("select[name='has-own-instrument']").on('change', function(){  
+    $("select[name='SignUpForm[ownsInstrument]']").on('change', function(){  
         if ($("span.select2").hasClass('select-warning')) {
             $("span.select2").removeClass("select-warning");
             let div = document.getElementById('has-instrument');
@@ -53,17 +53,26 @@ $(document).ready(function() {
         }
     });
 
-    $('#registration-button').on('click', function(event){
-        let select = $("select[name='has-own-instrument']").val();
-        if ((select === '') && (!$("span.select2").hasClass('select-warning'))){
-            event.preventDefault();
-            $("span.select2").addClass("select-warning");
-            let errorMessage = document.createElement("p");
-            let text = document.createTextNode("Lūdzu, izvēlieties vienu no variantiem");
-            errorMessage.appendChild(text);
-            document.getElementById('has-instrument').appendChild(errorMessage);
-        }
-    })
+    // $('#registration-button').on('click', function(event){
+    //     let select = $("select[name='SignUpForm[ownsInstrument]']").val();
+
+    //     if ((select === '') && (!$("span.select2").hasClass('select-warning-border'))){
+    //         event.preventDefault();
+    //         $("span.select2").addClass("select-warning-border");
+    //         let errorMessage = document.createElement("p");
+    //         let text = document.createTextNode("Lūdzu, izvēlieties vienu no variantiem");
+    //         errorMessage.classList.add('select-warning-message');
+    //         errorMessage.appendChild(text);
+    //         document.getElementById('has-instrument').appendChild(errorMessage);
+    //     }
+
+    //     if ((select !== '') && ($("span.select2").hasClass('select-warning-border'))) {
+    //         $("span.select2").removeClass("select-warning-border");
+    //         let checkbox = document.getElementById('has-instrument');
+    //         checkbox.removeChild(checkbox.lastChild);
+    //     }
+        
+    // })
     
     addPopoverToElement(
         ".info-school-email",
@@ -416,20 +425,6 @@ function showChatContent(){
     $chatContent.show();
     $chatSpinner.hide();
 }
-
-$('.rent-or-buy-radio input[type="radio"]').click(function(){
-    var paymentType = $(this).val();
-    if (paymentType=='buy' || 'payments'){ 
-        $('.buy-options input[type="radio"]').prop('disabled', false);
-        $('input[type="radio"][value="omniva"]').prop('disabled', true); 
-        $('.buy-options input[type="radio"]').prop('checked', false);       
-    }
-    if (paymentType=='rent'){
-        $('.buy-options input[type="radio"]').prop('disabled', true);
-        $('input[type="radio"][value="omniva"]').prop('disabled', false);
-        $('.buy-options input[type="radio"]').prop('checked', false);
-    }
-})
 
 $("#export-sent-invoices").on("click", exportSentInvoices);
 

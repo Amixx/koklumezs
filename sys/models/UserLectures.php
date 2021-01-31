@@ -316,6 +316,8 @@ class UserLectures extends \yii\db\ActiveRecord
             return false;
         }
 
+        $school = School::getByStudent($id);
+
         return Yii::$app
             ->mailer
             ->compose(
@@ -325,7 +327,7 @@ class UserLectures extends \yii\db\ActiveRecord
                     'teacherMessage' => $teacherMessage
                 ]
             )
-            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+            ->setFrom([$school['email'] => Yii::$app->name])
             ->setTo($user->email)
             ->setSubject($subject . ' - ' . Yii::$app->name)
             ->send();
@@ -345,14 +347,17 @@ class UserLectures extends \yii\db\ActiveRecord
         if ($user === null) {
             return false;
         }
+
+        $school = School::getByStudent($id);
         $lecture = Lectures::findOne($lecture_id);
+        
         return Yii::$app
             ->mailer
             ->compose(
                 ['html' => 'japieskir-lekcija-html', 'text' => 'japieskir-lekcija-text'],
                 ['user' => $user, 'lecture' => $lecture, 'x' => $x]
             )
-            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+            ->setFrom([$school['email'] => Yii::$app->name])
             ->setTo(Yii::$app->params['adminEmail'])
             ->setSubject('Jāpiešķir nodarbība - ' . Yii::$app->name)
             ->send();

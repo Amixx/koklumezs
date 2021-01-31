@@ -4,24 +4,19 @@ namespace app\controllers;
 
 use app\models\LectureAssignment;
 use app\models\SentInvoices;
+use app\models\School;
 use app\models\Sentlectures;
 use app\models\Studentgoals;
 use app\models\UserLectures;
 use app\models\Lectures;
 use app\models\Users;
 use app\models\StudentSubPlans;
-use app\models\School;
-use app\models\SchoolTeacher;
-use app\models\SchoolSubPlans;
-use app\models\SchoolSubplanParts;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use kartik\mpdf\Pdf;
+use app\helpers\InvoiceManager;
+use app\helpers\EmailSender;
 
-/**
- * CronController sends spam a lot.
- */
 class CronController extends Controller
 {
 
@@ -193,10 +188,6 @@ class CronController extends Controller
         ]);
     }
 
-    /**
-     *
-     * @return mixed
-     */
     public function actionUserlectures()
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -289,123 +280,25 @@ class CronController extends Controller
 
     public function actionTest()
     {
-        $users = Users::getAllStudents();
-        $inlineCss = SentInvoices::getInvoiceCss();
+        $students = Users::getAllStudents();
+        
+        foreach ($students as $student) {
+            $studentSubplan = StudentSubPlans::getForStudent($student["id"]);
 
-        foreach ($users as $user) {
-            $studentSubplan = StudentSubPlans::getForStudent($user["id"]);
-            if ($studentSubplan !== null && $studentSubplan["plan"] !== null) {
-                $today = date('d.m.Y');
-                $match_date = date('d.m.Y', strtotime($studentSubplan["start_date"]));
-
-                $today_split = explode(".", $today);
-                $match_date_split = explode(".", $match_date);
-                if ($today_split[0] === $match_date_split[0]) {
-                    $userFullName = $user['first_name'] . " " . $user['last_name'];
-                    $subplan = $studentSubplan["plan"];
-                    $planUnlimited = $subplan['months'] === 0;
-                    $planEnded = $studentSubplan['sent_invoices_count'] == $subplan['months'];
-                    $hasPaidInAdvance = $studentSubplan['times_paid'] > $studentSubplan['sent_invoices_count'];
-                    $school = School::getByStudent($user['id']);
-                    $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
-                    $teacherId = $schoolTeacher['user_id'];
-                    $subplanParts = SchoolSubplanParts::getPartsForSubplan($subplan['id']);
-                    $subplanCost = SchoolSubplanParts::getPlanTotalCost($subplan['id']);
-
-                    if(!$planEnded || $planUnlimited){
-                        if(!$hasPaidInAdvance){
-                            $timestamp = time();
-                            $folderUrl = "files/user_$teacherId/invoices/".date("M", $timestamp) . "_" . date("Y", $timestamp)."/advance";
-                            if (!is_dir($folderUrl)) mkdir($folderUrl, 0777, true);
-                            $invoiceBasePath = $folderUrl . "/";
-
-                            $id = mt_rand(10000000, 99999999);
-                            $title = "avansa-rekins-$id.pdf";
-                            $invoicePath = $invoiceBasePath.$title;
-
-                            $content = $this->renderPartial('advanceInvoiceTemplate', [
-                                'id' => $id,
-                                'fullName' => $userFullName,
-                                'email' => $user['email'],
-                                'subplan' => $subplan,
-                                'subplanCost' => $subplanCost,
-                                'subplanParts' => $subplanParts,
-                                'payer' => $user['payer'],
-                            ]);
-
-                            $pdf = new Pdf([
-                                'mode' => Pdf::MODE_UTF8,
-                                'format' => Pdf::FORMAT_A4,
-                                'orientation' => Pdf::ORIENT_PORTRAIT,
-                                'destination' => Pdf::DEST_FILE,
-                                'filename' => $invoicePath,
-                                'content' => $content,
-                                'cssInline' => $inlineCss,
-                                'options' => ['title' => $title],
-                            ]);
-
-                            $pdf->render();
-
-                            $message = "Nosūtam rēķinu par tekošā mēneša nodarbībām. Lai jauka diena!";
-                            if(isset($subplan['message']) && $subplan['message']) $message = $subplan['message'];
-                            
-                            $sent = Yii::$app
-                                ->mailer
-                                ->compose(
-                                    ['html' => 'rekins-html', 'text' => 'rekins-text'],
-                                    ['message' => $message])
-                                ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
-                                ->setTo($user['email'])
-                                ->setSubject("Avansa rēķins $id - " . Yii::$app->name)
-                                ->attach($invoicePath)
-                                ->send();
-
-                            if ($sent) {
-                                $studentSubplan['sent_invoices_count'] += 1;
-                                $studentSubplan->update();
-
-                                $invoice = new SentInvoices;
-                                $invoice->user_id = $user['id'];
-                                $invoice->invoice_number = $id;
-                                $invoice->is_advance = true;
-                                $invoice->plan_name = $subplan['name'];
-                                $invoice->plan_price = SchoolSubplanParts::getPlanTotalCost($subplan['id']);
-                                $invoice->plan_start_date = $studentSubplan['start_date'];
-                                $invoice->save();
-                            }else{
-                                Yii::$app
-                                    ->mailer
-                                    ->compose([
-                                        'html' => 'invoice-not-sent-html', 
-                                        'text' => 'invoice-not-sent-text'
-                                    ], [
-                                        'email' => $user['email'],
-                                    ])
-                                    ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
-                                    ->setTo(Yii::$app->params['senderEmail'])
-                                    ->setSubject("Skolēnam nenosūtījās rēķins!")
-                                    ->send();
-                            }
-                        }else{
-                            $studentSubplan['sent_invoices_count'] += 1;
-                            $studentSubplan->update();
-                        }
-                    }
-                }
+            if(StudentSubPlans::shouldSendAdvanceInvoice($studentSubplan)){
+                InvoiceManager::sendAdvanceInvoice($student, $studentSubplan);
+            } else if(StudentSubPlans::hasPaidInAdvance($studentSubplan)){
+                $studentSubplan->increaseSentInvoicesCount();
             }
         }
     }
 
     public function actionRemindToPay($userId){    
-        $user = Users::findOne($userId);   
+        $user = Users::findOne($userId);  
+        $school = School::getByStudent($userId); 
+        
         if($user){
-            $sent = Yii::$app
-                ->mailer
-                ->compose(['html' => 'reminder-to-pay-html', 'text' => 'reminder-to-pay-text'])
-                ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
-                ->setTo($user['email'])
-                ->setSubject("Atgādinājums par rēķina apmaksu")
-                ->send();
+            $sent = EmailSender::sendReminderToPay($school['email'], $user['email']);            
         };
 
         if($sent) {

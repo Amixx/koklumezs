@@ -15,6 +15,7 @@ use app\models\SchoolTeacher;
 use app\models\SchoolStudent;
 use app\models\School;
 use app\models\LectureViews;
+use app\models\StudentSubPlans;
 use Yii;
 use yii\web\Controller;
 
@@ -121,6 +122,7 @@ class AssignController extends \yii\web\Controller
         $diff = Studentgoals::getUserDifficulty($id);
         $goalsnow = StudentGoals::NOW;
         $goalsum = isset($goals[$goalsnow]) ? array_sum($goals[$goalsnow]) : 0;
+        $endDate = StudentSubPlans::getEndDate($id);
         if ($post) {
             $model = new UserLectures();
             $model->assigned = Yii::$app->user->identity->id;
@@ -246,6 +248,7 @@ class AssignController extends \yii\web\Controller
         $options['userCount'] = $userCount;
         $options['firstOpenTime'] = $firstOpenTime;
         $options['openTimes'] = $openTimes;
+        $options['endDate'] = $endDate;
 
         return $this->render('userlectures', $options);
     }

@@ -112,7 +112,7 @@ $planEndMonths = [];
                             $value = $number['invoice_number'];
                             $html .= "
                             <p>
-                                <a target='_blank' href='/sys/sent-invoices/update?number=$value'><strong>$value</strong></a>
+                                <a target='_blank' href='/sys/sent-invoices/update?invoiceNumber=$value'><strong>$value</strong></a>
                             </p>
                             ";
                         }

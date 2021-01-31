@@ -5,13 +5,11 @@ namespace app\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\RentOrBuyForm;
+use app\models\RentForm;
 use app\models\Lectures;
 use app\models\SchoolTeacher;
-use app\models\UserLectures;
 use app\models\SignupQuestions;
 use app\models\Evaluations;
 use app\models\Lecturesevaluations;
@@ -205,11 +203,10 @@ class SiteController extends Controller
         $school = School::findOne($s);
 
         $model = new SignUpForm();
-        if ($model->load(Yii::$app->request->post())) {
+     
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $model['language'] = $l;
             $userId = $model->signUp();
-            $hasOwnInstrument = Yii::$app->request->post() && Yii::$app->request->post()['has-own-instrument'];
-            $hasExperience = Yii::$app->request->post() && Yii::$app->request->post()['has-experience'];
 
             if($userId){
                 $schoolStudent = new SchoolStudent;
@@ -224,7 +221,7 @@ class SiteController extends Controller
                     Yii::$app->user->login($user);
 
                     $schoolTeacher = SchoolTeacher::getBySchoolId($s)["user"];
-                    $firstLectureIds = RegistrationLesson::getLessonIds($school['id'], $hasExperience);
+                    $firstLectureIds = RegistrationLesson::getLessonIds($school['id'], $model->hasExperience);
                     $insertDate = date('Y-m-d H:i:s', time());
                     $insertColumns = [];
 
@@ -247,7 +244,7 @@ class SiteController extends Controller
                         ->setSubject("Reģistrējies jauns skolēns - " . $user['first_name'])
                         ->send();
 
-                    if($school['registration_message'] != null && $hasOwnInstrument){
+                    if($school['registration_message'] != null && $model->ownsInstrument){
                         Yii::$app
                             ->mailer
                             ->compose(['html' => 'after-registration-html', 'text' => 'after-registration-text'], [
@@ -259,9 +256,9 @@ class SiteController extends Controller
                             ->send();
                     }
 
-                    if(!$hasOwnInstrument){
-                        $this->redirect(["rent-or-buy", 'u' => $user['id'], 'l' => $l]);
-                    } else if($hasExperience) {
+                    if(!$model->ownsInstrument){
+                        $this->redirect(["rent", 'u' => $user['id'], 'l' => $l]);
+                    } else if($model->hasExperience) {
                         $this->redirect(["signup-questions", 'u' => $user['id'], 'l' => $l, 's' => $s]);
                     }else {
                         Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam koklēt! Turpmākās 2 nedēļas vari izmēģināt bez maksas!');
@@ -278,12 +275,12 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionRentOrBuy($u, $l) {
+    public function actionRent($u, $l) {
         Yii::$app->language = $l;
         $school = School::getByStudent($u);
 
         $user = Users::findOne($u);
-        $model = new RentOrBuyForm;
+        $model = new RentForm;
         $model->fullname = $user['first_name'] . " " . $user['last_name'];
         $model->email = $user['email'];
         
@@ -303,7 +300,7 @@ class SiteController extends Controller
             }
         }
 
-        return $this->render('rent-or-buy', [
+        return $this->render('rent', [
             'model' => $model,
         ]);
     }
