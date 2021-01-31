@@ -6,6 +6,7 @@ use app\models\School;
 use app\models\SchoolTeacher;
 use app\models\SentInvoices;
 use app\models\StudentSubPlans;
+use app\models\SchoolSubplanParts;
 use app\models\Users;
 use Yii;
 
@@ -20,12 +21,16 @@ class InvoiceManager
         $invoiceNumber = self::generateInvoiceNumber();
         $title = self::generateInvoiceTitle($invoiceNumber, true);
         $invoicePath = $invoiceBasePath.$title;
+        $subplanParts = SchoolSubplanParts::getPartsForSubplan($schoolSubplan['id']);
+        $subplanCost = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
 
         $invoiceContent = Yii::$app->view->render('@app/views/invoice-templates/advance', [
             'id' => $invoiceNumber,
             'fullName' => $userFullName,
             'email' => $user['email'],
             'subplan' => $schoolSubplan,
+            'subplanCost' => $subplanCost,
+            'subplanParts' => $subplanParts,
             'payer' => $user['payer'],
         ]);
 
@@ -56,12 +61,16 @@ class InvoiceManager
         $invoiceBasePath = self::getInvoiceBasePath($schoolTeacher['user_id'], false);
         $title = self::generateInvoiceTitle($invoiceNumber, false);
         $invoicePath = $invoiceBasePath.$title;
+        $subplanParts = SchoolSubplanParts::getPartsForSubplan($schoolSubplan['id']);
+        $subplanCost = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
 
         $invoiceContent = Yii::$app->view->render('@app/views/invoice-templates/real', [
             'number' => $invoiceNumber,
             'fullName' => $userFullName,
             'email' => $model['student']['email'],
             'subplan' => $schoolSubplan,
+            'subplanCost' => $subplanCost,
+            'subplanParts' => $subplanParts,
             'datePaid' => $paidDate,
             'months' => 1,
             'payer' => $model['student']['payer'],
@@ -88,12 +97,16 @@ class InvoiceManager
         $title = self::generateInvoiceTitle($invoiceNumber, false);
         $invoicePath = $invoiceBasePath.$title;
         $userFullName = Users::getFullName($user);  
+        $subplanParts = SchoolSubplanParts::getPartsForSubplan($schoolSubplan['id']);
+        $subplanCost = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
 
         $invoiceContent = Yii::$app->view->render('@app/views/invoice-templates/real', [
             'number' => $invoiceNumber,
             'fullName' => $userFullName,
             'email' => $user['email'],
             'subplan' => $schoolSubplan,
+            'subplanCost' => $subplanCost,
+            'subplanParts' => $subplanParts,
             'datePaid' => $paidDate,
             'months' => $months, 
             'payer' => $user['payer'],

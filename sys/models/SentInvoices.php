@@ -79,7 +79,7 @@ class SentInvoices extends \yii\db\ActiveRecord
         $invoice->invoice_number = $invoiceNumber;
         $invoice->is_advance = true;
         $invoice->plan_name = $schoolSubplan['name'];
-        $invoice->plan_price = $schoolSubplan['monthly_cost'];
+        $invoice->plan_price = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
         $invoice->plan_start_date = $startDate;
         $invoice->save();
     }
@@ -90,7 +90,7 @@ class SentInvoices extends \yii\db\ActiveRecord
         $invoice->invoice_number = $invoiceNumber;
         $invoice->is_advance = false;
         $invoice->plan_name = $schoolSubplan['name'];
-        $invoice->plan_price = $schoolSubplan['monthly_cost'];
+        $invoice->plan_price = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
         $invoice->plan_start_date = $planStartDate;
         $invoice->sent_date = $paidDate;
         $invoice->save();
