@@ -269,10 +269,12 @@ class SiteController extends Controller
         }
 
         $model->password = '';
+        $instrument = strtolower($school['instrument']);
         return $this->render('signup', [
             'model' => $model,
             'defaultLanguage' => $l,
             'registration_title' => $school['registration_title'],
+            'instrument' => $instrument,
         ]);
     }
 

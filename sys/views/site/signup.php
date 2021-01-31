@@ -62,7 +62,7 @@ function getFieldOptions($fieldName, $hasInfo = false){
             )->dropDownList(
                 [false => \Yii::t('app',  'No'), true => \Yii::t('app', 'Yes')],
                 ['prompt' => '', 'class' => 'small-dropdown']
-            )->label(Yii::t('app', 'Do you have your own kokle?')) ?>
+            )->label(Yii::t('app', 'Do you have your own').' '.$instrument.'?') ?>
         </div>
         <div class="has-experience">
             <?= $form->field(
@@ -72,7 +72,7 @@ function getFieldOptions($fieldName, $hasInfo = false){
             )->dropDownList(
                 [false => \Yii::t('app',  'No'), true => \Yii::t('app', 'Yes')],
                 ['prompt' => '', 'class' => 'small-dropdown']
-            )->label(Yii::t('app', 'Have you played kokle before?')) ?>
+            )->label(Yii::t('app', 'Have you played this instrument before?')) ?>
         </div>
         
         <div style='margin-top: 16px;'>
