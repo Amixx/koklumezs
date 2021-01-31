@@ -118,4 +118,36 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         if ($warningDate <= $today) return "<span style='background: red;'>".$date."</span>";
         else return "<span>".$date."</span>";
     }
+
+    public static function shouldSendAdvanceInvoice($studentSubplan){
+        if($studentSubplan === null || $studentSubplan["plan"] === null) return false;
+        if(!self::isSameDayAsPlanStart($studentSubplan)) return false;
+
+        $planMonths = $studentSubplan['plan']['months'];
+        $planUnlimited = $planMonths === 0;
+        $planEnded = $studentSubplan['sent_invoices_count'] == $planMonths;
+        $hasPaidInAdvance = self::hasPaidInAdvance($studentSubplan);
+
+        return ((!$planEnded || $planUnlimited) && !$hasPaidInAdvance);
+    }
+
+    public static function hasPaidInAdvance($studentSubplan){
+        if($studentSubplan === null || $studentSubplan["plan"] === null) return false;
+        return $studentSubplan['times_paid'] > $studentSubplan['sent_invoices_count'];
+    }
+
+    public static function isSameDayAsPlanStart($studentSubplan){
+        $today = date('d.m.Y');
+        $match_date = date('d.m.Y', strtotime($studentSubplan["start_date"]));
+
+        $today_split = explode(".", $today);
+        $match_date_split = explode(".", $match_date);
+
+        return $today_split[0] === $match_date_split[0];
+    }
+
+    public function increaseSentInvoicesCount($count = 1){
+        $this->sent_invoices_count += $count;
+        $this->update();
+    }
 }
