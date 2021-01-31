@@ -422,4 +422,5 @@ return [
     'stars' => 'zvaigznes',
     'text' => 'teksts',
     'Registration title' => 'Reģistrācijas virsraksts',
+    'Do you have your own instrument' => 'Vai tev jau ir savs instruments',
 ];

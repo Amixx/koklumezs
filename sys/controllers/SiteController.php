@@ -261,7 +261,7 @@ class SiteController extends Controller
                     } else if($model->hasExperience) {
                         $this->redirect(["signup-questions", 'u' => $user['id'], 'l' => $l, 's' => $s]);
                     }else {
-                        Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam koklēt! Turpmākās 2 nedēļas vari izmēģināt bez maksas!');
+                        Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam spēlēt! Turpmākās 2 nedēļas vari izmēģināt bez maksas!');
                         return $this->redirect(['lekcijas/index']);
                     }
                 }
@@ -281,13 +281,14 @@ class SiteController extends Controller
     public function actionRent($u, $l) {
         Yii::$app->language = $l;
         $school = School::getByStudent($u);
-
         $user = Users::findOne($u);
         $model = new RentForm;
+
         $model->fullname = $user['first_name'] . " " . $user['last_name'];
         $model->email = $user['email'];
-        
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+        $valid = $model->load(Yii::$app->request->post()) && $model->validate();
+
+        if ($valid) {
             $sent = Yii::$app
                 ->mailer
                 ->compose(['html' => 'instrument-html', 'text' => 'instrument-text'], [

@@ -11,15 +11,13 @@ class RentForm extends Model
     public $email;
     public $phone_number;
     public $address;
-    public $payment_type;
-    public $delivery_type;
     public $color = null;
 
     public function rules()
     {
         return [
-            [['fullname', 'email', 'phone_number', 'address', 'payment_type', 'delivery_type'], 'required'],
-            [['fullname', 'address', 'payment_type', 'delivery_type'], 'string'],
+            [['fullname', 'email', 'phone_number', 'address'], 'required'],
+            [['fullname', 'address'], 'string'],
             ['phone_number', 'validatePhoneNumber'],
             ['email', 'email'],
         ];
@@ -31,8 +29,6 @@ class RentForm extends Model
             'email' => \Yii::t('app',  'E-mail'),
             'phone_number' => \Yii::t('app',  'Phone number'),
             'address' => \Yii::t('app',  'Address'),
-            'payment_type' => \Yii::t('app',  'Payment type'),
-            'delivery_type' => \Yii::t('app',  'Delivery type'),
         ];
     }
 

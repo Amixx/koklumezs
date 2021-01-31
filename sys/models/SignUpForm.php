@@ -37,6 +37,7 @@ class SignUpForm extends Model
             'last_name' => Yii::t('app', 'Last name'),
             'email' => Yii::t('app', 'E-mail'),
             'rememberMe' => Yii::t('app', 'Remember me'),
+            'ownsInstrument' => Yii::t('app', 'Do you have your own instrument'),
         ];
     }
 
