@@ -14,7 +14,8 @@ use app\models\StudentSubPlans;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use app\helpers\InvoiceSender;
+use app\helpers\InvoiceManager;
+use app\helpers\EmailSender;
 
 class CronController extends Controller
 {
@@ -279,20 +280,15 @@ class CronController extends Controller
 
     public function actionTest()
     {
-        $users = Users::getAllStudents();
+        $students = Users::getAllStudents();
         
-        foreach ($users as $user) {
-            $studentSubplan = StudentSubPlans::getForStudent($user["id"]);
-            if ($studentSubplan !== null && $studentSubplan["plan"] !== null) {
-                $today = date('d.m.Y');
-                $match_date = date('d.m.Y', strtotime($studentSubplan["start_date"]));
+        foreach ($students as $student) {
+            $studentSubplan = StudentSubPlans::getForStudent($student["id"]);
 
-                $today_split = explode(".", $today);
-                $match_date_split = explode(".", $match_date);
-
-                if ($today_split[0] === $match_date_split[0]) {
-                    InvoiceSender::sendAdvanceInvoice($user, $studentSubplan);
-                }
+            if(StudentSubPlans::shouldSendAdvanceInvoice($studentSubplan)){
+                InvoiceManager::sendAdvanceInvoice($student, $studentSubplan);
+            } else if(StudentSubPlans::hasPaidInAdvance($studentSubplan)){
+                $studentSubplan->increaseSentInvoicesCount();
             }
         }
     }
@@ -302,13 +298,7 @@ class CronController extends Controller
         $school = School::getByStudent($userId); 
         
         if($user){
-            $sent = Yii::$app
-                ->mailer
-                ->compose(['html' => 'reminder-to-pay-html', 'text' => 'reminder-to-pay-text'])
-                ->setFrom([$school['email'] => Yii::$app->name])
-                ->setTo($user['email'])
-                ->setSubject("Atgādinājums par rēķina apmaksu")
-                ->send();
+            $sent = EmailSender::sendReminderToPay($school['email'], $user['email']);            
         };
 
         if($sent) {
