@@ -272,6 +272,7 @@ class SiteController extends Controller
         return $this->render('signup', [
             'model' => $model,
             'defaultLanguage' => $l,
+            'registration_title' => $school['registration_title'],
         ]);
     }
 
@@ -301,7 +302,7 @@ class SiteController extends Controller
         }
 
         return $this->render('rent', [
-            'model' => $model,
+            'model' => $model, 
         ]);
     }
 

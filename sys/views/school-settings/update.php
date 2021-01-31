@@ -68,7 +68,11 @@ $this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
         <?= $form->field($model, 'email')->textInput(['class' => 'form-control form-group has-feedback field-with-info-widget']) ?>
         <span class="glyphicon glyphicon-info-sign info info-school-email" style="margin-top: -50px;"></span>
 
-         <?= $form->field($model, 'registration_message')->widget(CKEditor::className(), [
+        <?= $form->field($model, 'registration_message')->widget(CKEditor::className(), [
+            'editorOptions' => $ckeditorOptions,
+        ]) ?>
+
+        <?= $form->field($model, 'registration_title')->widget(CKEditor::className(), [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
 

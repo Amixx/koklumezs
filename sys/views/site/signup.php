@@ -26,8 +26,7 @@ function getFieldOptions($fieldName, $hasInfo = false){
 
 <div class="login-box">
     <div class="login-box-body login">
-
-        <h3>Prieks, ka vēlies pievienoties Kokļu Meža attālinātajām individuālajām nodarbībām! Reģistrējies un – koklēsim!</h3>
+        <h3><?= $registration_title ?></h3>
         
         <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
 

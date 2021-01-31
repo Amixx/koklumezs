@@ -408,4 +408,5 @@ return [
     'language' => 'valoda',
     'stars' => 'zvaigznes',
     'text' => 'teksts',
+    'Registration title' => 'Reģistrācijas virsraksts',
 ];
