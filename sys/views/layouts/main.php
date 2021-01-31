@@ -125,7 +125,17 @@ AppAsset::register($this);
             $navItems[] = ['label' => '+', 'url' => ['/user/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])];
             $navItems[] = ['label' => \Yii::t('app',  'Lessons'), 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
             $navItems[] = ['label' => '+', 'url' => ['/lectures/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
-            $navItems[] = ['label' => \Yii::t('app',  'Subscription plans'), 'url' => ['/school-sub-plans'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-sub-plans']),];
+            $navItems[] = [
+                'label' => \Yii::t('app',  'Subscription plans'),
+                'url' => ['/school-sub-plans'], 
+                'active' =>  in_array(\Yii::$app->controller->id, ['school-sub-plans']),
+                'items' => [
+                    ['label' => \Yii::t('app',  'Subscription plans'), 'url' => ['/school-sub-plans']],
+                    ['label' => \Yii::t('app',  'Plan parts'), 'url' => ['/plan-parts']],
+                    ['label' => \Yii::t('app',  'Plan pauses'), 'url' => ['/student-subplan-pauses']],
+                ],
+                'options' => ['class' => 'nav-item dropdown']
+            ];
             $navItems[] = ['label' => '+', 'url' => ['/school-sub-plans/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-sub-plans']),];
             $navItems[] = [
                 'label' => \Yii::t('app',  'Metrics'),

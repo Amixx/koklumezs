@@ -36,6 +36,22 @@ class StudentSubplanPausesController extends Controller
         ];
     }
 
+    public function actionIndex(){
+        $isGuest = Yii::$app->user->isGuest;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
+        }
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => StudentSubplanPauses::getForCurrentSchool(),
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
     public function actionView($id)
     {
         $isGuest = Yii::$app->user->isGuest;

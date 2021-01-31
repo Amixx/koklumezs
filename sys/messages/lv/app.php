@@ -423,4 +423,5 @@ return [
     'text' => 'teksts',
     'Registration title' => 'Reģistrācijas virsraksts',
     'Do you have your own instrument' => 'Vai tev jau ir savs instruments',
+    'Create a plan part' => 'Izveidot plāna daļu',
 ];

@@ -70,14 +70,9 @@ class SchoolSubPlansController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => SchoolSubPlans::getForCurrentSchool(),
         ]);
-        $pausesDataProvider = new ActiveDataProvider([
-            'query' => StudentSubplanPauses::getForCurrentSchool(),
-            'pagination' => false,
-        ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'pausesDataProvider' => $pausesDataProvider,
         ]);
     }
 

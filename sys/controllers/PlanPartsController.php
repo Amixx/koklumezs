@@ -68,6 +68,31 @@ class PlanPartsController extends Controller
         ]);        
     }
 
+    public function actionUpdate($id)
+    {
+        $isGuest = Yii::$app->user->isGuest;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
+        }
+
+        $model = $this->findModel($id);
+        $post = Yii::$app->request->post();
+        
+        if ($post) {
+            $model->load($post);
+            $saved = $model->validate() && $model->save();
+
+            if($saved){
+                return $this->redirect(['index']);
+            }
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
     public function actionDelete($id)
     {
         $isGuest = Yii::$app->user->isGuest;

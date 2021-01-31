@@ -40,7 +40,6 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
             <?= $form->field($model, 'description')->widget(CKEditor::className(), [
                 'editorOptions' => $ckeditorOptions,
             ]) ?>
-            <?= $form->field($model, 'monthly_cost')->textInput() ?>
             <?= $form->field($model, 'months')->textInput() ?>
             <?= $form->field($model, 'max_pause_weeks')->textInput() ?>
             <?= $form->field($model, 'message')->textInput() ?>
@@ -92,7 +91,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                 ]); ?>
             </label>
         </div>
-        <div class="tab-pane fade active in" id="parts" role="tabpanel" aria-labelledby="parts-tab">
+        <div class="tab-pane fade in" id="parts" role="tabpanel" aria-labelledby="parts-tab">
             <?php if(isset($subplanParts) && $subplanParts) {
                 echo GridView::widget([
                     'dataProvider' => $subplanParts,

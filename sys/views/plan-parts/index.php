@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'monthly_cost',
                         [
                             'class' => 'yii\grid\ActionColumn',
-                            'template' => '{delete}'
+                            'template' => '{delete} {update}'
                         ],
                     ],
                 ]); ?>
@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <hr>
         <div class="row">
+            <h3><?= Yii::t('app', 'Create a plan part') ?></h3>
             <div class="col-12">
                 <?php $form = ActiveForm::begin(); ?>
 
@@ -44,8 +45,4 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
     </div>
-
-   
-
-
 </div>
