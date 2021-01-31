@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\SchoolSubplanParts;
 
 $this->title = \Yii::t('app', 'Subscription plans');
 $this->params['breadcrumbs'][] = $this->title;
@@ -21,7 +22,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'description:html',
             'pvn_percent',
-            'monthly_cost',
+            [
+                'attribute' => 'Monthly cost',
+                'label' => Yii::t('app',  'Monthly cost (with PVN)'),
+                'value' => function($model){
+                    return SchoolSubplanParts::getPlanTotalCost($model->id);
+                },
+            ],
             'months',
             'max_pause_weeks',
             'message',

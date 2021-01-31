@@ -56,10 +56,15 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
     public function getPrices()
     {
         $isAdmin = Yii::$app->user->identity->user_level == 'Admin';
-        if(!$isAdmin){
-            return ArrayHelper::map(self::getForCurrentSchool()->asArray()->all(), 'id', 'monthly_cost');
-        }else{
-            return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'monthly_cost');
+        $query = $isAdmin ? self::find() : self::getForCurrentSchool();
+        $data = $query->asArray()->all();
+
+        $res = [];
+
+        foreach($data as $item){
+            $res[$item['id']] = SchoolSubplanParts::getPlanTotalCost($item['id']);
         }
+        
+        return $res;
     }
 }

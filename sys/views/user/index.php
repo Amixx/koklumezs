@@ -4,12 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\StudentSubplanPauses;
 use app\models\SentInvoices;
-use  yii\jui\DatePicker;
-
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\TeacherUserSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $user app\models\Users */
+use app\models\SchoolSubplanParts;
 
 $this->title = \Yii::t('app',  'Users');
 $this->params['breadcrumbs'][] = $this->title;
@@ -63,7 +58,9 @@ $planEndMonths = [];
                 'label' => Yii::t('app', 'Payment'),
                 'value' => function ($dataProvider) {
                     if(!$dataProvider["subplan"] || !$dataProvider["subplan"]["plan"]) return;
-                    return "<a href='/sys/school-sub-plans/view?id=".$dataProvider["subplan"]["plan"]["id"]."'>".$dataProvider["subplan"]["plan"]["monthly_cost"]."</a>";
+                    $planId = $dataProvider["subplan"]["plan"]["id"];
+                    $totalCost = SchoolSubplanParts::getPlanTotalCost($planId);
+                    return "<a href='/sys/school-sub-plans/view?id=$planId'>$totalCost</a>";
                 },
                 'format' => 'html',
                 'filter' => Html::dropDownList(
