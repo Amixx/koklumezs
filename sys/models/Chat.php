@@ -56,7 +56,7 @@ class Chat extends \yii\db\ActiveRecord {
             'or',
             ['author_id' => $authorId, 'recipient_id' => $recipientId],
             ['author_id' => $recipientId, 'recipient_id' => $authorId],
-        ])->orderBy('id desc')->all();
+        ])->orderBy('id asc')->all();
     }
 
     public static function unreadCountForCurrentUser(){
