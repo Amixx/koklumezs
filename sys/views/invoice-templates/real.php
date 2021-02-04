@@ -2,8 +2,6 @@
 
 use app\models\PlanParts;
 
-$dateToday = Date("d.m.Y.");
-
 $divider = 1 + ($subplan['pvn_percent']/100);
 $totalCost = $subplanCost * $months;
 $priceWithoutPvn = number_format($totalCost / $divider, 2);
@@ -198,7 +196,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
             <div class="lh-2">
                 <div>Sastādīja: <u>Laura Laugale (vārds, uzvārds)</u>
                 </div>
-                <div><u><?= $dateToday ?></u></div>
+                <div><u><?= $datePaid ?></u></div>
                 <div class="font-xs">Rēķins sagatavots elektroniski un ir derīgs bez paraksta.</div>
             </div>
         </div>
