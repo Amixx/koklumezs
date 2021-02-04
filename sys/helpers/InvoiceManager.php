@@ -58,7 +58,7 @@ class InvoiceManager
         $school = School::getByStudent($userId);
         $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
         $userFullName = Users::getFullName($model['student']);      
-        $invoiceBasePath = self::getInvoiceBasePath($schoolTeacher['user_id'], false);
+        $invoiceBasePath = self::getInvoiceBasePath($schoolTeacher['user_id'], false, strtotime($paidDate));
         $title = self::generateInvoiceTitle($invoiceNumber, false);
         $invoicePath = $invoiceBasePath.$title;
         $subplanParts = SchoolSubplanParts::getPartsForSubplan($schoolSubplan['id']);
@@ -92,7 +92,7 @@ class InvoiceManager
         $user = Users::find()->where(['users.id' => $userId])->joinWith('payer')->one();
         $school = School::getByStudent($userId);
         $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
-        $invoiceBasePath = self::getInvoiceBasePath($schoolTeacher['user_id'], false);
+        $invoiceBasePath = self::getInvoiceBasePath($schoolTeacher['user_id'], false, strtotime($paidDate));
         $invoiceNumber = self::generateInvoiceNumber();
         $title = self::generateInvoiceTitle($invoiceNumber, false);
         $invoicePath = $invoiceBasePath.$title;
@@ -120,9 +120,9 @@ class InvoiceManager
         $studentSubplan->save();
     }
 
-    public static function getInvoiceBasePath($teacherId, $isAdvance){
+    public static function getInvoiceBasePath($teacherId, $isAdvance, $timestamp = null){
         $subfolderName = $isAdvance ? "advance" : "real";
-        $timestamp = time();
+        if(!$timestamp) $timestamp = time();       
         $folderUrl = "files/user_$teacherId/invoices/".date("M", $timestamp) . "_" . date("Y", $timestamp)."/" . $subfolderName;
 
         if (!is_dir($folderUrl)) mkdir($folderUrl, 0777, true);
