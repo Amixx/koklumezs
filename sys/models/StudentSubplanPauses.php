@@ -38,7 +38,11 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
         $subplan = StudentSubPlans::findOne(['user_id' => $studentId]);
         if($subplan == null) return null;
 
-        return self::find()->where(['studentsubplan_id' => $subplan['id']])->joinWith('studentPlan');
+        return self::getForStudentSubplan($subplan['id']);
+    }
+
+    public function getForStudentSubplan($subplanId){
+        return self::find()->where(['studentsubplan_id' => $subplanId])->joinWith('studentPlan');       
     }
 
     public static function getForSchool($schoolId) {

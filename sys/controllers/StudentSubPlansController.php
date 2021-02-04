@@ -52,7 +52,7 @@ class StudentSubPlansController extends Controller
         $planPauses = null;
         if(StudentSubplanPauses::studentHasAnyPauses($id)){
             $planPauses = new ActiveDataProvider([
-                'query' => StudentSubplanPauses::getForStudent($id),
+                'query' => StudentSubplanPauses::getForStudentSubplan($subplan['id']),
             ]);
         }
         $newPause = new StudentSubplanPauses;    

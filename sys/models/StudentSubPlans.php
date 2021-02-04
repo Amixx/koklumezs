@@ -57,7 +57,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         $schoolId = School::getCurrentSchoolId();
         $studentPlans = self::find()->joinWith("plan")->andFilterWhere(['schoolsubplans.school_id' => $schoolId])->asArray()->all();
         $planEndDates = array_map(function ($studentPlan) {
-            $planPauses = StudentSubplanPauses::getForStudent($studentPlan['user_id'])->asArray()->all();
+            $planPauses = StudentSubplanPauses::getForStudentSubplan($studentPlan['id'])->asArray()->all();
             $date = date_create($studentPlan["start_date"]);
             $date->modify("+" . $studentPlan['plan']['months'] . "month");
             foreach($planPauses as $pause){
@@ -78,8 +78,8 @@ class StudentSubPlans extends \yii\db\ActiveRecord
     }
 
     public function getRemainingPauseWeeks($studentId){
-        $pauses = StudentSubplanPauses::getForStudent($studentId)->asArray()->all();
         $subplan = self::getForStudent($studentId);
+        $pauses = StudentSubplanPauses::getForStudentSubplan($subplan['id'])->asArray()->all();
         $totalPausedWeeks = 0;
         foreach($pauses as $p){
             $totalPausedWeeks += $p['weeks'];
@@ -105,7 +105,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
     public function getEndDate($studentId){
         $subplan = self::getForStudent($studentId);
         if ($subplan == null) return null;
-        $planPauses = StudentSubplanPauses::getForStudent($subplan['user_id'])->asArray()->all();
+        $planPauses = StudentSubplanPauses::getForStudentSubplan($subplan['id'])->asArray()->all();
         $date = date_create($subplan["start_date"]);
         $date->modify("+" . $subplan['plan']['months'] . "month");
         foreach($planPauses as $pause){
