@@ -30,14 +30,31 @@ $this->params['breadcrumbs'][] = $model->title;
         </h2>
 
         <?php if ($model->file) { ?>
-            <?= $this->render('video', ['lecturefiles' => [0 => ['title' => $model->title, 'file' => $model->file]], 'videos' => $videos, 'baseUrl' => $baseUrl, 'thumbnail' => $videoThumb ?? '']); ?>
+            <?= $this->render(
+                'video',
+                ['lecturefiles' => [0 => ['title' => $model->title, 'file' => $model->file]],
+                'videos' => $videos,
+                'baseUrl' => $baseUrl,
+                'thumbnail' => $videoThumb ?? '',
+                'idPrefix' => 'main',
+            ]); ?>
         <?php } ?>
         <?php if ($model->file && $userCanDownloadFiles && SectionsVisible::isVisible("Video lejupielādes poga")) { ?>
             <a href="<?= $model->file ?> " target="_blank" download><?= \Yii::t('app',  'Download lesson video file') ?></a>
         <?php } ?>
         <?php if ($lecturefiles) { ?>
-            <?= $this->render('video', ['lecturefiles' => $lecturefiles, 'videos' => $videos, 'baseUrl' => $baseUrl, 'thumbnail' => $videoThumb ?? '']); ?>
-            <?= $this->render('audio', ['lecturefiles' => $lecturefiles, 'audio' => $audio]); ?>
+            <?= $this->render(
+                'video',
+                ['lecturefiles' => $lecturefiles,
+                'videos' => $videos,
+                'baseUrl' => $baseUrl,
+                'thumbnail' => $videoThumb ?? '',
+                'idPrefix' => 'file',
+            ]); ?>
+            <?= $this->render(
+                'audio',
+                ['lecturefiles' => $lecturefiles, 'audio' => $audio]
+            ); ?>
         <?php } ?>
         <?= $model->description ?>
         <?php if ($uLecture && $uLecture->evaluated) { ?>

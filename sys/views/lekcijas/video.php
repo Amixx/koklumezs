@@ -17,7 +17,7 @@ if ($hasFiles) {
         ?>
             <div class="col-md-12">
                 <p><?= $file['title'] ?></p>
-                <video id="my-player<?= $id ?>" class="video-js vjs-layout-x-large vjs-big-play-centered" controls preload="auto" poster="<?= isset($thumbnail) && $thumbnail ? $thumbnail : '' ?>" data-setup='{}'>
+                <video id="my-player<?= $idPrefix ?><?= $id ?>" class="video-js vjs-layout-x-large vjs-big-play-centered" controls preload="auto" poster="<?= isset($thumbnail) && $thumbnail ? $thumbnail : '' ?>" data-setup='{}'>
                     <source src="<?= $file['file'] ?>" type="video/<?= strtolower($path_info['extension']) ?>">
                     </source>
                     <p class="vjs-no-js">
@@ -29,7 +29,7 @@ if ($hasFiles) {
                     </p>
                 </video>
                 <script>
-                    var player = videojs('my-player<?= $id ?>', {
+                    var player = videojs('my-player<?= $idPrefix ?><?= $id ?>', {
                         responsive: true,
                         width: 400,
                         playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2]
