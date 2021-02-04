@@ -316,6 +316,12 @@ class UserController extends Controller
             ->delete('userlectureevaluations', ['user_id' => $id])
             ->execute();
 
+        Yii::$app
+            ->db
+            ->createCommand()
+            ->delete('studentgoals', ['user_id' => $id])
+            ->execute();
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
