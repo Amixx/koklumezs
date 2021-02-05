@@ -6,6 +6,7 @@ use app\models\School;
 use app\models\SchoolTeacher;
 use app\models\SentInvoices;
 use app\models\StudentSubPlans;
+use app\models\SchoolSubPlans;
 use app\models\SchoolSubplanParts;
 use app\models\Users;
 use Yii;
@@ -45,17 +46,25 @@ class InvoiceManager
         if ($sent) {
             $studentSubplan->increaseSentInvoicesCount();
 
-            SentInvoices::createAdvance($user['id'], $invoiceNumber, $schoolSubplan, $studentSubplan['start_date']);
+            SentInvoices::createAdvance($user['id'], $invoiceNumber, $schoolSubplan, $studentSubplan);
         }else{
             EmailSender::sendWarningToTeacher($user['email'], $school['email']);
         }
     }
 
-    public static function createRealInvoice($model, $invoiceNumber, $userId, $paidDate){
-        $studentSubplan = StudentSubPlans::findOne(['user_id' => $model['user_id']]);
-        $studentSubplan->times_paid += 1;
-        $schoolSubplan = $studentSubplan["plan"];
+    public static function createRealInvoice($model, $invoiceNumber, $userId, $paidDate, $advanceInvoice){
         $school = School::getByStudent($userId);
+
+        //pārejas periodā, kamēr ne visiem avansa rēķiniem ir `studentsubplan_id`, jāizlīdzas ar šādu risinājumu!       
+        if($advanceInvoice['studentSubplan'] !== null){  //jaunais variants
+            $studentSubplan = StudentSubPlans::findOne(['id' => $advanceInvoice['studentsubplan_id']]);
+            $schoolSubplan = $studentSubplan["plan"];
+        } else { // backups vecajiem
+            $schoolSubplan = SchoolSubPlans::find()->where(['school_id' => $school['id'], 'name' => $advanceInvoice['plan_name']])->one();
+            $studentSubplan = StudentSubPlans::find()->where(['plan_id' => $schoolSubplan['id']])->orderBy(['id' => SORT_DESC])->one();
+        }
+
+        $studentSubplan->times_paid += 1;
         $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
         $userFullName = Users::getFullName($model['student']);      
         $invoiceBasePath = self::getInvoiceBasePath($schoolTeacher['user_id'], false, strtotime($paidDate));
@@ -78,7 +87,7 @@ class InvoiceManager
 
         InvoicePdfFileGenerator::generate($invoicePath, $invoiceContent, $title);
 
-        SentInvoices::createReal($model['student']['id'], $invoiceNumber, $schoolSubplan, $studentSubplan['start_date'], $paidDate);
+        SentInvoices::createReal($model['student']['id'], $invoiceNumber, $schoolSubplan, $studentSubplan, $paidDate);
 
         Yii::$app->session->setFlash('success', 'Rēķina apmaksa reģistrēta!');
 
@@ -87,7 +96,7 @@ class InvoiceManager
 
     public static function createRealInvoiceForMultipleMonths($userId, $paidMonths, $paidDate){
         $months = intval($paidMonths, 10);
-        $studentSubplan = StudentSubPlans::findOne(['user_id' => $userId]);
+        $studentSubplan = StudentSubPlans::getCurrentForStudent($userId);
         $schoolSubplan = $studentSubplan["plan"];
         $user = Users::find()->where(['users.id' => $userId])->joinWith('payer')->one();
         $school = School::getByStudent($userId);
@@ -114,7 +123,7 @@ class InvoiceManager
 
         InvoicePdfFileGenerator::generate($invoicePath, $invoiceContent, $title);
 
-        SentInvoices::createReal($user['id'], $invoiceNumber, $schoolSubplan, $studentSubplan['start_date'], $paidDate);
+        SentInvoices::createReal($user['id'], $invoiceNumber, $schoolSubplan, $studentSubplan, $paidDate);
         
         $studentSubplan->times_paid += $months;
         $studentSubplan->save();

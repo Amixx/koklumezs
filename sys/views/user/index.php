@@ -5,6 +5,7 @@ use yii\grid\GridView;
 use app\models\StudentSubplanPauses;
 use app\models\SentInvoices;
 use app\models\SchoolSubplanParts;
+use app\models\StudentSubplans;
 
 $this->title = \Yii::t('app',  'Users');
 $this->params['breadcrumbs'][] = $this->title;
@@ -57,8 +58,10 @@ $planEndMonths = [];
                 'attribute' => 'Plan price',
                 'label' => Yii::t('app', 'Payment'),
                 'value' => function ($dataProvider) {
-                    if(!$dataProvider["subplan"] || !$dataProvider["subplan"]["plan"]) return;
-                    $planId = $dataProvider["subplan"]["plan"]["id"];
+                    $studentSubplan = StudentSubplans::getCurrentForStudent($dataProvider['id']);
+                    if(!$studentSubplan || !$studentSubplan["plan"]) return;
+
+                    $planId = $studentSubplan["plan_id"];
                     $totalCost = SchoolSubplanParts::getPlanTotalCost($planId);
                     return "<a href='/sys/school-sub-plans/view?id=$planId'>$totalCost</a>";
                 },
@@ -73,10 +76,12 @@ $planEndMonths = [];
                 'attribute' => 'Plan end date',
                 'label' => Yii::t('app', 'Plan end date'),
                 'value' => function ($dataProvider) {
-                    if(!$dataProvider['subplan'] || !$dataProvider['subplan']['plan'] || !$dataProvider['subplan']['plan']['months']) return;
-                    $planPauses = StudentSubplanPauses::getForStudentSubplan($dataProvider['subplan']['id'])->asArray()->all();
-                    $date = date_create($dataProvider["subplan"]["start_date"]);
-                    $date->modify("+" . $dataProvider['subplan']['plan']['months'] . "month");
+                    $studentSubplan = StudentSubplans::getCurrentForStudent($dataProvider['id']);
+
+                    if(!$studentSubplan || !$studentSubplan['plan'] || !$studentSubplan['plan']['months']) return;
+                    $planPauses = StudentSubplanPauses::getForStudentSubplan($studentSubplan['id'])->asArray()->all();
+                    $date = date_create($studentSubplan["start_date"]);
+                    $date->modify("+" . $studentSubplan['plan']['months'] . "month");
                     foreach($planPauses as $pause){
                         $date->modify("+" . $pause['weeks'] . "week");
                     }
@@ -93,15 +98,17 @@ $planEndMonths = [];
                 'attribute' => 'Payments',
                 'label' => Yii::t('app', 'Paid/Has to pay'),
                 'value' => function ($dataProvider) {
-                    if(!$dataProvider['subplan']) return;
+                    $studentSubplan = StudentSubplans::getCurrentForStudent($dataProvider['id']);
+
+                    if(!$studentSubplan) return;
 
                     $color = "#99ff9c";
-                    if($dataProvider['subplan']["times_paid"] < $dataProvider['subplan']["sent_invoices_count"]) $color = "#ff9a99";
-                    if($dataProvider['subplan']["times_paid"] > $dataProvider['subplan']["sent_invoices_count"]) $color = "#99cfff";
+                    if($studentSubplan["times_paid"] < $studentSubplan["sent_invoices_count"]) $color = "#ff9a99";
+                    if($studentSubplan["times_paid"] > $studentSubplan["sent_invoices_count"]) $color = "#99cfff";
                     $unpaidInvoiceNumbers = SentInvoices::getUnpaidForStudent($dataProvider["id"]);
                     $studentId = $dataProvider['id'];
-                    $timesPaid = $dataProvider['subplan']["times_paid"];
-                    $sentInvoices = $dataProvider['subplan']["sent_invoices_count"];
+                    $timesPaid = $studentSubplan["times_paid"];
+                    $sentInvoices = $studentSubplan["sent_invoices_count"];
 
                     $html = "";
                     if($unpaidInvoiceNumbers){   

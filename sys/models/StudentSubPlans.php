@@ -15,6 +15,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
             [['user_id', 'plan_id', 'start_date'], 'required'],
             [['start_date'], 'string'],
             [['user_id', 'plan_id', 'sent_invoices_count', 'times_paid'], 'number'],
+            [['is_active'], 'boolean'],
         ];
     }
 
@@ -24,6 +25,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
             'id' => 'ID',
             'user_id' => \Yii::t('app',  'Student ID'),
             'plan_id' => \Yii::t('app',  'Subscription plan ID'),
+            'is_active' => \Yii::t('app',  'Is active'),
             'start_date' => \Yii::t('app',  'Plan start date'),
             'sent_invoices_count' => \Yii::t('app',  'Sent invoices count'),
             'times_paid' => \Yii::t('app',  'Times paid'),
@@ -42,7 +44,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
 
     public function getCurrentForStudent($studentId)
     {
-        return self::find()->where(['user_id' => $studentId])->orderBy(['studentsubplans.id' => SORT_DESC])->joinWith('plan')->one();
+        return self::find()->where(['user_id' => $studentId, 'is_active' => true])->orderBy(['studentsubplans.id' => SORT_DESC])->joinWith('plan')->one();
     }
 
     public function getPlanEndDatesForCurrentSchoolStudents(){
@@ -50,7 +52,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         if($isAdmin) return [];
 
         $schoolId = School::getCurrentSchoolId();
-        $studentPlans = self::find()->joinWith("plan")->andFilterWhere(['schoolsubplans.school_id' => $schoolId])->asArray()->all();
+        $studentPlans = self::find()->joinWith("plan")->andFilterWhere(['schoolsubplans.school_id' => $schoolId, 'is_active' => true])->asArray()->all();
         $planEndDates = array_map(function ($studentPlan) {
             $planPauses = StudentSubplanPauses::getForStudentSubplan($studentPlan['id'])->asArray()->all();
             $date = date_create($studentPlan["start_date"]);
@@ -73,7 +75,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
     }
 
     public function getRemainingPauseWeeks($studentId){
-        $subplan = self::getForStudent($studentId);
+        $subplan = self::getCurrentForStudent($studentId);
         $pauses = StudentSubplanPauses::getForStudentSubplan($subplan['id'])->asArray()->all();
         $totalPausedWeeks = 0;
         foreach($pauses as $p){
@@ -92,13 +94,8 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $planEndDate > $time;
     }
 
-    public static function getForCurrentSchool(){
-        $schoolId = School::getCurrentSchoolId();
-        return self::find()->joinWith('plan')->where(['school_id' => $schoolId])->asArray()->all();
-    }
-
     public function getEndDate($studentId){
-        $subplan = self::getForStudent($studentId);
+        $subplan = self::getCurrentForStudent($studentId);
         if ($subplan == null) return null;
         $planPauses = StudentSubplanPauses::getForStudentSubplan($subplan['id'])->asArray()->all();
         $date = date_create($subplan["start_date"]);
@@ -117,7 +114,6 @@ class StudentSubPlans extends \yii\db\ActiveRecord
     public static function shouldSendAdvanceInvoice($studentSubplan){
         if($studentSubplan === null || $studentSubplan["plan"] === null) return false;
         if(!self::isSameDayAsPlanStart($studentSubplan)) return false;
-
         $planMonths = $studentSubplan['plan']['months'];
         $planUnlimited = $planMonths === 0;
         $planEnded = $studentSubplan['sent_invoices_count'] == $planMonths;
@@ -144,5 +140,14 @@ class StudentSubPlans extends \yii\db\ActiveRecord
     public function increaseSentInvoicesCount($count = 1){
         $this->sent_invoices_count += $count;
         $this->update();
+    }
+
+    public static function resetActivePlanForUser($studentId){
+        $activeSubplan = self::getCurrentForStudent($studentId);
+
+        if($activeSubplan){
+            $activeSubplan->is_active = false;
+            $activeSubplan->update();
+        }        
     }
 }

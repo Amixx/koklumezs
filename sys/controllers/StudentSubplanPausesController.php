@@ -77,8 +77,7 @@ class StudentSubplanPausesController extends Controller
         $schoolId = School::getCurrentSchoolId();
         if ($model->load(Yii::$app->request->post())) {
             if(isset($_POST['user_id'])) $userId = $_POST['user_id'];
-            echo $userId;
-            $studentSubplan = StudentSubPlans::findOne(['user_id' => $userId]);
+            $studentSubplan = StudentSubPlans::getCurrentForStudent($userId);
             if($studentSubplan){
                 $model->studentsubplan_id = $studentSubplan['id'];
                 if($model->save()){

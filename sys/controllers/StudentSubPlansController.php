@@ -76,7 +76,8 @@ class StudentSubPlansController extends Controller
             $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
-        StudentSubPlans::findOne(['user_id' => $userId])->delete();
+        
+        StudentSubplans::resetActivePlanForUser($userId);
 
         return $this->redirect(Yii::$app->request->referrer);
     }

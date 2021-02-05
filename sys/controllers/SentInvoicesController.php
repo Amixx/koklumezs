@@ -67,7 +67,7 @@ class SentInvoicesController extends Controller
         $processRequest = isset($post['SentInvoices']) && isset($post['SentInvoices']['paid_date']) && $post['SentInvoices']['paid_date'];
 
         if($processRequest){
-            InvoiceManager::createRealInvoice($model, $invoiceNumber, $model['user_id'], $post['SentInvoices']['paid_date']);
+            InvoiceManager::createRealInvoice($model, $invoiceNumber, $model['user_id'], $post['SentInvoices']['paid_date'], $model);
 
             return $this->redirect(Yii::$app->request->referrer);
         }
@@ -129,7 +129,7 @@ class SentInvoicesController extends Controller
 
     protected function findAdvanceByNumber($invoiceNumber)
     {
-        if (($model = SentInvoices::find()->where(['invoice_number' => $invoiceNumber])->joinWith("student")->one()) !== null) {
+        if (($model = SentInvoices::find()->where(['invoice_number' => $invoiceNumber])->joinWith("student")->joinWith("studentSubplan")->one()) !== null) {
             return $model;
         }
 

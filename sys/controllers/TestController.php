@@ -80,8 +80,21 @@ class TestController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
-        $firstLectureIds = RegistrationLesson::getLessonIds(1, true);
+        $q = 'SELECT * FROM studentsubplans where
+            start_date like "%-31" or
+            start_date like "%-01" OR
+            start_date like "%-02" OR
+            start_date like "%-03" OR
+            start_date like "%-04"';
 
-        var_dump($firstLectureIds);
+        $data = Yii::$app->db->createCommand($q)->queryAll();
+
+        $ids = [];
+
+        foreach($data as $d){
+            $ids[] = $d['user_id'];
+        }
+
+        var_dump($ids);
     }
 }

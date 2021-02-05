@@ -18,8 +18,8 @@ class SentInvoices extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'invoice_number', 'plan_name', 'plan_price', 'plan_start_date'], 'required'],
-            [['user_id', 'invoice_number', 'plan_price'], 'number'],
+            [['user_id', 'studentsubplan_id', 'invoice_number', 'plan_name', 'plan_price', 'plan_start_date'], 'required'],
+            [['user_id', 'studentsubplan_id', 'invoice_number', 'plan_price'], 'number'],
             [['plan_name', 'plan_start_date', 'sent_date'], 'string'],
             [['is_advance'], 'boolean']
         ];
@@ -30,6 +30,7 @@ class SentInvoices extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => \Yii::t('app',  'Student ID'),
+            'studentsubplan_id' => \Yii::t('app',  'Student subscription plan ID'),
             'invoice_number' => \Yii::t('app',  'Invoice number'),
             'is_advance' => \Yii::t('app',  'Is advance invoice'),
             'plan_name' => \Yii::t('app',  'Plan title'),
@@ -42,6 +43,11 @@ class SentInvoices extends \yii\db\ActiveRecord
     public function getStudent()
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id'])->joinWith('payer');
+    }
+
+    public function getStudentSubplan()
+    {
+        return $this->hasOne(StudentSubPlans::className(), ['id' => 'studentsubplan_id'])->joinWith('plan');
     }
 
     public static function getForCurrentSchool(){
@@ -73,25 +79,27 @@ class SentInvoices extends \yii\db\ActiveRecord
         return self::find()->where(['invoice_number' => $invoiceNumber, 'is_advance' => false])->one();
     }
 
-    public static function createAdvance($userId, $invoiceNumber, $schoolSubplan, $startDate){
+    public static function createAdvance($userId, $invoiceNumber, $schoolSubplan, $studentSubplan){
         $invoice = new SentInvoices;
         $invoice->user_id = $userId;
+        $invoice->studentsubplan_id = $studentSubplan['id'];
         $invoice->invoice_number = $invoiceNumber;
         $invoice->is_advance = true;
         $invoice->plan_name = $schoolSubplan['name'];
         $invoice->plan_price = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
-        $invoice->plan_start_date = $startDate;
+        $invoice->plan_start_date = $studentSubplan['start_date'];
         $invoice->save();
     }
 
-    public static function createReal($studentId, $invoiceNumber, $schoolSubplan, $planStartDate, $paidDate){
+    public static function createReal($studentId, $invoiceNumber, $schoolSubplan, $studentSubplan, $paidDate){
         $invoice = new SentInvoices;
         $invoice->user_id = $studentId;
+        $invoice->studentsubplan_id = $studentSubplan['id'];
         $invoice->invoice_number = $invoiceNumber;
         $invoice->is_advance = false;
         $invoice->plan_name = $schoolSubplan['name'];
         $invoice->plan_price = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
-        $invoice->plan_start_date = $planStartDate;
+        $invoice->plan_start_date = $studentSubplan['start_date'];
         $invoice->sent_date = $paidDate;
         $invoice->save();
     }
