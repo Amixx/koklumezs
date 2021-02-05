@@ -90,7 +90,9 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public function getSubplan()
     {
-        return $this->hasOne(StudentSubPlans::className(), ['user_id' => 'id'])->joinWith("plan");
+        return $this->hasOne(StudentSubPlans::className(), ['user_id' => 'id'])
+            ->orderBy(['studentsubplans.id' => SORT_DESC])
+            ->joinWith('plan');
     }
 
     public static function getFullName($user){

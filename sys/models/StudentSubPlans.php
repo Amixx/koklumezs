@@ -40,14 +40,9 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }
 
-    public function getForStudent($studentId)
+    public function getCurrentForStudent($studentId)
     {
-        return self::find()->where(['user_id' => $studentId])->joinWith('plan')->one();
-    }
-
-    public function getForStudentEdit($studentId)
-    {
-        return self::find()->where(['user_id' => $studentId]);
+        return self::find()->where(['user_id' => $studentId])->orderBy(['studentsubplans.id' => SORT_DESC])->joinWith('plan')->one();
     }
 
     public function getPlanEndDatesForCurrentSchoolStudents(){

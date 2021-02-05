@@ -283,7 +283,7 @@ class CronController extends Controller
         $students = Users::getAllStudents();
         
         foreach ($students as $student) {
-            $studentSubplan = StudentSubPlans::getForStudent($student["id"]);
+            $studentSubplan = StudentSubPlans::getCurrentForStudent($student["id"]);
 
             if(StudentSubPlans::shouldSendAdvanceInvoice($studentSubplan)){
                 InvoiceManager::sendAdvanceInvoice($student, $studentSubplan);

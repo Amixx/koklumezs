@@ -47,7 +47,7 @@ class StudentSubPlansController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
-        $subplan = StudentSubPlans::getForStudent($id);
+        $subplan = StudentSubPlans::getCurrentForStudent($id);
         $planFiles = PlanFiles::getFilesForPlan($subplan["plan_id"])->asArray()->all();
         $planPauses = null;
         if(StudentSubplanPauses::studentHasAnyPauses($id)){

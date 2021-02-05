@@ -96,7 +96,7 @@ class UserController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
-        $studentSubPlan = StudentSubPlans::getForStudent($id);
+        $studentSubPlan = StudentSubPlans::getCurrentForStudent($id);
 
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -244,13 +244,23 @@ class UserController extends Controller
             if (isset($post['Users']['subplan'])) {
                 $postData = $post['Users']['subplan'];
 
-                $subplan = StudentSubPlans::getForStudent($model->id);
-                if ($subplan) {
+                $subplan = StudentSubPlans::getCurrentForStudent($model->id);
+                $schoolSubplanChanged = $subplan['plan_id'] !== (int) $postData['plan_id'];
+              
+                if ($subplan && !$schoolSubplanChanged) {
                     $subplan->plan_id = $postData["plan_id"];
                     $subplan->start_date = $postData["start_date"];
                     $subplan->sent_invoices_count = $postData["sent_invoices_count"];
                     $subplan->times_paid = $postData["times_paid"];
                     $subplan->update();
+                } else if($schoolSubplanChanged){
+                    $subplan = new StudentSubPlans;
+                    $subplan->user_id = $model->id;
+                    $subplan->plan_id = $postData["plan_id"];
+                    $subplan->start_date = $postData["start_date"];
+                    $subplan->sent_invoices_count = $postData["sent_invoices_count"];
+                    $subplan->times_paid = $postData["times_paid"];
+                    $subplan->save();
                 } else {
                     $subplan = new StudentSubPlans;
                     $subplan->user_id = $model->id;
@@ -339,7 +349,7 @@ class UserController extends Controller
 
     protected function findModel($id)
     {
-        if (($model = Users::find()->where(['users.id' => $id])->joinWith('subplan')->joinWith("payer")->one()) !== null) {
+        if (($model = Users::find()->where(['users.id' => $id])->joinWith("payer")->one()) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
