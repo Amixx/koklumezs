@@ -49,18 +49,29 @@ class RegistrationLessonsController extends Controller
         $schoolId = School::getCurrentSchoolId();
         $lectures = Lectures::getLectures();
 
-        $withoutExperience = new ActiveDataProvider([
-            'query' => RegistrationLesson::find()->andWhere(['school_id' => $schoolId, 'for_students_with_experience' => false])->joinWith('lesson'),
+        $registrationLessons = [];
+
+        $registrationLessons['without_instrument']['without_experience'] = new ActiveDataProvider([
+            'query' => RegistrationLesson::getLessonsForIndex($schoolId, false, false),
         ]);
-        $withExperience = new ActiveDataProvider([
-            'query' => RegistrationLesson::find()->andWhere(['school_id' => $schoolId, 'for_students_with_experience' => true])->joinWith('lesson'),
+        $registrationLessons['without_instrument']['with_experience'] = new ActiveDataProvider([
+            'query' => RegistrationLesson::getLessonsForIndex($schoolId, false, true),
         ]);
+        $registrationLessons['with_instrument']['without_experience'] = new ActiveDataProvider([
+            'query' => RegistrationLesson::getLessonsForIndex($schoolId, true, false),
+        ]);
+        $registrationLessons['with_instrument']['with_experience'] = new ActiveDataProvider([
+            'query' => RegistrationLesson::getLessonsForIndex($schoolId, true, true),
+        ]);
+
+
         $model = new RegistrationLesson;
         $model->school_id = $schoolId;
 
         $post = Yii::$app->request->post();
         if($post){
             $model->lesson_id = (int)$post['RegistrationLesson']['lesson_id'];
+            $model->for_students_with_instrument = (bool)$post['RegistrationLesson']['for_students_with_instrument'];
             $model->for_students_with_experience = (bool)$post['RegistrationLesson']['for_students_with_experience'];
 
             if($model->save()){
@@ -69,8 +80,7 @@ class RegistrationLessonsController extends Controller
         }
 
         return $this->render('index', [
-            'withoutExperience' => $withoutExperience,
-            'withExperience' => $withExperience,
+            'registrationLessons' => $registrationLessons,
             'lectures' => $lectures,
             'model' => $model,
         ]);

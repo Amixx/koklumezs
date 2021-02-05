@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
 use yii\widgets\ActiveForm;
 
 $this->title = \Yii::t('app', 'Lessons to assign after registration');
@@ -13,36 +12,24 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="container">
         <div class="row">
-            <div class="col-sm-6">
-                <h3><?= Yii::t('app', 'Lessons for students without experience') ?></h3>
-
-                 <?= GridView::widget([
-                    'dataProvider' => $withoutExperience,
-                    'columns' => [
-                        ['class' => 'yii\grid\SerialColumn'],
-                        'lesson.title',
-                        [
-                            'class' => 'yii\grid\ActionColumn',
-                            'template' => '{delete}'
-                        ],
-                    ],
-                ]); ?>
-            </div>
-            <div class="col-sm-6">
-                <h3><?= Yii::t('app', 'Lessons for students with experience') ?></h3>
-
-                 <?= GridView::widget([
-                    'dataProvider' => $withExperience,
-                    'columns' => [
-                        ['class' => 'yii\grid\SerialColumn'],
-                        'lesson.title',
-                        [
-                            'class' => 'yii\grid\ActionColumn',
-                            'template' => '{delete}'
-                        ],
-                    ],
-                ]); ?>                
-            </div>
+            <?= $this->render('_lessons', [
+                'title' => 'Without instrument; without experience',
+                'model' => $registrationLessons['without_instrument']['without_experience'],
+            ]) ?>
+            <?= $this->render('_lessons', [
+                'title' => 'Without instrument; with experience',
+                'model' => $registrationLessons['without_instrument']['with_experience'],
+            ]) ?>
+        </div>
+        <div class="row">
+            <?= $this->render('_lessons', [
+                'title' => 'With instrument; without experience',
+                'model' => $registrationLessons['with_instrument']['without_experience'],
+            ]) ?>
+            <?= $this->render('_lessons', [
+                'title' => 'With instrument; with experience',
+                'model' => $registrationLessons['with_instrument']['with_experience'],
+            ]) ?>
         </div>
         <hr>
         <div class="row">
@@ -51,7 +38,31 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'lesson_id')->dropDownList($lectures, ['prompt' => '', 'type' => 'number']) ?>
 
-                <?= $form->field($model, 'for_students_with_experience')->dropDownList([0 => 'bez pieredzes', 1 => 'ar pieredzi'], ['prompt' => '', 'type' => 'number'])->label('Kuriem skolēniem piešķirt nodarbību') ?>
+                <?= $form->field(
+                    $model, 
+                    'for_students_with_instrument'
+                )->dropDownList(
+                    [
+                        0 => 'nav instrumenta',
+                        1 => 'ir instrumentu'
+                    ],
+                    [
+                        'prompt' => '-- instruments --',
+                        'type' => 'number'
+                    ]
+                )->label('Kuriem skolēniem piešķirt nodarbību') ?>
+
+                <?= $form->field(
+                    $model, 
+                    'for_students_with_experience'
+                )->dropDownList(
+                    [
+                        0 => 'bez pieredzes',
+                        1 => 'ar pieredzi'
+                    ], [
+                        'prompt' => '-- pieredze --',
+                        'type' => 'number'
+                    ])->label(false) ?>
 
                 <div class="form-group">
                     <?= Html::submitButton(\Yii::t('app', 'Add'), ['class' => 'btn btn-success']) ?>
@@ -61,8 +72,4 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
     </div>
-
-   
-
-
 </div>

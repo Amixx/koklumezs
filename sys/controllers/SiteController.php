@@ -221,7 +221,7 @@ class SiteController extends Controller
                     Yii::$app->user->login($user);
 
                     $schoolTeacher = SchoolTeacher::getBySchoolId($s)["user"];
-                    $firstLectureIds = RegistrationLesson::getLessonIds($school['id'], $model->hasExperience);
+                    $firstLectureIds = RegistrationLesson::getLessonIds($school['id'], $model->ownsInstrument, $model->hasExperience);
                     $insertDate = date('Y-m-d H:i:s', time());
                     $insertColumns = [];
 
@@ -327,6 +327,7 @@ class SiteController extends Controller
             $user['about'] = $aboutUser;
             $saved = $user->save();
             if($saved){
+                Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam spēlēt! Turpmākās 2 nedēļas vari izmēģināt bez maksas!');
                 return $this->redirect(['lekcijas/index']);
             }
         }

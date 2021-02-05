@@ -426,4 +426,9 @@ return [
     'Create a plan part' => 'Izveidot plāna daļu',
     'A profile has already been registered using this e-mail! Have you forgotten your password?' => 'Profils ar šādu e-pastu jau ir reģistrēts! Vai aizmirsi paroli?',
     'Is active' => 'Vai ir aktīvs',
+    'For students with instrument' => 'Skolēniem ar instrumentu',
+    'Without instrument; without experience' => 'Bez instrumenta; bez pieredzes',
+    'Without instrument; with experience' => 'Bez instrumenta; ar pieredzi',
+    'With instrument; without experience' => 'Ar instrumentu; bez pieredzes',
+    'With instrument; with experience' => 'Ar instrumentu; ar pieredzi'
 ];
