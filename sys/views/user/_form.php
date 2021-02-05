@@ -4,14 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\models\Users;
 use  yii\jui\DatePicker;
-use mihaildev\elfinder\InputFile;
 
 $isTeacher = Users::isCurrentUserTeacher();
 ?>
 
 <div class="user-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['enableClientValidation'=>false]); ?>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item active">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><?= \Yii::t('app',  'User data') ?></a>
