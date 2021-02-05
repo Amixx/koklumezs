@@ -82,38 +82,56 @@ class TeacherUserSearch extends Users
             ->andFilterWhere(['like', 'last_login', $this->last_login])
             ->andFilterWhere(['like', 'dont_bother', $this->dont_bother]);
 
-        // if(isset($params["TeacherUserSearch"]) && isset($params["TeacherUserSearch"]["subplan_monthly_cost"])) {
-        //     $query->andFilterWhere(['like', 'schoolsubplans.id', $params["TeacherUserSearch"]["subplan_monthly_cost"]]);
-        // }
-        // if(isset($params["TeacherUserSearch"]) && isset($params["TeacherUserSearch"]["subplan_end_date"]) && $params["TeacherUserSearch"]["subplan_end_date"]) {
-        //     $firstDayOfMonth = date_format((new \DateTime($params["TeacherUserSearch"]["subplan_end_date"]))
-        //         ->modify('first day of this month'), 'Y-m-d');
-        //     $lastDayOfMonth = date_format((new \DateTime($params["TeacherUserSearch"]["subplan_end_date"]))
-        //         ->modify('last day of this month'), 'Y-m-d');
-                
-        //     $dateFilterString = '
-        //         DATE_ADD(
-        //             DATE_ADD(studentsubplans.start_date, INTERVAL schoolsubplans.months MONTH),
-        //             INTERVAL (
-        //                 SELECT COALESCE(sum(weeks), 0) FROM studentsubplanpauses
-        //                 WHERE studentsubplan_id = studentsubplans.id) WEEK)
-        //     ';
-        //     if($firstDayOfMonth && $lastDayOfMonth){
-        //         $query->andFilterWhere(['between', $dateFilterString, $firstDayOfMonth, $lastDayOfMonth]);
-        //     }
-        // }
-        // if(isset($params["TeacherUserSearch"]) && isset($params["TeacherUserSearch"]["subplan_paid_type"]) && $params["TeacherUserSearch"]["subplan_paid_type"]) {
-        //     $type = $params["TeacherUserSearch"]["subplan_paid_type"];
-        //     if($type == "late"){
-        //         $sign = '<';
-        //     }else if($type == "paid"){
-        //         $sign = '=';
-        //     }else if($type == "prepaid"){
-        //         $sign = '>';
+        // if(isset($params["TeacherUserSearch"])) {
+        //     $studentSubplans = StudentSubPlans::find()->where(['id', 'user_id', $schoolStudentIds])->joinWith('plan');
+
+        //     if(isset($params["TeacherUserSearch"]["subplan_monthly_cost"])){
+        //         $studentSubplans->andWhere(['like', 'schoolsubplans.id', $params["TeacherUserSearch"]["subplan_monthly_cost"]]);
         //     }
 
-        //     $query->andWhere('studentsubplans.times_paid ' . $sign . ' studentsubplans.sent_invoices_count');  
-        // }        
+        //     if(isset($params["TeacherUserSearch"]["subplan_end_date"]) && $params["TeacherUserSearch"]["subplan_end_date"]){
+        //         $firstDayOfMonth = date_format((new \DateTime($params["TeacherUserSearch"]["subplan_end_date"]))
+        //             ->modify('first day of this month'), 'Y-m-d');
+        //         $lastDayOfMonth = date_format((new \DateTime($params["TeacherUserSearch"]["subplan_end_date"]))
+        //             ->modify('last day of this month'), 'Y-m-d');
+                    
+        //         $dateFilterString = '
+        //             DATE_ADD(
+        //                 DATE_ADD(studentsubplans.start_date, INTERVAL schoolsubplans.months MONTH),
+        //                 INTERVAL (
+        //                     SELECT COALESCE(sum(weeks), 0) FROM studentsubplanpauses
+        //                     WHERE studentsubplan_id = studentsubplans.id) WEEK)
+        //         ';
+        //         if($firstDayOfMonth && $lastDayOfMonth){
+        //             $studentSubplans->andWhere(['between', $dateFilterString, $firstDayOfMonth, $lastDayOfMonth]);
+        //         }
+        //     }
+
+        //     if(isset($params["TeacherUserSearch"]["subplan_paid_type"]) && $params["TeacherUserSearch"]["subplan_paid_type"]){
+        //         $type = $params["TeacherUserSearch"]["subplan_paid_type"];
+        //         if($type == "late"){
+        //             $sign = '<';
+        //         }else if($type == "paid"){
+        //             $sign = '=';
+        //         }else if($type == "prepaid"){
+        //             $sign = '>';
+        //         }
+
+        //         $studentSubplans->andWhere('studentsubplans.times_paid ' . $sign . ' studentsubplans.sent_invoices_count');  
+        //     }
+
+        //     // $studentSubplanData = $studentSubplans
+        //     var_dump($studentSubplans);
+        //     die();
+        //     $userIds = [];
+        //     foreach($studentSubplanData as $studentSubplan){
+        //         $userIds[] = $studentSubplan['user_id'];
+        //     }
+        //     var_dump($userIds);
+        //     die();
+
+        //     $query->andFilterWhere(['in', 'users.id', $userIds]);
+        // }
 
         return $dataProvider;
     }
