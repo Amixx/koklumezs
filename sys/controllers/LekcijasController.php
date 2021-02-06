@@ -213,6 +213,10 @@ class LekcijasController extends Controller
                     $evaluation->user_id = $user->id;
                     $evaluation->created = date('Y-m-d H:i:s', time());
                     $evaluation->evaluation = $value ?? 0;
+                    $evaluation->public_comment = false;
+                    if (isset($post["public_comment"])) {
+                        $evaluation->public_comment = $post["public_comment"];
+                    };
                     $evaluation->save();
                 }
                 $param = Evaluations::getScaleParam();
@@ -299,6 +303,17 @@ class LekcijasController extends Controller
             $userComments = [];
             if (SectionsVisible::isVisible("Komentāri")) {
                 $userComments = Userlectureevaluations::getComments($id);
+
+                $currentUserEmail = Yii::$app->user->identity->email;
+                $user_id = Yii::$app->user->identity->id;
+                $isCurrentUserTeacher = Users::isTeacher($currentUserEmail);
+                
+                foreach($userComments as $key =>$comment) {
+                    if (!($isCurrentUserTeacher || $comment['user_id'] == $user_id)) {
+                        if ($comment['public_comment'] != '1') {unset($userComments[$key]);}
+                    }
+                }
+
                 foreach ($userComments as &$comment) {
                     if ($comment['id']) {
                         $comment['responses'] = CommentResponses::getCommentResponses($comment['id']);
