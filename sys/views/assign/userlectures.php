@@ -165,10 +165,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <h3><?= \Yii::t('app', 'New difficulty') ?>: <strong><?= $PossibleThreeLectures > 0 ? $PossibleThreeLectures : $goalsum ?></strong> <small>[<?= \Yii::t('app', 'No suitable lessons found') ?>]</small></h3>
     <?php } ?>
     <h3><?= \Yii::t('app', 'Manual assignment of lessons') ?>:</h3>
-    <label for="preferred-lecture-difficulty">
-        <?= \Yii::t('app', 'Difficulty') ?>
-        <input type="number" name="preferred-lecture-difficulty" id="PreferredLectureDifficulty">
-    </label>
 
     <?php $form = ActiveForm::begin(); ?>
 

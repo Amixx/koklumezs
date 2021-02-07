@@ -430,5 +430,6 @@ return [
     'Without instrument; without experience' => 'Bez instrumenta; bez pieredzes',
     'Without instrument; with experience' => 'Bez instrumenta; ar pieredzi',
     'With instrument; without experience' => 'Ar instrumentu; bez pieredzes',
-    'With instrument; with experience' => 'Ar instrumentu; ar pieredzi'
+    'With instrument; with experience' => 'Ar instrumentu; ar pieredzi',
+    'Make this comment public' => 'Izveidot kā publisku komentāru',
 ];

@@ -40,6 +40,7 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
             [['lecture_id', 'evaluation_id', 'user_id', 'evaluation'], 'required'],
             [['lecture_id', 'evaluation_id', 'user_id'], 'integer'],
             [['evaluation'], 'string'],
+            [['public_comment'], 'boolean'],
             [['created'], 'safe'],
             [['evaluation_id'], 'exist', 'skipOnError' => true, 'targetClass' => Evaluations::className(), 'targetAttribute' => ['evaluation_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
