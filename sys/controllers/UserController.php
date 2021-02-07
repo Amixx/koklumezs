@@ -260,14 +260,14 @@ class UserController extends Controller
                         $studentSubplan->plan_id = $postData["plan_id"];
                         $studentSubplan->is_active = true;
                         $studentSubplan->start_date = $postData["start_date"];
-                        $studentSubplan->sent_invoices_count = $postData["sent_invoices_count"];
-                        $studentSubplan->times_paid = $postData["times_paid"];
+                        $studentSubplan->sent_invoices_count = $postData["sent_invoices_count"] ? $postData["sent_invoices_count"] : 0;
+                        $studentSubplan->times_paid = $postData["times_paid"] ? $postData["times_paid"] : 0;
                         $studentSubplan->save();
                     }else{
                         $studentSubplan->plan_id = $postData["plan_id"];
                         $studentSubplan->start_date = $postData["start_date"];
-                        $studentSubplan->sent_invoices_count = $postData["sent_invoices_count"];
-                        $studentSubplan->times_paid = $postData["times_paid"];
+                        $studentSubplan->sent_invoices_count = $postData["sent_invoices_count"] ? $postData["sent_invoices_count"] : 0;
+                        $studentSubplan->times_paid = $postData["times_paid"] ? $postData["times_paid"] : 0;
                         $studentSubplan->update();
                     }                    
                 } else {

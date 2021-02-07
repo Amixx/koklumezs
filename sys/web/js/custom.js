@@ -322,7 +322,7 @@ function setupAssignUserListFilters(){
     loadUnreadMessagesCount();
 }
 
-function reloadChat(message, clearChat, showSpinner) {
+function reloadChat(message, clearChat, showSpinner, scrollToBottom) {
     var url = $(".btn-send-comment").data("url");
     var model = $(".btn-send-comment").data("model");
     var recipient_id = $(".btn-send-comment").data("recipient_id");
@@ -341,9 +341,26 @@ function reloadChat(message, clearChat, showSpinner) {
                 $("#chat-user-list").html(data.userList);
             }
 
-            if(showSpinner) showChatContent();
+            showChatContent();
         }
     });
+}
+
+function scrollChatToBottom(){
+    useTimeout = false;
+    $("#chat-box-container").scrollTop(function() {
+        useTimeout = this.scrollHeight === 0;
+        return this.scrollHeight;
+    });
+
+    //šitā nekad nevajag darīt!!! :)
+    if(useTimeout){
+        setTimeout(function(){
+            $("#chat-box-container").scrollTop(function() {
+                return this.scrollHeight;
+            });
+        }, 200);        
+    }
 }
 
 var $unreadCount = $(".chat-unread-count");
@@ -371,31 +388,33 @@ function isChatOpen(){
 
 
 setInterval(function () {
-    if(isChatOpen()) reloadChat('', false, false);
-}, 5000); // katru piekto sekundi
+    if(isChatOpen()) reloadChat('', false, false, false);
+}, 60000); // katru minūti
 
 setInterval(function () {
     if(!isChatOpen()) loadUnreadMessagesCount();
-}, 60000); // katru minūti
+}, 120000); // katru otro minūti
 
 $(".btn-send-comment").on("click", function () {
     var message = $("#chat_message").val();
     $(".chat-unread-count").hide();
-    reloadChat(message, true, false);
+    reloadChat(message, true, false, true);
 });
-
 
 $("#chat-toggle-button").on('click', function(){
     openChat();
 });
 
 function openChat(){
-    $unreadCount.hide();
+    $unreadCount.hide();    
 
     var url = IS_PROD ? "/sys/user/open-chat" : "/user/open-chat";
     $.ajax({
         url: url,
         type: "POST",
+        success: function(){
+            scrollChatToBottom();
+        }
     });
 }
 
@@ -403,14 +422,14 @@ $(document).on('click', ".chat-user-item", function(){
     var newRecipientId = $(this).data("userid");
     $(".btn-send-comment").data("recipient_id", newRecipientId);
 
-    reloadChat("", true, true);
+    reloadChat("", true, true, true);
 })
 
 $(document).on('click', ".chat-with-student", function(){
     var newRecipientId = $(this).data("userid");
     $(".btn-send-comment").data("recipient_id", newRecipientId);
 
-    reloadChat("", true, true);
+    reloadChat("", true, true, true);
     openChat();
     $("#chatModal").modal('show');
 })
@@ -424,6 +443,7 @@ function hideChatContent(){
 function showChatContent(){
     $chatContent.show();
     $chatSpinner.hide();
+    scrollChatToBottom();
 }
 
 $("#export-sent-invoices").on("click", exportSentInvoices);

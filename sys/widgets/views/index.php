@@ -23,8 +23,8 @@
                   </ul>
                   </div>
                 <?php } ?>
-                  <div class="slimScrollDiv" style="overflow: auto; display:inline-block; height: 100%; width: <?= $data['userList'] ? '69%' : '100%' ?>;">
-                      <div id="chat-box" class="box-body chat" style="width: auto; height: 350px;">
+                  <div class="slimScrollDiv" id='chat-box-container' style="overflow: auto; display:inline-block; height: 100%; width: <?= $data['userList'] ? '69%' : '100%' ?>;">
+                      <div id="chat-box" class="box-body chat" style="width: auto;">
                           <?= $data['content'] ?>
                       </div>
                       <div class="slimScrollBar" style="background: none repeat scroll 0% 0% rgb(0, 0, 0); width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 0px; z-index: 99; right: 1px; height: 187.126px;"></div>
