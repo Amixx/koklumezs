@@ -53,6 +53,7 @@ $this->title = $subplan['plan']['name'];
     <?php if(!$planCurrentlyPaused) { ?>
         <?php if($remainingPauseWeeks > 0) { ?>
             <h3><?= Yii::t('app', 'Pause the plan') ?></h3>
+            <p><?= Yii::t('app', 'You have to do monthly payments for the pause weeks too. At the end of subscribtion plan all pauses will be summed up and the plan will be extended with free lessons.') ?></p>
             <?php $form = ActiveForm::begin([
                 'action' => ['student-subplan-pauses/create'],
                 'method' => 'post',
