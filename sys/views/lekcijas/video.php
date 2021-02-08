@@ -36,8 +36,6 @@ if ($hasFiles) {
                     });
                 </script>
             </div>
-            <hr />
         <?php } ?>
     </div>
-    <hr />
 <?php } ?>
