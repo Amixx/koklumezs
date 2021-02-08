@@ -62,9 +62,6 @@ class SchoolSettingsController extends Controller
         $faqsDataProvider = new ActiveDataProvider([
             'query' => SchoolFaqs::find()->where(['school_id' => $schoolId]),
         ]);
-        $studentQuestionsDataProvider = new ActiveDataProvider([
-            'query' => StudentQuestions::find()->where(['school_id' => $schoolId]),
-        ]);
         $signupQuestionsDataProvider = new ActiveDataProvider([
             'query' => SignupQuestions::find()->where(['school_id' => $schoolId]),
         ]);
@@ -74,7 +71,6 @@ class SchoolSettingsController extends Controller
             'difficultiesDataProvider' => $difficultiesDataProvider,
             'faqsDataProvider' => $faqsDataProvider,
             'schoolId' => $schoolId,
-            'studentQuestionsDataProvider' => $studentQuestionsDataProvider,
             'signupQuestionsDataProvider' => $signupQuestionsDataProvider,
             'signupUrl' => $signupUrl,
         ]);
