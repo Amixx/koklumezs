@@ -4,6 +4,7 @@ namespace app\helpers;
 
 use Yii;
 
+
 class EmailSender
 {
     public static function sendEmailWithAdvanceInvoice($message, $schoolEmail, $studentEmail, $invoiceNumber, $invoicePath){
@@ -17,7 +18,6 @@ class EmailSender
             ->setSubject("Avansa rēķins $invoiceNumber - " . Yii::$app->name)
             ->attach($invoicePath)
             ->send();
-        // return true;
     }
 
     public static function sendReminderToPay($schoolEmail, $userEmail){
@@ -28,7 +28,6 @@ class EmailSender
             ->setTo($userEmail)
             ->setSubject("Atgādinājums par rēķina apmaksu")
             ->send();
-        // return true;
     }
 
     public static function sendWarningToTeacher($studentEmail, $schoolEmail){
@@ -44,6 +43,96 @@ class EmailSender
             ->setTo($schoolEmail)
             ->setSubject("Skolēnam nenosūtījās rēķins!")
             ->send();
-        // return true;
+    }
+
+    public static function sendNewStudentNotification($user, $schoolEmail){
+        return Yii::$app
+            ->mailer
+            ->compose(['html' => 'new-user-html', 'text' => 'new-user-text'], [
+                'user' => $user,
+            ])
+            ->setFrom([$schoolEmail => Yii::$app->name])
+            ->setTo($schoolEmail)
+            ->setSubject("Reģistrējies jauns skolēns - " . $user['first_name'])
+            ->send();
+    }
+
+    public static function sendPostSignupMessage($registrationMessage, $schoolEmail, $userEmail){
+        return Yii::$app
+            ->mailer
+            ->compose(['html' => 'after-registration-html', 'text' => 'after-registration-text'], [
+                'message' => $registrationMessage,
+            ])
+            ->setFrom([$schoolEmail => Yii::$app->name])
+            ->setTo($userEmail)
+            ->setSubject("Apsveicam ar reģistrēšanos - " . Yii::$app->name)
+            ->send();
+    }
+
+    public static function sendRentNotification($model, $schoolEmail){
+        return Yii::$app
+            ->mailer
+            ->compose(['html' => 'instrument-html', 'text' => 'instrument-text'], [
+                'model' => $model,
+            ])
+            ->setFrom([$schoolEmail => Yii::$app->name])
+            ->setTo($schoolEmail)
+            ->setSubject("Par kokles iegādāšanos - " . $model['fullname'])
+            ->send();
+    }
+
+    public static function sendPasswordReset($user, $userEmail){
+        return Yii::$app
+            ->mailer
+            ->compose(
+                ['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'],
+                ['user' => $user]
+            )
+            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+            ->setTo($userEmail)
+            ->setSubject('Password reset for ' . Yii::$app->name)
+            ->send();
+    }
+
+    public static function sendEmailVerification($user, $userEmail){
+        return Yii::$app
+            ->mailer
+            ->compose(
+                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
+                ['user' => $user]
+            )
+            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+            ->setTo($userEmail)
+            ->setSubject('Account registration at ' . Yii::$app->name)
+            ->send();
+    }
+
+    public static function sendLessonNotification($user, $teacherMessage, $schoolEmail, $subject){
+        return Yii::$app
+            ->mailer
+            ->compose(
+                ['html' => 'lekcija-html', 'text' => 'lekcija-text'],
+                [
+                    'userFirstName' => $user->first_name,
+                    'teacherMessage' => $teacherMessage
+                ]
+            )
+            ->setFrom([$schoolEmail => Yii::$app->name])
+            ->setTo($user->email)
+            ->setSubject($subject . ' - ' . Yii::$app->name)
+            ->send();
+    }
+
+    public static function sendReminderToTeacher($user, $lecture, $x, $schoolEmail){
+        return Yii::$app
+            ->mailer
+            ->compose(
+                ['html' => 'japieskir-lekcija-html', 'text' => 'japieskir-lekcija-text'],
+                ['user' => $user, 'lecture' => $lecture, 'x' => $x]
+            )
+            ->setFrom([$schoolEmail => Yii::$app->name])
+            ->setTo($schoolEmail)
+            ->setSubject('Jāpiešķir nodarbība - ' . Yii::$app->name)
+            ->send();
     }
 }

@@ -6,19 +6,8 @@ use app\models\Lectures;
 use app\models\Users;
 use Yii;
 use yii\helpers\ArrayHelper;
+use app\helpers\EmailSender;
 
-/**
- * This is the model class for table "userlectures".
- *
- * @property int $id
- * @property int $lecture_id Lekcija
- * @property int $user_id Students
- * @property int $assigned Administrators
- * @property string $createdtime Izveidots
- *
- * @property Users $assigned
- * @property Lectures $lecture
- */
 class UserLectures extends \yii\db\ActiveRecord
 {
     /**
@@ -318,19 +307,7 @@ class UserLectures extends \yii\db\ActiveRecord
 
         $school = School::getByStudent($id);
 
-        return Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'lekcija-html', 'text' => 'lekcija-text'],
-                [
-                    'userFirstName' => $user->first_name,
-                    'teacherMessage' => $teacherMessage
-                ]
-            )
-            ->setFrom([$school['email'] => Yii::$app->name])
-            ->setTo($user->email)
-            ->setSubject($subject . ' - ' . Yii::$app->name)
-            ->send();
+        return EmailSender::sendLessonNotification($user, $teacherMessage, $school['email'], $subject);
     }
 
     /**
@@ -351,15 +328,6 @@ class UserLectures extends \yii\db\ActiveRecord
         $school = School::getByStudent($id);
         $lecture = Lectures::findOne($lecture_id);
         
-        return Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'japieskir-lekcija-html', 'text' => 'japieskir-lekcija-text'],
-                ['user' => $user, 'lecture' => $lecture, 'x' => $x]
-            )
-            ->setFrom([$school['email'] => Yii::$app->name])
-            ->setTo(Yii::$app->params['adminEmail'])
-            ->setSubject('Jāpiešķir nodarbība - ' . Yii::$app->name)
-            ->send();
+        return EmailSender::sendReminderToTeacher($user, $lecture, $x, $school['email']);
     }
 }

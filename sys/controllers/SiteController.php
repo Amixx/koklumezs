@@ -22,6 +22,7 @@ use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
 use app\models\ResendVerificationEmailForm;
 use app\models\VerifyEmailForm;
+use app\helpers\EmailSender;
 
 class SiteController extends Controller
 {
@@ -133,12 +134,12 @@ class SiteController extends Controller
         } catch (InvalidArgumentException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
-        if ($user = $model->verifyEmail()) {
-            if (Yii::$app->user->login($user)) {
-                Yii::$app->session->setFlash('success', 'Your email has been confirmed!');
-                return $this->goHome();
-            }
+        
+        if ($user = $model->verifyEmail() && Yii::$app->user->login($user)) {
+            Yii::$app->session->setFlash('success', 'Your email has been confirmed!');
+            return $this->goHome();
         }
+
         Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with provided token.');
         return $this->goHome();
     }
@@ -234,26 +235,10 @@ class SiteController extends Controller
                         ->batchInsert('userlectures', ['assigned', 'user_id', 'lecture_id', 'created', 'user_difficulty', 'open_times', 'sent'], $insertColumns)
                         ->execute();
 
-                    Yii::$app
-                        ->mailer
-                        ->compose(['html' => 'new-user-html', 'text' => 'new-user-text'], [
-                            'user' => $user,
-                        ])
-                        ->setFrom([$school['email'] => Yii::$app->name])
-                        ->setTo($school['email'])
-                        ->setSubject("Reģistrējies jauns skolēns - " . $user['first_name'])
-                        ->send();
+                    EmailSender::sendNewStudentNotification($user, $school['email']);
 
                     if($school['registration_message'] != null && $model->ownsInstrument){
-                        Yii::$app
-                            ->mailer
-                            ->compose(['html' => 'after-registration-html', 'text' => 'after-registration-text'], [
-                                'message' => $school['registration_message'],
-                            ])
-                            ->setFrom([$school['email'] => Yii::$app->name])
-                            ->setTo($user['email'])
-                            ->setSubject("Apsveicam ar reģistrēšanos - " . Yii::$app->name)
-                            ->send();
+                        EmailSender::sendPostSignupMessage($school['registration_message'], $school['email'], $user['email']);
                     }
 
                     if(!$model->ownsInstrument){
@@ -289,15 +274,7 @@ class SiteController extends Controller
         $valid = $model->load(Yii::$app->request->post()) && $model->validate();
 
         if ($valid) {
-            $sent = Yii::$app
-                ->mailer
-                ->compose(['html' => 'instrument-html', 'text' => 'instrument-text'], [
-                    'model' => $model,
-                ])
-                ->setFrom([$school['email'] => Yii::$app->name])
-                ->setTo($school['email'])
-                ->setSubject("Par kokles iegādāšanos - " . $model['fullname'])
-                ->send();
+            $sent = EmailSender::sendRentNotification($model, $school['email']);
             if($sent){
                 Yii::$app->session->setFlash('success', 'Paldies par tavu pieteikumu! Tuvākajā laikā sazināsimies ar tevi uz tavu norādīto epastu. Tikmēr vari noskatīties video par to, kā darboties platformā!');
                 return $this->redirect(['lekcijas/index']);

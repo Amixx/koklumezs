@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use app\models\Users;
 use yii\base\Model;
+use app\helpers\EmailSender;
 
 class ResendVerificationEmailForm extends Model
 {
@@ -40,18 +41,9 @@ class ResendVerificationEmailForm extends Model
             'email' => $this->email,
             'status' => Users::STATUS_INACTIVE
         ]);
-        if ($user === null) {
-            return false;
-        }
-        return Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
-            )
-            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
-            ->setTo($this->email)
-            ->setSubject('Account registration at ' . Yii::$app->name)
-            ->send();
+        
+        if ($user === null) return false;
+
+        return EmailSender::sendEmailVerification($user, $this->email);
     }
 }

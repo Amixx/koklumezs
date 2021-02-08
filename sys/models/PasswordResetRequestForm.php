@@ -5,10 +5,8 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use app\models\Users;
+use app\helpers\EmailSender;
 
-/**
- * Password reset request form
- */
 class PasswordResetRequestForm extends Model
 {
     public $email;
@@ -36,7 +34,6 @@ class PasswordResetRequestForm extends Model
      */
     public function sendEmail()
     {
-        /* @var $user UsUserser */
         $user = Users::findOne([
             'status' => Users::STATUS_ACTIVE,
             'email' => $this->email,
@@ -51,15 +48,7 @@ class PasswordResetRequestForm extends Model
                 return false;
             }
         }
-        return Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'],
-                ['user' => $user]
-            )
-            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
-            ->setTo($this->email)
-            ->setSubject('Password reset for ' . Yii::$app->name)
-            ->send();
+
+        return EmailSender::sendPasswordReset($user, $this->email);
     }
 }
