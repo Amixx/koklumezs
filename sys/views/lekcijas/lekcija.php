@@ -88,9 +88,6 @@ $this->params['breadcrumbs'][] = $model->title;
         <?php if ($difficulties and $lectureDifficulties and $difficultiesVisible) { ?>
             <?= $this->render('difficulties', ['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>
         <?php } ?>
-        <?php if ($comments) { ?>
-            <?= $this->render('comments', ['comments' => $comments]); ?>
-        <?php } ?>
         <?php if ($lecturefiles) { ?>
             <?= $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]); ?>
         <?php } ?>
