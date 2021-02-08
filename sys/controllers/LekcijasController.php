@@ -300,26 +300,6 @@ class LekcijasController extends Controller
             $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
             $lecturefiles = Lecturesfiles::getLectureFiles($id);
             $userLectureEvaluations = $force ? [] : Userlectureevaluations::getLectureEvaluations($user->id, $id);
-            $userComments = [];
-            if (SectionsVisible::isVisible("Komentāri")) {
-                $userComments = Userlectureevaluations::getComments($id);
-
-                $currentUserEmail = Yii::$app->user->identity->email;
-                $user_id = Yii::$app->user->identity->id;
-                $isCurrentUserTeacher = Users::isTeacher($currentUserEmail);
-                
-                foreach($userComments as $key =>$comment) {
-                    if (!($isCurrentUserTeacher || $comment['user_id'] == $user_id)) {
-                        if ($comment['public_comment'] != '1') {unset($userComments[$key]);}
-                    }
-                }
-
-                foreach ($userComments as &$comment) {
-                    if ($comment['id']) {
-                        $comment['responses'] = CommentResponses::getCommentResponses($comment['id']);
-                    }
-                }
-            }
             $baseUrl = Yii::$app->request->baseUrl;
             $ids = RelatedLectures::getRelations($id);
             if ($ids) {
@@ -356,7 +336,6 @@ class LekcijasController extends Controller
                 'force' => $force,
                 'relatedLectures' => $relatedLectures,
                 'difficultiesVisible' => $difficultiesVisible,
-                'comments' => $userComments,
                 'uLecture' => $uLecture,
                 'userCanDownloadFiles' => $userCanDownloadFiles,
                 'videoThumb' => $videoThumb
@@ -374,19 +353,6 @@ class LekcijasController extends Controller
         }
         $model = UserLectures::findOne(['lecture_id' => $lectureId, 'user_id' => Yii::$app->user->identity->id]);
         $model->is_favourite = !$model->is_favourite;
-        $model->update();
-        return $this->redirect(Yii::$app->request->referrer);
-    }
-
-    public function actionToggleStillLearning($lectureId)
-    {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-        $model = UserLectures::findOne(['lecture_id' => $lectureId, 'user_id' => Yii::$app->user->identity->id]);
-        $model->still_learning = !$model->still_learning;
         $model->update();
         return $this->redirect(Yii::$app->request->referrer);
     }
