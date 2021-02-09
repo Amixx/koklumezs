@@ -21,6 +21,7 @@ use app\models\School;
 
 use Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -277,9 +278,11 @@ class LecturesController extends Controller
                     $relation->save();
                 }
             }
-            return $this->redirect(['index']);
-            //return $this->redirect(['view', 'id' => $model->id]);
+
+            return $this->redirect(Url::previous());
         }
+
+        Url::remember(Yii::$app->request->referrer);
 
         return $this->render('update', [
             'model' => $model,

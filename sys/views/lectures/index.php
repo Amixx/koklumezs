@@ -5,9 +5,6 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use  yii\jui\DatePicker;
 use app\models\Lectures;
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\LecturesSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = \Yii::t('app', 'Lessons');
 $this->params['breadcrumbs'][] = $this->title;
@@ -20,18 +17,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(\Yii::t('app', 'Create lesson'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); 
-    ?>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            //'id',
             'title',
-            // 'description:ntext',
             [
                 'attribute' => 'created',
                 'value' => 'created',
@@ -43,24 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]),
                 'format' => ['date', 'php:Y-m-d H:i:s']
             ],
-            // [
-            //     'attribute' => 'updated',
-            //     'value' => 'updated',
-            //     'filter' => DatePicker::widget([
-            //         'model' => $searchModel,
-            //         'attribute' => 'updated',
-            //         'language' => 'lv',
-            //         'dateFormat' => 'yyyy-MM-dd',
-            //     ]),
-            //     'format' => ['date', 'php:Y-m-d H:i:s']
-            // ],
-
-            // [
-            //     'attribute' => 'author',
-            //     'format' => 'raw',
-            //     'value' => 'users.email',
-            //     'filter' => Html::dropDownList('TeacherLecturesSearch[author]', isset($get['TeacherLecturesSearch']['author']) ? $get['TeacherLecturesSearch']['author'] : '', $admins, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
-            // ],
             [
                 'attribute' => 'complexity',
                 'format' => 'raw',
@@ -69,34 +42,26 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'filter' => Html::dropDownList('TeacherLecturesSearch[complexity]', isset($get['TeacherLecturesSearch']['complexity']) ? $get['TeacherLecturesSearch']['complexity'] : '', Lectures::getComplexity(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
-            // [
-            //     'attribute' => 'season',
-            //     'format' => 'raw',
-            //     'value' => function ($dataProvider) {
-            //         return $dataProvider->season;
-            //     },
-            //     'filter' => Html::dropDownList('TeacherLecturesSearch[season]', isset($get['TeacherLecturesSearch']['season']) ? $get['TeacherLecturesSearch']['season'] : '', Lectures::getSeasons(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
-            // ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => \Yii::t('app', 'Actions'),
                 'template' => '{view} {update} {delete}',
                 'buttons' => [
-                    'view' => function ($url, $model) {
+                    'view' => function ($url) {
                         return Html::a(
                             '<span class="glyphicon glyphicon-eye-open"> </span>',
                             $url,
                             ['title' => \Yii::t('app', 'View'), 'data-pjax' => '0', 'onclick' => "window.open('" . $url . "','newwindow','width=1200,height=1200');return false;"]
                         );
                     },
-                    'update' => function ($url, $model) {
+                    'update' => function ($url) {
                         return Html::a(
                             '<span class="glyphicon glyphicon-pencil"> </span>',
                             $url,
                             ['title' => \Yii::t('app', 'Update'), 'data-pjax' => '0']
                         );
                     },
-                    'delete' => function ($url, $model, $key) {
+                    'delete' => function ($url) {
                         return Html::a(
                             '<span  class="glyphicon glyphicon glyphicon-trash"> </span>',
                             $url,
@@ -106,7 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         );
                     }
                 ],
-                'urlCreator' => function ($action, $model, $key, $index) {
+                'urlCreator' => function ($action, $model) {
                     if ($action === 'view') {
                         $url = Url::base(true).'/lekcijas/lekcija/' . $model->id . '?force=1';
                         return $url;
