@@ -82,56 +82,73 @@ class TeacherUserSearch extends Users
             ->andFilterWhere(['like', 'last_login', $this->last_login])
             ->andFilterWhere(['like', 'dont_bother', $this->dont_bother]);
 
-        // if(isset($params["TeacherUserSearch"])) {
-        //     $studentSubplans = StudentSubPlans::find()->where(['id', 'user_id', $schoolStudentIds])->joinWith('plan');
+        if(isset($params["TeacherUserSearch"])) {
+            $studentSubplans = StudentSubPlans::find()->where(['in', 'user_id', $schoolStudentIds])->andWhere(['is_active' => true])->joinWith('plan');
 
-        //     if(isset($params["TeacherUserSearch"]["subplan_monthly_cost"])){
-        //         $studentSubplans->andWhere(['like', 'schoolsubplans.id', $params["TeacherUserSearch"]["subplan_monthly_cost"]]);
-        //     }
+            if(isset($params["TeacherUserSearch"]["subplan_monthly_cost"]) && $params["TeacherUserSearch"]["subplan_monthly_cost"] !== ""){
+                $planPrices = SchoolSubPlans::getPrices();
+                $selectedPrice = $planPrices[$params["TeacherUserSearch"]["subplan_monthly_cost"]];
+            
+                $filterSql = "SELECT id FROM schoolsubplans 
+                    WHERE schoolsubplans.id IN (
+                        SELECT schoolsubplan_id FROM schoolsubplanparts WHERE (
+                            SELECT ROUND(SUM(monthly_cost), 2)
+                            FROM planparts WHERE id IN (
+                                SELECT planpart_id FROM schoolsubplanparts WHERE schoolsubplan_id = schoolsubplans.id
+                            )
+                        ) = $selectedPrice
+                    )";
+                $planIds = Yii::$app->db->createCommand($filterSql)->queryAll()[0];
 
-        //     if(isset($params["TeacherUserSearch"]["subplan_end_date"]) && $params["TeacherUserSearch"]["subplan_end_date"]){
-        //         $firstDayOfMonth = date_format((new \DateTime($params["TeacherUserSearch"]["subplan_end_date"]))
-        //             ->modify('first day of this month'), 'Y-m-d');
-        //         $lastDayOfMonth = date_format((new \DateTime($params["TeacherUserSearch"]["subplan_end_date"]))
-        //             ->modify('last day of this month'), 'Y-m-d');
+                $studentSubplans->andFilterWhere(['in', 'plan_id', $planIds]);
+            }
+
+            if(isset($params["TeacherUserSearch"]["subplan_end_date"]) && $params["TeacherUserSearch"]["subplan_end_date"]){
+                $date = new \DateTime($params["TeacherUserSearch"]["subplan_end_date"]);
+                $firstDayOfMonth = date_format(
+                    ($date)->modify('first day of this month'),
+                    'Y-m-d'
+                );
+                $lastDayOfMonth = date_format(
+                    ($date)->modify('last day of this month'),
+                    'Y-m-d'
+                );
                     
-        //         $dateFilterString = '
-        //             DATE_ADD(
-        //                 DATE_ADD(studentsubplans.start_date, INTERVAL schoolsubplans.months MONTH),
-        //                 INTERVAL (
-        //                     SELECT COALESCE(sum(weeks), 0) FROM studentsubplanpauses
-        //                     WHERE studentsubplan_id = studentsubplans.id) WEEK)
-        //         ';
-        //         if($firstDayOfMonth && $lastDayOfMonth){
-        //             $studentSubplans->andWhere(['between', $dateFilterString, $firstDayOfMonth, $lastDayOfMonth]);
-        //         }
-        //     }
+                $filterSql = '
+                    DATE_ADD(
+                        DATE_ADD(studentsubplans.start_date, INTERVAL schoolsubplans.months MONTH),
+                        INTERVAL (
+                            SELECT COALESCE(sum(weeks), 0) FROM studentsubplanpauses
+                            WHERE studentsubplan_id = studentsubplans.id) WEEK)
+                ';
 
-        //     if(isset($params["TeacherUserSearch"]["subplan_paid_type"]) && $params["TeacherUserSearch"]["subplan_paid_type"]){
-        //         $type = $params["TeacherUserSearch"]["subplan_paid_type"];
-        //         if($type == "late"){
-        //             $sign = '<';
-        //         }else if($type == "paid"){
-        //             $sign = '=';
-        //         }else if($type == "prepaid"){
-        //             $sign = '>';
-        //         }
+                if($firstDayOfMonth && $lastDayOfMonth){
+                    $studentSubplans->andFilterWhere(['between', $filterSql, $firstDayOfMonth, $lastDayOfMonth]);
+                }
+            }
 
-        //         $studentSubplans->andWhere('studentsubplans.times_paid ' . $sign . ' studentsubplans.sent_invoices_count');  
-        //     }
+            if(isset($params["TeacherUserSearch"]["subplan_paid_type"]) && $params["TeacherUserSearch"]["subplan_paid_type"]){
+                $type = $params["TeacherUserSearch"]["subplan_paid_type"];
+                if($type == "late"){
+                    $sign = '<';
+                }else if($type == "paid"){
+                    $sign = '=';
+                }else if($type == "prepaid"){
+                    $sign = '>';
+                }
 
-        //     // $studentSubplanData = $studentSubplans
-        //     var_dump($studentSubplans);
-        //     die();
-        //     $userIds = [];
-        //     foreach($studentSubplanData as $studentSubplan){
-        //         $userIds[] = $studentSubplan['user_id'];
-        //     }
-        //     var_dump($userIds);
-        //     die();
+                $studentSubplans->andFilterWhere([$sign, 'times_paid', 'sent_invoices_count']);
+            }
 
-        //     $query->andFilterWhere(['in', 'users.id', $userIds]);
-        // }
+            $studentSubplanData = $studentSubplans->asArray()->all();
+
+            $userIds = [];
+            foreach($studentSubplanData as $studentSubplan){
+                $userIds[] = $studentSubplan['user_id'];
+            }
+
+            $query->andFilterWhere(['in', 'users.id', $userIds]);
+        }
 
         return $dataProvider;
     }

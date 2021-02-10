@@ -53,6 +53,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
 
         $schoolId = School::getCurrentSchoolId();
         $studentPlans = self::find()->joinWith("plan")->andFilterWhere(['schoolsubplans.school_id' => $schoolId, 'is_active' => true])->asArray()->all();
+        
         $planEndDates = array_map(function ($studentPlan) {
             $planPauses = StudentSubplanPauses::getForStudentSubplan($studentPlan['id'])->asArray()->all();
             $date = date_create($studentPlan["start_date"]);
@@ -60,18 +61,39 @@ class StudentSubPlans extends \yii\db\ActiveRecord
             foreach($planPauses as $pause){
                 $date->modify("+" . $pause['weeks'] . "week");
             }
-            return date_format($date, 'd-m-Y');
+
+            return $date;
         }, $studentPlans);
-        return $planEndDates;
+    
+        usort($planEndDates, function($a, $b){
+            if ($a == $b) return 0;
+            return ($a < $b) ? -1 : 1;
+        });
+
+        $readablePlanEndDates = array_map(function ($endDate){
+            return date_format($endDate, 'd-m-Y');
+        }, $planEndDates);
+
+        return array_unique($readablePlanEndDates);
     }
 
     public function getReadablePlanEndDates(){
         $endDates = self::getPlanEndDatesForCurrentSchoolStudents();
-        $endDatesMapped = array_map(function($date){
-            $timestamp = strtotime($date);
-            return date("M", $timestamp) . " " . date("Y", $timestamp);
-        }, $endDates);
-        return array_combine($endDates, $endDatesMapped);
+
+        $endDatesMapped = [];
+        foreach($endDates as $endDate){
+            $timestamp = strtotime($endDate);
+            $readableDate = date("M", $timestamp) . " " . date("Y", $timestamp);
+
+            $alreadyAdded = false;
+            foreach($endDatesMapped as $key => $value){
+                if($readableDate === $value) $alreadyAdded = true;
+            }
+
+            if(!$alreadyAdded) $endDatesMapped[$endDate] = $readableDate;
+        }
+       
+        return $endDatesMapped;
     }
 
     public function getRemainingPauseWeeks($studentId){
