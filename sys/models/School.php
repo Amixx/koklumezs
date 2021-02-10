@@ -15,7 +15,18 @@ class School extends \yii\db\ActiveRecord
     {
         return [
             [['instrument'], 'required'],
-            [['instrument', 'background_image', 'registration_background_image', 'logo', 'video_thumbnail', 'email', 'registration_message', 'registration_title'], 'string'],
+            [[
+                'instrument',
+                'background_image',
+                'registration_background_image',
+                'logo',
+                'video_thumbnail',
+                'email',
+                'registration_message',
+                'registration_title',
+                'renter_message',
+            ], 'string'],
+            [['rent_schoolsubplan_id'], 'number'],
             [['created'], 'safe'],
         ];
     }
@@ -32,6 +43,8 @@ class School extends \yii\db\ActiveRecord
             'video_thumbnail' => \Yii::t('app',  'Video thumbnail'),
             'email' => \Yii::t('app',  'E-mail'),
             'registration_message' => \Yii::t('app',  'Registration message'),
+            'renter_message' => \Yii::t('app',  'Message for students who want to rent an instrument'),
+            'rent_schoolsubplan_id' => \Yii::t('app',  'Subscription plan used to generate invoice for renters'),
             'registration_title' => \Yii::t('app', 'Registration title'),
         ];
     }
@@ -51,6 +64,10 @@ class School extends \yii\db\ActiveRecord
     public function getSettings($teacherId)
     {
         $school = self::getByTeacher($teacherId);
+        $rentSubplanName = $school->rent_schoolsubplan_id
+            ? SchoolSubPlans::find()->where(['id' => $school->rent_schoolsubplan_id])->one()['name']
+            : null;
+
         return [
             \Yii::t('app', 'School background image') => $school->background_image,
             \Yii::t('app', 'Registration page background image') => $school->registration_background_image,
@@ -58,7 +75,8 @@ class School extends \yii\db\ActiveRecord
             \Yii::t('app', 'Logo') => $school->logo,
             \Yii::t('app', 'E-mail') => $school->email,
             \Yii::t('app', 'Registration message') => $school->registration_message,
-            \Yii::t('app', 'Registration title') => $school->registration_title,
+            \Yii::t('app', 'Message for students who want to rent an instrument') => $school->renter_message,
+            \Yii::t('app', 'Subscription plan used to generate invoice for renters') => $rentSubplanName,
         ];
     }
 

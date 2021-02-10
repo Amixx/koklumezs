@@ -76,6 +76,16 @@ $this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
             'editorOptions' => $ckeditorOptions,
         ]) ?>
 
+        <?= $form->field($model, 'renter_message')->widget(CKEditor::className(), [
+            'editorOptions' => $ckeditorOptions,
+        ]) ?>
+
+        <?= $form->field($model, 'rent_schoolsubplan_id')
+            ->dropDownList(
+                $schoolSubPlans,
+                ['prompt' => '']
+            )->label(Yii::t('app', 'Subscription plan')) ?>
+
         <div class="form-group">
             <?= Html::submitButton(\Yii::t('app',  'Save'), ['class' => 'btn btn-success']) ?>
         </div>
