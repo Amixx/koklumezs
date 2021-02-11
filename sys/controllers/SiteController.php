@@ -286,6 +286,9 @@ class SiteController extends Controller
                 $studentSubplan->times_paid = 0;
                 $studentSubplan->save();
 
+                $user->status = 11;
+                $user->update();
+                
                 InvoiceManager::sendAdvanceInvoice($user, $studentSubplan, true);
             }
 
