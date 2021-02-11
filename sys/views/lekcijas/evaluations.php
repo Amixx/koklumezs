@@ -43,11 +43,6 @@ foreach ($evaluations as $id => $evaluation) {
 
     <?php } ?>
 <?php } ?>
-<div class="form-group">
-    <?= Html::checkbox('public_comment', false, ['label' => \Yii::t('app', 'Make this comment public')]) ?>
-    <?= Html::checkbox('add-to-favourites', $isFavourite, ['label' => \Yii::t('app',  'Add to favourites')]) ?>
-    <?= Html::checkbox('add-to-still-learning', $isStillLearning, ['label' => \Yii::t('app',  'Add to lessons I\'m still learning')]) ?>
-</div>
 <?php if (!$force) { ?>
     <div class="form-group">
         <?= Html::submitButton(\Yii::t('app',  'Submit'), ['class' => 'btn btn-success']) ?>

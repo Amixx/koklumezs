@@ -303,7 +303,6 @@ return [
     'Student' => 'Skolēns',
     'Student ID' => 'Skolēna ID',
     'Student evaluations' => 'Skolēnu novērtējumi',
-    'Student questions' => 'Skolēnu jautājumi',
     'Student selection' => 'Skolēnu atlase',
     'Student subscription plan ID' => 'Skolēna abonēšanas plāna ID',
     'Student\'s subscription plan' => 'Skolēna abonēšanas plāns',

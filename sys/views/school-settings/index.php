@@ -21,9 +21,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <a class="nav-link" id="faqs-tab" data-toggle="tab" href="#faqs" role="tab" aria-controls="faqs" aria-selected="false"><?= \Yii::t('app', 'FAQs') ?></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="sqs-tab" data-toggle="tab" href="#sqs" role="tab" aria-controls="sqs" aria-selected="false"><?= \Yii::t('app', 'Student questions') ?></a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link" id="signup-questions-tab" data-toggle="tab" href="#signup-questions" role="tab" aria-controls="signup-questions" aria-selected="false"><?= \Yii::t('app', 'Questions after signup') ?></a>
         </li>
         <li class="nav-item">
@@ -87,19 +84,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             }
                         },
                     ],
-                ],
-            ]); ?>
-        </div>
-        <div class="tab-pane fade" id="sqs" role="tabpanel" aria-labelledby="sqs-tab">
-            <h1><?= Yii::t("app", "Student questions") ?></h1>
-             <?= GridView::widget([
-                'dataProvider' => $studentQuestionsDataProvider,
-                'columns' => [
-                    ['class' => 'yii\grid\SerialColumn'],
-                    'student.first_name',
-                    'student.last_name',
-                    'student.email',
-                    'text',
                 ],
             ]); ?>
         </div>
