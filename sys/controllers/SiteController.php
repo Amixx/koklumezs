@@ -18,11 +18,13 @@ use app\models\SchoolStudent;
 use app\models\School;
 use app\models\RegistrationLesson;
 use app\models\Users;
+use app\models\StudentSubplans;
 use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
 use app\models\ResendVerificationEmailForm;
 use app\models\VerifyEmailForm;
 use app\helpers\EmailSender;
+use app\helpers\InvoiceManager;
 
 class SiteController extends Controller
 {
@@ -274,6 +276,22 @@ class SiteController extends Controller
         $valid = $model->load(Yii::$app->request->post()) && $model->validate();
 
         if ($valid) {
+            if($school['renter_message'] != null && $school['rent_schoolsubplan_id'] != null){
+                $studentSubplan = new StudentSubPlans;
+                $studentSubplan->user_id = $user['id'];
+                $studentSubplan->plan_id = $school['rent_schoolsubplan_id'];
+                $studentSubplan->is_active = false;
+                $studentSubplan->start_date = date('Y-m-d H:i:s', time());
+                $studentSubplan->sent_invoices_count = 0;
+                $studentSubplan->times_paid = 0;
+                $studentSubplan->save();
+
+                $user->status = 11;
+                $user->update();
+                
+                InvoiceManager::sendAdvanceInvoice($user, $studentSubplan, true);
+            }
+
             $sent = EmailSender::sendRentNotification($model, $school['email']);
             if($sent){
                 Yii::$app->session->setFlash('success', 'Paldies par tavu pieteikumu! Tuvākajā laikā sazināsimies ar tevi uz tavu norādīto epastu. Tikmēr vari noskatīties video par to, kā darboties platformā!');

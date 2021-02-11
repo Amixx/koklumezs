@@ -12,6 +12,7 @@ use yii\filters\VerbFilter;
 use app\models\StudentQuestions;
 use app\models\Difficulties;
 use app\models\SignupQuestions;
+use app\models\SchoolSubPlans;
 use app\models\SchoolFaqs;
 use yii\data\ActiveDataProvider;
 
@@ -80,14 +81,6 @@ class SchoolSettingsController extends Controller
         ]);
     }
 
-
-    /**
-     * Updates an existing SectionsVisible model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate()
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -98,6 +91,7 @@ class SchoolSettingsController extends Controller
         $model = new School;
         $post = Yii::$app->request->post();
         $model = School::getByTeacher(Yii::$app->user->identity->id);
+        $schoolSubPlans = SchoolSubPlans::getMappedForSelection();
 
         if (count($post) > 0) {
             $model->load($post);
@@ -109,7 +103,10 @@ class SchoolSettingsController extends Controller
             }
         }
 
-        return $this->render('update', ['model' => $model]);
+        return $this->render('update', [
+            'model' => $model,
+            'schoolSubPlans' => $schoolSubPlans,
+        ]);
     }
 
     public function actionDelete($id)
