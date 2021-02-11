@@ -369,20 +369,17 @@ a.desc:after {
 }
 
 .LectureOverview__Section {   
-    padding: 4px 16px;
-    margin: 0 -16px;
+    padding: 5px;
 }
 
 .LectureOverview__Section--new {
-background: rgba(0,0,0,0.1);
+    background: rgba(0,0,0,0.1);
+    padding: 4px 16px;
 }
 
 .LectureOverview__Section--favourite {
-    
-}
-
-.LectureOverview__Section--learning {
-   background: rgba(0,0,0,0.1);
+    background: rgba(0,0,0,0.1);
+    padding: 4px 16px;
 }
 
 .LectureOverview__EmptyText {
