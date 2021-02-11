@@ -22,7 +22,7 @@ if ($hasFiles) {
                 ? "{
                     \"techOrder\": [\"youtube\"],
                     \"sources\": [{ \"type\": \"video/youtube\",
-                    \"src\": \"$videoUrl\"}]
+                    \"src\": \"$fileUrl\"}]
                 }"
                 : "{}"
         ?>
@@ -53,7 +53,6 @@ if ($hasFiles) {
             </video>
             
         </div>
-        <hr />
          <script>
             var player = videojs('my-player<?= $idPrefix ?><?= $id ?>', {
                 responsive: true,
@@ -63,5 +62,4 @@ if ($hasFiles) {
         </script>        
         <?php } ?>
     </div>
-    <hr />
 <?php } ?>

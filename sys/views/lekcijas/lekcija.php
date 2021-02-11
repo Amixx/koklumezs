@@ -28,6 +28,35 @@ $this->params['breadcrumbs'][] = $model->title;
                 if ($uLecture->still_learning) echo " (<span class='text-primary'>" . \Yii::t('app',  'Still learning') . "</span>)";
             } ?>
         </h2>
+        <?= $model->description ?>
+        <?php if ($uLecture && $uLecture->evaluated) { ?>
+            <div style="margin-top:10px;">
+                <div class="col-sm-6" style="margin-bottom: 5px">
+                    <?php
+                    $firstButtonText = \Yii::t('app',  'Add to favourites');
+                    if ($uLecture->is_favourite) {
+                        $firstButtonText = \Yii::t('app',  'Remove from favourites');
+                    }
+                    ?>
+                    <?= Html::beginForm(["/lekcijas/toggle-is-favourite?lectureId=$uLecture->lecture_id"], 'get') ?>
+                    <?= Html::submitButton($firstButtonText, ['class' => 'btn btn-primary btn-sm']) ?>
+                    <?= Html::endForm() ?>
+                </div>
+                <div class="col-sm-6" style="margin-bottom: 5px">
+                    <?php
+                    $secondButtonText = \Yii::t('app',  'Add to lessons I\'m still learning');
+                    if ($uLecture->still_learning) {
+                        $secondButtonText = \Yii::t('app',  'Remove from lessons I\'m still learning');
+                    }
+                    ?>
+                    <?= Html::beginForm(["/lekcijas/toggle-still-learning?lectureId=$uLecture->lecture_id"], 'get') ?>
+                    <?= Html::submitButton($secondButtonText, ['class' => 'btn btn-primary btn-sm']) ?>
+                    <?= Html::endForm() ?>
+                </div>
+            </div>
+        <?php } ?>
+
+        <hr/>
 
         <?php if ($model->file) { ?>
             <?= $this->render(
@@ -56,46 +85,14 @@ $this->params['breadcrumbs'][] = $model->title;
                 ['lecturefiles' => $lecturefiles, 'audio' => $audio]
             ); ?>
         <?php } ?>
-        <?= $model->description ?>
-        <?php if ($uLecture && $uLecture->evaluated) { ?>
-            <div style="margin-top:10px;">
-                <div class="col-sm-6" style="margin-bottom: 5px">
-                    <?php
-                    $firstButtonText = \Yii::t('app',  'Add to favourites');
-                    if ($uLecture->is_favourite) {
-                        $firstButtonText = \Yii::t('app',  'Remove from favourites');
-                    }
-                    ?>
-                    <?= Html::beginForm(["/lekcijas/toggle-is-favourite?lectureId=$uLecture->lecture_id"], 'get') ?>
-                    <?= Html::submitButton($firstButtonText, ['class' => 'btn btn-primary btn-sm']) ?>
-                    <?= Html::endForm() ?>
-                </div>
-                <div class="col-sm-6" style="margin-bottom: 5px">
-                    <?php
-                    $secondButtonText = \Yii::t('app',  'Add to lessons I\'m still learning');
-                    if ($uLecture->still_learning) {
-                        $secondButtonText = \Yii::t('app',  'Remove from lessons I\'m still learning');
-                    }
-                    ?>
-                    <?= Html::beginForm(["/lekcijas/toggle-still-learning?lectureId=$uLecture->lecture_id"], 'get') ?>
-                    <?= Html::submitButton($secondButtonText, ['class' => 'btn btn-primary btn-sm']) ?>
-                    <?= Html::endForm() ?>
-                </div>
-
-            </div>
-
-        <?php } ?>
         <?php if ($difficulties and $lectureDifficulties and $difficultiesVisible) { ?>
             <?= $this->render('difficulties', ['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>
-        <?php } ?>
-        <?php if ($comments) { ?>
-            <?= $this->render('comments', ['comments' => $comments]); ?>
         <?php } ?>
         <?php if ($lecturefiles) { ?>
             <?= $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]); ?>
         <?php } ?>
         <?php if ($evaluations and $lectureEvaluations) {  ?>
-            <?= $this->render('evaluations', ['evaluations' => $evaluations, 'lectureEvaluations' => $lectureEvaluations, 'isFavourite' => isset($uLecture) ? $uLecture['is_favourite'] : false, 'isStillLearning' => isset($uLecture) ? $uLecture['still_learning'] : false, 'force' => $force]) ?>
+            <?= $this->render('evaluations', ['evaluations' => $evaluations, 'lectureEvaluations' => $lectureEvaluations, 'force' => $force]) ?>
         <?php } ?>
         <?php if ($relatedLectures) { ?>
             <?= $this->render('related', ['relatedLectures' => $relatedLectures, 'lecturefiles' => $lecturefiles, 'videos' => $videos, 'baseUrl' => $baseUrl, 'userEvaluatedLectures' => $userEvaluatedLectures, 'videoThumb' => $videoThumb]) ?>
