@@ -4,8 +4,6 @@ use app\models\Lecturesfiles;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$this->title = 'Nodarbības/Lessons';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid lectures-index">
     <div class="row">
