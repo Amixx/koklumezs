@@ -158,7 +158,6 @@ AppAsset::register($this);
                 'active' =>  in_array(\Yii::$app->controller->id, ['lekcijas']),
                 'items' => [
                     ['label' => \Yii::t('app',  'New lessons'), 'url' => ['/lekcijas?type=new']],
-                    ['label' => \Yii::t('app',  'Currently learning'), 'url' => ['/lekcijas?type=learning']],
                     ['label' => \Yii::t('app',  'Favourite lessons'), 'url' => ['/lekcijas?type=favourite']]
                 ],
                 'options' => ['class' => 'navbar-lessons-dropdown-toggle']
