@@ -286,7 +286,7 @@ return [
     'Sent lessons' => 'Nosūtītās nodarbības',
     'Sent/Paid date' => 'Nosūtīšanas/Apmaksas datums',
     'Settings' => 'Iestatījumi',
-    'Sheet music' => 'Notis',
+    'Sheet music' => 'Dziesmu klade',
     'Should this parameter be used' => 'Vai lietot šo parametru',
     'Show all' => 'Parādīt visus',
     'Show paused' => 'Parādīt nopauzētos',
