@@ -117,8 +117,8 @@ class LekcijasController extends Controller
             $latestNewLecturesIds = UserLectures::getLatestLecturesOfType($user->id, "new");
             $latestStillLearningLecturesIds = UserLectures::getLatestLecturesOfType($user->id, "learning");
             $latestFavouriteLecturesIds = UserLectures::getLatestLecturesOfType($user->id, "favourite");
-            $newLectures = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->all();
             $stillLearningLectures = Lectures::find()->where(['in', 'id', $latestStillLearningLecturesIds])->all();
+            $newLectures = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->all() + $stillLearningLectures;
             $favouriteLectures = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->all();
             $opened = UserLectures::getOpened($user->id);
             $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
