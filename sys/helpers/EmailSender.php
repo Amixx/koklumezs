@@ -60,12 +60,25 @@ class EmailSender
     public static function sendPostSignupMessage($registrationMessage, $schoolEmail, $userEmail){
         return Yii::$app
             ->mailer
-            ->compose(['html' => 'after-registration-html', 'text' => 'after-registration-text'], [
+            ->compose(['html' => 'blank-message-html', 'text' => 'blank-message-text'], [
                 'message' => $registrationMessage,
             ])
             ->setFrom([$schoolEmail => Yii::$app->name])
             ->setTo($userEmail)
             ->setSubject("Apsveicam ar reģistrēšanos - " . Yii::$app->name)
+            ->send();
+    }
+
+    public static function sendInvoiceToRenter($renterMessage, $schoolEmail, $userEmail, $invoicePath){
+        return Yii::$app
+            ->mailer
+            ->compose(['html' => 'blank-message-html', 'text' => 'blank-message-text'], [
+                'message' => $renterMessage,
+            ])
+            ->setFrom([$schoolEmail => Yii::$app->name])
+            ->setTo($userEmail)
+            ->setSubject("Kokles īre - " . Yii::$app->name)
+            ->attach($invoicePath)
             ->send();
     }
 
