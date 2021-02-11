@@ -3,10 +3,6 @@
 use app\models\Lecturesfiles;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\widgets\LinkPager;
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\LecturesSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Nodarbības/Lessons';
 $this->params['breadcrumbs'][] = $this->title;
@@ -25,9 +21,21 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="row">
             <?php foreach ($newLectures as $model) {
                 $lecturefiles = Lecturesfiles::getLectureFiles($model->id);
+                $backgroundImage = trim(
+                    $videoThumb
+                        ? 'url(' . $this->render(
+                            'video_thumb',
+                            ['lecturefiles' => [0 => ['file' => $model->file, 'thumb' => $videoThumb]],
+                            'videos' => $videos,
+                            'baseUrl' => $baseUrl]) . ')'
+                        : "");
             ?>
                 <div class="col-md-6 col-lg-3 text-center lecture-wrap">
-                    <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->id]) ?>" style="background-color: white; background-image: <?= trim($videoThumb ? 'url(' . $this->render('video_thumb', ['lecturefiles' => [0 => ['file' => $model->file, 'thumb' => $videoThumb]], 'videos' => $videos, 'baseUrl' => $baseUrl]) . ')' : "") ?>;"></a>
+                    <a
+                        class="lecture-thumb"
+                        href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->id]) ?>"
+                        style="background-color: white; background-image: <?= $backgroundImage ?>;"
+                    ></a>
                     <?= $model->title ?>
                 </div>
             <?php } ?>

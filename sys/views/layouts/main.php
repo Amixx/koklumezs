@@ -1,8 +1,5 @@
 <?php
 
-/* @var $this \yii\web\View */
-/* @var $content string */
-
 use app\widgets\Alert;
 use app\widgets\ChatRoom;
 use yii\helpers\Html;
@@ -258,6 +255,7 @@ AppAsset::register($this);
             });
         });
     </script>
+    <script src="<?= Yii::$app->request->baseUrl ?>/js/Youtube.min.js"></script>
 </body>
 
 </html>
