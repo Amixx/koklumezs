@@ -78,7 +78,11 @@ class FileController extends Controller
                 }
             };
             if ($anyLectureFiles && !$isAlreadyAdded) {
-                array_push($userLectureFiles, Lecturesfiles::getLectureFiles($id)[0]);
+                $lectureFiles = Lecturesfiles::getLectureFiles($id);
+                foreach ($lectureFiles as $file) {
+                    array_push($userLectureFiles, $file);
+                }
+                
             }
         }
         $alphabet = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "a", "ā", "b", "c", "č", "d", "e", "ē", "f", "g", "ģ", "h", "i", "ī", "j", "k", "ķ", "l", "ļ", "m", "n", "ņ", "o", "p", "q", "r", "s", "š", "t", "u", "ū", "v", "w", "x", "y", "z", "ž");
@@ -88,11 +92,7 @@ class FileController extends Controller
             $bTitle = mb_strtolower(trim($b['title']), 'UTF-8');
 
             $aFirst = mb_substr($aTitle, 0, 1);
-            $bFirst = mb_substr(
-                $bTitle,
-                0,
-                1
-            );
+            $bFirst = mb_substr($bTitle, 0, 1);
 
             $aIndex = count(array_keys($alphabet, $aFirst)) == 1 ? array_keys($alphabet, $aFirst)[0] : array_keys($alphabet, $aFirst)[1];
             $bIndex = count(array_keys($alphabet, $bFirst)) == 1 ? array_keys($alphabet, $bFirst)[0] : array_keys($alphabet, $bFirst)[1];
