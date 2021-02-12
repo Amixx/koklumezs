@@ -1,10 +1,4 @@
-<?php
-
-use app\models\Lecturesfiles;
-use yii\helpers\Html;
-use yii\helpers\Url;
-
-?>
+<?php $this->title = \Yii::t('app', 'Lessons'); ?>
 <div class="container-fluid lectures-index">
     <div class="row">
         <?=

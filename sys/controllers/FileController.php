@@ -69,6 +69,7 @@ class FileController extends Controller
         $force = Yii::$app->request->get('force');
         $userLectureIds =  UserLectures::getUserLectures($user->id);
         $userLectureFiles = [];
+        $note_filter = Yii::$app->request->get('note_filter');
         foreach ($userLectureIds as $id) {
             $anyLectureFiles = count(Lecturesfiles::getLectureFiles($id)) > 0;
             $isAlreadyAdded = false;
@@ -81,10 +82,17 @@ class FileController extends Controller
                 $lectureFiles = Lecturesfiles::getLectureFiles($id);
                 foreach ($lectureFiles as $file) {
                     array_push($userLectureFiles, $file);
-                }
-                
+                }      
             }
         }
+
+        if ($note_filter) {
+            $userLectureFiles = array_filter($userLectureFiles, function ($item) use ($note_filter) {
+                $title_lower = mb_strtolower(trim($item['title']), 'UTF-8');
+                return strpos($title_lower, $note_filter) !== false;
+            });
+        }
+
         $alphabet = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "a", "ā", "b", "c", "č", "d", "e", "ē", "f", "g", "ģ", "h", "i", "ī", "j", "k", "ķ", "l", "ļ", "m", "n", "ņ", "o", "p", "q", "r", "s", "š", "t", "u", "ū", "v", "w", "x", "y", "z", "ž");
 
         usort($userLectureFiles, function ($a, $b) use ($alphabet) {
@@ -101,6 +109,7 @@ class FileController extends Controller
         });
         return $this->render('index', [
             'lecturefiles' => $userLectureFiles,
+            'note_filter' => $note_filter,
             'docs' => self::DOCS,
             'force' => $force
         ]);
