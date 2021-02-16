@@ -79,8 +79,12 @@ class LekcijasController extends Controller
 
         $videoThumb = School::getCurrentSchool()->video_thumbnail;
 
-        if ($type) {
-            $modelsIds = UserLectures::getLecturesOfType($user->id, $type);
+        if ($type) { 
+            $stillLearningLectures = [];
+            if ($type == 'new') {
+                $stillLearningLectures = UserLectures::getLatestLecturesOfType($user->id, "learning");
+            }  
+            $modelsIds = UserLectures::getLecturesOfType($user->id, $type) + $stillLearningLectures;
             if ($modelsIds) {
                 $query = Lectures::find()->where(['in', 'id', $modelsIds]);
                 $countQuery = clone $query;
@@ -117,8 +121,8 @@ class LekcijasController extends Controller
             $latestNewLecturesIds = UserLectures::getLatestLecturesOfType($user->id, "new");
             $latestStillLearningLecturesIds = UserLectures::getLatestLecturesOfType($user->id, "learning");
             $latestFavouriteLecturesIds = UserLectures::getLatestLecturesOfType($user->id, "favourite");
-            $newLectures = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->all();
             $stillLearningLectures = Lectures::find()->where(['in', 'id', $latestStillLearningLecturesIds])->all();
+            $newLectures = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->all() + $stillLearningLectures;
             $favouriteLectures = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->all();
             $opened = UserLectures::getOpened($user->id);
             $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);

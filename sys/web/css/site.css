@@ -208,18 +208,32 @@ a.desc:after {
     background-repeat: no-repeat;
     background-position: center;
     padding-top: 150px;
-    margin-bottom: 10px;
+    border-radius: 20px;
 }
 
 .lecture-wrap {
     transition: all .2s ease-in-out;
     box-sizing: border-box;
-    padding: 20px;
+    padding: 8px;
     font-size: 16px;
+    min-width: 270px; 
+    position: relative;  
 }
 
 .lecture-wrap:hover {
     transform: scale(1.1);
+}
+
+.lecture-title{
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    color: white;
+    background: rgba(0,0,0, .5);
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-weight: bold;
+    max-width: 89%;
 }
 
 .img-fluid {
@@ -368,22 +382,22 @@ a.desc:after {
   }
 }
 
+@media (min-width: 1199px) {
+    .LectureOverview__Section {
+        width: 48%;
+    }
+}
+
 .LectureOverview__Section {   
     padding: 5px;
-}
-
-.LectureOverview__Section--new {
-    background: rgba(0,0,0,0.1);
-    padding: 4px 16px;
-}
-
-.LectureOverview__Section--favourite {
-    background: rgba(0,0,0,0.1);
-    padding: 4px 16px;
+    background-color: rgba(0,0,0,0.1);  
+    margin: 3px; 
+    padding: 4px 16px; 
+    border-radius: 16px;
 }
 
 .LectureOverview__EmptyText {
-    margin-bottom:200px;
+    margin-bottom:185px;
 }
 
 .LectureOverview__LinkToAll {

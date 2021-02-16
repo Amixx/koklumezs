@@ -16,7 +16,7 @@ if ($hasFiles) {
                 continue;
             }
         ?>
-            <div class="col-md-3 text-center">
+            <div class="col-md-3 text-left">
                 <a target="_blank" href="<?= $file['file'] ?>"><?= $file['title'] ?></a>
             </div>
         <?php } ?>
