@@ -80,21 +80,44 @@ class TestController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
 
-        $q = 'SELECT * FROM studentsubplans where
-            start_date like "%-31" or
-            start_date like "%-01" OR
-            start_date like "%-02" OR
-            start_date like "%-03" OR
-            start_date like "%-04"';
+        // $q = 'SELECT * FROM studentsubplans where
+        //     start_date like "%-31" or
+        //     start_date like "%-01" OR
+        //     start_date like "%-02" OR
+        //     start_date like "%-03" OR
+        //     start_date like "%-04"';
 
-        $data = Yii::$app->db->createCommand($q)->queryAll();
+        // $data = Yii::$app->db->createCommand($q)->queryAll();
 
-        $ids = [];
+        // $ids = [];
 
-        foreach($data as $d){
-            $ids[] = $d['user_id'];
-        }
+        // foreach($data as $d){
+        //     $ids[] = $d['user_id'];
+        // }
 
-        var_dump($ids);
+        // var_dump($ids);
+
+
+        ////lekciju sarežģītības pārrēķināšanai
+        // $lectures = Lectures::find()->asArray()->all();
+
+        // foreach($lectures as $lecture){
+        //     $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($lecture['id']);
+        //     $sum = 0;
+        //     if(empty($lectureDifficulties)){
+        //         $res = 0;
+        //     } else{
+        //         foreach ($lectureDifficulties as $pid => $value) {
+        //             $sum += (10 * pow(2, ($value / 3)));
+        //         }
+        //         $res = round($sum / count($lectureDifficulties));
+        //     }
+            
+        //     if($lecture['complexity'] != $res){
+        //         $l = Lectures::find()->where(['id' => $lecture['id']])->one();
+        //         $l->complexity = $res;
+        //         $l->save();
+        //     }
+        // }
     }
 }
