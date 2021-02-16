@@ -434,4 +434,5 @@ return [
     'You have to do monthly payments for the pause weeks too. At the end of subscribtion plan all pauses will be summed up and the plan will be extended with free lessons.'=>'Ikmēneša maksājums jāveic arī par periodu, kad paņemta pauze. Maksas plāna beigās visas pauzes tiek sasummētas un mācību ilgums attiecīgi pagarināts ar bezmaksas nodarbībām.',
     'Message for students who want to rent an instrument' => 'Ziņa skolēniem, kuri vēlas īrēt instrumentu',
     'Subscription plan used to generate invoice for renters' => 'Abonēšanas plāns no kura ģenerēt rēķinu instrumenta īrētājiem',
+    'Notes' => 'Notis',
 ];

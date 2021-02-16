@@ -5,9 +5,6 @@ use yii\helpers\Html;
 use app\models\SectionsVisible;
 
 $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Lessons'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $model->title;
-
 ?>
 <!-- unpkg : use the latest version of Video.js -->
 <link href="https://unpkg.com/video.js/dist/video-js.min.css" rel="stylesheet">
@@ -28,7 +25,24 @@ $this->params['breadcrumbs'][] = $model->title;
                 if ($uLecture->still_learning) echo " (<span class='text-primary'>" . \Yii::t('app',  'Still learning') . "</span>)";
             } ?>
         </h2>
-        <?= $model->description ?>
+        <div class="row">
+            <div class="col-md-11">
+                <?= $model->description ?>
+            </div>
+            <div class="col-md-1">
+                <?php if ($lecturefiles) { ?>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
+                            <?= \Yii::t('app', 'Notes');?>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-lg-left">
+                            <?= $files = $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]);?>
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+        </hr>
         <?php if ($uLecture && $uLecture->evaluated) { ?>
             <div style="margin-top:10px;">
                 <div class="col-sm-6" style="margin-bottom: 5px">
@@ -87,9 +101,6 @@ $this->params['breadcrumbs'][] = $model->title;
         <?php } ?>
         <?php if ($difficulties and $lectureDifficulties and $difficultiesVisible) { ?>
             <?= $this->render('difficulties', ['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>
-        <?php } ?>
-        <?php if ($lecturefiles) { ?>
-            <?= $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]); ?>
         <?php } ?>
         <?php if ($evaluations and $lectureEvaluations) {  ?>
             <?= $this->render('evaluations', ['evaluations' => $evaluations, 'lectureEvaluations' => $lectureEvaluations, 'force' => $force]) ?>
