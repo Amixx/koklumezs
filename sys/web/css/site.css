@@ -375,19 +375,20 @@ a.desc:after {
 }
 
 .LectureOverview__Section {   
-    padding: 5px;
+    padding: 4px 16px;
+    margin: 0 -16px;
 }
 
 .LectureOverview__Section--new {
-    background: rgba(0,0,0,0.1);
-    padding: 4px 16px;
+background: rgba(0,0,0,0.1);
 }
 
 .LectureOverview__Section--favourite {
-    background: rgba(0,0,0,0.1);
-    padding: 4px 16px;
-    margin: 3px;   
-    border-radius: 16px;
+    
+}
+
+.LectureOverview__Section--learning {
+   background: rgba(0,0,0,0.1);
 }
 
 .LectureOverview__EmptyText {
