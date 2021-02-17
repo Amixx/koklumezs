@@ -236,6 +236,34 @@ a.desc:after {
     max-width: 89%;
 }
 
+.lesson-column {
+    background-color: rgb(225,225,225);
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.lesson-column h3{
+    text-align: center;
+}
+
+.lesson-column a{
+    text-decoration: none;
+    display: block;
+    color: rgb(102, 102, 102);
+    padding: 2px 8px;
+    transition: opacity .05s ease-out, background-color 0.1s ease-in;
+}
+
+.lesson-column a:hover{
+    color: rgb(50,50,50);
+    background: rgb(240, 240, 240);
+    border-radius: 4px;
+}
+
+.lesson-column p {
+    margin: 2px 0;
+}
+
 .img-fluid {
     max-width: 100%;
     height: auto;
