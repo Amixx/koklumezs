@@ -322,6 +322,8 @@ class LekcijasController extends Controller
             $relatedLectures = Lectures::getLecturesByIds($ids);
             $difficultiesVisible = SectionsVisible::isVisible("Nodarbības sarežģītība");
 
+            $nextLessonId = UserLectures::getNextLessonId();
+
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,
@@ -342,7 +344,8 @@ class LekcijasController extends Controller
                 'difficultiesVisible' => $difficultiesVisible,
                 'uLecture' => $uLecture,
                 'userCanDownloadFiles' => $userCanDownloadFiles,
-                'videoThumb' => $videoThumb
+                'videoThumb' => $videoThumb,
+                'nextLessonId' => $nextLessonId
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');

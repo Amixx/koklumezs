@@ -290,6 +290,11 @@ class UserLectures extends \yii\db\ActiveRecord
         return $firstOpenTime;
     }
 
+
+    public static function getNextLessonId(){
+        return 641;
+    }
+
     /**
      * Sends confirmation email to user
      *

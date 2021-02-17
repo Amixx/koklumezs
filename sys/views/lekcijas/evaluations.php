@@ -3,6 +3,7 @@
 use \yii2mod\rating\StarRating;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+
 ?>
 <hr />
 <div class="row">

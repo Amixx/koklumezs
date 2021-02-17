@@ -675,3 +675,16 @@ div.has-experience.active, div.rent.active {
 .small-dropdown + span .select2-selection {
     min-width: unset !important;
 }
+
+.LectureEvaluations__Heart {
+    font-size: 32px;
+}
+
+.LectureEvaluations__Heart--active {
+    color: red;
+}
+
+.LectureEvaluations__FavouriteText {
+    display: inline-block;
+    width: 65%;
+}

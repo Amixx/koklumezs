@@ -26,6 +26,12 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                 if ($uLecture->still_learning) echo " (<span class='text-primary'>" . \Yii::t('app',  'Still learning') . "</span>)";
             } ?>
         </h2>
+         <div class="row">
+            <?= $this->render("newevaluations.php", [
+                'isFavourite' => $uLecture->is_favourite,
+                'nextLessonId' => $nextLessonId
+            ]) ?>
+        </div>
         <div class="row">
             <div class="col-md-11">
                 <?= $model->description ?>

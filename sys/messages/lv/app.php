@@ -435,4 +435,5 @@ return [
     'Message for students who want to rent an instrument' => 'Ziņa skolēniem, kuri vēlas īrēt instrumentu',
     'Subscription plan used to generate invoice for renters' => 'Abonēšanas plāns no kura ģenerēt rēķinu instrumenta īrētājiem',
     'Notes' => 'Notis',
+    'Next lesson' => 'Nākamais uzdevums',
 ];
