@@ -378,15 +378,20 @@ a.desc:after {
     padding: 5px;
 }
 
-.LectureOverview__Section--inner {
-    background: rgba(0,0,0,0.1);  
+.LectureOverview__Section--new {
+    background: rgba(0,0,0,0.1);
+    padding: 4px 16px;
+}
+
+.LectureOverview__Section--favourite {
+    background: rgba(0,0,0,0.1);
     padding: 4px 16px;
     margin: 3px;   
     border-radius: 16px;
 }
 
 .LectureOverview__EmptyText {
-    margin-bottom:185px;
+    margin-bottom:200px;
 }
 
 .LectureOverview__LinkToAll {
