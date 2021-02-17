@@ -9,6 +9,7 @@ use yii\widgets\LinkPager;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Nodarbības/Lessons';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lectures-index">
     <div class="LectureOverview__Section LectureOverview__Section--new">
@@ -27,7 +28,7 @@ $this->title = 'Nodarbības/Lessons';
             ?>
                 <div class="col-md-6 col-lg-3 text-center lecture-wrap">
                     <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->id]) ?>" style="background-color: white; background-image: <?= trim($videoThumb ? 'url(' . $this->render('video_thumb', ['lecturefiles' => [0 => ['file' => $model->file, 'thumb' => $videoThumb]], 'videos' => $videos, 'baseUrl' => $baseUrl]) . ')' : "") ?>;"></a>
-                    <span class="lecture-title"><?= $model->title ?> </span>
+                    <?= $model->title ?>
                 </div>
             <?php } ?>
         </div>
@@ -48,7 +49,7 @@ $this->title = 'Nodarbības/Lessons';
             ?>
                 <div class="col-md-6 col-lg-3 text-center lecture-wrap">
                     <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->id]) ?>" style="background-color: white; background-image: <?= trim($videoThumb ? 'url(' . $this->render('video_thumb', ['lecturefiles' => [0 => ['file' => $model->file, 'thumb' => $videoThumb]], 'videos' => $videos, 'baseUrl' => $baseUrl]) . ')' : "") ?>;"></a>
-                    <span class="lecture-title"><?= $model->title ?> </span>
+                    <?= $model->title ?>
                 </div>
             <?php } ?>
         </div>
@@ -69,7 +70,7 @@ $this->title = 'Nodarbības/Lessons';
             ?>
                 <div class="col-md-6 col-lg-3 text-center lecture-wrap">
                     <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->id]) ?>" style="background-color: white; background-image: <?= trim($videoThumb ? 'url(' . $this->render('video_thumb', ['lecturefiles' => [0 => ['file' => $model->file, 'thumb' => $videoThumb]], 'videos' => $videos, 'baseUrl' => $baseUrl]) . ')' : "") ?>;"></a>
-                    <span class="lecture-title"><?= $model->title ?> </span>
+                    <?= $model->title ?>
                 </div>
             <?php } ?>
         </div>
