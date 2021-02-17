@@ -3,15 +3,8 @@
 use \yii2mod\rating\StarRating;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-?>
-<hr />
-<div class="row">
-    <div class="col-md-12">
-        <h3><?= \Yii::t('app',  'Evaluate the lesson') ?></h3>
-    </div>
-</div>
-<?php $form = ActiveForm::begin(); ?>
-<?php
+$form = ActiveForm::begin();
+
 foreach ($evaluations as $id => $evaluation) {
     $continue = !isset($lectureEvaluations[$evaluation['id']]);
     if ($continue) {

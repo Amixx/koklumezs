@@ -7,7 +7,6 @@ use yii\helpers\Url;
 if ($relatedLectures) {
 ?>
     <h2><?= \Yii::t('app',  'Related lessons') ?></h2>
-    <hr />
     <div class="lectures-related">
 
         <div class="row">

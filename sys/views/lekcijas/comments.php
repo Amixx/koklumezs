@@ -1,9 +1,6 @@
 <?php
-
 use yii\helpers\Html;
 ?>
-
-<hr />
 <div class="row">
     <div class="col-md-12">
         <h3><?= \Yii::t('app',  'Comments') ?></h3>

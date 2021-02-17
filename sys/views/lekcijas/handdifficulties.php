@@ -1,4 +1,3 @@
-<hr />
 <?php
 if ($handdifficulties['left']) { ?>
     <div class="row">

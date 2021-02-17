@@ -31,20 +31,23 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                 <?= $model->description ?>
             </div>
             <div class="col-md-1">
-                <?php if ($lecturefiles) { ?>
-                    <div class="btn-group">
+                <div class="btn-group">
+                    <?php if ($evaluations and $lectureEvaluations) {  
+                        echo $this->render('alertEvaluation', ['evaluations' => $evaluations, 'lectureEvaluations' => $lectureEvaluations, 'force' => $force]);
+                    } ?>
+                    <!-- Te jāieliek kādu pogu rādīt, ja ir jau novērtēts  + tam iepriekšējam if pielikt else { ... }-->
+                    <?php if ($lecturefiles) { ?>
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
                             <?= \Yii::t('app', 'Notes');?>
                         </button>
                         <div class="dropdown-menu dropdown-menu-lg-left">
                             <?= $files = $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]);?>
                         </div>
-                    </div>
-                <?php } ?>
+                    <?php } ?>
+                </div>
             </div>
-        </div>
-        </hr>
-        <?php if ($uLecture && $uLecture->evaluated) { ?>
+        
+            <?php if ($uLecture && $uLecture->evaluated) { ?>
             <div style="margin-top:10px;">
                 <div class="col-sm-6" style="margin-bottom: 5px">
                     <?php
@@ -70,8 +73,6 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                 </div>
             </div>
         <?php } ?>
-
-        <hr/>
 
         <?php if ($model->file) { ?>
             <?= $this->render(
@@ -104,6 +105,8 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
             <?= $this->render('difficulties', ['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>
         <?php } ?>
         <?php if ($evaluations and $lectureEvaluations) {  ?>
+            <hr>
+            <h3><?= \Yii::t('app',  'Evaluate the lesson') ?></h3>
             <?= $this->render('evaluations', ['evaluations' => $evaluations, 'lectureEvaluations' => $lectureEvaluations, 'force' => $force]) ?>
         <?php } ?>
         <?php if ($relatedLectures) { ?>

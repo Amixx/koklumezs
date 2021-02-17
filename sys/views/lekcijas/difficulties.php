@@ -7,7 +7,6 @@ foreach ($difficulties as $id => $name) {
     }
     $sum += $lectureDifficulties[$id];
 } ?>
-<hr />
 <div class="row">
     <div class="col-md-12">
         <h3><?= \Yii::t('app',  'Lesson difficulty') ?>: <?= $sum ?></h3>
