@@ -367,12 +367,12 @@ a.desc:after {
     display: block;
   }
 }
-
+/* 
 @media (min-width: 1199px) {
     .LectureOverview__Section {
         width: 48%;
     }
-}
+} */
 
 .LectureOverview__Section {   
     padding: 4px 16px;
