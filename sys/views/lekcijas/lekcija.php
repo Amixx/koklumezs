@@ -10,7 +10,8 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
 <link href="https://unpkg.com/video.js/dist/video-js.min.css" rel="stylesheet">
 <script src="https://unpkg.com/video.js/dist/video.min.js"></script>
 <div class="row">
-    <div class="col-md-3 ">
+    <div class="col-md-3 lesson-column">
+        <h3><?=\Yii::t('app',  'New lessons')?></h3>
         <?php foreach ($userLectures as $lecture) {  ?>
             <?php if ($lecture->sent) { ?>
                 <p><a href="<?= Url::to(['lekcijas/lekcija', 'id' => $lecture->lecture_id]); ?>"><?= $lecture->lecture->title ?></a></p>
