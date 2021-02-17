@@ -11,11 +11,15 @@ use yii\widgets\LinkPager;
 if (isset($type)) {
     if ($type == "new") {
         $this->title = \Yii::t('app',  'New lessons');
+    } else if ($type == "learning") {
+        $this->title = \Yii::t('app',  'Lessons I\'m still learning');
     } else if ($type == "favourite") {
         $this->title = \Yii::t('app',  'Favourite lessons');
     }
 }
 
+
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lectures-index">
     <h3><?= $this->title ?></h3>

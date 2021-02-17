@@ -7,7 +7,7 @@ use yii\helpers\Url;
 <div class="col-md-6 LectureOverview__Section">
     <h3><?= \Yii::t('app', $divTitle) ?></h3>
     <h4 class="LectureOverview__LinkToAll">
-        <a><?= Html::a(\Yii::t('app', $clickableTitle), ['?type='.$type]) ?></a>
+        <a><?= Html::a(\Yii::t('app', $clickableTitle), ['?type=new']) ?></a>
     </h4>
     <?php if (count($Lectures) == 0) { ?>
         <h4 class="LectureOverview__EmptyText">
