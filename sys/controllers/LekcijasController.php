@@ -79,12 +79,8 @@ class LekcijasController extends Controller
 
         $videoThumb = School::getCurrentSchool()->video_thumbnail;
 
-        if ($type) { 
-            $stillLearningLectures = [];
-            if ($type == 'new') {
-                $stillLearningLectures = UserLectures::getLatestLecturesOfType($user->id, "learning");
-            }  
-            $modelsIds = UserLectures::getLecturesOfType($user->id, $type) + $stillLearningLectures;
+        if ($type) {
+            $modelsIds = UserLectures::getLecturesOfType($user->id, $type);
             if ($modelsIds) {
                 $query = Lectures::find()->where(['in', 'id', $modelsIds]);
                 $countQuery = clone $query;
