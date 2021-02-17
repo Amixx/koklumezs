@@ -48,6 +48,18 @@ class StudentSubPlansController extends Controller
         }
 
         $subplan = StudentSubPlans::getCurrentForStudent($id);
+
+        if(!$subplan){
+            return $this->render('view', [
+                'subplan' => null,
+                'planFiles' => null,
+                'planPauses' => null,
+                'newPause' => null,
+                'remainingPauseWeeks' => null,
+                'planCurrentlyPaused' => null,
+            ]);
+        }
+
         $planFiles = PlanFiles::getFilesForPlan($subplan["plan_id"])->asArray()->all();
         $planPauses = null;
         if(StudentSubplanPauses::studentHasAnyPauses($id)){

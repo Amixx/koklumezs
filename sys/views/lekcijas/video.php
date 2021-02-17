@@ -2,7 +2,7 @@
 $hasFiles = false;
 foreach ($lecturefiles as $id => $file) {
     $path_info = pathinfo($file['file']);
-    if (str_contains($file['file'], "youtube") || in_array(strtolower($path_info['extension']), $videos)) {
+    if (strpos($file['file'], "youtube") !== false || in_array(strtolower($path_info['extension']), $videos)) {
         $hasFiles = true;
     }
 }
@@ -11,11 +11,11 @@ if ($hasFiles) {
     <div class="row">
         <?php foreach ($lecturefiles as $id => $file) {
             $path_info = pathinfo($file['file']);
-            if (!str_contains($file['file'], "youtube") && !in_array(strtolower($path_info['extension']), $videos)) {
+            if (strpos($file['file'], "youtube") === false && !in_array(strtolower($path_info['extension']), $videos)) {
                 continue;
             }
 
-            $isYoutubeVideo = str_contains($file['file'], "youtube");
+            $isYoutubeVideo = strpos($file['file'], "youtube") !== false;
             $fileUrl = $file['file'];
 
             $dataSetup = $isYoutubeVideo 

@@ -98,6 +98,8 @@ class StudentSubPlans extends \yii\db\ActiveRecord
 
     public function getRemainingPauseWeeks($studentId){
         $subplan = self::getCurrentForStudent($studentId);
+        if(!$subplan) return 0;
+
         $pauses = StudentSubplanPauses::getForStudentSubplan($subplan['id'])->asArray()->all();
         $totalPausedWeeks = 0;
         foreach($pauses as $p){
