@@ -20,7 +20,10 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
 </div>
 <div class="col-sm-4">
     <span class="LectureEvaluations__FavouriteText">Vai vēlies šo paspēlēt vēl? Atzīmē ar "Patīk"!</span>
-    <span class="glyphicon LectureEvaluations__Heart <?= $heartClasses ?>"></span>
+    <?= Html::beginForm(["/lekcijas/toggle-is-favourite?lectureId=$uLecture->lecture_id"], 'get') ?>
+    <button type="submit" class="removeBtnStyle"><span class="glyphicon LectureEvaluations__Heart <?= $heartClasses ?>"></span></button>
+    <?= Html::endForm() ?>
+    
 </div>
 <div class="col-sm-4">
     <?= Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-primary']); ?>

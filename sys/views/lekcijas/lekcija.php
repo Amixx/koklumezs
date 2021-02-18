@@ -29,7 +29,8 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
          <div class="row">
             <?= $this->render("newevaluations.php", [
                 'isFavourite' => $uLecture->is_favourite,
-                'nextLessonId' => $nextLessonId
+                'nextLessonId' => $nextLessonId,
+                'uLecture' => $uLecture
             ]) ?>
         </div>
         <div class="row">
@@ -50,34 +51,6 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
             </div>
         </div>
         </hr>
-        <?php if ($uLecture && $uLecture->evaluated) { ?>
-            <div style="margin-top:10px;">
-                <div class="col-sm-6" style="margin-bottom: 5px">
-                    <?php
-                    $firstButtonText = \Yii::t('app',  'Add to favourites');
-                    if ($uLecture->is_favourite) {
-                        $firstButtonText = \Yii::t('app',  'Remove from favourites');
-                    }
-                    ?>
-                    <?= Html::beginForm(["/lekcijas/toggle-is-favourite?lectureId=$uLecture->lecture_id"], 'get') ?>
-                    <?= Html::submitButton($firstButtonText, ['class' => 'btn btn-primary btn-sm']) ?>
-                    <?= Html::endForm() ?>
-                </div>
-                <div class="col-sm-6" style="margin-bottom: 5px">
-                    <?php
-                    $secondButtonText = \Yii::t('app',  'Add to lessons I\'m still learning');
-                    if ($uLecture->still_learning) {
-                        $secondButtonText = \Yii::t('app',  'Remove from lessons I\'m still learning');
-                    }
-                    ?>
-                    <?= Html::beginForm(["/lekcijas/toggle-still-learning?lectureId=$uLecture->lecture_id"], 'get') ?>
-                    <?= Html::submitButton($secondButtonText, ['class' => 'btn btn-primary btn-sm']) ?>
-                    <?= Html::endForm() ?>
-                </div>
-            </div>
-        <?php } ?>
-
-        <hr/>
 
         <?php if ($model->file) { ?>
             <?= $this->render(

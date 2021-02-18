@@ -688,3 +688,8 @@ div.has-experience.active, div.rent.active {
     display: inline-block;
     width: 65%;
 }
+
+.removeBtnStyle{
+    border: none;
+    background: none;
+}
