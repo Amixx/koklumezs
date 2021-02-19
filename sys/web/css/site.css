@@ -692,4 +692,13 @@ div.has-experience.active, div.rent.active {
 .removeBtnStyle{
     border: none;
     background: none;
+    outline: none;
+}
+
+.LessonTop {
+    width: 100%;
+}
+
+.LessonTop td:first-child {
+    width: 70%;
 }

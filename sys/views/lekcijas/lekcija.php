@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Url;
-use yii\helpers\Html;
 use app\models\SectionsVisible;
 
 $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
@@ -19,20 +18,12 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
         <?php } ?>
     </div>
     <div class="border-left col-md-9">
-        <h2 class="text-center">
-            <?= $model->title ?>
-            <?php if ($uLecture) {
-                if ($uLecture->is_favourite) echo " (<span class='text-primary'>" . \Yii::t('app',  'Favourite') . "</span>)";
-                if ($uLecture->still_learning) echo " (<span class='text-primary'>" . \Yii::t('app',  'Still learning') . "</span>)";
-            } ?>
-        </h2>
-         <div class="row">
-            <?= $this->render("newevaluations.php", [
-                'isFavourite' => $uLecture->is_favourite,
-                'nextLessonId' => $nextLessonId,
-                'uLecture' => $uLecture
-            ]) ?>
-        </div>
+        <?= $this->render("top-section.php", [
+            'title' => $model->title,
+            'isFavourite' => $uLecture->is_favourite,
+            'nextLessonId' => $nextLessonId,
+            'uLecture' => $uLecture
+        ]) ?>
         <div class="row">
             <div class="col-md-11">
                 <?= $model->description ?>
