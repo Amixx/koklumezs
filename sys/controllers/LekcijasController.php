@@ -322,7 +322,10 @@ class LekcijasController extends Controller
             $relatedLectures = Lectures::getLecturesByIds($ids);
             $difficultiesVisible = SectionsVisible::isVisible("Nodarbības sarežģītība");
 
-            $nextLessonId = UserLectures::getNextLessonId();
+            $userLecture = UserLectures::findOne(['user_id' => $user->id, 'lecture_id' => $id]);
+            $type = $userLecture->is_favourite ? "favourite" : "learning";
+
+            $nextLessonId = UserLectures::getNextLessonId($dbUser->id, $id, $type);
 
             return $this->render('lekcija', [
                 'model' => $model,

@@ -39,20 +39,9 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
         <?= Html::a(\Yii::t('app', 'Apstiprināt'), [$urlToNextLesson], ['class' => 'btn btn-primary']); ?>
     </td>
     <td>
-        <?= Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-primary']); ?>
+    <?php if($nextLessonId){
+        Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-primary']);
+    } ?>
     </td>
 </tr>
 </table>
-
-<!-- <div class="col-sm-4">
-    <p>
-        Novērtē, cik viegli/grūti gāja ar uzdevumu?
-    </p>
-    <div>
-        vēl nezin kas te būs (zvaigznes nē, moš emojīši)
-    </div>
-</div>
-<div class="col-sm-4">
-    
-    
-</div> -->
