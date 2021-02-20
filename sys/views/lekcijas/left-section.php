@@ -16,4 +16,4 @@ use yii\helpers\Html;
         </p>
     <?php } ?>
 <?php } ?>
-<?= Html::a(\Yii::t('app', 'Open favourite lessons'), ['?type=new'], ['class' => 'btn new-lessons-button']) ?>
+<?= Html::a(\Yii::t('app', 'Open favourite lessons'), ['?type=favourite'], ['class' => 'btn favourite-lessons-button']) ?>
