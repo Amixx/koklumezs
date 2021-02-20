@@ -18,6 +18,16 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
         'filter' => ['image', 'application/pdf', 'text', 'video'],    // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
     ]
 );
+
+$inputFileOptions = [
+    'language' => 'lv',
+    'controller' => 'elfinder', // вставляем название контроллера, по умолчанию равен elfinder
+    'filter' => ['video'], // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
+    'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
+    'options' => ['class' => 'form-control'],
+    'buttonOptions' => ['class' => 'btn btn-default'],
+    'multiple' => false, // возможность выбора нескольких файлов
+]
 ?>
 
 <div class="lectures-form">
@@ -30,9 +40,6 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
         <li class="nav-item">
             <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false"><?= \Yii::t('app', 'Parameters') ?></a>
         </li>
-        <!-- <li class="nav-item">
-            <a class="nav-link" id="evaluations-tab" data-toggle="tab" href="#evaluations" role="tab" aria-controls="evaluations" aria-selected="false"><?= \Yii::t('app', 'Evaluations') ?></a>
-        </li> -->
         <li class="nav-item">
             <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false"><?= \Yii::t('app', 'Files') ?></a>
         </li>
@@ -46,15 +53,8 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
             <?= $form->field($model, 'description')->widget(CKEditor::className(), [
                 'editorOptions' => $ckeditorOptions,
             ]) ?>
-            <?= $form->field($model, 'file')->widget(InputFile::className(), [
-                'language' => 'lv',
-                'controller' => 'elfinder', // вставляем название контроллера, по умолчанию равен elfinder
-                'filter' => ['video'], // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
-                'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
-                'options' => ['class' => 'form-control'],
-                'buttonOptions' => ['class' => 'btn btn-default'],
-                'multiple' => false, // возможность выбора нескольких файлов
-            ]); ?>
+            <?= $form->field($model, 'file')->widget(InputFile::className(), $inputFileOptions); ?>
+            <?= $form->field($model, 'play_along_file')->widget(InputFile::className(), $inputFileOptions); ?>
             <small><?= \Yii::t('app', 'If you need to add more files, go to section "Files"') ?></small><br /><br />
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
@@ -62,11 +62,6 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                 <?= $this->render('difficulties', ['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>
             <?php } ?>
         </div>
-        <!-- <div class="tab-pane fade" id="evaluations" role="tabpanel" aria-labelledby="evaluations-tab">
-            <?php if ($evaluations) {  ?>
-                <?= $this->render('evaluations', ['evaluations' => $evaluations, 'lectureEvaluations' => $lectureEvaluations]) ?>
-            <?php } ?>
-        </div> -->
         <div class="tab-pane fade" id="files" role="tabpanel" aria-labelledby="files-tab">
             <?php $link = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/create', 'lecture_id' => $model->id]) ?>
             <?= $this->render('files', ['lecturefiles' => $lecturefiles, 'link' => $link]) ?>

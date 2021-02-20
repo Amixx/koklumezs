@@ -432,4 +432,7 @@ return [
     'Subscription plan used to generate invoice for renters' => 'Abonēšanas plāns no kura ģenerēt rēķinu instrumenta īrētājiem',
     'Notes' => 'Notis',
     'Next lesson' => 'Nākamais uzdevums',
+    'Previous assignments in this lesson' => 'Iepriekšējie uzdevumi šajā nodarbībā',
+    'Play along video (not required)' => 'Izspēles video (nav nepieciešams)',
+    'Open favourite lessons' => 'Atvērt mīļākās nodarbības',
 ];

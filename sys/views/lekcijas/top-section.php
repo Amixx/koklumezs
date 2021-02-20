@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 
-$heartClasses = $isFavourite 
+$heartClasses = $uLecture->is_favourite 
     ? 'glyphicon-heart LectureEvaluations__Heart--active'
     : 'glyphicon-heart-empty';
 
@@ -10,37 +10,37 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
 
 ?>
 
-<table class="LessonTop">
+<h3 class="text-center">
+    <?= $title ?>
+</h3>
+
+<table class="LessonTop">   
 <tr>
     <td>
-        <span>
-            <h2 class="text-left">
-                <?= $title ?>
-            </h2>
-        </span>
+        <p>Hei! Kā tev veicās ar šo uzdevumu?</p>
+        <div>
+            <!-- pagaidām - kamēr nav emojīši -->
+            <?php for($i = 0; $i < 5; $i++){ ?>
+                <span class="glyphicon glyphicon-heart LectureEvaluations__Heart"></span>
+            <?php } ?>
+        </div>       
     </td>
     <td>
-        <?= Html::button(\Yii::t('app', 'Vārdi un notis'), ['class' => 'btn btn-primary', $urlToNextLesson]); ?>
-    </td>
-</tr>    
-<tr rowspan="2">
-    <td>
-    Atzīmē, cik viegli/grūti gāja ar uzdevumu?
-    </td>
-    <td>
-        <span class="LectureEvaluations__FavouriteText">Vai vēlies šo paspēlēt vēl? Atzīmē ar "Patīk"!</span>
-        <?= Html::beginForm(["/lekcijas/toggle-is-favourite?lectureId=$uLecture->lecture_id"], 'get') ?>
-        <button type="submit" class="removeBtnStyle"><span class="glyphicon LectureEvaluations__Heart <?= $heartClasses ?>"></span></button>
-        <?= Html::endForm() ?>
+        <?= Html::button(\Yii::t('app', 'Vārdi un notis'), ['class' => 'btn btn-orange', $urlToNextLesson]); ?>
     </td>
 </tr>
 <tr>
-    <td class="text-center">
-        <?= Html::a(\Yii::t('app', 'Apstiprināt'), [$urlToNextLesson], ['class' => 'btn btn-primary']); ?>
+    <td>
+        <?= Html::beginForm(["/lekcijas/toggle-is-favourite?lectureId=$uLecture->lecture_id"], 'get') ?>
+        <label for="heart" class="LectureEvaluations__FavouriteText">
+            <button type="submit" class="removeBtnStyle"><span class="glyphicon LectureEvaluations__Heart <?= $heartClasses ?>"></span></button>
+            Pievienot mīļākajām nodarbībām
+        </label>
+        <?= Html::endForm() ?>        
     </td>
     <td>
     <?php if($nextLessonId){
-        Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-primary']);
+        echo Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-orange']);
     } ?>
     </td>
 </tr>

@@ -22,7 +22,7 @@ class Lectures extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'author'], 'required'], //'complexity',
-            [['title', 'description', 'file'], 'string'],
+            [['title', 'description', 'file', 'play_along_file'], 'string'],
             [['created', 'updated'], 'safe'],
             [['author', 'complexity'], 'integer'],
             [['author'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['author' => 'id']],
@@ -44,6 +44,7 @@ class Lectures extends \yii\db\ActiveRecord
             'complexity' => \Yii::t('app',  'Difficulty'),
             'season' => \Yii::t('app',  'Season'),
             'file' => \Yii::t('app',  'Video (not required)'),
+            'play_along_file' => \Yii::t('app',  'Play along video (not required)'),
             'thumb' => \Yii::t('app',  'Video thumbnail (not required)'),
         ];
     }

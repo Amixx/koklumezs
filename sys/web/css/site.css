@@ -220,6 +220,12 @@ a.desc:after {
     position: relative;  
 }
 
+.lecture-wrap-related {
+    min-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .lecture-wrap:hover {
     transform: scale(1.1);
 }
@@ -237,24 +243,29 @@ a.desc:after {
 }
 
 .lesson-column {
-    background-color: rgb(225,225,225);
+    background-color: rgba(196, 196, 196, .5);
     border-radius: 8px;
     font-size: 15px;
+    padding: 8px;
 }
 
-.lesson-column h3{
-    text-align: center;
+.lesson-column-middle {
+    padding: 8px 56px 24px 56px;
 }
 
-.lesson-column a{
-    text-decoration: none;
+.lesson-column-right {
+    padding: 24px;
+}
+
+.lesson-column-item {
     display: block;
     color: rgb(102, 102, 102);
     padding: 2px 8px;
     transition: opacity .05s ease-out, background-color 0.1s ease-in;
 }
 
-.lesson-column a:hover{
+.lesson-column-item:hover {
+    text-decoration: none;
     color: rgb(50,50,50);
     background: rgb(240, 240, 240);
     border-radius: 4px;
@@ -677,16 +688,16 @@ div.has-experience.active, div.rent.active {
 }
 
 .LectureEvaluations__Heart {
-    font-size: 32px;
+    font-size: 25px;
+    vertical-align: -6px;
 }
 
 .LectureEvaluations__Heart--active {
-    color: red;
+    color: #F4900C;
 }
 
 .LectureEvaluations__FavouriteText {
-    display: inline-block;
-    width: 65%;
+    font-weight: normal;
 }
 
 .removeBtnStyle{
@@ -697,8 +708,35 @@ div.has-experience.active, div.rent.active {
 
 .LessonTop {
     width: 100%;
+    font-size: 14px;
+    padding: 0 56px 24px 56px;
+}
+
+.LessonTop tr {
+    height: 64px;
 }
 
 .LessonTop td:first-child {
     width: 70%;
+}
+
+.LessonTop td:last-child {
+    text-align: right;
+}
+
+.btn-orange {
+    background: rgba(248, 197, 67, .8);
+    border: none;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    color: black;
+}
+
+.new-lessons-button {
+    margin-top: 36px;
+    font-size: 12px;
+    padding-left: 4px;
+    padding-right: 4px;
+    background: #c4c4c4;
+    color: black;
 }
