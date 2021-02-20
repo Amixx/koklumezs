@@ -39,9 +39,18 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
         <?= Html::endForm() ?>        
     </td>
     <td>
-    <?php if($nextLessonId){
-        echo Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-orange']);
-    } ?>
+    <?php //if($nextLessonId){
+        if (!isset($hasEvaluatedLesson)) {
+            echo $this->render('alertEvaluation', [
+                'evaluations' => $evaluations, 
+                'lectureEvaluations' => $lectureEvaluations,
+                'force' => $force,
+                'nextLessonId' => $nextLessonId,
+            ]); 
+        } else {
+            echo Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-orange']);
+        }
+    //} ?>
     </td>
 </tr>
 </table>

@@ -22,7 +22,10 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                  <?= $this->render("top-section.php", [
                     'title' => $model->title,
                     'nextLessonId' => $nextLessonId,
-                    'uLecture' => $uLecture
+                    'uLecture' => $uLecture,
+                    'evaluations' => $evaluations,
+                    'lectureEvaluations' => $lectureEvaluations,
+                    'force' => $force,
                 ]) ?>
             <?php } ?>           
 

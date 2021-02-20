@@ -4,8 +4,9 @@ use \yii2mod\rating\StarRating;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+$urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
+
 ?>
-<hr />
 <div class="row">
     <div class="col-md-12">
         <h3><?= \Yii::t('app',  'Evaluate the lesson') ?></h3>
@@ -46,7 +47,7 @@ foreach ($evaluations as $id => $evaluation) {
 <?php } ?>
 <?php if (!$force) { ?>
     <div class="form-group">
-        <?= Html::submitButton(\Yii::t('app',  'Submit'), ['class' => 'btn btn-success']) ?>
+        <?= Html::a(\Yii::t('app',  'Submit'), [$urlToNextLesson] ,['class' => 'btn btn-success']) ?>
     </div>
 <?php } ?>
 </div>
