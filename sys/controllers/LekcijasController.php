@@ -304,6 +304,7 @@ class LekcijasController extends Controller
             $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
             $lecturefiles = Lecturesfiles::getLectureFiles($id);
             $userLectureEvaluations = $force ? [] : Userlectureevaluations::getLectureEvaluations($user->id, $id);
+            $hasEvaluatedLesson = !empty($userLectureEvaluations);
             $baseUrl = Yii::$app->request->baseUrl;
             $ids = RelatedLectures::getRelations($id);
             if ($ids) {
@@ -348,7 +349,8 @@ class LekcijasController extends Controller
                 'uLecture' => $uLecture,
                 'userCanDownloadFiles' => $userCanDownloadFiles,
                 'videoThumb' => $videoThumb,
-                'nextLessonId' => $nextLessonId
+                'nextLessonId' => $nextLessonId,
+                'hasEvaluatedLesson' => $hasEvaluatedLesson,
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');
