@@ -535,3 +535,11 @@ function makeDateString(date){
 function leadingZero(string){
     return ('0' + String(string)).slice(-2);
 }
+
+$("[data-role=evaluation-emoji]").on("click", submitLessonEvaluation);
+
+function submitLessonEvaluation(){
+    var $hiddenInput = $(this.parentElement).siblings("[name=difficulty-evaluation]");
+    $hiddenInput.val(this.dataset.value);
+    $(this).closest("form").submit();
+}

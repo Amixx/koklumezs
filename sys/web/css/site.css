@@ -742,3 +742,33 @@ div.has-experience.active, div.rent.active {
     background: #c4c4c4;
     color: black;
 }
+
+@font-face {
+  font-family: open-moji;
+  src: url(../fonts/OpenMoji-Color.ttf);
+}
+
+.emoji:before {
+    cursor: pointer;
+    font-size: 25px;
+    opacity: .5;
+}
+.emoji.active:before {
+    opacity: 1;
+}
+
+.emoji-sleepy:before {
+    content: "\1f634";
+}
+.emoji-wink:before {
+    content: "\1f609";
+}
+.emoji-smile:before {
+    content: "\1f60a";
+}
+.emoji-surprise:before {
+    content: "\1f60f";
+}
+.emoji-fatigue:before {
+    content: "\1f61f";
+}

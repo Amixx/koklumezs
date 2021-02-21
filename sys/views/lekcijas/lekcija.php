@@ -27,6 +27,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                     'lectureEvaluations' => $lectureEvaluations,
                     'force' => $force,
                     'hasEvaluatedLesson' => $hasEvaluatedLesson,
+                    'difficultyEvaluation' => $difficultyEvaluation,
                 ]) ?>
             <?php } ?>           
 

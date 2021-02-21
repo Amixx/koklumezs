@@ -17,13 +17,11 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
 <table class="LessonTop">   
 <tr>
     <td>
-        <p>Hei! Kā tev veicās ar šo uzdevumu?</p>
-        <div>
-            <!-- pagaidām - kamēr nav emojīši -->
-            <?php for($i = 0; $i < 5; $i++){ ?>
-                <span class="glyphicon glyphicon-heart LectureEvaluations__Heart"></span>
-            <?php } ?>
-        </div>       
+        <?= $this->render("amount-evaluation", [
+            'difficultyEvaluation' => $difficultyEvaluation, 
+            'force' => $force,
+            'redirectToNext' => false,
+        ]) ?>
     </td>
     <td>
         <?= Html::button(\Yii::t('app', 'Vārdi un notis'), ['class' => 'btn btn-orange', $urlToNextLesson]); ?>
@@ -42,9 +40,8 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
     <?php if($nextLessonId){
         if (!$hasEvaluatedLesson) {
             echo $this->render('alertEvaluation', [
-                'evaluations' => $evaluations, 
-                'lectureEvaluations' => $lectureEvaluations,
                 'force' => $force,
+                'difficultyEvaluation' => $difficultyEvaluation,
             ]); 
         } else {
             echo Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-orange']);

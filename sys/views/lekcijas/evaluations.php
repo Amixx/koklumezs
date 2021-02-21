@@ -42,8 +42,6 @@ foreach ($evaluations as $id => $evaluation) {
         </div>
 
     <?php } ?>
-
-    <?= Html::hiddenInput('redirect-to-next', true) ?>
 <?php } ?>
 <?php if (!$force) { ?>
     <div class="form-group">

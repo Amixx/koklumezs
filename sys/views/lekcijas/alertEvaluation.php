@@ -9,11 +9,11 @@
                 <h3 class="modal-title" id="alertEvaluationLabel"><?= \Yii::t('app',  'Hey! Please evaluate the lesson before moving on to the next one!'); ?></h3>
             </div>
             <div class="modal-body">
-                <?= $this->render('evaluations', [
-                        'evaluations' => $evaluations,
-                        'lectureEvaluations' => $lectureEvaluations, 
-                        'force' => $force,
-                    ]) ?>
+                <?= $this->render("amount-evaluation", [
+                    'difficultyEvaluation' => $difficultyEvaluation,
+                    'force' => $force,
+                    'redirectToNext' => true,
+                ]) ?>
             </div>
         </div>
     </div>
