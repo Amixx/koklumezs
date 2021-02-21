@@ -675,3 +675,111 @@ div.has-experience.active, div.rent.active {
 .small-dropdown + span .select2-selection {
     min-width: unset !important;
 }
+
+.LectureEvaluations__Heart {
+    font-size: 25px;
+    vertical-align: -6px;
+}
+
+.LectureEvaluations__Heart--active {
+    color: #F4900C;
+}
+
+.LectureEvaluations__FavouriteText {
+    font-weight: normal;
+}
+
+.removeBtnStyle{
+    border: none;
+    background: none;
+    outline: none;
+}
+
+.LessonTop {
+    width: 100%;
+    font-size: 14px;
+    padding: 0 56px 24px 56px;
+}
+
+.LessonTop tr {
+    height: 64px;
+}
+
+.LessonTop td:first-child {
+    width: 70%;
+}
+
+.LessonTop td:last-child {
+    text-align: right;
+}
+
+.btn-orange {
+    background: rgba(248, 197, 67, .8);
+    border: none;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    color: black;
+}
+
+.favourite-lessons-button {
+    margin-top: 36px;
+    border-radius: 8px;
+    font-size: 12px;
+    padding: 8px 4px;
+    width: 100%;
+    background: #c4c4c4;
+    color: black;
+}
+
+@font-face {
+  font-family: open-moji;
+  src: url(../fonts/OpenMoji-Color.ttf);
+}
+
+.emoji:before {
+    cursor: pointer;
+    font-size: 25px;
+    opacity: .5;
+}
+.emoji.active:before {
+    opacity: 1;
+}
+
+.emoji-sleepy:before {
+    content: "\1f634";
+}
+.emoji-wink:before {
+    content: "\1f609";
+}
+.emoji-smile:before {
+    content: "\1f60a";
+}
+.emoji-surprise:before {
+    content: "\1f60f";
+}
+.emoji-fatigue:before {
+    content: "\1f61f";
+}
+
+.lecturelikes {
+    position: absolute;
+    right: 24px;
+    bottom: 16px;
+}
+
+.lecturelikes-archive {
+    bottom: 32px;
+}
+
+.lecturelikes-icon {
+    font-size: 36px;
+    color: #F4900C;
+}
+
+.lecturelikes-count {
+    font-size: 13px;
+    position: absolute;
+    top: 20%;
+    left: 4px;
+    right: 0;
+}
