@@ -4,21 +4,17 @@ namespace app\controllers;
 
 use app\models\Difficulties;
 use app\models\Evaluations;
-use app\models\LectureAssignment;
 use app\models\Lectures;
 use app\models\LecturesDifficulties;
 use app\models\Lecturesevaluations;
 use app\models\Lecturesfiles;
-use app\models\Lectureshanddifficulties;
 use app\models\LectureViews;
 use app\models\RelatedLectures;
-use app\models\Studentgoals;
 use app\models\Userlectureevaluations;
 use app\models\UserLectures;
 use app\models\Users;
 use app\models\School;
 use app\models\SectionsVisible;
-use app\models\CommentResponses;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\VerbFilter;
@@ -171,10 +167,21 @@ class LekcijasController extends Controller
 
         $videoThumb = School::getCurrentSchool()->video_thumbnail;
 
+        $oldSortByDifficulty = Yii::$app->request->get('sortByDifficulty');
+        
+        if (!(isset($oldSortByDifficulty)) || $oldSortByDifficulty == '' || $oldSortByDifficulty == 'desc') {
+            $sortByDifficulty = 'asc';
+            
+            $sortByDifficultyLabel = 'From hardest to easiest';
+        } else {
+            $sortByDifficulty = 'desc';
+            $sortByDifficultyLabel = 'From easiest to hardest';
+        }
+
         $force = Yii::$app->request->get('force');
+        $userLectures = $force ? [] : UserLectures::getLectures($user->id, $oldSortByDifficulty);
         $modelsIds = $force ? [$id] : UserLectures::getUserLectures($user->id); //UserLectures::getSentUserLectures($user->id)
         $check = in_array($id, $modelsIds);
-        $userLectures = $force ? [] : UserLectures::getLectures($user->id);
         $userEvaluatedLectures = $force ? [] : UserLectures::getEvaluatedLectures($user->id);
 
         $nextLessonId = null;
@@ -262,6 +269,8 @@ class LekcijasController extends Controller
                 'nextLessonId' => $nextLessonId,
                 'hasEvaluatedLesson' => $hasEvaluatedLesson,
                 'difficultyEvaluation' => $difficultyEvaluation,
+                'sortByDifficulty' => $sortByDifficulty,
+                'sortByDifficultyLabel' => $sortByDifficultyLabel,
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');

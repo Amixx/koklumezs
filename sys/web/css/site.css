@@ -743,6 +743,16 @@ div.has-experience.active, div.rent.active {
     color: black;
 }
 
+.sort-button {
+    border-radius: 8px;
+    font-size: 12px;
+    padding: 2px 4px;
+    width: 100%;
+    background: #c4c4c4;
+    color: black;
+    font-size: 11px;
+}
+
 @font-face {
   font-family: open-moji;
   src: url(../fonts/OpenMoji-Color.ttf);

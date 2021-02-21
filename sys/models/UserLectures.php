@@ -188,9 +188,14 @@ class UserLectures extends \yii\db\ActiveRecord
         return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
     }
 
-    public function getLectures($id, $evaluated = 0)
+    public function getLectures($id, $order, $evaluated = 0)
     {
-        return self::find()->where(['user_id' => $id, 'evaluated' => $evaluated])->orderBy(['id' => SORT_DESC])->all();
+        if ($order === 'asc') {
+            $orderBy = ['lectures.complexity' => SORT_ASC];
+        } else {
+            $orderBy = ['lectures.complexity' => SORT_DESC];
+        }
+        return self::find()->where(['user_id' => $id, 'evaluated' => $evaluated])->joinWith('lecture')->orderBy($orderBy)->all();
     }
 
     public function getLecturesOfType($id, $type)

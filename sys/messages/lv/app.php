@@ -437,4 +437,6 @@ return [
     'Previous assignments in this lesson' => 'Iepriekšējie uzdevumi šajā nodarbībā',
     'Play along video (not required)' => 'Izspēles video (nav nepieciešams)',
     'Open favourite lessons' => 'Atvērt mīļākās nodarbības',
+    'From hardest to easiest' => 'No sarežģītākās uz vieglāko',
+    'From easiest to hardest' => 'No vieglākās uz sarežģītāko',
 ];
