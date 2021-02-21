@@ -4,8 +4,6 @@ use \yii2mod\rating\StarRating;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-$urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
-
 ?>
 <div class="row">
     <div class="col-md-12">
@@ -44,10 +42,12 @@ foreach ($evaluations as $id => $evaluation) {
         </div>
 
     <?php } ?>
+
+    <?= Html::hiddenInput('redirect-to-next', true) ?>
 <?php } ?>
 <?php if (!$force) { ?>
     <div class="form-group">
-        <?= Html::a(\Yii::t('app',  'Submit'), [$urlToNextLesson] ,['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(\Yii::t('app',  'Submit'), ['class' => 'btn btn-success']) ?>
     </div>
 <?php } ?>
 </div>

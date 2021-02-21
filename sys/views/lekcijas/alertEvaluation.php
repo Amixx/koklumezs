@@ -13,7 +13,6 @@
                         'evaluations' => $evaluations,
                         'lectureEvaluations' => $lectureEvaluations, 
                         'force' => $force,
-                        'nextLessonId' => $nextLessonId,
                     ]) ?>
             </div>
         </div>

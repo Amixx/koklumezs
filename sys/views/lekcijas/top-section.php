@@ -45,7 +45,6 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
                 'evaluations' => $evaluations, 
                 'lectureEvaluations' => $lectureEvaluations,
                 'force' => $force,
-                'nextLessonId' => $nextLessonId,
             ]); 
         } else {
             echo Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-orange']);

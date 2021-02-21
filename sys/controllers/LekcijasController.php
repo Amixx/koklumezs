@@ -207,8 +207,17 @@ class LekcijasController extends Controller
         $check = in_array($id, $modelsIds);
         $userLectures = $force ? [] : UserLectures::getLectures($user->id);
         $userEvaluatedLectures = $force ? [] : UserLectures::getEvaluatedLectures($user->id);
+
+        $nextLessonId = null;
+        $userLecture = UserLectures::findOne(['user_id' => $user->id, 'lecture_id' => $id]);
+        if($userLecture){
+            $type = $userLecture->is_favourite ? "favourite" : "learning";
+            $nextLessonId = UserLectures::getNextLessonId($user->id, $id, $type);
+        }
+
         if ($check) {
             $post = Yii::$app->request->post();
+           
             if (isset($post['evaluations'])) {
                 foreach ($post['evaluations'] as $pid => $value) {
                     $evaluation = new Userlectureevaluations();
@@ -282,6 +291,10 @@ class LekcijasController extends Controller
                 }
                 $uLecture->update();
 
+                if($userLecture && isset($post['evaluations']) && !empty($post['evaluations']) && isset($post['redirect-to-next']) && $post['redirect-to-next']){
+                    return $this->redirect(["lekcijas/lekcija/$nextLessonId"]);
+                }
+
                 $this->refresh();
             }
 
@@ -322,11 +335,6 @@ class LekcijasController extends Controller
             $userCanDownloadFiles = $dbUser->allowed_to_download_files;
             $relatedLectures = Lectures::getLecturesByIds($ids);
             $difficultiesVisible = SectionsVisible::isVisible("Nodarbības sarežģītība");
-
-            $userLecture = UserLectures::findOne(['user_id' => $user->id, 'lecture_id' => $id]);
-            $type = $userLecture->is_favourite ? "favourite" : "learning";
-
-            $nextLessonId = UserLectures::getNextLessonId($dbUser->id, $id, $type);
 
             return $this->render('lekcija', [
                 'model' => $model,
