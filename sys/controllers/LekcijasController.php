@@ -149,13 +149,6 @@ class LekcijasController extends Controller
         ]);
     }
 
-
-    /**
-     * Displays a single Lecture model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionLekcija($id)
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -178,31 +171,7 @@ class LekcijasController extends Controller
 
         $videoThumb = School::getCurrentSchool()->video_thumbnail;
 
-        $dbg = Yii::$app->request->get('dbg');
         $force = Yii::$app->request->get('force');
-        if ($dbg) {
-            $defX = Yii::$app->request->get('x');
-            if (is_numeric($defX)) {
-                echo 'X: <strong>' . $defX . '</strong><br />';
-                $result = LectureAssignment::getNewUserDifficulty($user->id, $defX, $id, $dbg);
-                if ($dbg) {
-                    echo 'New difficulty:<strong>' . $result . '</strong><br />';
-                }
-                $data = LectureAssignment::getNewDifficultyIds($result, $defX, $id, $user->id, $dbg);
-                echo '<hr />';
-            } else {
-                for ($x = 1; $x <= 10; $x++) {
-                    echo 'X: <strong>' . $x . '</strong><br />';
-                    $result = LectureAssignment::getNewUserDifficulty($user->id, $x, $id, $dbg);
-                    if ($dbg) {
-                        echo 'New difficulty:<strong>' . $result . '</strong><br />';
-                    }
-                    $data = LectureAssignment::getNewDifficultyIds($result, $x, $id, $user->id, $dbg);
-                    echo '<hr />';
-                }
-            }
-            die;
-        }
         $modelsIds = $force ? [$id] : UserLectures::getUserLectures($user->id); //UserLectures::getSentUserLectures($user->id)
         $check = in_array($id, $modelsIds);
         $userLectures = $force ? [] : UserLectures::getLectures($user->id);
@@ -248,19 +217,9 @@ class LekcijasController extends Controller
             if (!$force) {
                 UserLectures::setSeenByUser($user->id, $id);
             }
+            
             $difficulties = Difficulties::getDifficulties();
-            $evaluations = Evaluations::getEvaluations();
-            foreach ($evaluations as &$evaluation) {
-                if ($evaluation['star_text']) {
-                    $starTextArray = unserialize($evaluation['star_text']);
-                    foreach ($starTextArray as &$starText) {
-                        $starText = Yii::t('app', $starText);
-                    };
-                    $evaluation['star_text'] = serialize($starTextArray);
-                }
-            }
             $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
-            $lectureHandDifficulties = Lectureshanddifficulties::getLectureDifficulties($id);
             $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
             $lecturefiles = Lecturesfiles::getLectureFiles($id);
             $hasEvaluatedLesson = $difficultyEvaluation !== null;
@@ -285,9 +244,7 @@ class LekcijasController extends Controller
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,
-                'evaluations' => $evaluations,
                 'lectureDifficulties' => $lectureDifficulties,
-                'lectureHandDifficulties' => $lectureHandDifficulties,
                 'lectureEvaluations' => $lectureEvaluations,
                 'lecturefiles' => $lecturefiles,
                 'userLectures' => $userLectures,

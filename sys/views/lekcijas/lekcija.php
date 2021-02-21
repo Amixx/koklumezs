@@ -23,7 +23,6 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                     'title' => $model->title,
                     'nextLessonId' => $nextLessonId,
                     'uLecture' => $uLecture,
-                    'evaluations' => $evaluations,
                     'lectureEvaluations' => $lectureEvaluations,
                     'force' => $force,
                     'hasEvaluatedLesson' => $hasEvaluatedLesson,
@@ -76,7 +75,6 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                 'playAlongFile' => $model->play_along_file,
                 'videos' => $videos,
                 'baseUrl' => $baseUrl,
-                'userEvaluatedLectures' => $userEvaluatedLectures,
                 'videoThumb' => $videoThumb
             ]) ?>
         </div>            
