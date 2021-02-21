@@ -1,4 +1,4 @@
-<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#alertEvaluation"><?= \Yii::t('app',  'Next lesson'); ?></button>
+<button type="button" class="btn btn-orange" data-toggle="modal" data-target="#alertEvaluation"><?= \Yii::t('app',  'Next lesson'); ?></button>
 <div class="modal fade" id="alertEvaluation" tabindex="-1" role="dialog" aria-labelledby="alertEvaluationLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
