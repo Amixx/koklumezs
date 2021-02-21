@@ -25,5 +25,4 @@ if ($hasFiles) {
             </div>
         <?php } ?>
     </div>
-    <hr />
 <?php } ?>

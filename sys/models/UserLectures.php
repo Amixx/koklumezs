@@ -290,6 +290,18 @@ class UserLectures extends \yii\db\ActiveRecord
         return $firstOpenTime;
     }
 
+
+    public static function getNextLessonId($studentId, $currentLectureId, $type){
+        $lectureIds = self::getLecturesOfType($studentId, $type);
+        $lectures = Lectures::find()->where(['in', 'id', $lectureIds])->orderBy(['title' => SORT_ASC])->asArray()->all();
+
+        $takeNext = false;
+        foreach($lectures as $lecture){
+            if($takeNext) return $lecture['id'];
+            if($lecture["id"] === $currentLectureId) $takeNext = true;
+        }
+    }
+
     /**
      * Sends confirmation email to user
      *

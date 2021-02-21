@@ -149,13 +149,6 @@ class LekcijasController extends Controller
         ]);
     }
 
-
-    /**
-     * Displays a single Lecture model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionLekcija($id)
     {
         $isGuest = Yii::$app->user->isGuest;
@@ -178,109 +171,45 @@ class LekcijasController extends Controller
 
         $videoThumb = School::getCurrentSchool()->video_thumbnail;
 
-        $dbg = Yii::$app->request->get('dbg');
         $force = Yii::$app->request->get('force');
-        if ($dbg) {
-            $defX = Yii::$app->request->get('x');
-            if (is_numeric($defX)) {
-                echo 'X: <strong>' . $defX . '</strong><br />';
-                $result = LectureAssignment::getNewUserDifficulty($user->id, $defX, $id, $dbg);
-                if ($dbg) {
-                    echo 'New difficulty:<strong>' . $result . '</strong><br />';
-                }
-                $data = LectureAssignment::getNewDifficultyIds($result, $defX, $id, $user->id, $dbg);
-                echo '<hr />';
-            } else {
-                for ($x = 1; $x <= 10; $x++) {
-                    echo 'X: <strong>' . $x . '</strong><br />';
-                    $result = LectureAssignment::getNewUserDifficulty($user->id, $x, $id, $dbg);
-                    if ($dbg) {
-                        echo 'New difficulty:<strong>' . $result . '</strong><br />';
-                    }
-                    $data = LectureAssignment::getNewDifficultyIds($result, $x, $id, $user->id, $dbg);
-                    echo '<hr />';
-                }
-            }
-            die;
-        }
         $modelsIds = $force ? [$id] : UserLectures::getUserLectures($user->id); //UserLectures::getSentUserLectures($user->id)
         $check = in_array($id, $modelsIds);
         $userLectures = $force ? [] : UserLectures::getLectures($user->id);
         $userEvaluatedLectures = $force ? [] : UserLectures::getEvaluatedLectures($user->id);
+
+        $nextLessonId = null;
+        $userLecture = UserLectures::findOne(['user_id' => $user->id, 'lecture_id' => $id]);
+        if($userLecture){
+            $type = $userLecture->is_favourite ? "favourite" : "learning";
+            $nextLessonId = UserLectures::getNextLessonId($user->id, $id, $type);
+        }
+
+        $difficultyEvaluation = $force ? null : Userlectureevaluations::getLecturedifficultyEvaluation($user->id, $id);
+
         if ($check) {
             $post = Yii::$app->request->post();
-            if (isset($post['evaluations'])) {
-                foreach ($post['evaluations'] as $pid => $value) {
-                    $evaluation = new Userlectureevaluations();
-                    $evaluation->evaluation_id = $pid;
-                    $evaluation->lecture_id = $model->id;
-                    $evaluation->user_id = $user->id;
-                    $evaluation->created = date('Y-m-d H:i:s', time());
-                    $evaluation->evaluation = $value ?? 0;
-                    $evaluation->public_comment = false;
-                    if (isset($post["public_comment"])) {
-                        $evaluation->public_comment = $post["public_comment"];
-                    };
-                    $evaluation->save();
-                }
-                $param = Evaluations::getScaleParam();
-                if (isset($post['evaluations'][$param->id])) {
-                    $x = (int) $post['evaluations'][$param->id];
-                    if ($x > 0) {
-                        $userLecture = UserLectures::findOne(['user_id' => $user->id, 'lecture_id' => $id]);
-                        $userLecture->evaluated = 1;
-                        $savedEvaluation = $userLecture->save();
-                        // find next lecture(s)
-                        if ($savedEvaluation) {
-                            //Katru reizi kad skolnieks novērtē uzdevumu, viņam tiek izraudzīts jauns uzdevums. Tā NEVAJADZĒTU BŪT. 
-                            //LectureAssignment::giveNewAssignment($user->id, $x, $id);                            
-                        }
-                    }
-                }
-                $videoParam = Evaluations::getVideoParam();
-                if (isset($post['evaluations'][$videoParam->id])) {
-                    $x = (int) $post['evaluations'][$videoParam->id];
-                    // more, more, MORE!!!
-                    if (($x == 3) and ($user->more_lecture_requests < Users::MAX_MORE_REQUESTS)) {
-                        $gotNew = LectureAssignment::getSameDiffLectures($user->id, true, $dbg);
-                        $new = [];
-                        $coef = 0;
-                        if (empty($gotNew)) {
-                            $spam = true;
-                            $coef = Studentgoals::getUserDifficultyCoef($user->id);
-                            $new = LectureAssignment::giveNewAssignment($user->id, $coef, $id, $spam);
-                        }
-                        if ($dbg) {
-                            echo '</hr>More lectures request';
-                            echo 'got same diff<br/>';
-                            var_dump($gotNew);
-                            echo 'got new lectures diff<br/>';
-                            var_dump($new);
-                            echo 'user coef diff<br/>';
-                            var_dump($coef);
-                            echo '</hr>';
-                        }
-                        $u = Users::findOne($user->id);
-                        $u->more_lecture_requests = (int) $u->more_lecture_requests + 1;
-                        $u->save(false);
-                    } else {
-                        /* more_lecture_requests = 0 update now is located in croncontroller
-                        $u = Users::findOne($user->id);
-                        $u->more_lecture_requests = 0;
-                        $u->save(false);
-                        */
-                    }
+            if(isset($post["difficulty-evaluation"])){
+                if($difficultyEvaluation){
+                    $difficultyEvaluation->evaluation = $post["difficulty-evaluation"];
+                    $difficultyEvaluation->update();
+                }else{
+                    $difficultyEvaluation = new Userlectureevaluations();
+                    $difficultyEvaluation->evaluation_id = 1;
+                    $difficultyEvaluation->lecture_id = $model->id;
+                    $difficultyEvaluation->user_id = $user->id;
+                    $difficultyEvaluation->created = date('Y-m-d H:i:s', time());
+                    $difficultyEvaluation->evaluation = $post["difficulty-evaluation"];
+                    $difficultyEvaluation->public_comment = false;
+                    $difficultyEvaluation->save();
+
+                    $userLecture->evaluated = 1;
+                    $userLecture->update();
                 }
 
-                $uLecture->still_learning = false;
-                $uLecture->is_favourite = false;
-                if (isset($post["add-to-favourites"])) {
-                    $uLecture->is_favourite = $post["add-to-favourites"];
+                $shouldRedirectToNextLesson = isset($post['redirect-to-next']) && $post['redirect-to-next'];
+                if($shouldRedirectToNextLesson){
+                    return $this->redirect(["lekcijas/lekcija/$nextLessonId"]);
                 }
-                if (isset($post["add-to-still-learning"])) {
-                    $uLecture->still_learning = $post["add-to-still-learning"];
-                }
-                $uLecture->update();
 
                 $this->refresh();
             }
@@ -288,22 +217,12 @@ class LekcijasController extends Controller
             if (!$force) {
                 UserLectures::setSeenByUser($user->id, $id);
             }
+            
             $difficulties = Difficulties::getDifficulties();
-            $evaluations = Evaluations::getEvaluations();
-            foreach ($evaluations as &$evaluation) {
-                if ($evaluation['star_text']) {
-                    $starTextArray = unserialize($evaluation['star_text']);
-                    foreach ($starTextArray as &$starText) {
-                        $starText = Yii::t('app', $starText);
-                    };
-                    $evaluation['star_text'] = serialize($starTextArray);
-                }
-            }
             $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
-            $lectureHandDifficulties = Lectureshanddifficulties::getLectureDifficulties($id);
             $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
             $lecturefiles = Lecturesfiles::getLectureFiles($id);
-            $userLectureEvaluations = $force ? [] : Userlectureevaluations::getLectureEvaluations($user->id, $id);
+            $hasEvaluatedLesson = $difficultyEvaluation !== null;
             $baseUrl = Yii::$app->request->baseUrl;
             $ids = RelatedLectures::getRelations($id);
             if ($ids) {
@@ -325,14 +244,11 @@ class LekcijasController extends Controller
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,
-                'evaluations' => $evaluations,
                 'lectureDifficulties' => $lectureDifficulties,
-                'lectureHandDifficulties' => $lectureHandDifficulties,
                 'lectureEvaluations' => $lectureEvaluations,
                 'lecturefiles' => $lecturefiles,
                 'userLectures' => $userLectures,
                 'userEvaluatedLectures' => $userEvaluatedLectures,
-                'userLectureEvaluations' => $userLectureEvaluations,
                 'videos' => self::VIDEOS,
                 'docs' => self::DOCS,
                 'audio' => self::AUDIO,
@@ -342,7 +258,10 @@ class LekcijasController extends Controller
                 'difficultiesVisible' => $difficultiesVisible,
                 'uLecture' => $uLecture,
                 'userCanDownloadFiles' => $userCanDownloadFiles,
-                'videoThumb' => $videoThumb
+                'videoThumb' => $videoThumb,
+                'nextLessonId' => $nextLessonId,
+                'hasEvaluatedLesson' => $hasEvaluatedLesson,
+                'difficultyEvaluation' => $difficultyEvaluation,
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');

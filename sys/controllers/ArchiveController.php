@@ -2,30 +2,14 @@
 
 namespace app\controllers;
 
-use app\models\Difficulties;
-use app\models\Evaluations;
-use app\models\LectureAssignment;
 use app\models\Lectures;
-use app\models\LecturesDifficulties;
-use app\models\Lecturesevaluations;
-use app\models\Lecturesfiles;
-use app\models\Lectureshanddifficulties;
-use app\models\RelatedLectures;
-use app\models\Studentgoals;
-use app\models\Userlectureevaluations;
 use app\models\UserLectures;
 use app\models\Users;
-use app\models\SectionsVisible;
 use app\models\School;
 use Yii;
-use yii\data\Pagination;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 
-/**
- * ArchiveController implements the actions for Lectures model by student.
- */
 class ArchiveController extends Controller
 {
     const VIDEOS = ['mp4', 'mov', 'ogv', 'webm', 'flv', 'avi', 'f4v'];

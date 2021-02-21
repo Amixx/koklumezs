@@ -220,6 +220,12 @@ a.desc:after {
     position: relative;  
 }
 
+.lecture-wrap-related {
+    min-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .lecture-wrap:hover {
     transform: scale(1.1);
 }
@@ -237,24 +243,30 @@ a.desc:after {
 }
 
 .lesson-column {
-    background-color: rgb(225,225,225);
-    border-radius: 8px;
+    background-color: rgba(0, 0, 0, .1);
+    border-radius: 16px;
     font-size: 15px;
+    padding: 8px;
+    margin-top: 50px;
 }
 
-.lesson-column h3{
-    text-align: center;
+.lesson-column-middle {
+    padding: 8px 56px 24px 56px;
 }
 
-.lesson-column a{
-    text-decoration: none;
+.lesson-column-right {
+    padding: 24px;
+}
+
+.lesson-column-item {
     display: block;
     color: rgb(102, 102, 102);
     padding: 2px 8px;
     transition: opacity .05s ease-out, background-color 0.1s ease-in;
 }
 
-.lesson-column a:hover{
+.lesson-column-item:hover {
+    text-decoration: none;
     color: rgb(50,50,50);
     background: rgb(240, 240, 240);
     border-radius: 4px;

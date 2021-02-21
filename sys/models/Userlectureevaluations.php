@@ -148,4 +148,14 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
         $timeFormatted = $timeToStartShowingComments->format('Y-m-d');
         return self::find()->where(['evaluation_id' => 4, 'lecture_id' => $id])->andWhere(['>=', 'created', $timeFormatted])->orderBy(['created' => SORT_DESC])->joinWith('student')->asArray()->all();
     }
+
+    public static function getLecturedifficultyEvaluation($userId, $lectureId){
+        $difficultyEvaluationId = 1;
+
+        return self::find()->where([
+            'lecture_id' => $lectureId, 
+            'evaluation_id' => $difficultyEvaluationId,
+            'user_id' => $userId,
+        ])->one();
+    }
 }
