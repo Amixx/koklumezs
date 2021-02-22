@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $model app\models\Difficulties */
 
 $this->title = \Yii::t('app',  'Create parameter');
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Parameters'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+ ['label' => \Yii::t('app',  'Parameters'), 'url' => ['index']];
+
 ?>
 <div class="difficulties-create">
 

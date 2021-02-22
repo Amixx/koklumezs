@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $model app\models\Evaluations */
 
 $this->title = \Yii::t('app',  'Create school evaluation');
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  \Yii::t('app',  'School evaluations')), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+ ['label' => \Yii::t('app',  \Yii::t('app',  'School evaluations')), 'url' => ['index']];
+
 ?>
 <div class="evaluations-create">
     <h1><?= Html::encode($this->title) ?></h1>

@@ -3,9 +3,9 @@
 use yii\helpers\Html;
 
 $this->title = \Yii::t('app', 'Edit FAQ') . ': ' . $model->question;
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('app', 'FAQs'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->question, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = \Yii::t('app', 'Edit');
+ ['label' => \Yii::t('app', 'FAQs'), 'url' => ['index']];
+ ['label' => $model->question, 'url' => ['view', 'id' => $model->id]];
+ \Yii::t('app', 'Edit');
 ?>
 <div class="difficulties-update">
 

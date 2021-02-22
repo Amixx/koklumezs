@@ -4,8 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'School evaluations'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+ ['label' => \Yii::t('app',  'School evaluations'), 'url' => ['index']];
+
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="evaluations-view">

@@ -8,7 +8,7 @@ use app\models\SchoolSubplanParts;
 use app\models\StudentSubplans;
 
 $this->title = \Yii::t('app',  'Users');
-$this->params['breadcrumbs'][] = $this->title;
+
 
 $planEndMonths = [];
 ?>

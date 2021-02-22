@@ -7,8 +7,8 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Userlectureevaluations */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Student evaluations'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+ ['label' => \Yii::t('app',  'Student evaluations'), 'url' => ['index']];
+
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="userlectureevaluations-view">

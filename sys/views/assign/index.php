@@ -4,7 +4,6 @@
 use yii\helpers\Html;
 
 $this->title = \Yii::t('app',  'Lesson assigning');
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <h1><?= $this->title ?></h1>
 <p style="display:inline-block">

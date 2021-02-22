@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 $this->title = \Yii::t('app', 'Invoice No. ') . $model->invoice_number;
-$this->params['breadcrumbs'][] = \Yii::t('app', 'Edit');
+ \Yii::t('app', 'Edit');
 ?>
 <div>
     <h1><?= Html::encode($this->title) ?></h1>

@@ -18,7 +18,6 @@ if ($user['subscription_type'] == 'free') {
 }
 
 $this->title = $user['first_name'] . ' ' . $user['last_name'];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
     <?php if ($filterLang) { ?>

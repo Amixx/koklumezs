@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 $this->title = \Yii::t('app',  'School evaluations');
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="evaluations-index">
 

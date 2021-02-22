@@ -5,8 +5,8 @@ use yii\helpers\Html;
 use app\models\SectionsVisible;
 
 $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Lessons'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $model->title;
+ ['label' => \Yii::t('app',  'Lessons'), 'url' => ['index']];
+ $model->title;
 
 ?>
 <!-- unpkg : use the latest version of Video.js -->

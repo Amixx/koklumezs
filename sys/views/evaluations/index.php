@@ -8,7 +8,7 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = \Yii::t('app',  'Evaluations');
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="evaluations-index">
 

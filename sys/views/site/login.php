@@ -8,7 +8,7 @@ use yii\bootstrap\ActiveForm;
 /* @var $model \common\models\LoginForm */
 
 $this->title = \Yii::t('app',  'Log in');
-$this->params['breadcrumbs'][] = $this->title;
+
 
 $fieldOptions1 = [
     'options' => ['class' => 'form-group has-feedback'],
