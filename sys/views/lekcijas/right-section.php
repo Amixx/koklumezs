@@ -16,8 +16,8 @@ $backgroundImage = trim(
 
 <div>
     <div class="text-center">
+        <h4>Spēlēsim kopā</h4>
         <?php if($model->play_along_file){ ?>
-            <h4>Spēlēsim kopā</h4>
             <div>
                 <div class="text-center lecture-wrap lecture-wrap-related">
                     <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $model->id ?>" style="background-color: white; background-image: <?= $backgroundImage ?>;"></a>
