@@ -75,7 +75,9 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                 'playAlongFile' => $model->play_along_file,
                 'videos' => $videos,
                 'baseUrl' => $baseUrl,
-                'videoThumb' => $videoThumb
+                'videoThumb' => $videoThumb,
+                'model' => $model,
+                'userEvaluatedLectures' => $userEvaluatedLectures,
             ]) ?>
         </div>            
     </div>    
