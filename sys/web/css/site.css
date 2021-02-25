@@ -66,6 +66,7 @@ body {
 }
 
 .wrap {
+    position: relative;
     min-height: 100%;
     height: auto;
     margin: 0 auto -60px;
@@ -73,9 +74,17 @@ body {
     background-repeat:repeat;
 }
 
+.background-overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255,255,255,0.8);
+}
+
 .wrap>.container {
     padding: 110px 15px 20px;
-    background:rgba(255,255,255,0.8);
 }
 
 .table {
@@ -87,6 +96,7 @@ body {
     background-color: #f5f5f5;
     border-top: 1px solid #ddd;
     padding-top: 20px;
+    position: relative;
 }
 
 .jumbotron {

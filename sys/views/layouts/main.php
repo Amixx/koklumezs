@@ -50,6 +50,7 @@ AppAsset::register($this);
 <body>
     <?php $this->beginBody() ?>
 
+    <div class="background-overlay"></div>
     <div class="wrap" style="background: <?= $wrapperBackground ?>">
         <?php
         ob_start(); ?>
