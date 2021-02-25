@@ -19,6 +19,7 @@ if (isset($type)) {
 ?>
 <div class="lectures-index">
     <h3><?= $this->title ?></h3>
+    <?= Html::a(\Yii::t('app', $sortByDifficultyLabel), '?type='.$type.'&sortByDifficulty='.$sortByDifficulty,['class' => 'btn sort-button']) ?>
     <div class="row">
         <?php
         if (count($models) == 0) { ?>

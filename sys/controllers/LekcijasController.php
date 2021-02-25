@@ -85,16 +85,23 @@ class LekcijasController extends Controller
                 $query = Lectures::find()->where(['in', 'id', $modelsIds]);
                 $countQuery = clone $query;
                 $pages = new Pagination(['totalCount' => $countQuery->count()]);
+
+                $SortByDifficulty = Yii::$app->request->get('sortByDifficulty');
+                
+                if (!(isset($SortByDifficulty)) || $SortByDifficulty == '' || $SortByDifficulty == 'desc') {
+                    $sortByDifficulty = 'asc';
+                    $orderBy = ['lectures.complexity' => SORT_DESC];
+                    $sortByDifficultyLabel = 'From hardest to easiest';
+                } else {
+                    $sortByDifficulty = 'desc';
+                    $orderBy = ['lectures.complexity' => SORT_ASC];
+                    $sortByDifficultyLabel = 'From easiest to hardest';
+                }
+
                 $models = $query->offset($pages->offset)
                     ->limit($pages->limit)
+                    ->orderBy($orderBy)
                     ->all();
-
-                //sakārtojas pēc lekcijas piešķiršanas datuma
-                usort($models, function ($a, $b) use ($modelsIds) {
-                    $keyA = array_search($a['id'], $modelsIds);
-                    $keyB = array_search($b['id'], $modelsIds);
-                    return $keyA < $keyB;
-                });
 
                 $opened = UserLectures::getOpened($user->id);
                 $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
@@ -110,16 +117,32 @@ class LekcijasController extends Controller
                     'userLectureEvaluations' => $userLectureEvaluations,
                     'baseUrl' => $baseUrl,
                     'videos' => self::VIDEOS,
-                    'videoThumb' => $videoThumb
+                    'videoThumb' => $videoThumb,
+                    'sortByDifficultyLabel' => $sortByDifficultyLabel,
+                    'sortByDifficulty' => $sortByDifficulty,
+                    
                 ]);
             }
         } else {
             $latestNewLecturesIds = UserLectures::getLatestLecturesOfType($user->id, "new");
             $latestStillLearningLecturesIds = UserLectures::getLatestLecturesOfType($user->id, "learning");
             $latestFavouriteLecturesIds = UserLectures::getLatestLecturesOfType($user->id, "favourite");
-            $stillLearningLectures = Lectures::find()->where(['in', 'id', $latestStillLearningLecturesIds])->all();
-            $newLectures = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->all() + $stillLearningLectures;
-            $favouriteLectures = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->all();
+
+            $SortByDifficulty = Yii::$app->request->get('sortByDifficulty');
+            if (!(isset($SortByDifficulty)) || $SortByDifficulty == '' || $SortByDifficulty == 'desc') {
+                $sortByDifficulty = 'asc';
+                $orderBy = ['lectures.complexity' => SORT_ASC];
+                $sortByDifficultyLabel = 'From hardest to easiest';
+            } else {
+                $sortByDifficulty = 'desc';
+                $orderBy = ['lectures.complexity' => SORT_DESC];
+                $sortByDifficultyLabel = 'From easiest to hardest';
+            }
+
+            $stillLearningLectures = Lectures::find()->where(['in', 'id', $latestStillLearningLecturesIds])->orderBy($orderBy)->all();
+            $newLectures = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->orderBy($orderBy)->all() + $stillLearningLectures;
+            $favouriteLectures = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->orderBy($orderBy)->all();        
+
             $opened = UserLectures::getOpened($user->id);
             $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
             $baseUrl = Yii::$app->request->baseUrl;
@@ -134,14 +157,16 @@ class LekcijasController extends Controller
                 'userLectureEvaluations' => $userLectureEvaluations,
                 'baseUrl' => $baseUrl,
                 'videos' => self::VIDEOS,
-                'videoThumb' => $videoThumb
+                'videoThumb' => $videoThumb,
+                'sortByDifficultyLabel' => $sortByDifficultyLabel,
+                'sortByDifficulty' => $sortByDifficulty,
             ]);
         }
 
 
         return $this->render('index', [
             'models' => $models,
-            'pages' => $pages
+            'pages' => $pages,
         ]);
     }
 
