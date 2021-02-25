@@ -225,8 +225,10 @@ a.desc:after {
     transition: all .2s ease-in-out;
     box-sizing: border-box;
     padding: 8px;
+    padding: 8px 16px;
     font-size: 16px;
     min-width: 270px; 
+    min-width: 257px; 
     position: relative;  
 }
 
@@ -244,12 +246,15 @@ a.desc:after {
     position: absolute;
     top: 15px;
     left: 15px;
+    top: 16px;
+    left: 24px;
     color: white;
-    background: rgba(0,0,0, .5);
+    /* background: rgba(0,0,0, .5);
     padding: 4px 8px;
     border-radius: 20px;
     font-weight: bold;
     max-width: 89%;
+    max-width: 89%; */
 }
 
 .lesson-column {
@@ -432,10 +437,12 @@ a.desc:after {
   }
 }
 
-@media (min-width: 1199px) {
-    .LectureOverview__Section {
-        width: 48%;
-    }
+.LectureOverview__Wrap:first-child {
+    padding-right: 32px;
+}
+
+.LectureOverview__Wrap:last-child {
+    padding-left: 32px;
 }
 
 .LectureOverview__Section {   
@@ -444,6 +451,7 @@ a.desc:after {
     margin: 3px; 
     padding: 4px 16px; 
     border-radius: 16px;
+    padding: 4px 16px 16px 16px;
 }
 
 .LectureOverview__EmptyText {
@@ -740,6 +748,14 @@ div.has-experience.active, div.rent.active {
     border: none;
     padding-top: 8px;
     padding-bottom: 8px;
+    color: black;
+}
+
+.btn-gray {
+    background: #c4c4c4;
+    border: none;
+    padding-top: 8px;
+    padding: 4px 64px;
     color: black;
 }
 
