@@ -7,8 +7,8 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Difficulties */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Section visibility'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+ ['label' => \Yii::t('app',  'Section visibility'), 'url' => ['index']];
+
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="difficulties-view">

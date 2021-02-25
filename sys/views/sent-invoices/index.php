@@ -7,7 +7,7 @@ use app\models\dataProvider;
 use  yii\jui\DatePicker;
 
 $this->title = \Yii::t('app',  'Users');
-$this->params['breadcrumbs'][] = $this->title;
+
 
 ?>
 <div>

@@ -6,9 +6,9 @@ use yii\helpers\Html;
 /* @var $model app\models\Sentlectures */
 
 $this->title = \Yii::t('app',  'Update sent lessons') . ': ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Sent lessons'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
+ ['label' => \Yii::t('app',  'Sent lessons'), 'url' => ['index']];
+ ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+ \Yii::t('app',  'Edit');
 ?>
 <div class="sentlectures-update">
 

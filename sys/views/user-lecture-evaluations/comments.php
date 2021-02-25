@@ -5,7 +5,7 @@ use yii\grid\GridView;
 use  yii\jui\DatePicker;
 
 $this->title = \Yii::t('app',  'Student evaluations');
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="userlectureevaluations-index">
 

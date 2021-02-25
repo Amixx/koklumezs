@@ -7,7 +7,7 @@ use  yii\jui\DatePicker;
 use app\models\Lectures;
 
 $this->title = \Yii::t('app', 'Lessons');
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="lectures-index">
 

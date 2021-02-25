@@ -5,7 +5,7 @@ use yii\grid\GridView;
 use yii\widgets\ActiveForm;
 
 $this->title = \Yii::t('app', 'Plan parts');
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="difficulties-index">
 

@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $model app\models\Userlectureevaluations */
 
 $this->title = \Yii::t('app',  'Create student evaluation');
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Student evaluations'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+ ['label' => \Yii::t('app',  'Student evaluations'), 'url' => ['index']];
+
 ?>
 <div class="userlectureevaluations-create">
 

@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $model app\models\Difficulties */
 
 $this->title = \Yii::t('app', 'Create subscription plan');
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('app', 'Subscription plans'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+ ['label' => \Yii::t('app', 'Subscription plans'), 'url' => ['index']];
+
 ?>
 <div class="difficulties-create">
 

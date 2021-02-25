@@ -5,7 +5,7 @@ use yii\grid\GridView;
 use app\models\SchoolSubplanParts;
 
 $this->title = \Yii::t('app', 'Subscription plans');
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="subplans-index">
 

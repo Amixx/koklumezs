@@ -6,9 +6,9 @@ use yii\helpers\Html;
 /* @var $model app\models\Difficulties */
 
 $this->title = \Yii::t('app', 'Edit subscription plan') . ': ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('app', 'Subscription plans'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = \Yii::t('app', 'Edit');
+ ['label' => \Yii::t('app', 'Subscription plans'), 'url' => ['index']];
+ ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
+ \Yii::t('app', 'Edit');
 ?>
 <div class="difficulties-update">
 

@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $model app\models\UserLectures */
 
 $this->title = \Yii::t('app',  'Assign lesson');
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Assigned lessons'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+ ['label' => \Yii::t('app',  'Assigned lessons'), 'url' => ['index']];
+
 ?>
 <div class="user-lectures-create">
 

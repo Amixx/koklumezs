@@ -13,6 +13,8 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
         <div class="lesson-column">
             <?= $this->render("left-section", [
                 'userLectures' => $userLectures,
+                'sortByDifficulty' => $sortByDifficulty,
+                'sortByDifficultyLabel' => $sortByDifficultyLabel,
             ]) ?>
         </div>
     </div>

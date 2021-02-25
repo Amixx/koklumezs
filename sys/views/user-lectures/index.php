@@ -9,7 +9,7 @@ use  yii\jui\DatePicker;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = \Yii::t('app',  'Assigned lessons');
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="user-lectures-index">
 

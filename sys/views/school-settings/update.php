@@ -19,7 +19,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
 );
 
 $this->title = \Yii::t('app',  'Edit school settings') . ': ';
-$this->params['breadcrumbs'][] = \Yii::t('app',  'Edit');
+ \Yii::t('app',  'Edit');
 ?>
 <div class="school-settings-update">
 

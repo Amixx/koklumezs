@@ -1,6 +1,6 @@
 <?php
 $this->title = \Yii::t('app', 'FAQs');
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="difficulties-index">
     <div>

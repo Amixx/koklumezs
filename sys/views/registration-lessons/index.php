@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 $this->title = \Yii::t('app', 'Lessons to assign after registration');
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="difficulties-index">
 

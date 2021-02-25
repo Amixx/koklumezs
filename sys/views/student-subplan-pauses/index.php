@@ -5,7 +5,7 @@ use yii\helpers\Url;
 use yii\grid\GridView;
 
 $this->title = \Yii::t('app', 'Plan pauses');
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div>
 

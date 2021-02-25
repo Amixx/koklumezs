@@ -7,8 +7,8 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Sentlectures */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => \Yii::t('app',  'Sent lessons'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+ ['label' => \Yii::t('app',  'Sent lessons'), 'url' => ['index']];
+
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="sentlectures-view">
