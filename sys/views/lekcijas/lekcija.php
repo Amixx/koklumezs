@@ -69,19 +69,21 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
             <?php } ?>
         </div>        
     </div>
-    <div class="col-md-3">
-        <div class="lesson-column lesson-column-right">
-            <?= $this->render("right-section.php", [
-                'relatedLectures' => $relatedLectures,
-                'lecturefiles' => $lecturefiles,
-                'playAlongFile' => $model->play_along_file,
-                'videos' => $videos,
-                'baseUrl' => $baseUrl,
-                'videoThumb' => $videoThumb,
-                'model' => $model,
-                'userEvaluatedLectures' => $userEvaluatedLectures,
-            ]) ?>
-        </div>            
-    </div>    
+    <?php if($model->play_along_file || ($relatedLectures && !empty($relatedLectures))) { ?>
+        <div class="col-md-3">
+            <div class="lesson-column lesson-column-right">
+                <?= $this->render("right-section.php", [
+                    'relatedLectures' => $relatedLectures,
+                    'lecturefiles' => $lecturefiles,
+                    'playAlongFile' => $model->play_along_file,
+                    'videos' => $videos,
+                    'baseUrl' => $baseUrl,
+                    'videoThumb' => $videoThumb,
+                    'model' => $model,
+                    'userEvaluatedLectures' => $userEvaluatedLectures,
+                ]) ?>
+            </div>            
+        </div>    
+    <?php } ?>    
 </div>
 </div>
