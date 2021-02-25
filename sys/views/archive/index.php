@@ -7,12 +7,10 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $this->title = \Yii::t('app', 'Archive');
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lectures-index">
     <?php
     if ($archive) { ?>
-        <hr />
         <h3><?= \Yii::t('app', 'Archive') ?></h3>
         <div class="col-sm-6">
             <?= Html::beginForm([''], 'get') ?>
