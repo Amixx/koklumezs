@@ -167,11 +167,10 @@ class LekcijasController extends Controller
 
         $videoThumb = School::getCurrentSchool()->video_thumbnail;
 
-        $oldSortByDifficulty = Yii::$app->request->get('sortByDifficulty');
+        $SortByDifficulty = Yii::$app->request->get('sortByDifficulty');
         
-        if (!(isset($oldSortByDifficulty)) || $oldSortByDifficulty == '' || $oldSortByDifficulty == 'desc') {
+        if (!(isset($SortByDifficulty)) || $SortByDifficulty == '' || $SortByDifficulty == 'desc') {
             $sortByDifficulty = 'asc';
-            
             $sortByDifficultyLabel = 'From hardest to easiest';
         } else {
             $sortByDifficulty = 'desc';
@@ -179,7 +178,7 @@ class LekcijasController extends Controller
         }
 
         $force = Yii::$app->request->get('force');
-        $userLectures = $force ? [] : UserLectures::getLectures($user->id, $oldSortByDifficulty);
+        $userLectures = $force ? [] : UserLectures::getLectures($user->id, $SortByDifficulty);
         $modelsIds = $force ? [$id] : UserLectures::getUserLectures($user->id); //UserLectures::getSentUserLectures($user->id)
         $check = in_array($id, $modelsIds);
         $userEvaluatedLectures = $force ? [] : UserLectures::getEvaluatedLectures($user->id);
