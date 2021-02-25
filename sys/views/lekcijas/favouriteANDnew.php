@@ -7,7 +7,7 @@ use yii\helpers\Url;
 
 <div class="col-md-6 LectureOverview__Wrap">
     <div class="LectureOverview__Section">
-        <h3><?= \Yii::t('app', $divTitle) ?></h3>
+        <h4><?= \Yii::t('app', $divTitle) ?></h4>
         <?php if (count($Lectures) == 0) { ?>
             <h4 class="LectureOverview__EmptyText">
                 <?= \Yii::t('app', $emptyText) ?>
