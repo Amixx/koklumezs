@@ -35,7 +35,7 @@ $isEmojiActive = function($name) use($evaluations, $difficultyEvaluation) {
 
 ?>
 
-<p>Hei! Kā tev veicās ar šo uzdevumu?</p>
+<p><?= \Yii::t('app', 'How well did you do with this task?');?></p>
 <div>
     <?php $form = ActiveForm::begin(); ?>
     <?php if (!$force) { ?>
@@ -43,7 +43,7 @@ $isEmojiActive = function($name) use($evaluations, $difficultyEvaluation) {
         <?php if($redirectToNext){
             echo Html::hiddenInput('redirect-to-next', true);
         } ?>
-        <div class="form-group">
+        <div class="form-group" style="margin: 0;">
             <?php foreach($evaluations as $evaluation){
                 $name = $evaluation['emoji-name'];
                 $emojiClass = "emoji emoji-$name";
@@ -58,5 +58,14 @@ $isEmojiActive = function($name) use($evaluations, $difficultyEvaluation) {
             <?php } ?>
         </div>
     <?php } ?>
+    <p>
+        <span style="padding-left: 10px;"><?= \Yii::t('app', 'easy');?></span>    
+        <span class="glyphicon glyphicon-arrow-left" style="padding-left: 8px;"></span>
+        <span class="glyphicon glyphicon-minus"></span>
+        <span class="glyphicon glyphicon-minus"></span>
+        <span class="glyphicon glyphicon-minus"></span>
+        <span class="glyphicon glyphicon-arrow-right"></span>
+        <span style="padding: 5px;"><?= \Yii::t('app', 'hard');?></span>
+    </p>
     <?php ActiveForm::end(); ?>            
 </div>       

@@ -41,7 +41,7 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
         <?= Html::beginForm(["/lekcijas/toggle-is-favourite?lectureId=$uLecture->lecture_id"], 'get') ?>
         <label for="heart" class="LectureEvaluations__FavouriteText">
             <button type="submit" class="removeBtnStyle"><span class="glyphicon LectureEvaluations__Heart <?= $heartClasses ?>"></span></button>
-            Pievienot mīļākajām nodarbībām
+            <?= \Yii::t('app', 'Add to favourite lessons');?>
         </label>
         <?= Html::endForm() ?>        
     </td>

@@ -6,7 +6,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>  
-                <h3 class="modal-title" id="alertEvaluationLabel"><?= \Yii::t('app',  'Hey! Please evaluate the lesson before moving on to the next one!'); ?></h3>
+                <h4 class="modal-title" id="alertEvaluationLabel"><?= \Yii::t('app',  'Hey! Please evaluate the lesson before moving on to the next one!'); ?></h4>
             </div>
             <div class="modal-body">
                 <?= $this->render("amount-evaluation", [

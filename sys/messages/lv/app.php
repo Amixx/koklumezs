@@ -431,7 +431,7 @@ return [
     'Message for students who want to rent an instrument' => 'Ziņa skolēniem, kuri vēlas īrēt instrumentu',
     'Subscription plan used to generate invoice for renters' => 'Abonēšanas plāns no kura ģenerēt rēķinu instrumenta īrētājiem',
     'Notes' => 'Notis',
-    'Hey! Please evaluate the lesson before moving on to the next one!' => 'Hei! Kā tev veicās? Lūdzu, novērtē uzdevumu, pirms dodies pie nākamā!',
+    'Hey! Please evaluate the lesson before moving on to the next one!' => 'Lūdzu, novērtē uzdevumu, pirms dodies pie nākamā!',
     'Next lesson' => 'Nākamais uzdevums',
     'Next lesson' => 'Nākamais uzdevums',
     'Previous assignments in this lesson' => 'Iepriekšējie uzdevumi šajā nodarbībā',
@@ -440,4 +440,8 @@ return [
     'From hardest to easiest' => 'No sarežģītākās uz vieglāko',
     'From easiest to hardest' => 'No vieglākās uz sarežģītāko',
     'Lyrics and notes' => 'Vārdi un notis',
+    'Add to favourite lessons' => 'Pievienot mīļākajām nodarbībām',
+    'easy' => 'viegli',
+    'hard' => 'grūti',
+    'How well did you do with this task?' => 'Hei! Kā tev veicās ar šo uzdevumu?',
 ];
