@@ -278,6 +278,9 @@ a.desc:after {
     color: rgb(102, 102, 102);
     padding: 2px 8px;
     transition: opacity .05s ease-out, background-color 0.1s ease-in;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .lesson-column-item:hover {
@@ -349,7 +352,6 @@ a.desc:after {
 .nav>li>form>button.logout:focus {
     outline: none;
 }
-
 
 .a2hs {
     display:none;
@@ -434,6 +436,15 @@ a.desc:after {
 @media (min-width: 979px) {
   ul.navbar-nav li.dropdown:hover > ul.dropdown-menu {
     display: block;
+  }
+
+  .lesson-column-outer {
+    padding: 0;
+    height: 100%;
+  }
+  
+  .lesson-column {
+    height: 100vh;
   }
 }
 

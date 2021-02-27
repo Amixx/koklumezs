@@ -9,7 +9,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
 <link href="https://unpkg.com/video.js/dist/video-js.min.css" rel="stylesheet">
 <script src="https://unpkg.com/video.js/dist/video.min.js"></script>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-2 lesson-column-outer">
         <div class="lesson-column">
             <?= $this->render("left-section", [
                 'userLectures' => $userLectures,
