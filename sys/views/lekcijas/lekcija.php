@@ -29,13 +29,16 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                     'force' => $force,
                     'hasEvaluatedLesson' => $hasEvaluatedLesson,
                     'difficultyEvaluation' => $difficultyEvaluation,
+                    'lecturefiles' => $lecturefiles,
+                    'docs' => $docs,
                 ]) ?>
             <?php } ?>           
 
-            <?= $this->render("main-content", [
-                'description' => $model->description,
-                'lecturefiles' => $lecturefiles,
-            ]) ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <?= $model->description ?>
+                </div>
+            </div>
             
             <?php if ($model->file) { ?>
             <?= $this->render(

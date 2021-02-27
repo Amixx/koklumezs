@@ -439,4 +439,5 @@ return [
     'Open favourite lessons' => 'Atvērt mīļākās nodarbības',
     'From hardest to easiest' => 'No sarežģītākās uz vieglāko',
     'From easiest to hardest' => 'No vieglākās uz sarežģītāko',
+    'Lyrics and notes' => 'Vārdi un notis',
 ];

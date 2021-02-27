@@ -24,7 +24,16 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
         ]) ?>
     </td>
     <td>
-        <?= Html::button(\Yii::t('app', 'Vārdi un notis'), ['class' => 'btn btn-orange', $urlToNextLesson]); ?>
+        <?php if ($lecturefiles) { ?>
+            <div class="btn-group">
+                <button type="button" class="btn btn-orange dropdown-toggle" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
+                    <?= \Yii::t('app', 'Lyrics and notes');?>
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg-left">
+                    <?= $files = $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]);?>
+                </div>
+            </div>
+        <?php } ?>
     </td>
 </tr>
 <tr>
