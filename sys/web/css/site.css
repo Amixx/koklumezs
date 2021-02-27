@@ -454,7 +454,7 @@ a.desc:after {
     margin-left: 20px;
 }
 
-@media (min-width: 979px) {
+@media (min-width: 991px) {
   ul.navbar-nav li.dropdown:hover > ul.dropdown-menu {
     display: block;
   }
