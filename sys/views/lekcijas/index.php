@@ -16,6 +16,13 @@ if (isset($type)) {
     }
 }
 
+$toggledSortByDifficulty = 'desc';
+
+if (isset($sortByDifficulty)) {
+    if ($sortByDifficulty == 'desc') {$toggledSortByDifficulty = 'asc';}
+    else if ($sortByDifficulty == 'asc') {$toggledSortByDifficulty = 'desc';}
+}
+
 ?>
 <div class="lectures-index">
     <h3><?= $this->title ?></h3>
@@ -27,7 +34,8 @@ if (isset($type)) {
             <?= Html::beginForm(['/lekcijas/?type='.$type.'&sortByDifficulty='.$sortByDifficulty], 'get') ?>
             <?= Html::input('text', 'title_filter', $title_filter, ['name'=>'kaut-kas' ]) ?>
             <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-success']) ?>
-            <?= Html::a(\Yii::t('app', 'Show all'), '?type='.$type.'&sortByDifficulty='.$sortByDifficulty.'&title_filter=', ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(\Yii::t('app', 'Show all'), '?type='.$type.'&sortByDifficulty='.$toggledSortByDifficulty.'&title_filter=', ['class' => 'btn btn-primary']) ?>
+            <?= Html::input('hidden', 'sortByDifficulty', $toggledSortByDifficulty) ?>
             <?= Html::endForm() ?>
         </div> 
     </div>

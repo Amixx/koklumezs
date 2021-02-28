@@ -90,12 +90,12 @@ class LekcijasController extends Controller
                 
                 if (!(isset($SortByDifficulty)) || $SortByDifficulty == '' || $SortByDifficulty == 'desc') {
                     $sortByDifficulty = 'asc';
-                    $orderBy = ['lectures.complexity' => SORT_DESC];
-                    $sortByDifficultyLabel = 'From hardest to easiest';
-                } else {
-                    $sortByDifficulty = 'desc';
                     $orderBy = ['lectures.complexity' => SORT_ASC];
                     $sortByDifficultyLabel = 'From easiest to hardest';
+                } else {
+                    $sortByDifficulty = 'desc';
+                    $orderBy = ['lectures.complexity' => SORT_DESC];
+                    $sortByDifficultyLabel = 'From hardest to easiest';
                 }
 
                 $models = $query->offset($pages->offset)
