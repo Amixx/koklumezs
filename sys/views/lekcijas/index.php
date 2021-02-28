@@ -19,7 +19,18 @@ if (isset($type)) {
 ?>
 <div class="lectures-index">
     <h3><?= $this->title ?></h3>
-    <?= Html::a(\Yii::t('app', $sortByDifficultyLabel), '?type='.$type.'&sortByDifficulty='.$sortByDifficulty,['class' => 'btn sort-button']) ?>
+    <div class="row">
+        <div class="col-sm-7">
+            <?= Html::a(\Yii::t('app', $sortByDifficultyLabel), '?type='.$type.'&sortByDifficulty='.$sortByDifficulty,['class' => 'btn sort-button']) ?>
+        </div>
+        <div class="col-sm-5">
+            <?= Html::beginForm([''], 'get') ?>
+            <?= Html::input('text', 'title_filter', $title_filter) ?>
+            <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-success']) ?>
+            <?= Html::a(\Yii::t('app', 'Show all'), ['/lekcijas/?type=new&sortByDifficulty='.$sortByDifficulty], ['class' => 'btn btn-primary']) ?>
+            <?= Html::endForm() ?>
+        </div>
+    </div>
     <div class="row">
         <?php
         if (count($models) == 0) { ?>

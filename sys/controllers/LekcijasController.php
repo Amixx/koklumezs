@@ -107,7 +107,14 @@ class LekcijasController extends Controller
                 $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
                 $baseUrl = Yii::$app->request->baseUrl;
 
+                $title_filter = Yii::$app->request->get('title_filter');
 
+                if ($title_filter) {
+                    $models = array_filter($models, function ($item) use ($title_filter) {
+                        $title_lower = mb_strtolower(trim($item->title), 'UTF-8');
+                        return strpos($title_lower, $title_filter) !== false;
+                    });
+                }
 
                 return $this->render('index', [
                     'models' => $models,
@@ -120,6 +127,7 @@ class LekcijasController extends Controller
                     'videoThumb' => $videoThumb,
                     'sortByDifficultyLabel' => $sortByDifficultyLabel,
                     'sortByDifficulty' => $sortByDifficulty,
+                    'title_filter' => $title_filter,
                     
                 ]);
             }
@@ -146,6 +154,8 @@ class LekcijasController extends Controller
             $opened = UserLectures::getOpened($user->id);
             $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
             $baseUrl = Yii::$app->request->baseUrl;
+
+            $title_filter = 1;
 
             return $this->render('overview', [
                 'models' => $models,
