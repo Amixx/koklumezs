@@ -12,16 +12,18 @@ $this->title = \Yii::t('app', 'Archive');
     <?php
     if ($archive) { ?>
         <h3><?= \Yii::t('app', 'Archive') ?></h3>
-        <div class="col-sm-6">
-            <?= Html::beginForm([''], 'get') ?>
-            <?= Html::input('text', 'archive_filter', $archive_filter) ?>
-            <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-success']) ?>
-            <?= Html::a(\Yii::t('app', 'Show all'), [''], ['class' => 'btn btn-primary']) ?>
-            <?= Html::endForm() ?>
-        </div>
-        <div class="col-sm-6">
-            <label for="only_favourites"> <input type="checkbox" name="only_favourites" id="only_favourites"><?= \Yii::t('app', 'Select only favourite lessons') ?></label>
-            <label for="only_still_learning"><input type="checkbox" name="only_still_learning" id="only_still_learning"><?= \Yii::t('app', 'Select only lessons I\'m still learning') ?></label>
+        <div class="row">
+            <div class="col-sm-6">
+                <?= Html::beginForm([''], 'get') ?>
+                <?= Html::input('text', 'archive_filter', $archive_filter) ?>
+                <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-success']) ?>
+                <?= Html::a(\Yii::t('app', 'Show all'), [''], ['class' => 'btn btn-primary']) ?>
+                <?= Html::endForm() ?>
+            </div>
+            <div class="col-sm-6">
+                <label for="only_favourites"> <input type="checkbox" name="only_favourites" id="only_favourites"><?= \Yii::t('app', 'Select only favourite lessons') ?></label>
+                <label for="only_still_learning"><input type="checkbox" name="only_still_learning" id="only_still_learning"><?= \Yii::t('app', 'Select only lessons I\'m still learning') ?></label>
+            </div>
         </div>
         <div class="row">
             <?php foreach ($archive as $lecture) {
