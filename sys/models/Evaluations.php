@@ -63,7 +63,7 @@ class Evaluations extends \yii\db\ActiveRecord
      */
     public function getEvaluations()
     {
-        return self::find()->where(['not like', 'id', [3, 5]])->asArray()->all();
+        return self::find()->where(['not like', 'id', [2,3,5]])->asArray()->all();
     }
 
 
@@ -94,7 +94,7 @@ class Evaluations extends \yii\db\ActiveRecord
      */
     public function getEvaluationsTitles()
     {
-        return ArrayHelper::map(self::find()->where(['not like', 'id', [3, 5]])->asArray()->all(), 'id', 'title');
+        return ArrayHelper::map(self::find()->where(['not like', 'id', [2,3,5]])->asArray()->all(), 'id', 'title');
     }
 
     public function getScaleParam()
