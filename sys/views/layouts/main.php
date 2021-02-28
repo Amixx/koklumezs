@@ -107,23 +107,19 @@ AppAsset::register($this);
 
         if($renderChat){
             $recipientId = $isStudent ? $schoolTeacher['user']['id'] : null;
+
+            $unreadGroups = Users::isCurrentUserTeacher() ? '<span class="chat-unread-count-groups"></span>' : '';
+
             $navChat= 
                 '<button class="btn btn-success " id="chat-toggle-button" data-toggle="modal" data-target="#chatModal">'
                     
                     .\Yii::t('app', $chatButtonText)
                     .'<div id="notification-badges"> '
-                    .Users::isCurrentUserTeacher() ?  '<span class="chat-unread-count-groups"></span>' : ""         
-                   
+                    . $unreadGroups
                     .'<span class="chat-unread-count"></span>'
                     .'</div>'
                 
-                .'</button>';    
-            ChatRoom::widget([
-                'url' => \yii\helpers\Url::to(['/chat/send-chat']),
-                'userModel' =>  \app\models\User::className(),
-                'recipientId' => $recipientId,
-            ]);
-                
+                .'</button>';               
         }
 
 
@@ -224,6 +220,14 @@ AppAsset::register($this);
         </div>
 
     </div>
+
+    <?php if($renderChat){
+        echo ChatRoom::widget([
+            'url' => \yii\helpers\Url::to(['/chat/send-chat']),
+            'userModel' =>  \app\models\User::className(),
+            'recipientId' => $recipientId,
+        ]);
+    } ?>
     
     <footer class="footer">
         <div class="container">
