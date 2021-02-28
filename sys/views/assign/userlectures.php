@@ -56,7 +56,7 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     <?php
     if ($prevUserId) { ?>
         <span style="vertical-align:top;">
-            <?= Html::a(\Yii::t('app', 'Previous'), [$prevButtonHref], ['class' => 'btn btn-primary']); ?>
+            <?= Html::a(\Yii::t('app', 'Previous'), [$prevButtonHref], ['class' => 'btn btn-orange']); ?>
         </span>
     <?php } ?>
 
@@ -65,7 +65,7 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     <?php
     if ($nextUserId) { ?>
         <span style="vertical-align:top;">
-            <?= Html::a(\Yii::t('app', 'Next'), [$nextButtonHref], ['class' => 'btn btn-primary pull-right']); ?>
+            <?= Html::a(\Yii::t('app', 'Next'), [$nextButtonHref], ['class' => 'btn btn-orange pull-right']); ?>
         </span>
     <?php } ?>
 </div>

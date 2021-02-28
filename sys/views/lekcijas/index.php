@@ -33,8 +33,8 @@ if (isset($sortByDifficulty)) {
         <div class="col-sm-5">
             <?= Html::beginForm(['/lekcijas/?type='.$type.'&sortByDifficulty='.$sortByDifficulty], 'get') ?>
             <?= Html::input('text', 'title_filter', $title_filter, ['name'=>'kaut-kas' ]) ?>
-            <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-success']) ?>
-            <?= Html::a(\Yii::t('app', 'Show all'), '?type='.$type.'&sortByDifficulty='.$toggledSortByDifficulty.'&title_filter=', ['class' => 'btn btn-primary']) ?>
+            <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>
+            <?= Html::a(\Yii::t('app', 'Show all'), '?type='.$type.'&sortByDifficulty='.$toggledSortByDifficulty.'&title_filter=', ['class' => 'btn btn-orange']) ?>
             <?= Html::input('hidden', 'sortByDifficulty', $toggledSortByDifficulty) ?>
             <?= Html::endForm() ?>
         </div> 

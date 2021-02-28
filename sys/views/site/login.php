@@ -45,7 +45,7 @@ $fieldOptions2 = [
                 <?= $form->field($model, 'rememberMe')->label(\Yii::t('app',  'Remember me'))->checkbox() ?>
             </div>
             <div class="col-xs-12 col-md-4">
-                <?= Html::submitButton(\Yii::t('app',  'Log in'), ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button']) ?>
+                <?= Html::submitButton(\Yii::t('app',  'Log in'), ['class' => 'btn btn-orange btn-block btn-flat', 'name' => 'login-button']) ?>
             </div>
         </div>
         <div style="color:#999;margin:1em 0">
