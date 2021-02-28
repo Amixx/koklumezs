@@ -92,7 +92,12 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
                 foreach ($lastlectures as $lecture) { ?>
                     <tr>
                         <td><?= $a ?></td>
-                        <td><?= $lecture->lecture->title ?></td>
+                        <td>
+                            <?= $lecture->lecture->title ?>
+                            <?php if ($lecture->is_favourite){ ?> 
+                                <span class="glyphicon glyphicon-heart"></span>
+                            <?php } ?> 
+                        </td>
                         <td align="center"><?= (int) $lecture->opened ? 'Jā' : 'Nē' ?></td>
                         <td align="center"><?= $lecture->open_times ?></td>
                         <td align="center"><?= $lecture->lecture->complexity ? $lecture->lecture->complexity : '<code>Not set</code>' ?></td>
