@@ -163,13 +163,10 @@ AppAsset::register($this);
                 ],
                 'options' => ['class' => 'navbar-lessons-dropdown-toggle']
             ];
-            $navItems[] = ['label' => \Yii::t('app',  'acords'), 'url' => ['/'], 'active' =>  in_array(\Yii::$app->controller->id, [''])];
             $navItems[] = ['label' => \Yii::t('app',  'Sheet music'), 'url' => ['/file'], 'active' =>  in_array(\Yii::$app->controller->id, ['file'])];
-            $navItems[] = ['label' => \Yii::t('app',  'play along'), 'url' => ['/'], 'active' =>  in_array(\Yii::$app->controller->id, [''])];
             $navItems[] = ['label' => \Yii::t('app',  'Archive'), 'url' => ['/archive'], 'active' =>  in_array(\Yii::$app->controller->id, ['archive'])];
-            $navItems[] = ['label' => \Yii::t('app',  'suggest a song'), 'url' => ['/'], 'active' =>  in_array(\Yii::$app->controller->id, [''])];
-            $navItems[] = ['label' => \Yii::t('app',  'FAQs'), 'url' => ['/school-faqs/for-students'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-faqs'])];
             $navItems[] = ['label' => \Yii::t('app',  'Subscription plan'), 'url' => ['/student-sub-plans/view/?id='.Yii::$app->user->identity->id], 'active' =>  in_array(\Yii::$app->controller->id, ['student-sub-plans'])];
+            $navItems[] = ['label' => \Yii::t('app',  'FAQs'), 'url' => ['/school-faqs/for-students'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-faqs'])];
 
             $navItems[] = $navEnd;
         }
