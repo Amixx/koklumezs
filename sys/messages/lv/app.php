@@ -250,6 +250,7 @@ return [
     'Registration page background image' => 'Reģistrācijas lapas fona bilde',
     'Related lesson' => 'Saistītā nodarbība',
     'Related lessons' => 'Saistītās nodarbības',
+    'Related lessons (not required)' => 'Saistītās nodarbības (nav nepieciešams)',
     'Related materials' => 'Saistītie materiāli',
     'Remember me' => 'Atcerēties mani',
     'Remove subscription plan' => 'Noņemt abonēšanas plānu',
@@ -444,4 +445,5 @@ return [
     'easy' => 'viegli',
     'hard' => 'grūti',
     'How well did you do with this task?' => 'Hei! Kā tev veicās ar šo uzdevumu?',
+    
 ];
