@@ -83,7 +83,7 @@ AppAsset::register($this);
                 if (prevScrollpos > currentScrollPos) {
                     document.getElementById("navbar").style.top = "0";
                 } else {
-                    document.getElementById("navbar").style.top = "-90px";
+                    document.getElementById("navbar").style.top = "-180px";
                 }
                 prevScrollpos = currentScrollPos;
             }
@@ -101,6 +101,35 @@ AppAsset::register($this);
                 . Html::endForm()
                 . '</li>';
         }
+
+        
+        $renderChat = $isStudent || $isTeacher;
+
+        if($renderChat){
+            $recipientId = $isStudent ? $schoolTeacher['user']['id'] : null;
+            $navChat= 
+                '<button class="btn btn-success " id="chat-toggle-button" data-toggle="modal" data-target="#chatModal">'
+                    
+                    .\Yii::t('app', $chatButtonText)
+                    .'<div id="notification-badges"> '
+                    .Users::isCurrentUserTeacher() ?  '<span class="chat-unread-count-groups"></span>' : ""         
+                   
+                    .'<span class="chat-unread-count"></span>'
+                    .'</div>'
+                
+                .'</button>';    
+            ChatRoom::widget([
+                'url' => \yii\helpers\Url::to(['/chat/send-chat']),
+                'userModel' =>  \app\models\User::className(),
+                'recipientId' => $recipientId,
+            ]);
+                
+        }
+
+
+
+
+
         if ($isGuest) {
             $navItems[] = ['label' => \Yii::t('app',  'Log in'), 'url' => ['/site/login']];
         } elseif ($isAdmin) {
@@ -145,7 +174,7 @@ AppAsset::register($this);
                 'options' => ['class' => 'nav-item dropdown']
             ];
             $navItems[] = ['label' => \Yii::t('app',  'Settings'), 'url' => ['/school-settings'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-settings'])];
-
+            $navItems[] = $navChat;
             $navItems[] = $navEnd;
         } elseif ($isStudent) {
             $commentsItemText = \Yii::t('app',  'Newest comments');
@@ -170,7 +199,7 @@ AppAsset::register($this);
             $navItems[] = ['label' => \Yii::t('app',  'suggest a song'), 'url' => ['/'], 'active' =>  in_array(\Yii::$app->controller->id, [''])];
             $navItems[] = ['label' => \Yii::t('app',  'FAQs'), 'url' => ['/school-faqs/for-students'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-faqs'])];
             $navItems[] = ['label' => \Yii::t('app',  'Subscription plan'), 'url' => ['/student-sub-plans/view/?id='.Yii::$app->user->identity->id], 'active' =>  in_array(\Yii::$app->controller->id, ['student-sub-plans'])];
-
+            $navItems[] = $navChat;
             $navItems[] = $navEnd;
         }
 
@@ -194,30 +223,8 @@ AppAsset::register($this);
             <?= $content ?>
         </div>
 
-        <?php
-        $renderChat = $isStudent || $isTeacher;
-
-        if($renderChat){
-            $recipientId = $isStudent ? $schoolTeacher['user']['id'] : null;
-        ?>
-            <button class="btn btn-success teacher-communication-button" id="chat-toggle-button" data-toggle="modal" data-target="#chatModal">
-                <?= \Yii::t('app',  $chatButtonText) ?>
-                <div id="notification-badges">               
-                <?php if (Users::isCurrentUserTeacher()) {?>     
-                    <span class="chat-unread-count-groups"></span>
-                <?php } ?>
-                <span class="chat-unread-count"></span>
-                </div>
-            </button>
-            <?=        
-            ChatRoom::widget([
-                'url' => \yii\helpers\Url::to(['/chat/send-chat']),
-                'userModel' =>  \app\models\User::className(),
-                'recipientId' => $recipientId,
-            ]); ?>
-        <?php } ?>        
     </div>
-
+    
     <footer class="footer">
         <div class="container">
             <p class="pull-left">&copy; koklumezs.lv <?= date('Y') ?></p>
