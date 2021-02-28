@@ -546,6 +546,46 @@ div.has-experience.active, div.rent.active {
     background: transparent;
 }
 
+.login-container {
+    align-content: center;
+    top: 50px;
+}
+
+.login-form {
+    padding-top: 10px;
+    width: 50%;
+    margin-left: 25%;
+}
+
+.login-input {
+    margin-top: 16px;
+    width: 100%;
+    border: 1px solid lightgrey;
+    background: white;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.login-remember{
+    margin-top: 16px;
+}
+
+.login-button {
+    margin-top: 100px;
+    width: 100%;
+}
+
+.login-forgot {
+    margin-top: 8px;
+    text-align: right;
+}
+
+.login-forgot a {
+    margin-top: 26px;
+    text-decoration: none;
+    color:#999;
+}
+
 .signup-questions-textarea {
     width: 100%;
     height: 150px;
