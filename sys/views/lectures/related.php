@@ -1,24 +1,8 @@
-<?php
-
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-
-/* @var $this yii\web\View */
-/* @var $model app\models\UserLectures */
-/* @var $form yii\widgets\ActiveForm */
-?>
-<div class="container">
-    <div class="row">
-        <div class="col col-md-12">
-            <div class="related-lectures-form form-group">
-                <h2><?= \Yii::t('app', 'Related lessons') ?></h2>
-                <hr />
-                <select class="select2" name="relatedLectures[]" multiple>
-                    <?php foreach ($lectures as $id => $lecture) { ?>
-                        <option value="<?= $id ?>" <?= in_array($id, $relatedLectures) ? ' selected' : '' ?>><?= $lecture ?></option>
-                    <?php } ?>
-                </select>
-            </div>
-        </div>
-    </div>
+<div class="form-group related-lectures-form">
+    <label><?= \Yii::t('app', 'Related lessons') ?></label>
+    <select class="select2" style="width: 100%;" name="relatedLectures[]" multiple>
+        <?php foreach ($lectures as $id => $lecture) { ?>
+            <option value="<?= $id ?>" <?= in_array($id, $relatedLectures) ? ' selected' : '' ?>><?= $lecture ?></option>
+        <?php } ?>
+    </select>
 </div>

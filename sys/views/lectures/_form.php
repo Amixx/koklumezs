@@ -43,9 +43,6 @@ $inputFileOptions = [
         <li class="nav-item">
             <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false"><?= \Yii::t('app', 'Files') ?></a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" id="related-tab" data-toggle="tab" href="#related" role="tab" aria-controls="related" aria-selected="false"><?= \Yii::t('app', 'Related lessons') ?></a>
-        </li>
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -55,6 +52,7 @@ $inputFileOptions = [
             ]) ?>
             <?= $form->field($model, 'file')->widget(InputFile::className(), $inputFileOptions); ?>
             <?= $form->field($model, 'play_along_file')->widget(InputFile::className(), $inputFileOptions); ?>
+            <?= $this->render('related', ['lectures' => $lectures, 'relatedLectures' => $relatedLectures]) ?>
             <small><?= \Yii::t('app', 'If you need to add more files, go to section "Files"') ?></small><br /><br />
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
@@ -65,9 +63,6 @@ $inputFileOptions = [
         <div class="tab-pane fade" id="files" role="tabpanel" aria-labelledby="files-tab">
             <?php $link = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/create', 'lecture_id' => $model->id]) ?>
             <?= $this->render('files', ['lecturefiles' => $lecturefiles, 'link' => $link]) ?>
-        </div>
-        <div class="tab-pane fade" id="related" role="tabpanel" aria-labelledby="related-tab">
-            <?= $this->render('related', ['lectures' => $lectures, 'relatedLectures' => $relatedLectures]) ?>
         </div>
     </div>
     <hr />
