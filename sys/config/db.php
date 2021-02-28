@@ -8,7 +8,7 @@ return [
     // 'password' => 'skola',
 
     ////lokālā datubāze
-    'dsn' => 'mysql:host=localhost;dbname=skola_sys_db',
+    'dsn' => 'mysql:host=localhost;dbname=dev_skola_sys_db',
     'username' => 'skola',
     'password' => 'nJ%k]AQn36vA',
 

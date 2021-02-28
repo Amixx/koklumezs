@@ -591,8 +591,9 @@ div.has-experience.active, div.rent.active {
     line-height: 32px;
     border-radius: 32px;
     position: fixed;
-    bottom: 100px;
-    right: 100px;
+    top: 20px;
+    left: 100px;
+    z-index: 10000;
 }
 
 .chat-unread-count-groups {
