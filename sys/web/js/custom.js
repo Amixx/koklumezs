@@ -78,6 +78,8 @@ $(document).ready(function() {
         ".info-school-email",
         "<p>Skolas e-pasts tiek izmantots ziņojumu nosūtīšanai skolēniem, kā arī uz šo e-pastu tiek sūtīti paziņojumi.</p>"
     );
+
+    $("#sentinvoices-paid_date").attr("autocomplete", "off");
 });
 
 function addPopoverToElement($selector, html){
@@ -90,29 +92,6 @@ function addPopoverToElement($selector, html){
         }
     });
 }
-
-// function makeNavbarMultilineForStudents(){
-//     var navbarItemsSelector = ".navbar-nav.for-students li a";
-
-//     $(navbarItemsSelector).each(function (_, item) {
-//         makeItemMultiline(item);       
-//     });
-
-//     function makeItemMultiline(item){
-//         item.innerHTML = textToMultiline(item.innerText.split("/"));;
-//         item.style.lineHeight = "10px";
-//     }
-
-//     function textToMultiline(parts){
-//         var newText = "";
-
-//         parts.forEach(function(part){
-//             newText += "<p>" + part + "</p>";
-//         });
-
-//         return newText;
-//     }
-// }
 
 function setupArchiveSearchByCategory(){
     var selectors = {
@@ -535,3 +514,4 @@ function makeDateString(date){
 function leadingZero(string){
     return ('0' + String(string)).slice(-2);
 }
+
