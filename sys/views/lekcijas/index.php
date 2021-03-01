@@ -23,22 +23,30 @@ if (isset($sortByDifficulty)) {
     else if ($sortByDifficulty == 'asc') {$toggledSortByDifficulty = 'desc';}
 }
 
+if (isset($sortByDifficulty) && ($sortByDifficulty == 'desc')) {
+    $sortByDifficultyLabel = 'From hardest to easiest';
+} else {
+    $sortByDifficultyLabel = 'From easiest to hardest';    
+}
+
 ?>
 <div class="lectures-index">
     <h3><?= $this->title ?></h3>
-    <div class="row">
-        <div class="col-sm-7">
-            <?= Html::a(\Yii::t('app', $sortByDifficultyLabel), '?type='.$type.'&sortByDifficulty='.$sortByDifficulty.'&title_filter='.$title_filter,['class' => 'btn sort-button']) ?>
+    <?php if (count($models) > 1) { ?>
+        <div class="row">
+            <div class="col-sm-7">
+                <?= Html::a(\Yii::t('app', $sortByDifficultyLabel), '?type='.$type.'&sortByDifficulty='.$sortByDifficulty.'&title_filter='.$title_filter,['class' => 'btn sort-button']) ?>
+            </div>
+            <div class="col-sm-5">
+                <?= Html::beginForm(['/lekcijas/?type='.$type.'&sortByDifficulty='.$sortByDifficulty], 'get') ?>
+                <?= Html::input('text', 'title_filter', $title_filter, ['name'=>'kaut-kas' ]) ?>
+                <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>
+                <?= Html::a(\Yii::t('app', 'Show all'), '?type='.$type.'&sortByDifficulty='.$toggledSortByDifficulty.'&title_filter=', ['class' => 'btn btn-orange']) ?>
+                <?= Html::input('hidden', 'sortByDifficulty', $toggledSortByDifficulty) ?>
+                <?= Html::endForm() ?>
+            </div>
         </div>
-        <div class="col-sm-5">
-            <?= Html::beginForm(['/lekcijas/?type='.$type.'&sortByDifficulty='.$sortByDifficulty], 'get') ?>
-            <?= Html::input('text', 'title_filter', $title_filter, ['name'=>'kaut-kas' ]) ?>
-            <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>
-            <?= Html::a(\Yii::t('app', 'Show all'), '?type='.$type.'&sortByDifficulty='.$toggledSortByDifficulty.'&title_filter=', ['class' => 'btn btn-orange']) ?>
-            <?= Html::input('hidden', 'sortByDifficulty', $toggledSortByDifficulty) ?>
-            <?= Html::endForm() ?>
-        </div> 
-    </div>
+    <?php } ?>
     <div class="row">
         <?php
         if (count($models) == 0) { ?>

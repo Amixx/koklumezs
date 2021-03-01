@@ -91,11 +91,9 @@ class LekcijasController extends Controller
                 if (!(isset($SortByDifficulty)) || $SortByDifficulty == '' || $SortByDifficulty == 'desc') {
                     $sortByDifficulty = 'asc';
                     $orderBy = ['lectures.complexity' => SORT_ASC];
-                    $sortByDifficultyLabel = 'From easiest to hardest';
                 } else {
                     $sortByDifficulty = 'desc';
                     $orderBy = ['lectures.complexity' => SORT_DESC];
-                    $sortByDifficultyLabel = 'From hardest to easiest';
                 }
 
                 $models = $query->offset($pages->offset)
@@ -125,7 +123,6 @@ class LekcijasController extends Controller
                     'baseUrl' => $baseUrl,
                     'videos' => self::VIDEOS,
                     'videoThumb' => $videoThumb,
-                    'sortByDifficultyLabel' => $sortByDifficultyLabel,
                     'sortByDifficulty' => $sortByDifficulty,
                     'title_filter' => $title_filter,
                     
@@ -140,11 +137,9 @@ class LekcijasController extends Controller
             if (!(isset($SortByDifficulty)) || $SortByDifficulty == '' || $SortByDifficulty == 'desc') {
                 $sortByDifficulty = 'asc';
                 $orderBy = ['lectures.complexity' => SORT_ASC];
-                $sortByDifficultyLabel = 'From hardest to easiest';
             } else {
                 $sortByDifficulty = 'desc';
                 $orderBy = ['lectures.complexity' => SORT_DESC];
-                $sortByDifficultyLabel = 'From easiest to hardest';
             }
 
             $stillLearningLectures = Lectures::find()->where(['in', 'id', $latestStillLearningLecturesIds])->orderBy($orderBy)->all();
@@ -168,7 +163,6 @@ class LekcijasController extends Controller
                 'baseUrl' => $baseUrl,
                 'videos' => self::VIDEOS,
                 'videoThumb' => $videoThumb,
-                'sortByDifficultyLabel' => $sortByDifficultyLabel,
                 'sortByDifficulty' => $sortByDifficulty,
             ]);
         }
@@ -206,10 +200,8 @@ class LekcijasController extends Controller
         
         if (!(isset($SortByDifficulty)) || $SortByDifficulty == '' || $SortByDifficulty == 'desc') {
             $sortByDifficulty = 'asc';
-            $sortByDifficultyLabel = 'From hardest to easiest';
         } else {
             $sortByDifficulty = 'desc';
-            $sortByDifficultyLabel = 'From easiest to hardest';
         }
 
         $force = Yii::$app->request->get('force');
@@ -304,7 +296,6 @@ class LekcijasController extends Controller
                 'hasEvaluatedLesson' => $hasEvaluatedLesson,
                 'difficultyEvaluation' => $difficultyEvaluation,
                 'sortByDifficulty' => $sortByDifficulty,
-                'sortByDifficultyLabel' => $sortByDifficultyLabel,
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');

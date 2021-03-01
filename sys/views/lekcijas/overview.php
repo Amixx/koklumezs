@@ -16,7 +16,6 @@
             'videoThumb'=> $videoThumb,
             'videos' => $videos,
             'baseUrl' => $baseUrl,
-            'sortByDifficultyLabel' => $sortByDifficultyLabel,
             'sortByDifficulty' => $sortByDifficulty,
         ])?>
         <?=
@@ -29,7 +28,6 @@
             'videoThumb'=> $videoThumb,
             'videos' => $videos,
             'baseUrl' => $baseUrl,
-            'sortByDifficultyLabel' => $sortByDifficultyLabel,
             'sortByDifficulty' => $sortByDifficulty,
         ])?>
     </div>
