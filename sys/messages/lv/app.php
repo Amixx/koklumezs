@@ -445,5 +445,7 @@ return [
     'easy' => 'viegli',
     'hard' => 'grūti',
     'How well did you do with this task?' => 'Hei! Kā tev veicās ar šo uzdevumu?',
-    
+    'Suggest a song' => 'Iesaki savu dziesmu',
+    'Suggest a song you want to learn' => 'Iesaki dziesmu, kuru vēlies iemācīties',
+    'Song' => 'Dziesma',
 ];

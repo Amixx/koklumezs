@@ -909,3 +909,10 @@ div.has-experience.active, div.rent.active {
     left: 4px;
     right: 0;
 }
+
+.suggest-song-textarea {
+    display: block; 
+    margin-bottom: 8px; 
+    margin-left: 30%;
+    width: 40%;
+}
