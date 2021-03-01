@@ -257,21 +257,10 @@ class LekcijasController extends Controller
             $lecturefiles = Lecturesfiles::getLectureFiles($id);
             $hasEvaluatedLesson = $difficultyEvaluation !== null;
             $baseUrl = Yii::$app->request->baseUrl;
-            $ids = RelatedLectures::getRelations($id);
-            if ($ids) {
-                //filter out lecture that is not assigned to student
-                $tmp = [];
-                foreach ($ids as $check) {
-                    if (in_array($check, $modelsIds)) {
-                        $tmp[] = $check;
-                    }
-                }
-                $ids = $tmp;
-            }
-
+            $relatedLessonIds = RelatedLectures::getRelations($id);
             $dbUser = Users::findOne([$id => $user->id]);
             $userCanDownloadFiles = $dbUser->allowed_to_download_files;
-            $relatedLectures = Lectures::getLecturesByIds($ids);
+            $relatedLectures = Lectures::getLecturesByIds($relatedLessonIds);
             $difficultiesVisible = SectionsVisible::isVisible("Nodarbības sarežģītība");
 
             return $this->render('lekcija', [

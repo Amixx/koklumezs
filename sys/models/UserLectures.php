@@ -210,12 +210,46 @@ class UserLectures extends \yii\db\ActiveRecord
         }
 
         $results = self::find()->where($condition)->orderBy(['id' => SORT_DESC])->all();
-        return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
+        
+        $results = $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
+        
+        return static::filterOutRelatedLessons($results);
     }
 
     public function getLatestLecturesOfType($id, $type)
     {
         return array_slice(self::getLecturesOfType($id, $type), 0, 8);
+    }
+
+    // remove all lessons, which appear as related lessons in a lesson, which has been assigned more recently
+    // only the most recently assigned lesson remains
+    public static function filterOutRelatedLessons($mappedIds){
+        $lessonIdsToRemove = [];
+
+        foreach($mappedIds as $userLectureId => $lectureId){
+            $relatedLessonIds = RelatedLectures::getRelations($lectureId);
+
+            if(!empty($relatedLessonIds)){
+                $mostRecentUserLectureId = max(array_keys($relatedLessonIds));
+  
+                foreach($relatedLessonIds as $key => $value){
+                    if($key != $mostRecentUserLectureId){
+                        $lessonIdsToRemove[] = (int)$value;
+                    }
+                }
+            }
+        }
+
+        $res = $mappedIds;
+        if(!empty($lessonIdsToRemove)){
+            $res = array_filter($mappedIds, function($lessonId) use($lessonIdsToRemove) {
+                return !in_array($lessonId, $lessonIdsToRemove);
+            });
+        }
+
+        die();
+
+        return $res;
     }
 
     public function getUnsentLectures($id, $evaluated = 0, $sent = 0)
