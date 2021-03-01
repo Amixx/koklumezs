@@ -11,44 +11,42 @@ $this->title = \Yii::t('app',  'Log in');
 
 
 $fieldOptions1 = [
-    'options' => ['class' => 'form-group has-feedback'],
-    'inputTemplate' => "{input}<span class='glyphicon glyphicon-user form-control-feedback'></span>"
+    'options' => ['class' => 'form-group has-feedback']
 ];
 
 $fieldOptions2 = [
-    'options' => ['class' => 'form-group has-feedback'],
-    'inputTemplate' => "{input}<span class='glyphicon glyphicon-lock form-control-feedback'></span>"
+    'options' => ['class' => 'form-group has-feedback']
 ];
 ?>
 
-<div class="login-box">
+<div class="login-box login-container col-sm-12">
     <p>
         Hei! Sākot ar jauno gadu mainīsies veids kā varēsi tikt iekšā savā profilā - jau tagad vari izmantot epasta adresi, ko esi piereģistrējis un savu jau esošo paroli. 
         Ja neatceries  - raksti uz <strong>skola@koklumezs.lv</strong>
     </p>
-    <div class="login-box-body login">
+    <div class="login-box-body login login-form">
 
         <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
 
         <?= $form
             ->field($model, 'email', $fieldOptions1)
             ->label(false)
-            ->textInput(['placeholder' => $model->getAttributeLabel('email')]) ?>
+            ->textInput(['placeholder' => $model->getAttributeLabel('email'), 'class'=>'login-input']) ?>
 
         <?= $form
             ->field($model, 'password', $fieldOptions2)
             ->label(false)
-            ->passwordInput(['placeholder' => $model->getAttributeLabel('password')]) ?>
+            ->passwordInput(['placeholder' => $model->getAttributeLabel('password'), 'class'=>'login-input']) ?>
 
         <div class="row">
-            <div class="col-xs-8">
+            <div class="col-xs-8 login-remember">
                 <?= $form->field($model, 'rememberMe')->label(\Yii::t('app',  'Remember me'))->checkbox() ?>
             </div>
             <div class="col-xs-12 col-md-4">
-                <?= Html::submitButton(\Yii::t('app',  'Log in'), ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button']) ?>
+                <?= Html::submitButton(\Yii::t('app',  'Log in'), ['class' => 'btn btn-orange btn-block btn-flat login-button', 'name' => 'login-button']) ?>
             </div>
         </div>
-        <div style="color:#999;margin:1em 0">
+        <div class='login-forgot'>
             <?= Html::a(\Yii::t('app',  'Forgot password') . '?', ['site/request-password-reset']) ?>
         </div>
 

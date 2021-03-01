@@ -90,12 +90,10 @@ class LekcijasController extends Controller
                 
                 if (!(isset($SortByDifficulty)) || $SortByDifficulty == '' || $SortByDifficulty == 'desc') {
                     $sortByDifficulty = 'asc';
-                    $orderBy = ['lectures.complexity' => SORT_DESC];
-                    $sortByDifficultyLabel = 'From hardest to easiest';
+                    $orderBy = ['lectures.complexity' => SORT_ASC];
                 } else {
                     $sortByDifficulty = 'desc';
-                    $orderBy = ['lectures.complexity' => SORT_ASC];
-                    $sortByDifficultyLabel = 'From easiest to hardest';
+                    $orderBy = ['lectures.complexity' => SORT_DESC];
                 }
 
                 $models = $query->offset($pages->offset)
@@ -107,7 +105,14 @@ class LekcijasController extends Controller
                 $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
                 $baseUrl = Yii::$app->request->baseUrl;
 
+                $title_filter = Yii::$app->request->get('title_filter');
 
+                if ($title_filter) {
+                    $models = array_filter($models, function ($item) use ($title_filter) {
+                        $title_lower = mb_strtolower(trim($item->title), 'UTF-8');
+                        return strpos($title_lower, $title_filter) !== false;
+                    });
+                }
 
                 return $this->render('index', [
                     'models' => $models,
@@ -118,8 +123,8 @@ class LekcijasController extends Controller
                     'baseUrl' => $baseUrl,
                     'videos' => self::VIDEOS,
                     'videoThumb' => $videoThumb,
-                    'sortByDifficultyLabel' => $sortByDifficultyLabel,
                     'sortByDifficulty' => $sortByDifficulty,
+                    'title_filter' => $title_filter,
                     
                 ]);
             }
@@ -132,11 +137,9 @@ class LekcijasController extends Controller
             if (!(isset($SortByDifficulty)) || $SortByDifficulty == '' || $SortByDifficulty == 'desc') {
                 $sortByDifficulty = 'asc';
                 $orderBy = ['lectures.complexity' => SORT_ASC];
-                $sortByDifficultyLabel = 'From hardest to easiest';
             } else {
                 $sortByDifficulty = 'desc';
                 $orderBy = ['lectures.complexity' => SORT_DESC];
-                $sortByDifficultyLabel = 'From easiest to hardest';
             }
 
             $stillLearningLectures = Lectures::find()->where(['in', 'id', $latestStillLearningLecturesIds])->orderBy($orderBy)->all();
@@ -146,6 +149,8 @@ class LekcijasController extends Controller
             $opened = UserLectures::getOpened($user->id);
             $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
             $baseUrl = Yii::$app->request->baseUrl;
+
+            $title_filter = 1;
 
             return $this->render('overview', [
                 'models' => $models,
@@ -158,7 +163,6 @@ class LekcijasController extends Controller
                 'baseUrl' => $baseUrl,
                 'videos' => self::VIDEOS,
                 'videoThumb' => $videoThumb,
-                'sortByDifficultyLabel' => $sortByDifficultyLabel,
                 'sortByDifficulty' => $sortByDifficulty,
             ]);
         }
@@ -196,10 +200,8 @@ class LekcijasController extends Controller
         
         if (!(isset($SortByDifficulty)) || $SortByDifficulty == '' || $SortByDifficulty == 'desc') {
             $sortByDifficulty = 'asc';
-            $sortByDifficultyLabel = 'From hardest to easiest';
         } else {
             $sortByDifficulty = 'desc';
-            $sortByDifficultyLabel = 'From easiest to hardest';
         }
 
         $force = Yii::$app->request->get('force');
@@ -294,7 +296,6 @@ class LekcijasController extends Controller
                 'hasEvaluatedLesson' => $hasEvaluatedLesson,
                 'difficultyEvaluation' => $difficultyEvaluation,
                 'sortByDifficulty' => $sortByDifficulty,
-                'sortByDifficultyLabel' => $sortByDifficultyLabel,
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');

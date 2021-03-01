@@ -16,8 +16,8 @@ $this->title = \Yii::t('app', 'Archive');
             <div class="col-sm-6">
                 <?= Html::beginForm([''], 'get') ?>
                 <?= Html::input('text', 'archive_filter', $archive_filter) ?>
-                <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-success']) ?>
-                <?= Html::a(\Yii::t('app', 'Show all'), [''], ['class' => 'btn btn-primary']) ?>
+                <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>
+                <?= Html::a(\Yii::t('app', 'Show all'), [''], ['class' => 'btn btn-orange']) ?>
                 <?= Html::endForm() ?>
             </div>
             <div class="col-sm-6">

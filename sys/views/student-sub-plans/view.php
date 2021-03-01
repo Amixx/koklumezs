@@ -71,7 +71,7 @@ if($subplan){
                 <?= $form->field($newPause, 'studentsubplan_id')->hiddenInput(['value'=> $subplan['id']])->label(false); ?>
 
                 <div class="form-group">
-                    <?= Html::submitButton(\Yii::t('app', 'Submit'), ['class' => 'btn btn-primary']) ?>
+                    <?= Html::submitButton(\Yii::t('app', 'Submit'), ['class' => 'btn btn-orange']) ?>
                 </div>
 
                 <?php ActiveForm::end(); ?>
