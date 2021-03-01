@@ -464,9 +464,9 @@ a.desc:after {
     height: 100%;
   }
   
-  .lesson-column {
+  /*.lesson-column {
     height: 100vh;
-  }
+  }*/
 }
 
 .LectureOverview__Wrap:first-child {
