@@ -264,10 +264,9 @@ a.desc:after {
 
 .lecture-title{
     position: absolute;
-    top: 15px;
-    left: 15px;
     top: 16px;
     left: 24px;
+    right: 24px;
     color: white;
     /* background: rgba(0,0,0, .5);
     padding: 4px 8px;
