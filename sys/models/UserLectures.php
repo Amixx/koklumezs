@@ -198,27 +198,21 @@ class UserLectures extends \yii\db\ActiveRecord
         return self::find()->where(['user_id' => $id, 'evaluated' => $evaluated])->joinWith('lecture')->orderBy($orderBy)->all();
     }
 
-    public function getLecturesOfType($id, $type)
+    public function getLessonsOfType($id, $type)
     {
         $condition = ['user_id' => $id, 'sent' => true];
-        if ($type == "new") {
-            $condition['opened'] = false;
-        } else if ($type == "learning") {
-            $condition['still_learning'] = true;
-        } else if ($type == "favourite") {
-            $condition['is_favourite'] = true;
-        }
+        
+        if($type == "new") $condition['evaluated'] = false;
+        else if ($type == "favourite") $condition['is_favourite'] = true;
 
         $results = self::find()->where($condition)->orderBy(['id' => SORT_DESC])->all();
-        
         $results = $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
-        
         return static::filterOutRelatedLessons($results);
     }
 
-    public function getLatestLecturesOfType($id, $type)
+    public function getLatestLessonsOfType($id, $type)
     {
-        return array_slice(self::getLecturesOfType($id, $type), 0, 8);
+        return array_slice(self::getLessonsOfType($id, $type), 0, 8);
     }
 
     // remove all lessons, which appear as related lessons in a lesson, which has been assigned more recently
@@ -326,7 +320,7 @@ class UserLectures extends \yii\db\ActiveRecord
 
 
     public static function getNextLessonId($studentId, $currentLectureId, $type){
-        $lectureIds = self::getLecturesOfType($studentId, $type);
+        $lectureIds = self::getLessonsOfType($studentId, $type);
         $lectures = Lectures::find()->where(['in', 'id', $lectureIds])->orderBy(['title' => SORT_ASC])->asArray()->all();
 
         $takeNext = false;
