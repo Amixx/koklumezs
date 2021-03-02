@@ -43,7 +43,7 @@ label.custom-control-label {
 
 .navbar {
     min-height: 90px;
-    padding-top: 20px;
+    padding-top: 20px;   
 }
 
 .navbar-header {
@@ -181,9 +181,8 @@ a.desc:after {
 
 .nav li>form>button.logout {
     padding: 15px;
-    border: none;
+    border: none;  
 }
-
 .video-js {
     width: 540px;
     height: 304px;
@@ -616,6 +615,7 @@ div.has-experience.active, div.rent.active {
     background-size: 70px;
     display: inline-block;
     margin: 10px 15px;
+    margin-left: -10px;
 }
 
 .school-logo.admin {
@@ -627,43 +627,44 @@ div.has-experience.active, div.rent.active {
     margin-bottom: 32px;
 }
 
+.nav>li#chat-btn-with-icons{
+    margin-right: 20px; 
+    position: relative;
+    display: inline-block;
+}
+
 .teacher-communication-button {
-    line-height: 32px;
-    border-radius: 32px;
-    position: fixed;
-    top: 20px;
-    left: 100px;
-    z-index: 10000;
+    border-radius: 10px;
+    padding: 10px;   
 }
 
 .chat-unread-count-groups {
+    position: absolute;
     margin: 0 -5px;
     z-index: 1;
     padding: 5px 10px;
     border-radius: 5px 20px 5px;
     background-color: orange;
     color: white;
+    top: -40%;
+    right: 10%;
   }
 
  .chat-unread-count {
+    position: absolute;
     margin: 0 -5px;
     z-index: 2;
     padding: 5px 10px;
     border-radius: 5px 20px 5px;
     background-color: red;
     color: white;
+    top: -40%;
+    right: -2%;
 }
-
-  .chat-unread-count:empty,.chat-unread-count-groups:empty {
+/*
+.chat-unread-count:empty,.chat-unread-count-groups:empty {
     display: none;
- }
- 
-  #notification-badges{
-    position: absolute;
-    top: -15px;
-    right: -5px;
-}
-
+}*/
 
 .chat-user-item {
     line-height: 1.5; 
