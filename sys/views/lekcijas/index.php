@@ -35,7 +35,7 @@ if (isset($sortByDifficulty) && ($sortByDifficulty == 'desc')) {
     <?php if (count($models) > 1) { ?>
         <div class="row">
             <div class="col-sm-7">
-                <?= Html::a(\Yii::t('app', $sortByDifficultyLabel), '?type='.$type.'&sortByDifficulty='.$sortByDifficulty.'&title_filter='.$title_filter,['class' => 'btn sort-button']) ?>
+                <?= Html::a(\Yii::t('app', $sortByDifficultyLabel), '?type='.$type.'&sortByDifficulty='.$sortByDifficulty.'&title_filter='.$title_filter,['class' => 'btn btn-gray sort-button']) ?>
             </div>
             <div class="col-sm-5">
                 <?= Html::beginForm(['/lekcijas/?type='.$type.'&sortByDifficulty='.$sortByDifficulty], 'get') ?>

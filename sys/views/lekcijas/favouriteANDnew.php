@@ -7,13 +7,13 @@ use yii\helpers\Url;
 
 <div class="col-md-6 LectureOverview__Wrap">
     <div class="LectureOverview__Section">
-        <h4><?= \Yii::t('app', $divTitle) ?></h4>
+        <h4 class="text-center"><?= \Yii::t('app', $divTitle) ?></h4>
         <?php if (count($Lectures) == 0) { ?>
             <h4 class="LectureOverview__EmptyText">
                 <?= \Yii::t('app', $emptyText) ?>
             </h4>
         <?php } ?>
-        <div class="row">
+        <div class="row LectureOverview__Content">
             <?php foreach ($Lectures as $lecture) {
                 $lecturefiles = Lecturesfiles::getLectureFiles($lecture->id);
                 $likesCount = Lectures::getLikesCount($lecture->id);
@@ -41,8 +41,8 @@ use yii\helpers\Url;
                 </div>
             <?php } ?>
         </div>
-        <div class="row text-center">
-            <?= Html::a(\Yii::t('app', $clickableTitle), ['?type='.$type.'&sortByDifficulty='.$sortByDifficulty], ['class' => 'btn btn-gray']) ?>
+        <div class="row text-center LectureOverview__ButtonRow">
+            <?= Html::a(\Yii::t('app', $clickableTitle), ['?type='.$type.'&sortByDifficulty='.$sortByDifficulty], ['class' => 'btn btn-gray btn-long']) ?>
         </div>
     </div>
 </div> 

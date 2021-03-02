@@ -12,7 +12,7 @@ if (isset($sortByDifficulty) && ($sortByDifficulty == 'desc')) {
 
 <h3 class="text-center"><?=\Yii::t('app',  'New lessons')?></h3>
 <?php if (count($userLectures) > 1) { ?>
-    <?= Html::a(\Yii::t('app', $sortByDifficultyLabel), '?sortByDifficulty='.$sortByDifficulty,['class' => 'btn sort-button']) ?>
+    <?= Html::a(\Yii::t('app', $sortByDifficultyLabel), '?sortByDifficulty='.$sortByDifficulty,['class' => 'btn btn-gray sort-button']) ?>
 <?php } ?>
 <?php foreach ($userLectures as $lecture) {  ?>
     <?php if ($lecture->sent) { ?>
@@ -24,4 +24,4 @@ if (isset($sortByDifficulty) && ($sortByDifficulty == 'desc')) {
         </p>
     <?php } ?>
 <?php } ?>
-<?= Html::a(\Yii::t('app', 'Open favourite lessons'), ['?type=favourite'], ['class' => 'btn favourite-lessons-button']) ?>
+<?= Html::a(\Yii::t('app', 'Open favourite lessons'), ['?type=favourite'], ['class' => 'btn btn-gray favourite-lessons-button']) ?>
