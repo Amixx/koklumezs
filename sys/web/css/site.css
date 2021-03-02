@@ -661,10 +661,10 @@ div.has-experience.active, div.rent.active {
     top: -40%;
     right: -2%;
 }
-/*
+
 .chat-unread-count:empty,.chat-unread-count-groups:empty {
     display: none;
-}*/
+}
 
 .chat-user-item {
     line-height: 1.5; 
