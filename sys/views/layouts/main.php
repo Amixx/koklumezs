@@ -95,7 +95,7 @@ AppAsset::register($this);
             $navEnd = '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    \Yii::t('app',  'Sign out') . ' (' . Yii::$app->user->identity->first_name . ' ' . Yii::$app->user->identity->last_name . ')',
+                    \Yii::t('app',  'Sign out') .'<br>' . ' (' . Yii::$app->user->identity->first_name . ' ' . Yii::$app->user->identity->last_name . ')',
                     ['class' => 'btn btn-link logout']
                 )
                 . Html::endForm()
@@ -110,21 +110,16 @@ AppAsset::register($this);
 
             $unreadGroups = Users::isCurrentUserTeacher() ? '<span class="chat-unread-count-groups"></span>' : '';
 
-            $navChat= 
-                '<button class="btn btn-success " id="chat-toggle-button" data-toggle="modal" data-target="#chatModal">'
-                    
-                    .\Yii::t('app', $chatButtonText)
-                    .'<div id="notification-badges"> '
+            $navChat= '<li id="chat-btn-with-icons">'
+                .'<div id="notification-badges">'
                     . $unreadGroups
                     .'<span class="chat-unread-count"></span>'
-                    .'</div>'
-                
-                .'</button>';               
+                .'</div>'
+                .'<button class="btn btn-success teacher-communication-button" id="chat-toggle-button" data-toggle="modal" data-target="#chatModal">'                   
+                    .\Yii::t('app', $chatButtonText)                   
+                .'</button>'                
+                .'</li>';             
         }
-
-
-
-
 
         if ($isGuest) {
             $navItems[] = ['label' => \Yii::t('app',  'Log in'), 'url' => ['/site/login']];
@@ -141,6 +136,7 @@ AppAsset::register($this);
             $navItems[] = ['label' => 'Izsūtītie e-pasti', 'url' => ['/sentlectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['sentlectures'])];
             $navItems[] = $navEnd;
         } elseif ($isTeacher) {
+            $navItems[] = $navChat;
             $navItems[] = ['label' => \Yii::t('app',  'School'), 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),];
             $navItems[] = ['label' => '+', 'url' => ['/assign/userlectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),];
             $navItems[] = ['label' => \Yii::t('app',  'Community'), 'url' => ['/user-lecture-evaluations/comments'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations']) and Yii::$app->controller->action->actionMethod == "actionComments"];
@@ -170,7 +166,6 @@ AppAsset::register($this);
                 'options' => ['class' => 'nav-item dropdown']
             ];
             $navItems[] = ['label' => \Yii::t('app',  'Settings'), 'url' => ['/school-settings'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-settings'])];
-            $navItems[] = $navChat;
             $navItems[] = $navEnd;
         } elseif ($isStudent) {
             $commentsItemText = \Yii::t('app',  'Newest comments');
@@ -178,7 +173,7 @@ AppAsset::register($this);
             if ($unseenResponsesCount && $unseenResponsesCount > 0) {
                 $commentsItemText .= " ($unseenResponsesCount)";
             }
-
+            $navItems[] = $navChat;
             $navItems[] = [
                 'label' => \Yii::t('app',  'Lessons'),
                 'active' =>  in_array(\Yii::$app->controller->id, ['lekcijas']),
@@ -195,7 +190,6 @@ AppAsset::register($this);
             $navItems[] = ['label' => \Yii::t('app',  'suggest a song'), 'url' => ['/'], 'active' =>  in_array(\Yii::$app->controller->id, [''])];
             $navItems[] = ['label' => \Yii::t('app',  'FAQs'), 'url' => ['/school-faqs/for-students'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-faqs'])];
             $navItems[] = ['label' => \Yii::t('app',  'Subscription plan'), 'url' => ['/student-sub-plans/view/?id='.Yii::$app->user->identity->id], 'active' =>  in_array(\Yii::$app->controller->id, ['student-sub-plans'])];
-            $navItems[] = $navChat;
             $navItems[] = $navEnd;
         }
 
