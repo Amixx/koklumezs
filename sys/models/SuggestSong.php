@@ -29,6 +29,7 @@ class SuggestSong extends \yii\db\ActiveRecord
             'student_id' => \Yii::t('app',  'Student ID'),
             'school_id' => \Yii::t('app',  'School ID'),
             'song' => \Yii::t('app',  'Song'),
+            'times_suggested' => \Yii::t('app', 'Times suggested'),
         ];
     }
 

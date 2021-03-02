@@ -1,16 +1,13 @@
 <?php
-
 use yii\helpers\Html;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Difficulties */
-
-$this->title = \Yii::t('app', 'Create a FAQ');
+$this->title = \Yii::t('app', 'Edit FAQ') . ': ' . $model->song;
  ['label' => \Yii::t('app', 'FAQs'), 'url' => ['index']];
-
+ ['label' => $model->song, 'url' => ['view', 'id' => $model->id]];
+ \Yii::t('app', 'Edit');
 ?>
-<div class="suggestion-create">
-
+<div class="suggestion-update">
+    
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [

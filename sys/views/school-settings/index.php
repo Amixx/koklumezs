@@ -26,6 +26,9 @@ $this->title = \Yii::t('app',  'School settings');
         <li class="nav-item">
             <?= Html::a(\Yii::t('app', 'Registration lessons'), ['/registration-lessons'], ['class' => 'nav-link']) ?>
         </li>
+        <li class="nav-item">
+            <?= Html::a(\Yii::t('app', 'Suggest a song'), ['/suggest-song'], ['class' => 'nav-link']) ?>
+        </li>
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
