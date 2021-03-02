@@ -230,8 +230,11 @@ class UserLectures extends \yii\db\ActiveRecord
             $relatedLessonIds = RelatedLectures::getRelations($lectureId);
 
             if(!empty($relatedLessonIds)){
-                $mostRecentUserLectureId = max(array_keys($relatedLessonIds));
-  
+                $largestRelatedLessonId = max(array_keys($relatedLessonIds));
+                $mostRecentUserLectureId = $largestRelatedLessonId > $userLectureId
+                    ? $largestRelatedLessonId
+                    : $lectureId;
+               
                 foreach($relatedLessonIds as $key => $value){
                     if($key != $mostRecentUserLectureId){
                         $lessonIdsToRemove[] = (int)$value;
@@ -246,8 +249,6 @@ class UserLectures extends \yii\db\ActiveRecord
                 return !in_array($lessonId, $lessonIdsToRemove);
             });
         }
-
-        die();
 
         return $res;
     }

@@ -120,7 +120,7 @@ class LecturesController extends Controller
         $difficulties = Difficulties::getDifficultiesForSchool($schoolId);
         $handdifficulties = Handdifficulties::getDifficulties();
         $evaluations = Evaluations::getEvaluations();
-        $lectures = Lectures::getLectures();
+        $lectures = SchoolLecture::getSchoolLectureTitles($schoolId);
         $post = Yii::$app->request->post();
         $model = new Lectures();
         $model->author = Yii::$app->user->identity->id;
@@ -216,7 +216,7 @@ class LecturesController extends Controller
         $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
         $lecturefiles = Lecturesfiles::getLectureFiles($id);
         $relatedLectures = RelatedLectures::getRelations($id);
-        $lectures = Lectures::getLecturesForRelations($id);
+        $lectures = SchoolLecture::getSchoolLectureTitles($schoolId);
         $model = $this->findModel($id);
         $model->updated = date('Y-m-d H:i:s', time());
         $model->complexity = 1;
