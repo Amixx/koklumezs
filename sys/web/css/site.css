@@ -86,6 +86,10 @@ h4 {
     background-color: rgba(255,255,255,0.5);
 }
 
+.wrap-overlay {
+    background-color: rgba(196, 196, 196, 0.5);
+}
+
 .wrap>.container {
     padding: 110px 15px 20px;
     position: relative;
@@ -296,7 +300,6 @@ a.desc:after {
 }
 
 .lesson-column {
-    background-color: rgba(196, 196, 196, 0.5);
     border-radius: 16px;
     padding: 8px;
     margin-top: 50px;
@@ -595,6 +598,15 @@ div.has-experience.active, div.rent.active {
     border-radius: 8px;
 }
 
+.content-input {
+    border: 1px solid lightgrey;
+    background: white;
+    padding: 6px 20px 7px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin: 4px 4px 4px 50px;
+}
+
 .login-remember{
     margin-top: 16px;
 }
@@ -828,6 +840,11 @@ div.has-experience.active, div.rent.active {
     font-weight: normal;
 }
 
+.lectures-index {
+    padding: 16px;
+    border-radius: 16px;
+}
+
 .removeBtnStyle{
     border: none;
     background: none;
@@ -853,27 +870,38 @@ div.has-experience.active, div.rent.active {
 }
 
 .btn-orange {
-    background: rgba(248, 197, 67, .8);
+    background: rgba(248, 197, 67, .8);   
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
     border: none;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    border: 1px solid rgba(255,255,255,0);
+    padding: 6px 20px;
+    margin: 4px 12px;
     color: black;
+    font-size: 13px;
 }
 
 .btn-gray {
     background: #c4c4c4;
-    border: none;
+    border: 1px solid rgba(255,255,255,0);
+    border-radius: 8px;
     color: black;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
+    padding: 6px 20px;
     font-size: 13px;
+}
+
+.sort-button {
+    margin: 4px 16px;
+    padding: 6px 50px;
+    font-size: 13px;
+    
 }
 
 .btn-long {
     padding: 6px 64px;
 }
 
-.favourite-lessons-button, .sort-button {
+.favourite-lessons-button{
     font-size: 12px;
     width: 100%;
     padding: 6px 4px;
@@ -881,10 +909,6 @@ div.has-experience.active, div.rent.active {
 
 .favourite-lessons-button {
     margin-top: 36px;
-}
-
-.sort-button {
-    margin-bottom: 16px;
 }
 
 @font-face {

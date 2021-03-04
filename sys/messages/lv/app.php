@@ -40,6 +40,7 @@ return [
     'Algorithm scale' => 'Algoritma skala',
     'All' => 'Visi',
     'All favourite lessons' => 'Visas mīļākās nodarbības',
+    'Open all favourite lessons' => 'Atvērt visas mīļākās nodarbības',
     'All lessons I\'m still learning' => 'Visas nodarbības, ko vēl mācos',
     'All new lessons' => 'Visas jaunās nodarbības',
     'All paid' => 'Samaksāts',
