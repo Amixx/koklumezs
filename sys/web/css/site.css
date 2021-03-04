@@ -579,9 +579,14 @@ div.has-experience.active, div.rent.active {
     background: transparent;
 }
 
+.login-header {
+    text-align: center;
+    margin-top: 50px;
+}
+
 .login-container {
     align-content: center;
-    top: 50px;
+    margin-top: 10px;
 }
 
 .login-form {
