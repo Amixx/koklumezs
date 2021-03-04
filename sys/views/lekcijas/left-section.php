@@ -13,7 +13,6 @@ if (isset($sortByDifficulty) && ($sortByDifficulty == 'desc')) {
 
 <?php if (!empty($userLectures)) { ?>
     <?= Html::a(\Yii::t('app', $sortByDifficultyLabel), '?sortByDifficulty='.$sortByDifficulty,['class' => 'btn btn-gray sort-button', 'style' => 'padding: 4px; margin-left: 0; width: 100%;']) ?>
->>>>>>> d6c3ef24ecae7a736f27cefcb84d82f75ebcb86c
 <?php } ?>
 <?= $this->render('lesson-list', [
     'lessons' => $newLessons,

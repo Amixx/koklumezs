@@ -23,16 +23,18 @@ if (isset($sortByDifficulty)) {
     else if ($sortByDifficulty == 'asc') {$toggledSortByDifficulty = 'desc';}
 }
 
-if (isset($sortByDifficulty) && ($sortByDifficulty == 'desc')) {
-    $sortByDifficultyLabel = 'From hardest to easiest';
-} else {
-    $sortByDifficultyLabel = 'From easiest to hardest';    
-}
+if (isset($sortByDifficulty)) {
+    if ($sortByDifficulty == 'desc') {
+        $sortByDifficultyLabel = 'From hardest to easiest';
+    } else {
+        $sortByDifficultyLabel = 'From easiest to hardest';    
+    }
+} 
 
 ?>
 <div class="lectures-index ">
     <h3><?= $this->title ?></h3>
-    <?php if (count($models) > 1) { ?>
+    <?php if (count($models) > 1 || isset($title_filter)) { ?>
         <div class="row" style="margin-top: 10px; margin-bottom: 25px;">
             <?= Html::beginForm(['/lekcijas/?type='.$type.'&sortByDifficulty='.$sortByDifficulty], 'get') ?>
             <?= Html::input('text', 'title_filter', $title_filter, ['class' => 'content-input']) ?>
