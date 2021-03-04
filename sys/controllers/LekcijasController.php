@@ -138,8 +138,8 @@ class LekcijasController extends Controller
                 $orderBy = ['lectures.complexity' => SORT_DESC];
             }
 
-            $newLectures = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->orderBy($orderBy)->all();
-            $favouriteLectures = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->orderBy($orderBy)->all();        
+            $newLessons = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->orderBy($orderBy)->all();
+            $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->orderBy($orderBy)->all();        
 
             $opened = UserLectures::getOpened($user->id);
             $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
@@ -149,8 +149,8 @@ class LekcijasController extends Controller
 
             return $this->render('overview', [
                 'models' => $models,
-                'newLectures' => $newLectures,
-                'favouriteLectures' => $favouriteLectures,
+                'newLessons' => $newLessons,
+                'favouriteLessons' => $favouriteLessons,
                 'opened' => $opened,
                 'pages' => $pages,
                 'userLectureEvaluations' => $userLectureEvaluations,
@@ -195,8 +195,12 @@ class LekcijasController extends Controller
         
         if (!(isset($SortByDifficulty)) || $SortByDifficulty == '' || $SortByDifficulty == 'desc') {
             $sortByDifficulty = 'asc';
+            $orderBy = ['lectures.complexity' => SORT_ASC];
+
         } else {
             $sortByDifficulty = 'desc';
+            $orderBy = ['lectures.complexity' => SORT_DESC];
+
         }
 
         $force = Yii::$app->request->get('force');
@@ -259,6 +263,11 @@ class LekcijasController extends Controller
             $relatedLectures = Lectures::getLecturesByIds($relatedLessonIds);
             $difficultiesVisible = SectionsVisible::isVisible("Nodarbības sarežģītība");
 
+            $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "new");
+            $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
+            $newLessons = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->orderBy($orderBy)->all();
+            $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->orderBy($orderBy)->all();        
+
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,
@@ -266,6 +275,8 @@ class LekcijasController extends Controller
                 'lectureEvaluations' => $lectureEvaluations,
                 'lecturefiles' => $lecturefiles,
                 'userLectures' => $userLectures,
+                'newLessons' => $newLessons,
+                'favouriteLessons' => $favouriteLessons,
                 'userEvaluatedLectures' => $userEvaluatedLectures,
                 'videos' => self::VIDEOS,
                 'docs' => self::DOCS,

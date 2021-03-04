@@ -940,3 +940,9 @@ div.has-experience.active, div.rent.active {
     left: 4px;
     right: 0;
 }
+
+.lesson-list {
+    margin-bottom:16px;
+    list-style-type: none;
+    padding: 0;
+}

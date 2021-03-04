@@ -8,7 +8,7 @@
     <div class="row">
         <?=
         $this->render('favouriteANDnew',[
-            'Lectures' => $newLectures,
+            'Lectures' => $newLessons,
             'divTitle' => 'New lessons',
             'clickableTitle' => 'All new lessons',
             'type' => 'new',
@@ -21,7 +21,7 @@
         ])?>
         <?=
         $this->render('favouriteANDnew',[
-            'Lectures' => $favouriteLectures,
+            'Lectures' => $favouriteLessons,
             'divTitle' => 'Favourite lessons',
             'clickableTitle' => 'All favourite lessons',
             'type' => 'favourite',
