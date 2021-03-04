@@ -158,6 +158,7 @@ class LekcijasController extends Controller
                 'videos' => self::VIDEOS,
                 'videoThumb' => $videoThumb,
                 'sortByDifficulty' => $sortByDifficulty,
+                'renderRequestButton' => !$user->wants_more_lessons,
             ]);
         }
 

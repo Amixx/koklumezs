@@ -135,7 +135,9 @@ class AssignController extends \yii\web\Controller
                     $teacherMessage = $post['teacherMessage'];
                     UserLectures::sendEmail($model->user_id, $teacherMessage, $subject);
                 }
-                // $model->sent = (int) $sent;
+
+                $user->wants_more_lessons = false;
+                $user->update();   
                 $model->sent = 1;
                 $model->update();
                 return $this->refresh();
@@ -154,9 +156,11 @@ class AssignController extends \yii\web\Controller
                 if ($shouldSendEmail) {
                     $teacherMessage = $post['teacherMessage'];
                     $subject = isset($post['subject']) && $post['subject'] ? $post['subject'] : "Jaunas nodarbības";
-                    UserLectures::sendEmail($model->user_id, $teacherMessage, $subject);                    
+                    UserLectures::sendEmail($model->user_id, $teacherMessage, $subject);                 
                 }
-                // $model->sent = (int) $sent;
+
+                $user->wants_more_lessons = false;
+                $user->update();   
                 $model->sent = 1;
                 $model->update();
             }

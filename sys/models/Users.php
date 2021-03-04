@@ -73,6 +73,7 @@ class Users extends ActiveRecord implements IdentityInterface
             'dont_bother' => \Yii::t('app',  'Do not bother'),
             'status' => \Yii::t('app',  'Status'),
             'allowed_to_download_files' => \Yii::t('app',  'Allowed to download files'),
+            'wants_more_lessons' => \Yii::t('app',  'Wants more lessons'),
         ];
     }
 

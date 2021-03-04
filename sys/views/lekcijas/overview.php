@@ -17,6 +17,7 @@
             'videos' => $videos,
             'baseUrl' => $baseUrl,
             'sortByDifficulty' => $sortByDifficulty,
+            'renderRequestButton' => $renderRequestButton,
         ])?>
         <?=
         $this->render('favouriteANDnew',[
@@ -29,6 +30,7 @@
             'videos' => $videos,
             'baseUrl' => $baseUrl,
             'sortByDifficulty' => $sortByDifficulty,
+            'renderRequestButton' => false,
         ])?>
     </div>
 </div>

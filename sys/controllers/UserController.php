@@ -360,6 +360,15 @@ class UserController extends Controller
         return $saved;
     }
 
+    public function actionRequestMoreTasks($id){
+        $student = self::findModel($id);
+        $student->wants_more_lessons = true;
+        $student->update();
+
+        Yii::$app->session->setFlash('success', 'Paldies par ziņu! Nākamajā reizē sūtīsim vairāk uzdevumus! Lai mierīga diena!');
+        return $this->redirect(Yii::$app->request->referrer);
+    }
+
     protected function findModel($id)
     {
         if (($model = Users::find()->where(['users.id' => $id])->joinWith("payer")->one()) !== null) {
