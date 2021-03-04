@@ -22,7 +22,7 @@ if ($isTeacher) {
     $chatButtonText = "Chat with students";
 } else if ($isStudent) {
     $school = School::getByStudent(Yii::$app->user->identity->id);
-    $chatButtonText = "Chat with teacher";
+    $chatButtonText = "Send us a message";
     $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
 }
 

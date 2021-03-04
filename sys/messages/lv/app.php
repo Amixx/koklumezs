@@ -373,7 +373,7 @@ return [
     'Challenging' => 'Diezgan grūti',
     'Chat with student' => 'Sarakste ar skolēnu',
     'Chat with students' => 'Sarakste ar skolēniem',
-    'Chat with teacher' => 'Sarakste ar skolotāju',
+    'Send us a message' => 'Uzraksti mums',
     'Choose delivery type' => 'Izvēlies piegādes veidu',
     'Choose payment type' => 'Izvēlies sadarbības veidu',
     'Chord change frequency' => 'Akordu maiņas biežums',

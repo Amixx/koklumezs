@@ -678,7 +678,12 @@ div.has-experience.active, div.rent.active {
 
 .teacher-communication-button {
     border-radius: 10px;
-    padding: 10px;   
+    padding: 10px 20px;   
+    color: black;
+    margin-right: 50px;
+}
+.teacher-communication-button:hover { 
+    color: black;
 }
 
 .chat-unread-count-groups {
