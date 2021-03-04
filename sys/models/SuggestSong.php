@@ -12,7 +12,7 @@ class SuggestSong extends \yii\db\ActiveRecord
     {
         return [
             [['student_id', 'school_id', 'song'], 'required'],
-            [['student_id', 'school_id'], 'number'],
+            [['student_id', 'school_id', 'times_suggested'], 'number'],
             [['song'], 'string'],
         ];
     }

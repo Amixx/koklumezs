@@ -449,4 +449,5 @@ return [
     'Suggest a song you want to learn' => 'Iesaki dziesmu, kuru vēlies iemācīties',
     'Song' => 'Dziesma',
     'Times suggested' => 'Ieteikumu skaits',
+    'Vote' => 'Balso',
 ];

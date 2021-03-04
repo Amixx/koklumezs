@@ -1,7 +1,6 @@
 <?php
 use yii\helpers\Html;
 use yii\grid\GridView;
-use yii\widgets\ActiveForm;
 
 $this->title = \Yii::t('app', 'Suggest a song');
 
@@ -27,6 +26,16 @@ $this->title = \Yii::t('app', 'Suggest a song');
                 ['class' => 'yii\grid\SerialColumn'],
                 'song',
                 'times_suggested',
+                [   
+                    'class' => 'yii\grid\ActionColumn',
+                    'template' => '{vote}',
+                    'header' => \Yii::t('app', 'Vote'),
+                    'buttons' => [
+                        'vote' => function() {
+                            return Html::a('<span class="glyphicon glyphicon-thumbs-up"></span>', '',['class' => 'btn btn-orange']);
+                        }
+                    ],
+                ],
             ],
         ]);?>
     </div>

@@ -113,6 +113,20 @@ class SuggestSongController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionVote($id)
+    {
+        $isGuest = Yii::$app->user->isGuest;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
+        }
+        $model = $this->findModel($id);
+        // $model['times_suggested'] += 1;
+        $model->save();
+
+        return $this->redirect(['index']);
+    }
+
     protected function findModel($id)
     {
         if (($model = SuggestSong::findOne($id)) !== null) {
