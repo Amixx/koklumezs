@@ -43,7 +43,7 @@ if (isset($sortByDifficulty)) {
             <?= Html::endForm() ?>
         </div>
     <?php } ?>
-    <div class="row wrap-overlay" style="padding: 16px 2px; border-radius: 16px;">
+    <div class="row wrap-overlay" style="padding: 16px 2px; border-radius: 16px; min-height: 100vh;">
         <?php
         if (count($models) == 0) { ?>
             <div class="col-md-6">
