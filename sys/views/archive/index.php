@@ -23,7 +23,7 @@ $this->title = \Yii::t('app', 'Archive');
     </div>
     <?php
     if ($archive) { ?>
-        <div class="row">
+        <div class="row wrap-overlay" style="padding: 16px 2px; border-radius: 16px;">
             <?php foreach ($archive as $lecture) {
                 $lecturefiles = Lecturesfiles::getLectureFiles($lecture->id);
                 $userLecture = UserLectures::getUserLectureByLectureId($lecture->id);
