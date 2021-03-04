@@ -234,9 +234,10 @@ class LekcijasController extends Controller
                     $userLecture->update();
                 }
 
-                $shouldRedirectToNextLesson = isset($post['redirect-to-next']) && $post['redirect-to-next'];
-                if($shouldRedirectToNextLesson){
-                    return $this->redirect(["lekcijas/lekcija/$nextLessonId"]);
+                $shouldRedirect = isset($post['redirect-lesson-id']) && $post['redirect-lesson-id'];
+                if($shouldRedirect){
+                    $redirectLessonId = $post['redirect-lesson-id'];
+                    return $this->redirect(["lekcijas/lekcija/$redirectLessonId"]);
                 }
 
                 $this->refresh();

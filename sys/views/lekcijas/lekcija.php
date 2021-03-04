@@ -14,6 +14,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
             <?= $this->render("left-section", [
                 'userLectures' => $userLectures,
                 'sortByDifficulty' => $sortByDifficulty,
+                'currentLessonEvaluated' => $uLecture->evaluated,
             ]) ?>
         </div>
     </div>
