@@ -446,5 +446,6 @@ return [
     'easy' => 'viegli',
     'hard' => 'grūti',
     'How well did you do with this task?' => 'Hei! Kā tev veicās ar šo uzdevumu?',
-    
+    'I want more tasks' => 'Vēlos vēl uzdevumus',    
+    'Student wants more lessons' => 'Skolēns vēlas vairāk uzdevumu',
 ];

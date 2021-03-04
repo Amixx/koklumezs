@@ -1,6 +1,5 @@
 <?php
 
-use yii\helpers\Url;
 use yii\helpers\Html;
 
 if (isset($sortByDifficulty) && ($sortByDifficulty == 'desc')) {
@@ -11,17 +10,17 @@ if (isset($sortByDifficulty) && ($sortByDifficulty == 'desc')) {
 ?>
 
 <h3 class="text-center"><?=\Yii::t('app',  'New lessons')?></h3>
-<?php if (count($userLectures) > 1) { ?>
+
+<?php if (!empty($userLectures)) { ?>
     <?= Html::a(\Yii::t('app', $sortByDifficultyLabel), '?sortByDifficulty='.$sortByDifficulty,['class' => 'btn btn-gray sort-button', 'style' => 'padding: 4px; margin-left: 0; width: 100%;']) ?>
+>>>>>>> d6c3ef24ecae7a736f27cefcb84d82f75ebcb86c
 <?php } ?>
-<?php foreach ($userLectures as $lecture) {  ?>
-    <?php if ($lecture->sent) { ?>
-        <p>
-            <a
-                class="lesson-column-item"
-                href="<?= Url::to(['lekcijas/lekcija','id' => $lecture->lecture_id]); ?>"
-            ><?= $lecture->lecture->title ?></a>
-        </p>
-    <?php } ?>
-<?php } ?>
+<?= $this->render('lesson-list', [
+    'lessons' => $newLessons,
+    'currentLessonEvaluated' => $currentLessonEvaluated,
+]) ?>
+<?= $this->render('lesson-list', [
+    'lessons' => $favouriteLessons,
+    'currentLessonEvaluated' => $currentLessonEvaluated,
+]) ?>
 <?= Html::a(\Yii::t('app', 'Open favourite lessons'), ['?type=favourite'], ['class' => 'btn btn-gray favourite-lessons-button']) ?>

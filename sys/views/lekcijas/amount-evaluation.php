@@ -40,8 +40,8 @@ $isEmojiActive = function($name) use($evaluations, $difficultyEvaluation) {
     <?php $form = ActiveForm::begin(); ?>
     <?php if (!$force) { ?>
         <?= Html::hiddenInput("difficulty-evaluation", null) ?>
-        <?php if($redirectToNext){
-            echo Html::hiddenInput('redirect-to-next', true);
+        <?php if($redirectLessonId){
+            echo Html::hiddenInput('redirect-lesson-id', $redirectLessonId);
         } ?>
         <div class="form-group" style="margin: 0;">
             <?php foreach($evaluations as $evaluation){

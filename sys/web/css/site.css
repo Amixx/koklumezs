@@ -323,6 +323,7 @@ a.desc:after {
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 12px;
+    cursor: pointer;
 }
 
 .lesson-column-item:hover {
@@ -962,4 +963,10 @@ div.has-experience.active, div.rent.active {
     top: 20%;
     left: 4px;
     right: 0;
+}
+
+.lesson-list {
+    margin-bottom:16px;
+    list-style-type: none;
+    padding: 0;
 }

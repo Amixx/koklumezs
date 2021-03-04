@@ -140,6 +140,9 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     <?php } ?>
     <p><?= \Yii::t('app', 'Abilities now') ?>:<?= isset($goals[$goalsnow]) ? '<strong>' . $goalsum . '</strong>' : '<code>Not set</code>' ?></p>
     <p><?= \Yii::t('app', 'Plan end date') ?>: <?= $endDate == null ? \Yii::t('app', 'no plan assigned to pupil') : $endDate  ?></p>
+    <?php if($user->wants_more_lessons){ ?>
+        <h4><strong><?= Yii::t('app', 'Student wants more lessons') ?>!</strong></h4>
+    <?php } ?>
     <?php if (is_array($PossibleThreeLectures)) {
         $limit = 3;
     ?>

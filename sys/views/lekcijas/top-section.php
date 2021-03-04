@@ -20,7 +20,7 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
         <?= $this->render("amount-evaluation", [
             'difficultyEvaluation' => $difficultyEvaluation, 
             'force' => $force,
-            'redirectToNext' => false,
+            'redirectLessonId' => null,
         ]) ?>
     </td>
     <td>
@@ -46,15 +46,21 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
         <?= Html::endForm() ?>        
     </td>
     <td>
-    <?php if($nextLessonId){
-        if (!$hasEvaluatedLesson) {
-            echo $this->render('alertEvaluation', [
-                'force' => $force,
-                'difficultyEvaluation' => $difficultyEvaluation,
-            ]); 
-        } else {
-            echo Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-orange']);
-        }
+
+    <?php if(!$hasEvaluatedLesson){
+        $modalType = "next-lesson";
+        echo $this->render('alertEvaluation', [
+            'idPostfix' => $modalType,
+            'force' => $force,
+            'difficultyEvaluation' => $difficultyEvaluation,
+            'redirectLessonId' => $nextLessonId,
+        ]);
+
+        if($nextLessonId){ ?>
+            <button type="button" class="btn btn-orange" data-toggle="modal" data-target="#alertEvaluation-<?= $modalType ?>"><?= \Yii::t('app',  'Next lesson'); ?></button>
+        <?php }
+    } else if($nextLessonId) {
+        echo Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-orange']);
     } ?>
     </td>
 </tr>
