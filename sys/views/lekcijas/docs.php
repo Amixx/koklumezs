@@ -1,18 +1,24 @@
 <?php
 $hasFiles = false;
 foreach ($lecturefiles as $id => $file) {
-    $path_info = pathinfo($file['file']);
-    if (in_array(strtolower($path_info['extension']), $docs)) {
-        $hasFiles = true;
+    if (isset($file['file']) and !empty($file['file']) && strpos($file['file'], "youtube") === false) {
+        $path_info = pathinfo($file['file']);
+        if (in_array(strtolower($path_info['extension']), $docs)) {
+            $hasFiles = true;
+        }  
     }
 }
 if ($hasFiles) { ?>
     <div>
         <?php
         foreach ($lecturefiles as $id => $file) {
-            $path_info = pathinfo($file['file']);
-            if (!in_array(strtolower($path_info['extension']), $docs)) {
-                continue;
+            if(strpos($file['file'], "youtube") !== false) continue;
+            
+            if (isset($file['file']) and !empty($file['file'])) {
+                $path_info = pathinfo($file['file']);
+                if (!isset($path_info['extension']) or !in_array(strtolower($path_info['extension']), $docs)) {
+                    continue;
+                }
             }
         ?>
             <div class="col-md-12 text-left">

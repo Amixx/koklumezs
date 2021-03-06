@@ -58,12 +58,13 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
             <?php if ($lecturefiles) { ?>
             <?= $this->render(
                 'video',
-                ['lecturefiles' => $lecturefiles,
-                'videos' => $videos,
-                'baseUrl' => $baseUrl,
-                'thumbnail' => $videoThumb ?? '',
-                'idPrefix' => 'file',
-            ]); ?>
+                [
+                    'lecturefiles' => $lecturefiles,
+                    'videos' => $videos,
+                    'baseUrl' => $baseUrl,
+                    'thumbnail' => $videoThumb ?? '',
+                    'idPrefix' => 'file',
+                ]); ?>
             <?= $this->render(
                 'audio',
                 ['lecturefiles' => $lecturefiles, 'audio' => $audio]
