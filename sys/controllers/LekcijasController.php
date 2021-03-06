@@ -179,15 +179,6 @@ class LekcijasController extends Controller
 
         $model = $this->findModel($id);
         $user = Yii::$app->user->identity;
-        $uLecture = null;
-        if (Yii::$app->user->identity->user_level == 'Student') {
-            $uLecture = UserLectures::findOne(['user_id' => $user->id, 'lecture_id' => $id]);
-
-            $lectureView = new LectureViews;
-            $lectureView->user_id = $user->id;
-            $lectureView->lecture_id = $id;
-            $lectureView->save();
-        }
 
         $videoThumb = School::getCurrentSchool()->video_thumbnail;
 
@@ -266,8 +257,27 @@ class LekcijasController extends Controller
             $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "new");
             $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
             $newLessons = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->orderBy($orderBy)->all();
-            $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->orderBy($orderBy)->all();        
+            $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->orderBy($orderBy)->all();  
+            
+            $isStudent = Yii::$app->user->identity->user_level == 'Student';
+            $previousUrl = Yii::$app->request->referrer;
+            if($isStudent && $previousUrl){
+                if(strpos($previousUrl, "?") !== false){
+                    $previousUrl = strstr($previousUrl, '?', true); // noņem query params
+                }
 
+                $previousUrlSplit = explode("/", $previousUrl);
+                $lastUrlPart = end($previousUrlSplit);
+                $isDifferentLesson = $lastUrlPart !== $id;
+
+                if($isDifferentLesson){
+                    $lectureView = new LectureViews;
+                    $lectureView->user_id = $user->id;
+                    $lectureView->lecture_id = $id;
+                    $lectureView->save();
+                }
+            }
+            
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,
@@ -285,7 +295,7 @@ class LekcijasController extends Controller
                 'force' => $force,
                 'relatedLectures' => $relatedLectures,
                 'difficultiesVisible' => $difficultiesVisible,
-                'uLecture' => $uLecture,
+                'uLecture' => $userLecture,
                 'userCanDownloadFiles' => $userCanDownloadFiles,
                 'videoThumb' => $videoThumb,
                 'nextLessonId' => $nextLessonId,
