@@ -1,5 +1,5 @@
 <?php $this->title = \Yii::t('app', 'Lessons'); ?>
-<div class="container-fluid lectures-index">
+<div class="lectures-index">
     <div class="row">
         <div class="col-12">
             <h4 class="LectureOverview__Title">Prieks tevi redzēt! Lai veicas! Ja nepieciešama palīdzība - droši raksti!</h4>

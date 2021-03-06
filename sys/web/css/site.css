@@ -257,6 +257,13 @@ a.desc:after {
     position: relative;  
 }
 
+@media(max-width: 768px){
+    .lecture-wrap {
+        min-width: unset;
+        padding: 8px !important;
+    }
+}
+
 .LectureOverview__Wrap:first-child .lecture-wrap:nth-child(odd){
     padding: 16px 6px 16px 16px;
 }
@@ -350,7 +357,7 @@ a.desc:after {
 
 @media(max-width:767px) {
     .lecture-thumb {
-        height: 270px;
+        height: 160px;
     }
     .lecture-wrap:hover {
         transform: scale(1.03);
@@ -854,6 +861,12 @@ div.has-experience.active, div.rent.active {
 .lectures-index {
     padding: 16px;
     border-radius: 16px;
+}
+
+@media (max-width: 768px){
+    .lectures-index {
+        padding: 0;
+    }
 }
 
 .removeBtnStyle{

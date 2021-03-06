@@ -32,7 +32,7 @@ use yii\helpers\Url;
                                 'videos' => $videos,
                                 'baseUrl' => $baseUrl]) . ')'
                             : "");?>                              
-                    <div class="col-md-6 col-lg-3 text-center lecture-wrap">
+                    <div class="col-xs-6 col-lg-3 text-center lecture-wrap">
                         <a
                             class="lecture-thumb"
                             href="<?= Url::to(['lekcijas/lekcija', 'id' => $lecture->id]) ?>"
