@@ -19,6 +19,8 @@ $fieldOptions2 = [
 ];
 ?>
 
+<h2 class="login-header">Esi sveicināts Kokļu Meža attālinātajā individuālajā skolā! Koklēsim!</h2>
+
 <div class="login-box login-container col-sm-12">
     <div class="login-box-body login login-form">
 

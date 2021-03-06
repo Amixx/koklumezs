@@ -10,7 +10,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
 <script src="https://unpkg.com/video.js/dist/video.min.js"></script>
 <div class="row">
     <div class="col-md-2 lesson-column-outer">
-        <div class="lesson-column">
+        <div class="lesson-column wrap-overlay">
             <?= $this->render("left-section", [
                 'userLectures' => $userLectures,
                 'newLessons' => $newLessons,
@@ -21,7 +21,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
         </div>
     </div>
     <div class="border-left col-md-7">
-        <div class="lesson-column lesson-column-middle">
+        <div class="lesson-column lesson-column-middle wrap-overlay">
             <?php if($uLecture){ ?>
                  <?= $this->render("top-section.php", [
                     'title' => $model->title,
@@ -76,7 +76,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
     </div>
     <?php if($model->play_along_file || ($relatedLectures && !empty($relatedLectures))) { ?>
         <div class="col-md-3">
-            <div class="lesson-column lesson-column-right">
+            <div class="lesson-column lesson-column-right wrap-overlay">
                 <?= $this->render("right-section.php", [
                     'relatedLectures' => $relatedLectures,
                     'lecturefiles' => $lecturefiles,

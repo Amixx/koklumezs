@@ -9,23 +9,21 @@ use yii\helpers\Url;
 $this->title = \Yii::t('app', 'Archive');
 ?>
 <div class="lectures-index">
+    <div class="row" style="margin-top: 10px; margin-bottom: 25px;">
+        <div class="col-sm-11">
+            <?= Html::beginForm([''], 'get') ?>
+            <?= Html::input('text', 'archive_filter', $archive_filter, ['class' => 'content-input']) ?>
+            <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>
+            <a href="/lekcijas/?type=favourite&sortByDifficulty=asc" class="btn btn-gray sort-button"><?= \Yii::t('app', 'Open all favourite lessons') ?></a>
+            <?= Html::endForm() ?>
+        </div>  
+        <div class="col-sm-1">
+                    
+        </div>
+    </div>
     <?php
     if ($archive) { ?>
-        <h3><?= \Yii::t('app', 'Archive') ?></h3>
-        <div class="row">
-            <div class="col-sm-6">
-                <?= Html::beginForm([''], 'get') ?>
-                <?= Html::input('text', 'archive_filter', $archive_filter) ?>
-                <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>
-                <?= Html::a(\Yii::t('app', 'Show all'), [''], ['class' => 'btn btn-orange']) ?>
-                <?= Html::endForm() ?>
-            </div>
-            <div class="col-sm-6">
-                <label for="only_favourites"> <input type="checkbox" name="only_favourites" id="only_favourites"><?= \Yii::t('app', 'Select only favourite lessons') ?></label>
-                <label for="only_still_learning"><input type="checkbox" name="only_still_learning" id="only_still_learning"><?= \Yii::t('app', 'Select only lessons I\'m still learning') ?></label>
-            </div>
-        </div>
-        <div class="row">
+        <div class="row wrap-overlay" style="padding: 16px 2px; border-radius: 16px; min-height: 100vh; ">
             <?php foreach ($archive as $lecture) {
                 $lecturefiles = Lecturesfiles::getLectureFiles($lecture->id);
                 $userLecture = UserLectures::getUserLectureByLectureId($lecture->id);

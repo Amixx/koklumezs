@@ -23,31 +23,27 @@ if (isset($sortByDifficulty)) {
     else if ($sortByDifficulty == 'asc') {$toggledSortByDifficulty = 'desc';}
 }
 
-if (isset($sortByDifficulty) && ($sortByDifficulty == 'desc')) {
-    $sortByDifficultyLabel = 'From hardest to easiest';
-} else {
-    $sortByDifficultyLabel = 'From easiest to hardest';    
-}
+if (isset($sortByDifficulty)) {
+    if ($sortByDifficulty == 'desc') {
+        $sortByDifficultyLabel = 'From hardest to easiest';
+    } else {
+        $sortByDifficultyLabel = 'From easiest to hardest';    
+    }
+} 
 
 ?>
-<div class="lectures-index">
+<div class="lectures-index ">
     <h3><?= $this->title ?></h3>
-    <?php if (count($models) > 1) { ?>
-        <div class="row">
-            <div class="col-sm-7">
-                <?= Html::a(\Yii::t('app', $sortByDifficultyLabel), '?type='.$type.'&sortByDifficulty='.$sortByDifficulty.'&title_filter='.$title_filter,['class' => 'btn btn-gray sort-button']) ?>
-            </div>
-            <div class="col-sm-5">
-                <?= Html::beginForm(['/lekcijas/?type='.$type.'&sortByDifficulty='.$sortByDifficulty], 'get') ?>
-                <?= Html::input('text', 'title_filter', $title_filter, ['name'=>'kaut-kas' ]) ?>
-                <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>
-                <?= Html::a(\Yii::t('app', 'Show all'), '?type='.$type.'&sortByDifficulty='.$toggledSortByDifficulty.'&title_filter=', ['class' => 'btn btn-orange']) ?>
-                <?= Html::input('hidden', 'sortByDifficulty', $toggledSortByDifficulty) ?>
-                <?= Html::endForm() ?>
-            </div>
+    <?php if (count($models) > 1 || isset($title_filter)) { ?>
+        <div class="row" style="margin-top: 10px; margin-bottom: 25px;">
+            <?= Html::beginForm(['/lekcijas/?type='.$type.'&sortByDifficulty='.$sortByDifficulty], 'get') ?>
+            <?= Html::input('text', 'title_filter', $title_filter, ['class' => 'content-input']) ?>
+            <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>                <?= Html::input('hidden', 'sortByDifficulty', $toggledSortByDifficulty) ?>
+            <?= Html::a(\Yii::t('app', $sortByDifficultyLabel), '?type='.$type.'&sortByDifficulty='.$sortByDifficulty.'&title_filter='.$title_filter,['class' => 'btn btn-gray sort-button']) ?>
+            <?= Html::endForm() ?>
         </div>
     <?php } ?>
-    <div class="row">
+    <div class="row wrap-overlay" style="padding: 16px 2px; border-radius: 16px; min-height: 100vh;">
         <?php
         if (count($models) == 0) { ?>
             <div class="col-md-6">
