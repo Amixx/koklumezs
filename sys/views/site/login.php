@@ -37,10 +37,10 @@ $fieldOptions2 = [
             ->passwordInput(['placeholder' => $model->getAttributeLabel('password'), 'class'=>'login-input']) ?>
 
         <div class="row">
-            <div class="col-xs-8 login-remember">
+            <div class="col-xs-7 login-remember">
                 <?= $form->field($model, 'rememberMe')->label(\Yii::t('app',  'Remember me'))->checkbox() ?>
             </div>
-            <div class="col-xs-12 col-md-4">
+            <div class="col-xs-5">
                 <?= Html::submitButton(\Yii::t('app',  'Log in'), ['class' => 'btn btn-orange btn-block btn-flat login-button', 'name' => 'login-button']) ?>
             </div>
         </div>

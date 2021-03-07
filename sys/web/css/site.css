@@ -622,6 +622,25 @@ div.has-experience.active, div.rent.active {
     margin-top: 10px;
 }
 
+@media (max-width: 768px){ 
+    .login-container {
+        align-content: center;
+        margin-top: 0px;
+        padding: 0;
+    }
+    
+    div > .login-form {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    .form-group {
+        margin: 0;
+    }
+
+}
+
 .login-form {
     padding-top: 10px;
     width: 50%;
