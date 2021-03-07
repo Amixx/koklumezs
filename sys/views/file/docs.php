@@ -7,18 +7,14 @@ foreach ($lecturefiles as $id => $file) {
     }
 }
 if ($hasFiles) {
-?>
-    <hr />
-    <div class="row">
-        <?php foreach ($lecturefiles as $id => $file) {
-            $path_info = pathinfo($file['file']);
-            if (!in_array(strtolower($path_info['extension']), $docs)) {
-                continue;
-            }
-        ?>
-            <div class="col-md-3 text-left">
-                <a target="_blank" href="<?= $file['file'] ?>"><?= $file['title'] ?></a>
-            </div>
-        <?php } ?>
-    </div>
+    foreach ($lecturefiles as $id => $file) {
+        $path_info = pathinfo($file['file']);
+        if (!in_array(strtolower($path_info['extension']), $docs)) {
+            continue;
+    }
+    ?>
+    <a target="_blank" href="<?= $file['file'] ?>" class="file-file col-md-3 col-sm-4 col-xs-6 text-left">
+        <?= $file['title'] ?>   
+    </a>
+    <?php } ?>
 <?php } ?>
