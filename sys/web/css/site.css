@@ -407,11 +407,18 @@ a.desc:after {
         background: rgb(196, 196, 196);
         border-radius: 10px;
         text-align: center;
+        padding: 10px;
     }
-    .middlePls{
-        align-content: center;
-        text-align: center;
-    }  
+
+    .small-title{
+        display: block!important;
+    }
+    .big-title{
+        display: none;
+    }
+}
+.small-title{
+    display: none;
 }
 .btn-group{
     float:right;
