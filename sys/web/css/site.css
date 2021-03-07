@@ -628,6 +628,10 @@ div.has-experience.active, div.rent.active {
         margin-top: 0px;
         padding: 0;
     }
+
+    .login-header {
+        margin-top: 20px;
+    }
     
     div > .login-form {
         margin: 0;
