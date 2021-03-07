@@ -83,7 +83,7 @@ h4 {
     top: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(255,255,255,0.5);
+    background-color: rgba(204, 204, 204, 0.3);
 }
 
 .wrap-overlay {
@@ -313,9 +313,9 @@ a.desc:after {
     min-height: 100vh;
 }
 
-.lesson-column-middle {
+/*.lesson-column-middle {
     padding: 8px 56px 24px 56px;
-}
+}*/
 
 .lesson-column-right {
     padding: 24px;
@@ -392,6 +392,32 @@ a.desc:after {
         width: 100%;
         padding: 10px 15px;
     }
+    .LessonTop{
+        text-align: center;
+        align-content: center;
+    }
+    .login-header,.login-input{
+        font-size: 12px;
+    }
+    .top-and-left-section{
+        display: flex;
+        flex-direction: column-reverse;
+    }
+    .evaluation-and-favorite{
+        background: rgb(196, 196, 196);
+        border-radius: 10px;
+        text-align: center;
+    }
+    .middlePls{
+        align-content: center;
+        text-align: center;
+    }  
+}
+.btn-group{
+    float:right;
+}
+.evaluation-and-favorite{
+    float: left;
 }
 
 .nav>li>form>button.logout:focus,
@@ -878,20 +904,9 @@ div.has-experience.active, div.rent.active {
 .LessonTop {
     width: 100%;
     font-size: 14px;
-    padding: 0 56px 24px 56px;
+    /*padding: 0 56px 24px 56px;*/
 }
 
-.LessonTop tr {
-    height: 64px;
-}
-
-.LessonTop td:first-child {
-    width: 70%;
-}
-
-.LessonTop td:last-child {
-    text-align: right;
-}
 
 .btn-orange {
     background: rgba(248, 197, 67, .8);   
