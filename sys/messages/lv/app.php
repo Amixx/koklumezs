@@ -448,4 +448,6 @@ return [
     'How well did you do with this task?' => 'Hei! Kā tev veicās ar šo uzdevumu?',
     'I want more tasks' => 'Vēlos vēl uzdevumus',    
     'Student wants more lessons' => 'Skolēns vēlas vairāk uzdevumu',
+    'Repeat password' => 'Atkārtot Paroli',
+    'Passwords don\'t match' => 'Paroles nesakrīt',
 ];

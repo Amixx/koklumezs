@@ -32,18 +32,6 @@ function getFieldOptions($fieldName, $hasInfo = false){
 
         <div class="signup-form-section">
             <?= $form
-                ->field($model, 'email', getFieldOptions('email'))
-                ->label(false)
-                ->textInput(['placeholder' => Yii::t('app', 'E-mail')]) ?>
-
-            <?= $form
-                ->field($model, 'password', getFieldOptions('password'))
-                ->label(false)
-                ->passwordInput(['placeholder' => Yii::t('app', 'Password')]) ?>
-        </div>
-
-        <div class="signup-form-section">
-            <?= $form
                 ->field($model, 'first_name', getFieldOptions('first_name'))
                 ->label(false)
                 ->textInput(['placeholder' => Yii::t('app', 'Name')]) ?>
@@ -53,6 +41,22 @@ function getFieldOptions($fieldName, $hasInfo = false){
                 ->label(false)
                 ->textInput(['placeholder' => Yii::t('app', 'Surname')]) ?>
         </div>    
+
+        <div class="signup-form-section">
+            <?= $form
+                ->field($model, 'email', getFieldOptions('email'))
+                ->label(false)
+                ->textInput(['placeholder' => Yii::t('app', 'E-mail')]) ?>
+
+            <?= $form
+                ->field($model, 'password', getFieldOptions('password'))
+                ->label(false)
+                ->passwordInput(['placeholder' => Yii::t('app', 'Password')]) ?>
+            <?= $form
+                ->field($model, 'passwordRepeat', getFieldOptions('password'))
+                ->label(false)
+                ->passwordInput(['placeholder' => Yii::t('app', 'Repeat password')]) ?>
+        </div>
 
         <div id="has-instrument">
             <?= $form->field(

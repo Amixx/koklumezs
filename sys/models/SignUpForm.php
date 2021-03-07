@@ -8,6 +8,7 @@ use yii\base\Model;
 class SignUpForm extends Model
 {
     public $password;
+    public $passwordRepeat;
     public $first_name;
     public $last_name;
     public $email;
@@ -22,9 +23,10 @@ class SignUpForm extends Model
     public function rules()
     {
         return [ 
-            [['email', 'password', 'first_name', 'last_name', 'agree', 'ownsInstrument'], 'required'],
+            [['email', 'password', 'passwordRepeat', 'first_name', 'last_name', 'agree', 'ownsInstrument'], 'required'],
             [['rememberMe', 'agree', 'ownsInstrument', 'hasExperience'], 'boolean'],
             ['password', 'validatePassword'],
+            ['passwordRepeat', 'validatePasswordRepeat'], 
             ['agree', 'validateAgree'],
             ['email', 'email'],
             ['email', 'checkIfUserExists'],
@@ -39,6 +41,7 @@ class SignUpForm extends Model
             'email' => Yii::t('app', 'E-mail'),
             'rememberMe' => Yii::t('app', 'Remember me'),
             'ownsInstrument' => Yii::t('app', 'Do you have your own instrument'),
+            'passwordRepeat' => Yii::t('app', 'Repeat password'),
         ];
     }
 
@@ -47,6 +50,15 @@ class SignUpForm extends Model
         if (!$this->hasErrors()) {
             if(strlen($this->password) < 4){
                 $this->addError($attribute, Yii::t('app', 'Password too short.'));
+            }
+        }
+    }
+
+    public function validatePasswordRepeat($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            if($this->password != $this->passwordRepeat){
+                $this->addError($attribute, Yii::t('app', 'Passwords don\'t match').'.');
             }
         }
     }
