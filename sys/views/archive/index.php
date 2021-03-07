@@ -9,21 +9,20 @@ use yii\helpers\Url;
 $this->title = \Yii::t('app', 'Archive');
 ?>
 <div class="lectures-index">
-    <div class="row" style="margin-top: 10px; margin-bottom: 25px;">
-        <div class="col-sm-11">
+    <div class="row search-section">
+        <div class="col-md-5 col-xs-12" style="padding: 0;">      
             <?= Html::beginForm([''], 'get') ?>
             <?= Html::input('text', 'archive_filter', $archive_filter, ['class' => 'content-input']) ?>
-            <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>
-            <a href="/lekcijas/?type=favourite&sortByDifficulty=asc" class="btn btn-gray sort-button"><?= \Yii::t('app', 'Open all favourite lessons') ?></a>
+            <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange search-button']) ?>
             <?= Html::endForm() ?>
-        </div>  
-        <div class="col-sm-1">
-                    
+        </div> 
+        <div class="row col-md-5 col-xs-12" style="padding: 0;">
+            <a href="/lekcijas/?type=favourite&sortByDifficulty=asc" class="btn btn-gray sort-button"><?= \Yii::t('app', 'Open all favourite lessons') ?></a>
         </div>
     </div>
     <?php
     if ($archive) { ?>
-        <div class="row wrap-overlay" style="padding: 16px 2px; border-radius: 16px; min-height: 100vh; ">
+        <div class="row wrap-overlay" style="padding: 16px 2px; border-radius: 16px; min-height: 100vh;">
             <?php foreach ($archive as $lecture) {
                 $lecturefiles = Lecturesfiles::getLectureFiles($lecture->id);
                 $userLecture = UserLectures::getUserLectureByLectureId($lecture->id);

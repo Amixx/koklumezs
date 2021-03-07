@@ -676,6 +676,36 @@ div.has-experience.active, div.rent.active {
     margin: 4px 4px 4px 50px;
 }
 
+.search-section {
+    margin-top: 10px;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .content-input {
+        margin-left: 4px;
+        padding-left: 5px;
+        width: 65%;
+    }
+
+    .search-section {
+        margin-top: 5px;
+        margin-bottom: 5px;  
+        margin: 0;
+        padding: 4px;
+        display: inline-block;
+    }
+
+    .sort-button {
+        width: 97%;
+    }
+
+    .search-button {
+        width: 25%;
+    }
+}
+
 .login-remember{
     margin-top: 16px;
 }
@@ -944,7 +974,7 @@ div.has-experience.active, div.rent.active {
     border: none;
     border: 1px solid rgba(255,255,255,0);
     padding: 6px 20px;
-    margin: 4px 12px;
+    margin: 4px 4px;
     color: black;
     font-size: 13px;
 }
@@ -1040,4 +1070,22 @@ div.has-experience.active, div.rent.active {
     margin-bottom:16px;
     list-style-type: none;
     padding: 0;
+}
+
+.file-files {
+    padding: 0;
+    width: 100%;
+    min-height: 50vh;
+}
+
+.file-file {
+    text-transform: none;
+    color: black;
+    border-radius: 4px;
+}
+
+.file-file:hover {
+    text-decoration: none;
+    color: black;
+    background: rgba(255, 255,255, 0.4);
 }
