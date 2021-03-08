@@ -26,32 +26,31 @@ if ($hasFiles) {
                 }"
                 : "{}"
         ?>
-        <div class="col-md-12">
-            <p><?= $file['title'] ?></p>
-            <video
-                id="my-player<?= $idPrefix ?><?= $id ?>"
-                class="video-js vjs-layout-x-large vjs-big-play-centered"
-                controls
-                preload="auto"
-                poster="<?= isset($thumbnail) && $thumbnail ? $thumbnail : '' ?>"
-                data-setup='<?= $dataSetup ?>'
-            >
-                <?php if(!$isYoutubeVideo){ ?>
-                    <source
-                        src="<?=  $fileUrl ?>"
-                        type="video/<?= strtolower($path_info['extension']) ?>"
-                    ></source>
-                <?php } ?>
-                
-                <p class="vjs-no-js">
-                    To view this video please enable JavaScript, and consider upgrading to a
-                    web browser that
-                    <a href="https://videojs.com/html5-video-support/" target="_blank">
-                        supports HTML5 video
-                    </a>
-                </p>
-            </video>
-            
+        <div class="col-md-12">         
+                <h3 class="small-title"><?= $file['title'] ?></h3>
+                <video
+                    id="my-player<?= $idPrefix ?><?= $id ?>"
+                    class="video-js vjs-layout-x-large vjs-big-play-centered"
+                    controls
+                    preload="auto"
+                    poster="<?= isset($thumbnail) && $thumbnail ? $thumbnail : '' ?>"
+                    data-setup='<?= $dataSetup ?>'
+                >
+                    <?php if(!$isYoutubeVideo){ ?>
+                        <source
+                            src="<?=  $fileUrl ?>"
+                            type="video/<?= strtolower($path_info['extension']) ?>"
+                        ></source>
+                    <?php } ?>
+                    
+                    <p class="vjs-no-js">
+                        To view this video please enable JavaScript, and consider upgrading to a
+                        web browser that
+                        <a href="https://videojs.com/html5-video-support/" target="_blank">
+                            supports HTML5 video
+                        </a>
+                    </p>
+                </video>
         </div>
          <script>
             var player = videojs('my-player<?= $idPrefix ?><?= $id ?>', {

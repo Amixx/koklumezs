@@ -177,7 +177,7 @@ return [
     'Lessons for students with experience' => 'Nodarbības skolēniem ar pieredzi',
     'Lessons for students without experience' => 'Nodarbības skolēniem bez pieredzes',
     'Lessons to assign after registration' => 'Nodarbības, kuras skolēniem tiek piešķirtas pēc reģistrācijas',
-    'Log in' => 'Ielogoties',
+    'Log in' => 'Ienākt',
     'Logo' => 'Logo',
     'Logo (preferably in SVG format)' => 'Logo (ieteicams SVG formātā)',
     'Manual assignment of lessons' => 'Manuālā nodarbību piešķiršana',

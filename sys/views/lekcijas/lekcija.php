@@ -9,71 +9,73 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
 <link href="https://unpkg.com/video.js/dist/video-js.min.css" rel="stylesheet">
 <script src="https://unpkg.com/video.js/dist/video.min.js"></script>
 <div class="row">
-    <div class="col-md-2 lesson-column-outer">
-        <div class="lesson-column wrap-overlay">
-            <?= $this->render("left-section", [
-                'userLectures' => $userLectures,
-                'newLessons' => $newLessons,
-                'favouriteLessons' => $favouriteLessons,
-                'sortByDifficulty' => $sortByDifficulty,
-                'currentLessonEvaluated' => $uLecture->evaluated,
-            ]) ?>
-        </div>
-    </div>
-    <div class="border-left col-md-7">
-        <div class="lesson-column lesson-column-middle wrap-overlay">
-            <?php if($uLecture){ ?>
-                 <?= $this->render("top-section.php", [
-                    'title' => $model->title,
-                    'nextLessonId' => $nextLessonId,
-                    'uLecture' => $uLecture,
-                    'lectureEvaluations' => $lectureEvaluations,
-                    'force' => $force,
-                    'hasEvaluatedLesson' => $hasEvaluatedLesson,
-                    'difficultyEvaluation' => $difficultyEvaluation,
-                    'lecturefiles' => $lecturefiles,
-                    'docs' => $docs,
+    <div class="top-and-left-section">
+        <div class="col-md-2 lesson-column-outer">
+            <div class="lesson-column wrap-overlay">
+                <?= $this->render("left-section", [
+                    'userLectures' => $userLectures,
+                    'newLessons' => $newLessons,
+                    'favouriteLessons' => $favouriteLessons,
+                    'sortByDifficulty' => $sortByDifficulty,
+                    'currentLessonEvaluated' => $uLecture->evaluated,
                 ]) ?>
-            <?php } ?>           
-
-            <div class="row">
-                <div class="col-md-12">
-                    <?= $model->description ?>
-                </div>
             </div>
-            
-            <?php if ($model->file) { ?>
-            <?= $this->render(
-                'video',
-                ['lecturefiles' => [0 => ['title' => $model->title, 'file' => $model->file]],
-                'videos' => $videos,
-                'baseUrl' => $baseUrl,
-                'thumbnail' => $videoThumb ?? '',
-                'idPrefix' => 'main',
-            ]); ?>
-            <?php } ?>
-            <?php if ($model->file && $userCanDownloadFiles && SectionsVisible::isVisible("Video lejupielādes poga")) { ?>
-                <a href="<?= $model->file ?> " target="_blank" download><?= \Yii::t('app',  'Download lesson video file') ?></a>
-            <?php } ?>
-            <?php if ($lecturefiles) { ?>
-            <?= $this->render(
-                'video',
-                [
-                    'lecturefiles' => $lecturefiles,
+        </div>
+        <div class="border-left col-md-7">
+            <div class="lesson-column lesson-column-middle wrap-overlay">
+                <?php if($uLecture){ ?>
+                    <?= $this->render("top-section.php", [
+                        'title' => $model->title,
+                        'nextLessonId' => $nextLessonId,
+                        'uLecture' => $uLecture,
+                        'lectureEvaluations' => $lectureEvaluations,
+                        'force' => $force,
+                        'hasEvaluatedLesson' => $hasEvaluatedLesson,
+                        'difficultyEvaluation' => $difficultyEvaluation,
+                        'lecturefiles' => $lecturefiles,
+                        'docs' => $docs,
+                    ]) ?>
+                <?php } ?>           
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <?= $model->description ?>
+                    </div>
+                </div>
+                
+                <?php if ($model->file) { ?>
+                <?= $this->render(
+                    'video',
+                    ['lecturefiles' => [0 => ['title' => $model->title, 'file' => $model->file]],
                     'videos' => $videos,
                     'baseUrl' => $baseUrl,
                     'thumbnail' => $videoThumb ?? '',
-                    'idPrefix' => 'file',
+                    'idPrefix' => 'main',
                 ]); ?>
-            <?= $this->render(
-                'audio',
-                ['lecturefiles' => $lecturefiles, 'audio' => $audio]
-            ); ?>
-            <?php } ?>
-            <?php if ($difficulties and $lectureDifficulties and $difficultiesVisible) { ?>
-            <?= $this->render('difficulties', ['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>
-            <?php } ?>
-        </div>        
+                <?php } ?>
+                <?php if ($model->file && $userCanDownloadFiles && SectionsVisible::isVisible("Video lejupielādes poga")) { ?>
+                    <a href="<?= $model->file ?> " target="_blank" download><?= \Yii::t('app',  'Download lesson video file') ?></a>
+                <?php } ?>
+                <?php if ($lecturefiles) { ?>
+                <?= $this->render(
+                    'video',
+                    [
+                        'lecturefiles' => $lecturefiles,
+                        'videos' => $videos,
+                        'baseUrl' => $baseUrl,
+                        'thumbnail' => $videoThumb ?? '',
+                        'idPrefix' => 'file',
+                    ]); ?>
+                <?= $this->render(
+                    'audio',
+                    ['lecturefiles' => $lecturefiles, 'audio' => $audio]
+                ); ?>
+                <?php } ?>
+                <?php if ($difficulties and $lectureDifficulties and $difficultiesVisible) { ?>
+                <?= $this->render('difficulties', ['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>
+                <?php } ?>
+            </div>        
+        </div>
     </div>
     <?php if($model->play_along_file || ($relatedLectures && !empty($relatedLectures))) { ?>
         <div class="col-md-3">

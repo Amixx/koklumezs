@@ -10,13 +10,13 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
 
 ?>
 
-<h3 class="text-center">
+<h3 class="text-center big-title">
     <?= $title ?>
 </h3>
 
 <div class="LessonTop">   
     <div class="evaluation-and-favorite">
-        <div class="middlePls">
+        <div>
             <?= $this->render("amount-evaluation", [
                 'difficultyEvaluation' => $difficultyEvaluation, 
                 'force' => $force,
