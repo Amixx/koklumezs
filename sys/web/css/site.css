@@ -196,27 +196,6 @@ a.desc:after {
     height: 304px;
 }
 
-@media(max-width:1200px) {
-    .video-js {
-        width: 420px;
-        height: 236px;
-    }
-}
-
-@media(max-width: 991px) {
-    .video-js {
-        width: 600px;
-        height: 338px;
-    }
-}
-
-@media(max-width:768px) {
-    .video-js {
-        width: 300px;
-        height: 236px;
-    }
-}
-
 #navbar {
     transition: all .666s ease-in-out;
     top: 0;
@@ -255,18 +234,6 @@ a.desc:after {
     font-size: 16px;
     min-width: 263px; 
     position: relative;  
-}
-
-@media(max-width: 768px){
-    .lecture-wrap {
-        min-width: unset !important;
-        padding: 8px !important;
-    }
-
-    .lecture-wrap-related {
-        display: inline-block;
-        width: 49%;
-    }
 }
 
 .LectureOverview__Wrap:first-child .lecture-wrap:nth-child(odd){
@@ -354,75 +321,6 @@ a.desc:after {
     height: auto;
 }
 
-@media(max-width:1199px) {
-    .school-logo {
-        display: none;
-    }
-}
-
-@media(max-width:768px) {
-    .lecture-thumb {
-        height: 160px;
-    }
-    .lecture-wrap:hover {
-        transform: scale(1.03);
-    }
-    .video-js {
-        width: 100%;
-        height: 300px;
-    }
-    .school-logo {
-        width: 60px;
-        height: 60px;
-        background-size: 60px;
-        margin: 10px 15px;
-        display: block;
-    }
-    .navbar {
-        min-height: 80px;
-        padding-top: 10px;
-    }
-    .navbar-header {
-        margin-top: -10px;
-    }
-    .navbar-toggle {
-        margin-top: 18px;
-    }
-    .navbar-collapse {
-        margin-top: 12px;
-    }
-    .nav li>form>button.logout {
-        display: block;
-        text-align: left;
-        width: 100%;
-        padding: 10px 15px;
-    }
-    .LessonTop{
-        text-align: center;
-        align-content: center;
-    }
-    .login-header,.login-input{
-        font-size: 12px;
-    }
-    .top-and-left-section{
-        display: flex;
-        flex-direction: column-reverse;
-    }
-    .evaluation-and-favorite{
-        background: rgb(196, 196, 196);
-        border-radius: 10px;
-        text-align: center;
-        padding: 10px;
-        float: none !important;
-    }
-
-    .next-lesson {
-        margin: 8px 0;
-    }
-    .big-title{
-        display: none;
-    }
-}
 .btn-group{
     float:right;
 }
@@ -469,16 +367,6 @@ a.desc:after {
     margin-left:20px;
 }
 
-@media(max-width: 768px){
-    .LessonComments__Container {
-        max-width: 75%;
-    }
-
-    .LessonComments__Container--response {
-        max-width: 70%;
-    }
-}
-
 .LessonComments__Response {
     border-radius: 16px;
     text-indent: 10px;
@@ -517,21 +405,6 @@ a.desc:after {
     border-radius: 50%;
     margin-top: 6px;
     margin-left: 20px;
-}
-
-@media (min-width: 991px) {
-  ul.navbar-nav li.dropdown:hover > ul.dropdown-menu {
-    display: block;
-  }
-
-  .lesson-column-outer {
-    padding: 0;
-    height: 100%;
-  }
-  
-  /*.lesson-column {
-    height: 100vh;
-  }*/
 }
 
 .LectureOverview__Wrap:first-child {
@@ -573,23 +446,6 @@ a.desc:after {
     position: absolute;
     width: 100%;
     bottom: 16px;
-}
-
-
-@media (max-width: 768px) {
- .LectureOverview__LinkToAll {
-        float:none; margin-top:0;
-    }   
-}
-
-@media(max-width: 768px){
-    .LectureOverview__Section {
-        min-height: unset;
-    }
-
-    .LectureOverview__EmptyText {
-        margin-bottom: 32px;
-    }
 }
 
 .Comments {
@@ -642,29 +498,6 @@ div.has-experience.active, div.rent.active {
     margin-top: 10px;
 }
 
-@media (max-width: 768px){ 
-    .login-container {
-        align-content: center;
-        margin-top: 0px;
-        padding: 0;
-    }
-
-    .login-header {
-        margin-top: 20px;
-    }
-    
-    div > .login-form {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-    }
-
-    .form-group {
-        margin: 0;
-    }
-
-}
-
 .login-form {
     padding-top: 10px;
     width: 50%;
@@ -693,34 +526,6 @@ div.has-experience.active, div.rent.active {
     margin-top: 10px;
     margin-bottom: 25px;
     width: 100%;
-}
-
-@media (max-width: 768px) {
-    .content-input {
-        margin-left: 4px;
-        padding-left: 5px;
-        width: 65%;
-    }
-
-    .search-section {
-        margin-top: 5px;
-        margin-bottom: 5px;  
-        margin: 0;
-        padding: 4px;
-        display: inline-block;
-    }
-
-    .sort-button {
-        width: 97%;
-    }
-
-    .search-button {
-        width: 25%;
-    }
-
-    .lesson-column {
-        min-height: unset;
-    }
 }
 
 .login-remember{
@@ -967,11 +772,7 @@ div.has-experience.active, div.rent.active {
     border-radius: 16px;
 }
 
-@media (max-width: 768px){
-    .lectures-index {
-        padding: 0;
-    }
-}
+
 
 .removeBtnStyle{
     border: none;
@@ -1021,11 +822,7 @@ div.has-experience.active, div.rent.active {
     padding: 6px 64px;
 }
 
-@media(max-width: 768px){
-    .btn-long {
-        padding: 6px 40px;
-    }
-}
+
 
 .favourite-lessons-button{
     font-size: 12px;
@@ -1133,4 +930,175 @@ div.has-experience.active, div.rent.active {
     background: rgba(255, 255, 255, 0.8);
     padding: 2px 8px;
     border-radius: 4px;
+}
+
+@media (min-width: 991px) {
+    .video-js {
+        width: 600px;
+        height: 338px;
+    }
+    ul.navbar-nav li.dropdown:hover > ul.dropdown-menu {
+        display: block;
+    }
+    .lesson-column-outer {
+        padding: 0;
+        height: 100%;
+    }
+}
+
+@media(max-width:1200px) {
+    .video-js {
+        width: 420px;
+        height: 236px;
+    }
+}
+
+@media(max-width:1199px) {
+    .school-logo {
+        display: none;
+    }
+}
+
+@media(max-width:768px) {
+    .video-js {
+        width: 300px;
+        height: 236px;
+    }
+    .lecture-wrap {
+        min-width: unset !important;
+        padding: 8px !important;
+    }
+
+    .lecture-wrap-related {
+        display: inline-block;
+        width: 49%;
+    }
+    .lecture-thumb {
+        height: 160px;
+    }
+    .lecture-wrap:hover {
+        transform: scale(1.03);
+    }
+    .video-js {
+        width: 100%;
+        height: 300px;
+    }
+    .school-logo {
+        width: 60px;
+        height: 60px;
+        background-size: 60px;
+        margin: 10px 15px;
+        display: block;
+    }
+    .navbar {
+        min-height: 80px;
+        padding-top: 10px;
+    }
+    .navbar-header {
+        margin-top: -10px;
+    }
+    .navbar-toggle {
+        margin-top: 18px;
+    }
+    .navbar-collapse {
+        margin-top: 12px;
+    }
+    .nav li>form>button.logout {
+        display: block;
+        text-align: left;
+        width: 100%;
+        padding: 10px 15px;
+    }
+    .LessonTop{
+        text-align: center;
+        align-content: center;
+    }
+    .login-header,.login-input{
+        font-size: 12px;
+    }
+    .top-and-left-section{
+        display: flex;
+        flex-direction: column-reverse;
+    }
+    .evaluation-and-favorite{
+        background: rgb(196, 196, 196);
+        border-radius: 10px;
+        text-align: center;
+        padding: 10px;
+        float: none !important;
+    }
+
+    .next-lesson {
+        margin: 8px 0;
+    }
+    .big-title{
+        display: none;
+    }
+    .LessonComments__Container {
+        max-width: 75%;
+    }
+
+    .LessonComments__Container--response {
+        max-width: 70%;
+    }
+    .LectureOverview__LinkToAll {
+        float:none; margin-top:0;
+    }  
+     .LectureOverview__Section {
+        min-height: unset;
+    }
+
+    .LectureOverview__EmptyText {
+        margin-bottom: 32px;
+    } 
+    .login-container {
+        align-content: center;
+        margin-top: 0px;
+        padding: 0;
+    }
+
+    .login-header {
+        margin-top: 20px;
+    }
+    
+    div > .login-form {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    .form-group {
+        margin: 0;
+    }
+     .content-input {
+        margin-left: 4px;
+        padding-left: 5px;
+        width: 65%;
+    }
+
+    .search-section {
+        margin-top: 5px;
+        margin-bottom: 5px;  
+        margin: 0;
+        padding: 4px;
+        display: inline-block;
+    }
+
+    .sort-button {
+        width: 97%;
+    }
+
+    .search-button {
+        width: 25%;
+    }
+
+    .lesson-column {
+        min-height: unset;
+    }
+    .lectures-index {
+        padding: 0;
+    }
+    .btn-long {
+        padding: 6px 40px;
+    }
 }
