@@ -27,7 +27,7 @@ if ($hasFiles) {
                 : "{}"
         ?>
         <div class="col-md-12">         
-                <h3 class="small-title"><?= $file['title'] ?></h3>
+                <h4 class="visible-xs video-title-mobile"><?= $file['title'] ?></h4>
                 <video
                     id="my-player<?= $idPrefix ?><?= $id ?>"
                     class="video-js vjs-layout-x-large vjs-big-play-centered"

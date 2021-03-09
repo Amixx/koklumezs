@@ -10,7 +10,7 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
 
 ?>
 
-<h3 class="text-center big-title">
+<h3 class="text-center hidden-xs">
     <?= $title ?>
 </h3>
 
@@ -35,8 +35,7 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
     <div class="btn-group">
         <div>
         <?php if ($lecturefiles) { ?>
-            
-                <button type="button" class="btn btn-orange dropdown-toggle" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-orange dropdown-toggle hidden-xs" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
                     <?= \Yii::t('app', 'Lyrics and notes');?>
                 </button>
                 <div class="dropdown-menu dropdown-menu-lg-left">

@@ -13,6 +13,7 @@ $this->title = \Yii::t('app',  'Users');
 $planEndMonths = [];
 ?>
 <div class="user-index">
+    <h1><?= Yii::t('app', 'Students') ?></h1>
     <p>
         <?= Html::a(\Yii::t('app',  'Create user'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>

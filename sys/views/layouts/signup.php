@@ -21,6 +21,7 @@ $wrapperBackground = $school->registration_background_image != null
     : ($school->background_image != null
         ? "url($school->background_image)"
         : "white");
+
 $logo = $school != null && $school->logo != null ? "url($school->logo)" : "white";
 
 AppAsset::register($this);
@@ -52,6 +53,7 @@ AppAsset::register($this);
 <body>
     <?php $this->beginBody() ?>
 
+    <div class="background-overlay"></div>
     <div class="wrap" style="background: <?= $wrapperBackground ?>">
         <?php
         ob_start(); ?>

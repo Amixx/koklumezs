@@ -146,7 +146,6 @@ AppAsset::register($this);
             $navItems[] = $navChat;
             $navItems[] = ['label' => \Yii::t('app',  'School'), 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),];
             $navItems[] = ['label' => '+', 'url' => ['/assign/userlectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),];
-            $navItems[] = ['label' => \Yii::t('app',  'Community'), 'url' => ['/user-lecture-evaluations/comments'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations']) and Yii::$app->controller->action->actionMethod == "actionComments"];
             $navItems[] = ['label' => \Yii::t('app',  'Students'), 'url' => ['/user'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])];
             $navItems[] = ['label' => '+', 'url' => ['/user/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])];
             $navItems[] = ['label' => \Yii::t('app',  'Lessons'), 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];

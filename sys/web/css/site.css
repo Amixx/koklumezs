@@ -83,7 +83,7 @@ h4 {
     top: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(204, 204, 204, 0.3);
+    background-color: rgba(204, 204, 204, 0.5);
 }
 
 .wrap-overlay {
@@ -91,7 +91,7 @@ h4 {
 }
 
 .wrap>.container {
-    padding: 110px 15px 20px;
+    padding: 80px 15px 20px;
     position: relative;
 }
 
@@ -259,8 +259,13 @@ a.desc:after {
 
 @media(max-width: 768px){
     .lecture-wrap {
-        min-width: unset;
+        min-width: unset !important;
         padding: 8px !important;
+    }
+
+    .lecture-wrap-related {
+        display: inline-block;
+        width: 49%;
     }
 }
 
@@ -355,7 +360,7 @@ a.desc:after {
     }
 }
 
-@media(max-width:767px) {
+@media(max-width:768px) {
     .lecture-thumb {
         height: 160px;
     }
@@ -408,17 +413,15 @@ a.desc:after {
         border-radius: 10px;
         text-align: center;
         padding: 10px;
+        float: none !important;
     }
 
-    .small-title{
-        display: block!important;
+    .next-lesson {
+        margin: 8px 0;
     }
     .big-title{
         display: none;
     }
-}
-.small-title{
-    display: none;
 }
 .btn-group{
     float:right;
@@ -573,10 +576,20 @@ a.desc:after {
 }
 
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
  .LectureOverview__LinkToAll {
         float:none; margin-top:0;
     }   
+}
+
+@media(max-width: 768px){
+    .LectureOverview__Section {
+        min-height: unset;
+    }
+
+    .LectureOverview__EmptyText {
+        margin-bottom: 32px;
+    }
 }
 
 .Comments {
@@ -704,6 +717,10 @@ div.has-experience.active, div.rent.active {
     .search-button {
         width: 25%;
     }
+
+    .lesson-column {
+        min-height: unset;
+    }
 }
 
 .login-remember{
@@ -772,13 +789,14 @@ div.has-experience.active, div.rent.active {
     margin-right: 20px; 
     position: relative;
     display: inline-block;
+    margin-left: -80px;
 }
 
 .teacher-communication-button {
     border-radius: 10px;
     padding: 10px 20px;   
     color: black;
-    margin-right: 50px;
+    margin-top: 4px;
 }
 .teacher-communication-button:hover { 
     color: black;
@@ -1003,6 +1021,12 @@ div.has-experience.active, div.rent.active {
     padding: 6px 64px;
 }
 
+@media(max-width: 768px){
+    .btn-long {
+        padding: 6px 40px;
+    }
+}
+
 .favourite-lessons-button{
     font-size: 12px;
     width: 100%;
@@ -1088,4 +1112,25 @@ div.has-experience.active, div.rent.active {
     text-decoration: none;
     color: black;
     background: rgba(255, 255,255, 0.4);
+}
+
+.video-title-mobile {
+    position: absolute;
+    margin-left: 8px;
+    margin-top: 8px;
+    z-index: 2;
+    background: rgba(255, 255, 255, .8);
+    border-radius: 7px;
+    padding: 4px 8px;
+}
+
+.lecture-play-along-title-mobile {
+    position: absolute;
+    z-index: 2;
+    margin-left: 16px;
+    margin-top: 16px;
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2px 8px;
+    border-radius: 4px;
 }

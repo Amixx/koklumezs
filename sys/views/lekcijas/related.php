@@ -4,7 +4,7 @@ use app\models\Lecturesfiles;
 
 if ($relatedLectures) {
 ?>
-    <h4><?= \Yii::t('app',  'Previous assignments in this lesson') ?></h4>
+    <h4 class="hidden-xs"><?= \Yii::t('app',  'Previous assignments in this lesson') ?></h4>
     <div class="lectures-related">
             <?php foreach ($relatedLectures as $model) {
                 // if (in_array($model->id, $userEvaluatedLectures)) continue;
@@ -23,9 +23,8 @@ if ($relatedLectures) {
                         : "");
             ?>
                 <div class="text-center lecture-wrap lecture-wrap-related">
-                     <div class="text-center lecture-wrap lecture-wrap-related">
-                        <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $model->id ?>" style="background-color: white; background-image: <?= $backgroundImage ?>;"></a>
-                    </div>
+                    <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $model->id ?>" style="background-color: white; background-image: <?= $backgroundImage ?>;"></a>
+
                     <?= $model->title ?>
                     
                 </div>
