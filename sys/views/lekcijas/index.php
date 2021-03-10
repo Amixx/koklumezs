@@ -51,7 +51,7 @@ if (isset($sortByDifficulty)) {
         <?php } ?>
         <?php foreach ($models as $model) {
             $lecturefiles = Lecturesfiles::getLectureFiles($model->id);
-            $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->file, $videoThumb, $videos);
+            $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->file, $videoThumb);
         ?>
             <div class="col-md-6 col-lg-3 text-center lecture-wrap">
                 <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->id]) ?>" style="<?= $thumbStyle ?>"></a>

@@ -331,27 +331,4 @@ class SiteController extends Controller
             'questions' => $schoolSignupQuestions,
         ]);
     }
-
-    public function actionFirstLecture($l, $u){
-        $lectureId = 192;
-        Yii::$app->language = $l;
-
-        $lecture = Lectures::findOne($lectureId);
-        $evaluations = Evaluations::getEvaluations();
-        $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($lectureId);
-        foreach ($evaluations as &$evaluation) {
-            if ($evaluation['star_text']) {
-                $starTextArray = unserialize($evaluation['star_text']);
-                foreach ($starTextArray as &$starText) {
-                    $starText = Yii::t('app', $starText);
-                };
-                $evaluation['star_text'] = serialize($starTextArray);
-            }
-        }
-        return $this->render('first-lecture', [
-            'model' => $lecture,
-            'evaluations' => $evaluations,
-            'lectureEvaluations' => $lectureEvaluations,
-        ]);
-    }
 }

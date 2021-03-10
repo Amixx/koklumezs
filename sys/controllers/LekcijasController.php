@@ -21,18 +21,8 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-/**
- * LekcijasController implements the actions for Lectures model by student.
- */
 class LekcijasController extends Controller
 {
-    const VIDEOS = ['mp4', 'mov', 'ogv', 'webm', 'flv', 'avi', 'f4v'];
-    const DOCS = ['doc', 'docx', 'pdf'];
-    const AUDIO = ['aac', 'alac', 'amr', 'flac', 'mp3', 'opus', 'vorbis', 'ogg', 'wav'];
-
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
@@ -117,8 +107,6 @@ class LekcijasController extends Controller
                     'opened' => $opened,
                     'pages' => $pages,
                     'userLectureEvaluations' => $userLectureEvaluations,
-                    'baseUrl' => $baseUrl,
-                    'videos' => self::VIDEOS,
                     'videoThumb' => $videoThumb,
                     'sortByDifficulty' => $sortByDifficulty,
                     'title_filter' => $title_filter,
@@ -154,8 +142,6 @@ class LekcijasController extends Controller
                 'opened' => $opened,
                 'pages' => $pages,
                 'userLectureEvaluations' => $userLectureEvaluations,
-                'baseUrl' => $baseUrl,
-                'videos' => self::VIDEOS,
                 'videoThumb' => $videoThumb,
                 'sortByDifficulty' => $sortByDifficulty,
                 'renderRequestButton' => !$user->wants_more_lessons,
@@ -288,10 +274,6 @@ class LekcijasController extends Controller
                 'newLessons' => $newLessons,
                 'favouriteLessons' => $favouriteLessons,
                 'userEvaluatedLectures' => $userEvaluatedLectures,
-                'videos' => self::VIDEOS,
-                'docs' => self::DOCS,
-                'audio' => self::AUDIO,
-                'baseUrl' => $baseUrl,
                 'force' => $force,
                 'relatedLectures' => $relatedLectures,
                 'difficultiesVisible' => $difficultiesVisible,

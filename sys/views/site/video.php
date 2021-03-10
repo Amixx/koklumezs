@@ -1,19 +1,7 @@
-<?php
-$hasFiles = false;
-foreach ($lecturefiles as $id => $file) {
-    $path_info = pathinfo($file['file']);
-    if (in_array(strtolower($path_info['extension']), $videos)) {
-        $hasFiles = true;
-    }
-}
-if ($hasFiles) {
-?>
+<?php if (!empty($lecturefiles)) { ?>
     <div class="row">
         <?php foreach ($lecturefiles as $id => $file) {
             $path_info = pathinfo($file['file']);
-            if (!in_array(strtolower($path_info['extension']), $videos)) {
-                continue;
-            }
         ?>
             <div class="col-md-12">
                 <p><?= $file['title'] ?></p>

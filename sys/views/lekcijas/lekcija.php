@@ -32,8 +32,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                         'force' => $force,
                         'hasEvaluatedLesson' => $hasEvaluatedLesson,
                         'difficultyEvaluation' => $difficultyEvaluation,
-                        'lecturefiles' => $lecturefiles,
-                        'docs' => $docs,
+                        'lecturefiles' => $lecturefiles['docs'],
                     ]) ?>
                 <?php } ?>           
 
@@ -46,9 +45,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                 <?php if ($model->file) { ?>
                 <?= $this->render(
                     'video',
-                    ['lecturefiles' => [0 => ['title' => $model->title, 'file' => $model->file]],
-                    'videos' => $videos,
-                    'baseUrl' => $baseUrl,
+                    ['lectureVideoFiles' => [0 => ['title' => $model->title, 'file' => $model->file]],
                     'thumbnail' => $videoThumb ?? '',
                     'idPrefix' => 'main',
                 ]); ?>
@@ -60,15 +57,13 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                 <?= $this->render(
                     'video',
                     [
-                        'lecturefiles' => $lecturefiles,
-                        'videos' => $videos,
-                        'baseUrl' => $baseUrl,
+                        'lectureVideoFiles' => $lecturefiles['video'],
                         'thumbnail' => $videoThumb ?? '',
                         'idPrefix' => 'file',
                     ]); ?>
                 <?= $this->render(
                     'audio',
-                    ['lecturefiles' => $lecturefiles, 'audio' => $audio]
+                    ['lectureAudioFiles' => $lecturefiles['audio']]
                 ); ?>
                 <?php } ?>
                 <?php if ($difficulties and $lectureDifficulties and $difficultiesVisible) { ?>
@@ -79,12 +74,9 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                 echo $this->render('mob-related-section', [
                     'model' => $model,
                     'relatedLectures' => $relatedLectures,
-                    'lecturefiles' => $lecturefiles,
-                    'videos' => $videos,
-                    'baseUrl' => $baseUrl,
+                    'lecturefiles' => $lecturefiles['video'],
                     'userEvaluatedLectures' => $userEvaluatedLectures,
                     'videoThumb' => $videoThumb,
-                    'docs' => $docs,
                 ]);
                 } ?>
             </div>        
@@ -95,9 +87,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
             <div class="lesson-column lesson-column-right wrap-overlay">
                 <?= $this->render("right-section.php", [
                     'relatedLectures' => $relatedLectures,
-                    'lecturefiles' => $lecturefiles,
-                    'videos' => $videos,
-                    'baseUrl' => $baseUrl,
+                    'lecturefiles' => $lecturefiles['video'],
                     'videoThumb' => $videoThumb,
                     'model' => $model,
                     'userEvaluatedLectures' => $userEvaluatedLectures,

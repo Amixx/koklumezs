@@ -39,7 +39,7 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
                     <?= \Yii::t('app', 'Lyrics and notes');?>
                 </button>
                 <div class="dropdown-menu dropdown-menu-lg-left">
-                    <?= $files = $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]);?>
+                    <?= $files = $this->render('docs', ['lecturefiles' => $lecturefiles]);?>
                 </div> 
         <?php } ?>
         </div>

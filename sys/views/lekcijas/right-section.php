@@ -1,7 +1,7 @@
 <?php
 use app\helpers\ThumbnailHelper;
 
-$thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $videoThumb, $videos);
+$thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $videoThumb);
 ?>
 
 <div>
@@ -13,9 +13,7 @@ $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $video
                     <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $model->id ?>" style="<?= $thumbStyle ?>"></a>
                 </div>
                 <?= $this->render('view-lesson-modal', [
-                    'baseUrl' => $baseUrl,
                     'videoThumb' => $videoThumb,
-                    'videos' => $videos,
                     'lecturefiles' => [0 => ['title' => $model->title . " izspēle", 'file' => $model->play_along_file]],
                     'id' => $model->id,
                 ]) ?>
@@ -27,8 +25,6 @@ $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $video
         <?= $this->render('related', [
             'relatedLectures' => $relatedLectures,
             'lecturefiles' => $lecturefiles,
-            'videos' => $videos,
-            'baseUrl' => $baseUrl,
             'userEvaluatedLectures' => $userEvaluatedLectures,
             'videoThumb' => $videoThumb
         ])?>

@@ -17,9 +17,12 @@ use Yii;
  */
 class Lecturesfiles extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+    const FILE_EXTENSIONS = [
+        'video' => ['mp4', 'mov', 'ogv', 'webm', 'flv', 'avi', 'f4v'],
+        'docs' => ['doc', 'docx', 'pdf', 'txt'],
+        'audio' => ['aac', 'alac', 'amr', 'flac', 'mp3', 'opus', 'vorbis', 'ogg', 'wav'],
+    ];
+    
     public static function tableName()
     {
         return 'lecturesfiles';
@@ -52,19 +55,40 @@ class Lecturesfiles extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getLecture()
     {
         return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getLectureFiles($id)
     {
-        return self::find()->where(['lecture_id' => $id])->asArray()->all();
+        $fileGroups = [
+            'video' => [],
+            'docs' => [],
+            'audio' => [],
+        ];
+
+        $lecturefiles = self::find()->where(['lecture_id' => $id])->asArray()->all();
+
+        foreach($lecturefiles as $id => $file){
+            if(!isset($file['file']) || empty($file['file'])) continue;
+
+            if(strpos($file['file'], "youtube") !== false){
+                $fileGroups['video'][] = $file;
+                continue;
+            }
+            
+            $path_info = pathinfo($file['file']);
+            if(!isset($path_info['extension'])) continue;
+
+            foreach(self::FILE_EXTENSIONS as $type => $fileExtensions){
+                if(in_array(strtolower($path_info['extension']), $fileExtensions)){
+                    $fileGroups[$type][] = $file;
+                    break;
+                }
+            }
+        }
+
+        return $fileGroups;
     }
 }

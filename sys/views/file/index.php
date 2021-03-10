@@ -11,7 +11,7 @@ $this->title = \Yii::t('app',  'Sheet music');
     </div> 
     <div class="file-files">
         <?php if ($lecturefiles) { ?>
-            <?= $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]); ?>
+            <?= $this->render('docs', ['lecturefiles' => $lecturefiles]); ?>
         <?php } ?>
     </div>
 </div>

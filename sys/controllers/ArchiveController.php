@@ -12,13 +12,6 @@ use yii\web\Controller;
 
 class ArchiveController extends Controller
 {
-    const VIDEOS = ['mp4', 'mov', 'ogv', 'webm', 'flv', 'avi', 'f4v'];
-    const DOCS = ['doc', 'docx', 'pdf'];
-    const AUDIO = ['aac', 'alac', 'amr', 'flac', 'mp3', 'opus', 'vorbis', 'ogg', 'wav'];
-
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
@@ -83,13 +76,10 @@ class ArchiveController extends Controller
 
                 return $aIndex > $bIndex;
             });
-            $baseUrl = Yii::$app->request->baseUrl;
 
             $videoThumb = School::getCurrentSchool()->video_thumbnail;
 
             return $this->render('index', [
-                'baseUrl' => $baseUrl,
-                'videos' => self::VIDEOS,
                 'archive' => $archive,
                 'archive_filter' => $archive_filter,
                 'videoThumb' => $videoThumb

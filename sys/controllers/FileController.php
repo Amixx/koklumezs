@@ -2,37 +2,16 @@
 
 namespace app\controllers;
 
-use app\models\Difficulties;
-use app\models\Evaluations;
-use app\models\LectureAssignment;
-use app\models\Lectures;
-use app\models\LecturesDifficulties;
-use app\models\Lecturesevaluations;
 use app\models\Lecturesfiles;
-use app\models\Lectureshanddifficulties;
-use app\models\School;
-use app\models\RelatedLectures;
-use app\models\Studentgoals;
-use app\models\Userlectureevaluations;
 use app\models\UserLectures;
 use app\models\Users;
-use app\models\SectionsVisible;
 use Yii;
-use yii\data\Pagination;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-/**
- * LekcijasController implements the actions for Lectures model by student.
- */
 class FileController extends Controller
 {
-    const DOCS = ['doc', 'docx', 'pdf'];
-
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
@@ -70,20 +49,25 @@ class FileController extends Controller
         $userLectureIds =  UserLectures::getUserLectures($user->id);
         $userLectureFiles = [];
         $note_filter = Yii::$app->request->get('note_filter');
+
         foreach ($userLectureIds as $id) {
-            $anyLectureFiles = count(Lecturesfiles::getLectureFiles($id)) > 0;
+            $lectureFiles = Lecturesfiles::getLectureFiles($id);
+
             $isAlreadyAdded = false;
             foreach ($userLectureFiles as $file) {
-                if ($anyLectureFiles && $file['title'] == Lecturesfiles::getLectureFiles($id)[0]['title']) {
-                    $isAlreadyAdded = true;
+                foreach($lectureFiles['docs'] as $lectureFile){
+                    if ($file['title'] == $lectureFile['title']) {
+                        $isAlreadyAdded = true;
+                        break;
+                    }
                 }
-            };
-            if ($anyLectureFiles && !$isAlreadyAdded) {
-                $lectureFiles = Lecturesfiles::getLectureFiles($id);
-                foreach ($lectureFiles as $file) {
-                    array_push($userLectureFiles, $file);
-                }      
             }
+
+            if (!$isAlreadyAdded) {
+                foreach($lectureFiles['docs'] as $file){
+                    array_push($userLectureFiles, $file);
+                }   
+            }         
         }
 
         if ($note_filter) {
@@ -107,10 +91,10 @@ class FileController extends Controller
 
             return $aIndex > $bIndex;
         });
+
         return $this->render('index', [
             'lecturefiles' => $userLectureFiles,
             'note_filter' => $note_filter,
-            'docs' => self::DOCS,
             'force' => $force
         ]);
         throw new NotFoundHttpException('The requested page does not exist.');

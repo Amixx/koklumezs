@@ -11,16 +11,14 @@ if(!isset($modalIdPrefix)) $modalIdPrefix = "";
             <?php foreach ($relatedLectures as $model) {
                 // if (in_array($model->id, $userEvaluatedLectures)) continue;
                 $lecturefiles = Lecturesfiles::getLectureFiles($model->id);
-                $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->file, $videoThumb, $videos);
+                $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->file, $videoThumb);
             ?>
                 <div class="text-center lecture-wrap lecture-wrap-related">
                     <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $modalIdPrefix ?><?= $model->id ?>" style="<?= $thumbStyle ?>"></a>
                     <span class="lecture-title"><?= $model->title ?></span>                    
                 </div>
                 <?= $this->render('view-lesson-modal', [
-                    'baseUrl' => $baseUrl,
                     'videoThumb' => $videoThumb,
-                    'videos' => $videos,
                     'lecturefiles' => [0 => ['title' => $model->title, 'file' => $model->file]],
                     'id' => $modalIdPrefix . $model->id,
                 ]) ?>

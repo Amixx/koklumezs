@@ -3,7 +3,7 @@
 
 use app\helpers\ThumbnailHelper;
 
-$thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $videoThumb, $videos);
+$thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $videoThumb);
 
 $width = $model->play_along_file ? "38%" : "100%";
 $marginTop = $model->play_along_file ? "60px" : "0px";
@@ -18,7 +18,7 @@ if($model->play_along_file) {
             <?= \Yii::t('app', 'Lyrics and notes');?>
         </button>
         <div class="dropdown-menu dropdown-menu-lg-left">
-            <?= $files = $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]);?>
+            <?= $files = $this->render('docs', ['lecturefiles' => $lecturefiles]);?>
         </div> 
     <?php } ?>
     <p style="color:black; margin: <?= $marginTop ?> 0 0 6px"><?= Yii::t('app', 'Previous assignments in this lesson') ?></p>
@@ -33,9 +33,7 @@ if($model->play_along_file) {
                     <span class="lecture-title">Spēlēsim kopā</span>
                 </div>
                 <?= $this->render('view-lesson-modal', [
-                    'baseUrl' => $baseUrl,
                     'videoThumb' => $videoThumb,
-                    'videos' => $videos,
                     'lecturefiles' => [0 => ['title' => $model->title . " izspēle", 'file' => $model->play_along_file]],
                     'id' => "mob-" . $model->id,
                 ]) ?>
@@ -47,8 +45,6 @@ if($model->play_along_file) {
     <?= $this->render('related', [
         'relatedLectures' => $relatedLectures,
         'lecturefiles' => $lecturefiles,
-        'videos' => $videos,
-        'baseUrl' => $baseUrl,
         'userEvaluatedLectures' => $userEvaluatedLectures,
         'videoThumb' => $videoThumb,
         'modalIdPrefix' => 'mob-'

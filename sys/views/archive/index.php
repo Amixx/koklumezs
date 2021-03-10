@@ -28,7 +28,7 @@ $this->title = \Yii::t('app', 'Archive');
                 $lecturefiles = Lecturesfiles::getLectureFiles($lecture->id);
                 $userLecture = UserLectures::getUserLectureByLectureId($lecture->id);
                 $likesCount = Lectures::getLikesCount($lecture->id);
-                $thumbStyle = ThumbnailHelper::getThumbnailStyle($lecture->file, $videoThumb, $videos);
+                $thumbStyle = ThumbnailHelper::getThumbnailStyle($lecture->file, $videoThumb);
             ?>
                 <div class="col-md-6 col-lg-3 text-center lecture-wrap">
                     <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>

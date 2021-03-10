@@ -25,7 +25,7 @@ use yii\helpers\Url;
                 <?php foreach ($Lectures as $lecture) {
                     $lecturefiles = Lecturesfiles::getLectureFiles($lecture->id);
                     $likesCount = Lectures::getLikesCount($lecture->id);
-                    $thumbStyle = ThumbnailHelper::getThumbnailStyle($lecture->file, $videoThumb, $videos);
+                    $thumbStyle = ThumbnailHelper::getThumbnailStyle($lecture->file, $videoThumb);
                     ?>                              
                     <div class="col-xs-6 col-lg-3 text-center lecture-wrap">
                         <a
