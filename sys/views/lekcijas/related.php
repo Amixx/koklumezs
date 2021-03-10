@@ -24,9 +24,7 @@ if ($relatedLectures) {
             ?>
                 <div class="text-center lecture-wrap lecture-wrap-related">
                     <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $model->id ?>" style="background-color: white; background-image: <?= $backgroundImage ?>;"></a>
-
-                    <?= $model->title ?>
-                    
+                    <span class="lecture-title"><?= $model->title ?></span>                    
                 </div>
                 <?= $this->render('view-lesson-modal', [
                     'baseUrl' => $baseUrl,

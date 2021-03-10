@@ -270,6 +270,7 @@ a.desc:after {
     color: white;
     text-align: left;
     font-size: 14px;
+    z-index:2;
     /* background: rgba(0,0,0, .5);
     padding: 4px 8px;
     border-radius: 20px;
@@ -519,7 +520,7 @@ div.has-experience.active, div.rent.active {
     padding: 6px 20px 7px 20px;
     border-radius: 8px;
     font-size: 13px;
-    margin: 4px 4px 4px 50px;
+    margin: 4px 4px 4px 16px;
 }
 
 .search-section {
@@ -1100,5 +1101,11 @@ div.has-experience.active, div.rent.active {
     }
     .btn-long {
         padding: 6px 40px;
+    }
+    .nav>li#chat-btn-with-icons{
+        margin-left: 12px;
+    }
+    .btn-narrow {
+        padding: 6px 10px;
     }
 }

@@ -75,63 +75,18 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                 <?= $this->render('difficulties', ['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>
                 <?php } ?>
 
-                <?php
-                $backgroundImage = trim(
-                    $videoThumb
-                        ? 'url(' . $this->render('video_thumb', [
-                            'lecturefiles' => [
-                                0 => [
-                                    'file' => $model->play_along_file,
-                                    'thumb' => $videoThumb
-                                    ]
-                                ],
-                                'videos' => $videos,
-                                'baseUrl' => $baseUrl]) . ')'
-                        : ""
-                );
-                ?>
-
-                <div class="visible-xs">
-                    <div style="display: inline-block; width:49%; vertical-align: top; margin-top:8px">
-                        <?php if ($lecturefiles) { ?>
-                            <button type="button" class="btn btn-orange dropdown-toggle" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
-                                <?= \Yii::t('app', 'Lyrics and notes');?>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-lg-left">
-                                <?= $files = $this->render('docs', ['lecturefiles' => $lecturefiles, 'docs' => $docs]);?>
-                            </div> 
-                        <?php } ?>
-                        <p style="color:black; margin: 60px 0 0 6px"><?= Yii::t('app', 'Previous assignments in this lesson') ?></p>
-                    </div>
-                    
-                    <div style="display: inline-block; width:49%;">
-                        <?php if($model->play_along_file){ ?>
-                            <h4 class="lecture-play-along-title-mobile">Spēlēsim kopā</h4>
-                            <div>
-                                <div class="lecture-wrap">
-                                    <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $model->id ?>" style="background-color: white; background-image: <?= $backgroundImage ?>;"></a>
-                                </div>
-                                <?= $this->render('view-lesson-modal', [
-                                    'baseUrl' => $baseUrl,
-                                    'videoThumb' => $videoThumb,
-                                    'videos' => $videos,
-                                    'lecturefiles' => [0 => ['title' => $model->title . " izspēle", 'file' => $model->play_along_file]],
-                                    'id' => $model->id,
-                                ]) ?>
-                            </div>
-                        <?php } ?>
-                    </div>
-                    <?php if ($relatedLectures) { ?>
-                        <?= $this->render('related', [
-                            'relatedLectures' => $relatedLectures,
-                            'lecturefiles' => $lecturefiles,
-                            'videos' => $videos,
-                            'baseUrl' => $baseUrl,
-                            'userEvaluatedLectures' => $userEvaluatedLectures,
-                            'videoThumb' => $videoThumb
-                        ])?>
-                    <?php } ?>
-                </div>
+                <?php if($model->play_along_file || ($relatedLectures && !empty($relatedLectures))) {
+                echo $this->render('mob-related-section', [
+                    'model' => $model,
+                    'relatedLectures' => $relatedLectures,
+                    'lecturefiles' => $lecturefiles,
+                    'videos' => $videos,
+                    'baseUrl' => $baseUrl,
+                    'userEvaluatedLectures' => $userEvaluatedLectures,
+                    'videoThumb' => $videoThumb,
+                    'docs' => $docs,
+                ]);
+                } ?>
             </div>        
         </div>
     </div>
@@ -141,7 +96,6 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                 <?= $this->render("right-section.php", [
                     'relatedLectures' => $relatedLectures,
                     'lecturefiles' => $lecturefiles,
-                    'playAlongFile' => $model->play_along_file,
                     'videos' => $videos,
                     'baseUrl' => $baseUrl,
                     'videoThumb' => $videoThumb,

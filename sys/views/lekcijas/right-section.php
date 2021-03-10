@@ -4,7 +4,7 @@ $backgroundImage = trim(
         ? 'url(' . $this->render('video_thumb', [
             'lecturefiles' => [
                 0 => [
-                    'file' => $playAlongFile,
+                    'file' => $model->play_along_file,
                     'thumb' => $videoThumb
                     ]
                 ],
