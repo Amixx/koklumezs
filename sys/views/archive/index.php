@@ -11,13 +11,15 @@ $this->title = \Yii::t('app', 'Archive');
 ?>
 <div class="lectures-index">
     <div class="row search-section">
-        <div class="col-md-5 col-xs-12" style="padding: 0;">      
+        <div class="col-md-5 col-xs-12">      
             <?= Html::beginForm([''], 'get') ?>
-            <?= Html::input('text', 'archive_filter', $archive_filter, ['class' => 'content-input']) ?>
-            <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange search-button']) ?>
+            <div class="display-flex">
+                <?= Html::input('text', 'archive_filter', $archive_filter, ['class' => 'content-input']) ?>
+                <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>
+            </div>
             <?= Html::endForm() ?>
         </div> 
-        <div class="row col-md-5 col-xs-12" style="padding: 0;">
+        <div class="col-md-5 col-xs-12">
             <a href="/lekcijas/?type=favourite&sortByDifficulty=asc" class="btn btn-gray sort-button"><?= \Yii::t('app', 'Open all favourite lessons') ?></a>
         </div>
     </div>

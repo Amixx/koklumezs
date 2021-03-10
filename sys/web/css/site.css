@@ -521,7 +521,9 @@ div.has-experience.active, div.rent.active {
     padding: 6px 20px 7px 20px;
     border-radius: 8px;
     font-size: 13px;
-    margin: 4px 4px 4px 16px;
+    margin: 3px;
+    margin-left: 0;
+    flex-grow: 1;
 }
 
 .search-section {
@@ -815,9 +817,10 @@ div.has-experience.active, div.rent.active {
 }
 
 .sort-button {
-    margin: 4px 16px;
+    margin: 4px 0px;
     padding: 6px 50px;
     font-size: 13px;
+    width: 100%;
 }
 
 .btn-long {
@@ -932,6 +935,10 @@ div.has-experience.active, div.rent.active {
     background: rgba(255, 255, 255, 0.8);
     padding: 2px 8px;
     border-radius: 4px;
+}
+
+.display-flex {
+    display: flex;
 }
 
 @media (min-width: 991px) {
@@ -1072,11 +1079,6 @@ div.has-experience.active, div.rent.active {
     .form-group {
         margin: 0;
     }
-     .content-input {
-        margin-left: 4px;
-        padding-left: 5px;
-        width: 65%;
-    }
 
     .search-section {
         margin-top: 5px;
@@ -1086,12 +1088,17 @@ div.has-experience.active, div.rent.active {
         display: inline-block;
     }
 
-    .sort-button {
-        width: 97%;
+    .content-input {
+        float: right;
+        margin: 3px;
+        margin-left: 0px;
+        padding-left: 5px;
+        width: 80%;
     }
 
-    .search-button {
-        width: 25%;
+    .btn-orange {
+        float: right;
+        margin-right: 0;
     }
 
     .lesson-column {
@@ -1108,5 +1115,11 @@ div.has-experience.active, div.rent.active {
     }
     .btn-narrow {
         padding: 6px 10px;
+    }
+}
+
+@media(max-width:400px) {
+    .sort-button {
+        padding: 6px;
     }
 }
