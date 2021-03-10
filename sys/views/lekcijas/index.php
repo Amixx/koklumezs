@@ -17,17 +17,14 @@ if (isset($type)) {
 $toggledSortByDifficulty = 'desc';
 
 if (isset($sortByDifficulty)) {
-    if ($sortByDifficulty == 'desc') {$toggledSortByDifficulty = 'asc';}
-    else if ($sortByDifficulty == 'asc') {$toggledSortByDifficulty = 'desc';}
-}
-
-if (isset($sortByDifficulty)) {
     if ($sortByDifficulty == 'desc') {
+        $toggledSortByDifficulty = 'asc';
         $sortByDifficultyLabel = 'From hardest to easiest';
-    } else {
-        $sortByDifficultyLabel = 'From easiest to hardest';    
+    } else if ($sortByDifficulty == 'asc') {     
+        $toggledSortByDifficulty = 'desc';
+        $sortByDifficultyLabel = 'From easiest to hardest';
     }
-} 
+}
 
 ?>
 <div class="lectures-index ">
