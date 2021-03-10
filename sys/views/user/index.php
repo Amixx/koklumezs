@@ -78,8 +78,8 @@ $planEndMonths = [];
                 'label' => Yii::t('app', 'Plan end date'),
                 'value' => function ($dataProvider) {
                     $studentSubplan = StudentSubplans::getCurrentForStudent($dataProvider['id']);
-
-                    if(!$studentSubplan || !$studentSubplan['plan'] || !$studentSubplan['plan']['months']) return;
+                    if(!$studentSubplan || !$studentSubplan['plan']) return;
+                    if ($studentSubplan['plan']['months'] == '0') return \Yii::t('app',  'Unlimited');
                     $planPauses = StudentSubplanPauses::getForStudentSubplan($studentSubplan['id'])->asArray()->all();
                     $date = date_create($studentSubplan["start_date"]);
                     $date->modify("+" . $studentSubplan['plan']['months'] . "month");

@@ -25,7 +25,7 @@ if($subplan){
                 [
                     'attribute' => 'Plan end date',
                     'label' => Yii::t('app', 'Plan end date'),
-                    'value' => function ($dataProvider) {return StudentSubPlans::getEndDate($dataProvider['user_id']);},
+                    'value' => function ($dataProvider) {return StudentSubPlans::getEndDateString($dataProvider['user_id']);},
                     'format' => 'raw'
                 ],
                 'sent_invoices_count',
