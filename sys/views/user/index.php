@@ -104,8 +104,18 @@ $planEndMonths = [];
                     if(!$studentSubplan) return;
 
                     $color = "#99ff9c";
-                    if($studentSubplan["times_paid"] < $studentSubplan["sent_invoices_count"]) $color = "#ff9a99";
-                    if($studentSubplan["times_paid"] > $studentSubplan["sent_invoices_count"]) $color = "#99cfff";
+                    if ($studentSubplan["times_paid"] < $studentSubplan["sent_invoices_count"]) $color = "#ff9a99";
+                    if ($studentSubplan["times_paid"] > $studentSubplan["sent_invoices_count"]) $color = "#99cfff";
+
+                    $invoice = SentInvoices::getLatestForStudent($dataProvider['id']);
+                    if (isset($invoice)) {
+                        $is_advance = $invoice['is_advance'];
+                        $invoiceSentDate = $invoice['sent_date'];
+                        $today = date('Y-m-d');
+                        $warningDate = date('Y-m-d', strtotime($invoiceSentDate. ' +14 days'));
+                        if ($is_advance && $today <= $warningDate) $color = "#cb7119";
+                    }
+
                     $unpaidInvoiceNumbers = SentInvoices::getUnpaidForStudent($dataProvider["id"]);
                     $studentId = $dataProvider['id'];
                     $timesPaid = $studentSubplan["times_paid"];
