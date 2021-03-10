@@ -29,7 +29,7 @@ if($model->play_along_file) {
     <div style="display: inline-block; width:60%;">
             <div>
                 <div class="lecture-wrap">
-                    <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $model->id ?>" style="<?= $thumbStyle ?>"></a>
+                    <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-mob-<?= $model->id ?>" style="<?= $thumbStyle ?>"></a>
                     <span class="lecture-title">Spēlēsim kopā</span>
                 </div>
                 <?= $this->render('view-lesson-modal', [
@@ -37,7 +37,7 @@ if($model->play_along_file) {
                     'videoThumb' => $videoThumb,
                     'videos' => $videos,
                     'lecturefiles' => [0 => ['title' => $model->title . " izspēle", 'file' => $model->play_along_file]],
-                    'id' => $model->id,
+                    'id' => "mob-" . $model->id,
                 ]) ?>
             </div>
     </div>
@@ -50,7 +50,8 @@ if($model->play_along_file) {
         'videos' => $videos,
         'baseUrl' => $baseUrl,
         'userEvaluatedLectures' => $userEvaluatedLectures,
-        'videoThumb' => $videoThumb
+        'videoThumb' => $videoThumb,
+        'modalIdPrefix' => 'mob-'
     ])?>
 <?php } ?>
 </div>
