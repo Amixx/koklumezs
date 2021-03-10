@@ -450,4 +450,5 @@ return [
     'Student wants more lessons' => 'Skolēns vēlas vairāk uzdevumu',
     'Repeat password' => 'Atkārtot Paroli',
     'Passwords don\'t match' => 'Paroles nesakrīt',
+    'Unlimited' => 'Neierobežots',
 ];

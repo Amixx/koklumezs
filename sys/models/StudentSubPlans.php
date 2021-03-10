@@ -120,9 +120,10 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $pauseStartDate < $time && $pauseEndDate > $time;
     }
 
-    public function getEndDate($studentId){
+    public function getEndDateString($studentId){
         $subplan = self::getCurrentForStudent($studentId);
         if ($subplan == null) return null;
+        if ($subplan['plan']['months'] == "0") return \Yii::t('app',  'Unlimited');
         $planPauses = StudentSubplanPauses::getForStudentSubplan($subplan['id'])->asArray()->all();
         $date = date_create($subplan["start_date"]);
         $date->modify("+" . $subplan['plan']['months'] . "month");
