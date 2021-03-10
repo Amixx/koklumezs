@@ -192,8 +192,13 @@ a.desc:after {
     border: none;  
 }
 .video-js {
-    width: 540px;
-    height: 304px;
+    width: 636px;
+    height: 358px;
+}
+
+.modal .video-js {
+    width: 568px;
+    height: 320px;
 }
 
 #navbar {
@@ -941,24 +946,27 @@ div.has-experience.active, div.rent.active {
     display: flex;
 }
 
-@media (min-width: 991px) {
+@media(max-width:1200px) {
     .video-js {
-        width: 600px;
-        height: 338px;
+        width: 520px;
+        height: 293px;
     }
+}
+
+@media(max-width: 992px){
+    .video-js {
+        width: 704px;
+        height: 396px;
+    }
+}
+
+@media (min-width: 991px) {
     ul.navbar-nav li.dropdown:hover > ul.dropdown-menu {
         display: block;
     }
     .lesson-column-outer {
         padding: 0;
         height: 100%;
-    }
-}
-
-@media(max-width:1200px) {
-    .video-js {
-        width: 420px;
-        height: 236px;
     }
 }
 
@@ -971,6 +979,10 @@ div.has-experience.active, div.rent.active {
 @media(max-width:768px) {
     .video-js {
         width: 300px;
+        height: 236px;
+    }
+    .modal .video-js {
+        width: 100%;
         height: 236px;
     }
     .lecture-wrap {
