@@ -1,17 +1,7 @@
 <?php
-$backgroundImage = trim(
-    $videoThumb
-        ? 'url(' . $this->render('video_thumb', [
-            'lecturefiles' => [
-                0 => [
-                    'file' => $model->play_along_file,
-                    'thumb' => $videoThumb
-                    ]
-                ],
-                'videos' => $videos,
-                'baseUrl' => $baseUrl]) . ')'
-        : ""
-);
+use app\helpers\ThumbnailHelper;
+
+$thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $videoThumb, $videos);
 ?>
 
 <div>
@@ -20,7 +10,7 @@ $backgroundImage = trim(
             <h4>Spēlēsim kopā</h4>
             <div>
                 <div class="text-center lecture-wrap lecture-wrap-related">
-                    <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $model->id ?>" style="background-color: white; background-image: <?= $backgroundImage ?>;"></a>
+                    <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $model->id ?>" style="<?= $thumbStyle ?>"></a>
                 </div>
                 <?= $this->render('view-lesson-modal', [
                     'baseUrl' => $baseUrl,

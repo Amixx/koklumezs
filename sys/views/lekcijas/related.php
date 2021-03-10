@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Lecturesfiles;
+use app\helpers\ThumbnailHelper;
 
 if ($relatedLectures) {
 ?>
@@ -9,21 +10,10 @@ if ($relatedLectures) {
             <?php foreach ($relatedLectures as $model) {
                 // if (in_array($model->id, $userEvaluatedLectures)) continue;
                 $lecturefiles = Lecturesfiles::getLectureFiles($model->id);
-                $backgroundImage = trim(
-                    $videoThumb
-                        ? 'url(' . $this->render('video_thumb', [
-                            'lecturefiles' => [
-                                0 => [
-                                    'file' => $model->file,
-                                    'thumb' => $videoThumb
-                                    ]
-                                ],
-                                'videos' => $videos,
-                                'baseUrl' => $baseUrl]) . ')'
-                        : "");
+                $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->file, $videoThumb, $videos);
             ?>
                 <div class="text-center lecture-wrap lecture-wrap-related">
-                    <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $model->id ?>" style="background-color: white; background-image: <?= $backgroundImage ?>;"></a>
+                    <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $model->id ?>" style="<?= $thumbStyle ?>"></a>
                     <span class="lecture-title"><?= $model->title ?></span>                    
                 </div>
                 <?= $this->render('view-lesson-modal', [

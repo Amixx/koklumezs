@@ -3,6 +3,7 @@
 use app\models\Lecturesfiles;
 use app\models\UserLectures;
 use app\models\Lectures;
+use app\helpers\ThumbnailHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -27,9 +28,10 @@ $this->title = \Yii::t('app', 'Archive');
                 $lecturefiles = Lecturesfiles::getLectureFiles($lecture->id);
                 $userLecture = UserLectures::getUserLectureByLectureId($lecture->id);
                 $likesCount = Lectures::getLikesCount($lecture->id);
+                $thumbStyle = ThumbnailHelper::getThumbnailStyle($lecture->file, $videoThumb, $videos);
             ?>
                 <div class="col-md-6 col-lg-3 text-center lecture-wrap">
-                    <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $lecture->id]) ?>" style="background-color: white; background-image: <?= trim($videoThumb ? 'url(' . $this->render('video_thumb', ['lecturefiles' => [0 => ['file' => $lecture->file, 'thumb' => $videoThumb]], 'videos' => $videos, 'baseUrl' => $baseUrl]) . ')' : "") ?>;"></a>
+                    <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
                     <?= $lecture->title ?>
                     <?php if ($userLecture->is_favourite) { ?>
                         <div class="icon-favourite"></div>

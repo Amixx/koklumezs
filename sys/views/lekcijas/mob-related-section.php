@@ -1,18 +1,9 @@
 <div class="visible-xs">
 <?php
-$backgroundImage = trim(
-    $videoThumb
-        ? 'url(' . $this->render('video_thumb', [
-            'lecturefiles' => [
-                0 => [
-                    'file' => $model->play_along_file,
-                    'thumb' => $videoThumb
-                    ]
-                ],
-                'videos' => $videos,
-                'baseUrl' => $baseUrl]) . ')'
-        : ""
-);
+
+use app\helpers\ThumbnailHelper;
+
+$thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $videoThumb, $videos);
 
 $width = $model->play_along_file ? "38%" : "100%";
 $marginTop = $model->play_along_file ? "60px" : "0px";
@@ -38,7 +29,7 @@ if($model->play_along_file) {
     <div style="display: inline-block; width:60%;">
             <div>
                 <div class="lecture-wrap">
-                    <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $model->id ?>" style="background-color: white; background-image: <?= $backgroundImage ?>;"></a>
+                    <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $model->id ?>" style="<?= $thumbStyle ?>"></a>
                     <span class="lecture-title">Spēlēsim kopā</span>
                 </div>
                 <?= $this->render('view-lesson-modal', [

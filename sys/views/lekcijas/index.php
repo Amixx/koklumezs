@@ -4,9 +4,7 @@ use app\models\Lecturesfiles;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\LecturesSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+use app\helpers\ThumbnailHelper;
 
 if (isset($type)) {
     if ($type == "new") {
@@ -53,9 +51,10 @@ if (isset($sortByDifficulty)) {
         <?php } ?>
         <?php foreach ($models as $model) {
             $lecturefiles = Lecturesfiles::getLectureFiles($model->id);
+            $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->file, $videoThumb, $videos);
         ?>
             <div class="col-md-6 col-lg-3 text-center lecture-wrap">
-                <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->id]) ?>" style="background-color: white; background-image: <?= trim($videoThumb ? 'url(' . $this->render('video_thumb', ['lecturefiles' => [0 => ['file' => $model->file, 'thumb' => $videoThumb]], 'videos' => $videos, 'baseUrl' => $baseUrl]) . ')' : "") ?>;"></a>
+                <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->id]) ?>" style="<?= $thumbStyle ?>"></a>
                 <?= $model->title ?>
             </div>
         <?php } ?>

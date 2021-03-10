@@ -256,6 +256,7 @@ a.desc:after {
     min-width: 100%;
     padding-left: 0;
     padding-right: 0;
+    margin: 8px 0;
 }
 
 .lecture-wrap:hover {
