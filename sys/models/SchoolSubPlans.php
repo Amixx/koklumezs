@@ -37,23 +37,23 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getForSchool($schoolId)
+    public static function getForSchool($schoolId)
     {
         return self::find()->where(['school_id' => $schoolId]);
     }
 
-    public function getForCurrentSchool()
+    public static function getForCurrentSchool()
     {
         $schoolId = School::getCurrentSchoolId();
         return self::getForSchool($schoolId);
     }
 
-    public function getMappedForSelection()
+    public static function getMappedForSelection()
     {
         return ArrayHelper::map(self::getForCurrentSchool()->asArray()->all(), 'id', 'name');
     }
 
-    public function getPrices()
+    public static function getPrices()
     {
         $isAdmin = Yii::$app->user->identity->user_level == 'Admin';
         $query = $isAdmin ? self::find() : self::getForCurrentSchool();

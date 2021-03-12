@@ -33,7 +33,7 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
         return $this->hasOne(StudentSubPlans::className(), ['id' => 'studentsubplan_id'])->joinWith('plan')->joinWith('user');
     }
 
-    public function getForStudent($studentId)
+    public static function getForStudent($studentId)
     {
         $subplan = StudentSubPlans::getCurrentForStudent($studentId);
         if($subplan == null) return null;
@@ -41,7 +41,7 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
         return self::getForStudentSubplan($subplan['id']);
     }
 
-    public function getForStudentSubplan($subplanId){
+    public static function getForStudentSubplan($subplanId){
         return self::find()->where(['studentsubplan_id' => $subplanId])->joinWith('studentPlan');       
     }
 
@@ -49,14 +49,14 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
         return self::find()->joinWith('studentPlan')->where(['schoolsubplans.school_id' => $schoolId]);
     }
 
-    public function getMostRecentPauseForStudent($studentId){
+    public static function getMostRecentPauseForStudent($studentId){
         $subplan = StudentSubPlans::getCurrentForStudent($studentId);
         if($subplan == null) return null;
 
         return self::find()->where(['studentsubplan_id' => $subplan['id']])->orderBy(['start_date' => SORT_DESC])->asArray()->all()[0];
     }
 
-    public function studentHasAnyPauses($studentId)
+    public static function studentHasAnyPauses($studentId)
     {
         $subplan = StudentSubPlans::getCurrentForStudent($studentId);
         if($subplan == null) return null;

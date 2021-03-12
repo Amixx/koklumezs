@@ -17,6 +17,9 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
     const STATUS_PASSIVE = 11;
+
+    public $authKey;
+
     public static function tableName()
     {
         return 'users';

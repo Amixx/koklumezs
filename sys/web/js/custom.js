@@ -1,4 +1,14 @@
-var IS_PROD = window.location.origin.indexOf("localhost") === -1;
+var localhosts = ["localhost", "127.0.0.1"];
+var origin = window.location.origin;
+
+var IS_LOCAL = false;
+localhosts.forEach(function(host){
+    if(origin.indexOf(host) !== -1){
+        IS_LOCAL = true;
+    }
+});
+
+var IS_PROD = !IS_LOCAL;
 
 $(document).ready(function() {
     if ($('select').length) {

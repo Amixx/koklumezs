@@ -47,18 +47,12 @@ class SectionsVisible extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getSectionsVisible()
+    public static function getSectionsVisible()
     {
         return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'name', 'is_visible');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isVisible($name)
+    public static function isVisible($name)
     {
         return self::find()->where(['name' => $name])->one()['is_visible'];
     }

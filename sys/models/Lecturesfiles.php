@@ -60,7 +60,7 @@ class Lecturesfiles extends \yii\db\ActiveRecord
         return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
     }
 
-    public function getLectureFiles($id)
+    public static function getLectureFiles($id)
     {
         $fileGroups = [
             'video' => [],

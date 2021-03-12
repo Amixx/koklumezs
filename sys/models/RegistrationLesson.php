@@ -36,7 +36,7 @@ class RegistrationLesson extends \yii\db\ActiveRecord
         return $this->hasOne(Lectures::className(), ['id' => 'lesson_id']);
     }
 
-    public function getLessonIds($schoolId, $ownsInstrument, $hasExperience){
+    public static function getLessonIds($schoolId, $ownsInstrument, $hasExperience){
         $regLessons = self::find()->where(['school_id' => $schoolId, 'for_students_with_instrument' => $ownsInstrument, 'for_students_with_experience' => $hasExperience])->asArray()->all();
 
         return array_map(function($regLesson){

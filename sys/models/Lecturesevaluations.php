@@ -49,10 +49,7 @@ class Lecturesevaluations extends \yii\db\ActiveRecord
             'evaluation_id' => \Yii::t('app',  'Evaluation'),
         ];
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
+    
     public function getLecture()
     {
         return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
@@ -69,15 +66,12 @@ class Lecturesevaluations extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLectureEvaluations($id)
+    public static function getLectureEvaluations($id)
     {
         return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'evaluation_id', 'id');
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function removeLectureEvalutions($id)
+    public static function removeLectureEvalutions($id)
     {
         return self::deleteAll(['lecture_id' => $id]);
     }

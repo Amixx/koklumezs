@@ -67,7 +67,7 @@ class LectureViews extends \yii\db\ActiveRecord
         return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
     }
 
-    public function getDayResult($id, $days = 7)
+    public static function getDayResult($id, $days = 7)
     {
         $result = 0;
         $data = self::find()->where(['user_id' => $id])->andWhere('datetime >= DATE_SUB(CURDATE(), INTERVAL ' . $days . ' DAY)')->orderBy(['id' => SORT_DESC])->all();

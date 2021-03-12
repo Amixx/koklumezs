@@ -44,12 +44,12 @@ class SchoolEvaluations extends \yii\db\ActiveRecord
         return $this->hasMany(Userlectureevaluations::className(), ['evaluation_id' => 'id']);
     }
 
-    public function getEvaluations()
+    public static function getEvaluations()
     {
         return self::find()->asArray()->all();
     }
 
-    public function getEvaluationsValueTexts()
+    public static function getEvaluationsValueTexts()
     {
         $result = [];
         $data = self::getEvaluations();
@@ -66,24 +66,24 @@ class SchoolEvaluations extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public function getEvaluationsTitles()
+    public static function getEvaluationsTitles()
     {
         return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'title');
     }
 
-    public function getForSchool($schoolId)
+    public static function getForSchool($schoolId)
     {
         return self::find()->where(['school_id' => $schoolId]);
     }
 
-    public function getScaleParam()
+    public static function getScaleParam()
     {
         return self::findOne([
             'is_scale' => 1,
         ]);
     }
 
-    public function getVideoParam()
+    public static function getVideoParam()
     {
         return self::findOne([
             'is_video_param' => 1,

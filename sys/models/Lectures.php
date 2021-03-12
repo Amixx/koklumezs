@@ -49,7 +49,7 @@ class Lectures extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getSeasons()
+    public static function getSeasons()
     {
         return [
             'Visas' => \Yii::t('app',  'All'),
@@ -64,7 +64,7 @@ class Lectures extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function getComplexity()
+    public static function getComplexity()
     {
         $complex = [];
         for ($x = 1; $x <= 101; $x++) {
@@ -92,22 +92,22 @@ class Lectures extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLectures()
+    public static function getLectures()
     {
         return ArrayHelper::map(self::find()->asArray()->all(), 'id', 'title');
     }
 
-    public function getLecturesObjects()
+    public static function getLecturesObjects()
     {
         return self::find()->asArray()->all();
     }
 
-    public function getLecturesForUser($ids)
+    public static function getLecturesForUser($ids)
     {
         return ArrayHelper::map(self::find()->where(['not in', 'id', $ids])->asArray()->all(), 'id', 'title');
     }
 
-    public function getLecturesObjectsForUser($ids)
+    public static function getLecturesObjectsForUser($ids)
     {
         $data = self::find()->where(['not in', 'id', $ids])->asArray()->all();
         $returnArray = [];
@@ -121,7 +121,7 @@ class Lectures extends \yii\db\ActiveRecord
         return $returnArray;
     }
 
-    public function getLecturesByIds($ids, $asArray = false)
+    public static function getLecturesByIds($ids, $asArray = false)
     {
         if ($asArray) {
             return ArrayHelper::map(self::find()->where(['in', 'id', $ids])->all(), 'id', 'title');
@@ -130,7 +130,7 @@ class Lectures extends \yii\db\ActiveRecord
         }
     }
 
-    public function getLecturesBySeasonAndIds($ids, $season, $asArray = false)
+    public static function getLecturesBySeasonAndIds($ids, $season, $asArray = false)
     {
         if ($asArray) {
             return ArrayHelper::map(self::find()->where(['in', 'id', $ids])->andWhere(['season' => $season])->all(), 'id', 'title');
@@ -140,7 +140,7 @@ class Lectures extends \yii\db\ActiveRecord
     }
 
 
-    public function getLecturesForRelations($id)
+    public static function getLecturesForRelations($id)
     {
         return ArrayHelper::map(self::find()->where(['not in', 'id', [$id]])->asArray()->all(), 'id', 'title');
     }

@@ -36,7 +36,7 @@ class PlanFiles extends \yii\db\ActiveRecord
         return $this->hasOne(SchoolSubPlans::className(), ['id' => 'plan_id']);
     }
 
-    public function getFilesForPlan($planId)
+    public static function getFilesForPlan($planId)
     {
         return self::find()->where(['plan_id' => $planId]);
     }

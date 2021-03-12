@@ -70,20 +70,17 @@ class RelatedLectures extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getRelations($id): array
+    public static function getRelations($id): array
     {
         return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'id', 'related_id');
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRelatedParents($id): array
+    public static function getRelatedParents($id): array
     {
         return ArrayHelper::map(self::find()->where(['related_id' => $id])->asArray()->all(), 'id', 'lecture_id');
     }
 
-    public function getLectures($id)
+    public static function getLectures($id)
     {
         return self::find()->where(['user_id' => $id])->orderBy(['lecture_id' => SORT_ASC])->all();
     }
@@ -91,7 +88,7 @@ class RelatedLectures extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function removeLectureRelations($id)
+    public static function removeLectureRelations($id)
     {
         return self::deleteAll(['lecture_id' => $id]);
     }

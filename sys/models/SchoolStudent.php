@@ -47,19 +47,19 @@ class SchoolStudent extends \yii\db\ActiveRecord
         return $this->hasMany(Users::className(), ['id' => 'user_id']);
     }
 
-    public function getSchoolStudentIds($schoolId)
+    public static function getSchoolStudentIds($schoolId)
     {
         $students = self::find()->where(['school_id' => $schoolId])->asArray()->all();
         return ArrayHelper::map($students, 'id', 'user_id');
     }
 
-    public function getSchoolStudent($studentId)
+    public static function getSchoolStudent($studentId)
     {
         return self::find()->where(['user_id' => $studentId])->joinWith('school')->joinWith('user')->one();
     }
 
 
-    // public function getRelations($id): array
+    // public static function getRelations($id): array
     // {
     //     return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'id', 'related_id');
     // }

@@ -49,7 +49,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
         return !empty($newDifficulties);
     }
 
-    private function getKidRelation(int $id, int $it = 3, $results = [])
+    private static function getKidRelation(int $id, int $it = 3, $results = [])
     {
         $results = [];
         $result = RelatedLectures::getRelatedParents($id);
@@ -69,7 +69,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
         return $results;
     }
 
-    public function getNewDifficultyIds(int $result = 0, int $x = 0, $lecture_id = null, $user_id = null, $dbg = false, $returnIds = false): array
+    public static function getNewDifficultyIds(int $result = 0, int $x = 0, $lecture_id = null, $user_id = null, $dbg = false, $returnIds = false): array
     {
         //always true from now
         //$dbg = false;
@@ -238,7 +238,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
         return $modelsIds;
     }
 
-    public function getPossibleThreeLectures($user_id = null, $spam = false, $dbg = false)
+    public static function getPossibleThreeLectures($user_id = null, $spam = false, $dbg = false)
     {
         $result = [];
         $last = UserLectures::getLastEvaluatedLecture($user_id);
@@ -260,7 +260,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public function getSameDiffLectures($user_id = null, $spam = false, $dbg = false)
+    public static function getSameDiffLectures($user_id = null, $spam = false, $dbg = false)
     {
         $result = [];
         $x = 0; //Studentgoals::getUserDifficultyCoef($user_id);
@@ -283,7 +283,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
      * 9 (kaut ko mēģinu, bet pārāk nesanāk): MAXIMUM-x-4
      * 10 (vispār neko nesaprotu): Manuāli
      */
-    public function getNewUserDifficulty($user_id, $x = null, $lecture_id = null, $dbg = false): int
+    public static function getNewUserDifficulty($user_id, $x = null, $lecture_id = null, $dbg = false): int
     {
         $userDifficulty = Studentgoals::getUserDifficulty($user_id);
         $lectureDifficulty = null;
@@ -376,7 +376,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
         return (($result > $minimumDifficulty) ? $minimumDifficulty : $result);
     }
 
-    public function giveNewAssignment($user = null, $x = 0, $id = null, $spam = false, $dbg = false, $returnIds = false, int $predefinedResult = 0)
+    public static function giveNewAssignment($user = null, $x = 0, $id = null, $spam = false, $dbg = false, $returnIds = false, int $predefinedResult = 0)
     {
         $result =  ($predefinedResult > 0) ? $predefinedResult : self::getNewUserDifficulty($user, $x, $id, $dbg);
         if ($result) {

@@ -79,7 +79,7 @@ class Sentlectures extends \yii\db\ActiveRecord
         return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
     }
 
-    public function getLectureCount($user = null, $lecture = null)
+    public static function getLectureCount($user = null, $lecture = null)
     {
         return self::find(['user_id' => $user, 'lecture_id' => $lecture])->count();
     }

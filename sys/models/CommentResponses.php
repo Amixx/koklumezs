@@ -3,22 +3,15 @@
 namespace app\models;
 
 use Yii;
-use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
 
 class CommentResponses extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'commentresponses';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -27,9 +20,6 @@ class CommentResponses extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
@@ -51,7 +41,7 @@ class CommentResponses extends \yii\db\ActiveRecord
     }
 
 
-    public function getAllCommentResponses()
+    public static function getAllCommentResponses()
     {
         $query =  self::find()->joinWith('author')->joinWith('userlectureevaluation');
         return new ActiveDataProvider([
@@ -60,26 +50,26 @@ class CommentResponses extends \yii\db\ActiveRecord
         ]);
     }
 
-    public function getUnseenCommentsCount()
+    public static function getUnseenCommentsCount()
     {
         $user_id = Yii::$app->user->identity->id;
         $userLectureEvaluationIds = Userlectureevaluations::find()->where(['evaluation_id' => 4, 'user_id' => $user_id])->select('id');
-        $commentResponses = self::find()->where(['= any', 'userlectureevaluation_id', $userLectureEvaluationIds])->andWhere(['seen_by_author' => false])->joinWith('userlectureevaluation')->joinWith('userlectureevaluation.lecture');
+        $commentResponses = static::find()->where(['= any', 'userlectureevaluation_id', $userLectureEvaluationIds])->andWhere(['seen_by_author' => false])->joinWith('userlectureevaluation')->joinWith('userlectureevaluation.lecture');
         return count($commentResponses->asArray()->all());
     }
 
-    public function getCommentResponsesForUser()
+    public static function getCommentResponsesForUser()
     {
         $user_id = Yii::$app->user->identity->id;
         $userLectureEvaluationIds = Userlectureevaluations::find()->where(['evaluation_id' => 4, 'user_id' => $user_id])->select('id');
-        $commentResponses = self::find()->where(['= any', 'userlectureevaluation_id', $userLectureEvaluationIds])->joinWith('userlectureevaluation')->joinWith('userlectureevaluation.lecture');
+        $commentResponses = static::find()->where(['= any', 'userlectureevaluation_id', $userLectureEvaluationIds])->joinWith('userlectureevaluation')->joinWith('userlectureevaluation.lecture');
 
         return $commentResponses;
     }
 
-    public function markResponsesAsSeen()
+    public static function markResponsesAsSeen()
     {
-        $commentResponses = self::getCommentResponsesForUser()->asArray()->all();
+        $commentResponses = static::getCommentResponsesForUser()->asArray()->all();
         foreach ($commentResponses as $response) {
             $model = CommentResponses::findOne($response['id']);
             $model->seen_by_author = true;
@@ -87,16 +77,13 @@ class CommentResponses extends \yii\db\ActiveRecord
     }
 
 
-    public function getAllForUser()
+    public static function getAllForUser()
     {
-        return self::find()->where(['author_id' => Yii::$app->user->identity->id])->joinWith('author')->joinWith('userlectureevaluation')->joinWith('userlectureevaluation.lecture');
+        return static::find()->where(['author_id' => Yii::$app->user->identity->id])->joinWith('author')->joinWith('userlectureevaluation')->joinWith('userlectureevaluation.lecture');
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCommentResponses($id)
+    public static function getCommentResponses($id)
     {
-        return self::find()->where(['userlectureevaluation_id' => $id])->joinWith('author')->asArray()->all();
+        return static::find()->where(['userlectureevaluation_id' => $id])->joinWith('author')->asArray()->all();
     }
 }

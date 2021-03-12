@@ -72,10 +72,7 @@ class Studentgoals extends \yii\db\ActiveRecord
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUserGoals($id)
+    public static function getUserGoals($id)
     {
         $data = self::findAll(['user_id' => $id]);
         $result = [];
@@ -85,19 +82,13 @@ class Studentgoals extends \yii\db\ActiveRecord
         return $result;
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUserDifficulty($id): int
+    public static function getUserDifficulty($id): int
     {
         $sum = self::find()->where(['type' => self::NOW, 'user_id' => $id])->sum('value');
         return (int)$sum;
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUserDifficultyCoef($id): int
+    public static function getUserDifficultyCoef($id): int
     {
         $data = self::find()->where(['type' => self::NOW, 'user_id' => $id])->all();
         $result = 0;
@@ -110,10 +101,7 @@ class Studentgoals extends \yii\db\ActiveRecord
         return (int)$result;
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function removeUserGoals($id, $type = null)
+    public static function removeUserGoals($id, $type = null)
     {
         $params = [];
         if ($type) {

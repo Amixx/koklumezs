@@ -3,7 +3,6 @@
 namespace app\models;
 
 use Yii;
-use yii\helpers\ArrayHelper;
 
 class Chat extends \yii\db\ActiveRecord {
 

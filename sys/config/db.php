@@ -8,9 +8,9 @@ return [
     'password' => 'skola',
 
     ////lokālā datubāze
-    // 'dsn' => 'mysql:host=localhost;dbname=skola_sys_db',
+    // 'dsn' => 'mysql:host=host.docker.internal;dbname=skola_sys_db',
     // 'username' => 'skola',
-    // 'password' => 'nJ%k]AQn36vA',
+    // 'password' => 'skola',
 
     'charset' => 'utf8',
 

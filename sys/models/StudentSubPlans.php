@@ -42,12 +42,12 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }
 
-    public function getCurrentForStudent($studentId)
+    public static function getCurrentForStudent($studentId)
     {
         return self::find()->where(['user_id' => $studentId, 'is_active' => true])->orderBy(['studentsubplans.id' => SORT_DESC])->joinWith('plan')->one();
     }
 
-    public function getPlanEndDatesForCurrentSchoolStudents(){
+    public static function getPlanEndDatesForCurrentSchoolStudents(){
         $isAdmin = \Yii::$app->user->identity->user_level == 'Admin';
         if($isAdmin) return [];
 
@@ -77,7 +77,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return array_unique($readablePlanEndDates);
     }
 
-    public function getReadablePlanEndDates(){
+    public static function getReadablePlanEndDates(){
         $endDates = self::getPlanEndDatesForCurrentSchoolStudents();
 
         $endDatesMapped = [];
@@ -96,7 +96,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $endDatesMapped;
     }
 
-    public function getRemainingPauseWeeks($studentId){
+    public static function getRemainingPauseWeeks($studentId){
         $subplan = self::getCurrentForStudent($studentId);
         if(!$subplan) return 0;
 
@@ -109,7 +109,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $subplan->plan->max_pause_weeks - $totalPausedWeeks;
     }
 
-    public function isPlanCurrentlyPaused($studentId){
+    public static function isPlanCurrentlyPaused($studentId){
         if(!StudentSubplanPauses::studentHasAnyPauses($studentId)) return false;
 
         $mostRecentPause = StudentSubplanPauses::getMostRecentPauseForStudent($studentId);
@@ -120,7 +120,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $pauseStartDate < $time && $pauseEndDate > $time;
     }
 
-    public function getEndDateString($studentId){
+    public static function getEndDateString($studentId){
         $subplan = self::getCurrentForStudent($studentId);
         if ($subplan == null) return null;
         if ($subplan['plan']['months'] == "0") return \Yii::t('app',  'Unlimited');

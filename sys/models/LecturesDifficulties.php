@@ -72,7 +72,7 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLectureDifficulties($id): array
+    public static function getLectureDifficulties($id): array
     {
         return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'diff_id', 'value');
     }
@@ -80,7 +80,7 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
     /**
      * @return int
      */
-    public function getLectureDifficulty($id): int
+    public static function getLectureDifficulty($id): int
     {
         $default = 0;
         $sum = self::find()->where(['lecture_id' => $id])->sum('value');
@@ -90,7 +90,7 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLecturesByDifficulty($sum, $returnRandom = false): array
+    public static function getLecturesByDifficulty($sum, $returnRandom = false): array
     {
         $sums = self::getLectureSums();
         if ($returnRandom and isset($sums[$sum])) {
@@ -101,7 +101,7 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
         return isset($sums[$sum]) ? $sums[$sum] : [];
     }
 
-    public function getLectureSums()
+    public static function getLectureSums()
     {
         $q = 'SELECT DISTINCT lecture_id, SUM(value) as sum FROM `' . self::tableName() . '` GROUP BY lecture_id';
         $data = Yii::$app->db->createCommand($q)->queryAll();
@@ -112,10 +112,7 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
         return $sums;
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLecturesByDiff($params = []): array
+    public static function getLecturesByDiff($params = []): array
     {
 
         $results = [];
@@ -142,19 +139,13 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
         return $result;
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLecturesDifficulties($ids)
+    public static function getLecturesDifficulties($ids)
     {
         return ArrayHelper::map(self::find()->where(['in', 'lecture_id', $ids])->asArray()->all(), 'lecture_id', 'diff_id', 'value');
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function removeLectureDifficulties($id)
+    public static function removeLectureDifficulties($id)
     {
-        return self::deleteAll(['lecture_id' => $id]);
+        return static::deleteAll(['lecture_id' => $id]);
     }
 }

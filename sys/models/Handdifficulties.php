@@ -58,7 +58,7 @@ class Handdifficulties extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function getDifficulties()
+    public static function getDifficulties()
     {
         $result = $maps = [];
         $maps['categories'] = ArrayHelper::map(self::find()->asArray()->all(), 'id', 'category');

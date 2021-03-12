@@ -49,19 +49,19 @@ class School extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getByTeacher($teacherId)
+    public static function getByTeacher($teacherId)
     {
         $schoolId = SchoolTeacher::getSchoolTeacher($teacherId)->school_id;
         return self::findOne(['id' => $schoolId]);
     }
 
-    public function getByStudent($studentId)
+    public static function getByStudent($studentId)
     {
         $schoolId = SchoolStudent::getSchoolStudent($studentId)->school_id;
         return self::findOne(['id' => $schoolId]);
     }
 
-    public function getSettings($teacherId)
+    public static function getSettings($teacherId)
     {
         $school = self::getByTeacher($teacherId);
         $rentSubplanName = $school->rent_schoolsubplan_id
@@ -80,7 +80,7 @@ class School extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getCurrentSchool()
+    public static function getCurrentSchool()
     {
         $userId = Yii::$app->user->identity->id;
         $isTeacher = Users::isCurrentUserTeacher();
@@ -94,38 +94,10 @@ class School extends \yii\db\ActiveRecord
         return $school;
     }
 
-    public function getVideoThumb($userId)
-    {
-        $isTeacher = Users::isCurrentUserTeacher();
-        $school = null;
-        if ($isTeacher) {
-            $school = self::getByTeacher($userId);
-        } else {
-            $school = self::getByStudent($userId);
-        }
-
-        return $school->video_thumbnail;
-    }
-
-    public function getCurrentSchoolId()
+    public static function getCurrentSchoolId()
     {
         $userId = Yii::$app->user->identity->id;
         if(Users::isCurrentUserTeacher()) return SchoolTeacher::getSchoolTeacher($userId)->school_id;
         else return SchoolStudent::getSchoolStudent($userId)->school_id;
     }
-
-    // public function getTeachers()
-    // {
-    //     return $this->hasOne(Users::className(), ['id' => 'author']);
-    // }
-
-    // public function getStudents()
-    // {
-    //     return $this->hasOne(Users::className(), ['id' => 'author'])->from(['u2' => Users::tableName()]);
-    // }
-
-    // public function getLectures()
-    // {
-    //     return $this->hasOne(Users::className(), ['id' => 'author'])->from(['u2' => Users::tableName()]);
-    // }
 }

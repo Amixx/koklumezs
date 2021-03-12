@@ -81,17 +81,14 @@ class UserLectures extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUserLectures($id, $sent = 1): array
+    public static function getUserLectures($id, $sent = 1): array
     {
         //not anymore , 'sent' => $sent
         $results = self::find()->where(['user_id' => $id])->asArray()->all(); //, 'evaluated' => 0
         return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSentUserLectures($id, $sent = 1): array
+    public static function getSentUserLectures($id, $sent = 1): array
     {
         $results = self::find()->where(['user_id' => $id, 'evaluated' => 0, 'sent' => $sent])->asArray()->orderBy(['created' => SORT_DESC])->all();
         return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
@@ -100,7 +97,7 @@ class UserLectures extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEvaluatedUserLectures($id, $sent = 1): array
+    public static function getEvaluatedUserLectures($id, $sent = 1): array
     {
         $results = self::find()->where(['user_id' => $id, 'evaluated' => 1, 'sent' => $sent])->asArray()->all();
         return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
@@ -111,48 +108,33 @@ class UserLectures extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEvaluatedLectures($id): array
+    public static function getEvaluatedLectures($id): array
     {
         $results = self::find()->where(['user_id' => $id, 'evaluated' => 1])->asArray()->all();
         return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLastEvaluatedLecture($id)
+    public static function getLastEvaluatedLecture($id)
     {
         return self::find()->where(['user_id' => $id, 'evaluated' => 1])->orderBy(['id' => SORT_DESC])->one();
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLastTenEvaluatedLectures($id, $limit = 10)
+    public static function getLastTenEvaluatedLectures($id, $limit = 10)
     {
         return self::find()->where(['user_id' => $id, 'evaluated' => 1])->orderBy(['id' => SORT_DESC])->limit($limit)->all();
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLastTenLectures($id, $limit = 10)
+    public static function getLastTenLectures($id, $limit = 10)
     {
         return self::find()->where(['user_id' => $id])->orderBy(['id' => SORT_DESC])->limit($limit)->all();
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAllLectures($id)
+    public static function getAllLectures($id)
     {
         return self::find()->where(['user_id' => $id])->orderBy(['id' => SORT_DESC])->all();
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getDayResult($id, $days = 7)
+    public static function getDayResult($id, $days = 7)
     {
         $result = 0;
         $data = self::find()->where(['user_id' => $id])->andWhere('created >= DATE_SUB(CURDATE(), INTERVAL ' . $days . ' DAY)')->orderBy(['id' => SORT_DESC])->all();
@@ -162,33 +144,24 @@ class UserLectures extends \yii\db\ActiveRecord
         return $result;
     }
 
-
-
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLastEvaluatedLectures($ids)
+    public static function getLastEvaluatedLectures($ids)
     {
         return self::find()->where(['in', 'user_id', $ids])->andWhere(['evaluated' => 1])->orderBy(['id' => SORT_DESC])->asArray()->all();
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUserLectureTimes($id): array
+    public static function getUserLectureTimes($id): array
     {
         $results = self::find()->where(['user_id' => $id])->asArray()->all();
         return $results ? ArrayHelper::map($results, 'lecture_id', 'created') : [];
     }
 
-    public function getLastLecturesForUser($id, $limit = 5): array
+    public static function getLastLecturesForUser($id, $limit = 5): array
     {
         $results = self::find()->where(['user_id' => $id])->orderBy(['id' => SORT_DESC])->limit($limit)->asArray()->all();
         return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
     }
 
-    public function getLectures($id, $order, $evaluated = 0)
+    public static function getLectures($id, $order, $evaluated = 0)
     {
         if ($order === 'asc') {
             $orderBy = ['lectures.complexity' => SORT_ASC];
@@ -198,7 +171,7 @@ class UserLectures extends \yii\db\ActiveRecord
         return self::find()->where(['user_id' => $id, 'evaluated' => $evaluated])->joinWith('lecture')->orderBy($orderBy)->all();
     }
 
-    public function getLessonsOfType($id, $type)
+    public static function getLessonsOfType($id, $type)
     {
         $condition = ['user_id' => $id, 'sent' => true];
         
@@ -210,7 +183,7 @@ class UserLectures extends \yii\db\ActiveRecord
         return static::filterOutRelatedLessons($results);
     }
 
-    public function getLatestLessonsOfType($id, $type)
+    public static function getLatestLessonsOfType($id, $type)
     {
         return array_slice(self::getLessonsOfType($id, $type), 0, 8);
     }
@@ -241,15 +214,12 @@ class UserLectures extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public function getUnsentLectures($id, $evaluated = 0, $sent = 0)
+    public static function getUnsentLectures($id, $evaluated = 0, $sent = 0)
     {
         return self::find()->where(['user_id' => $id, 'evaluated' => $evaluated, 'sent' => $sent])->orderBy(['id' => SORT_DESC])->all();
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function setSeenByUser($user_id, $id)
+    public static function setSeenByUser($user_id, $id)
     {
         $setOpenTime = false;
         if (($user = Users::findOne($user_id)) !== null) {
@@ -275,13 +245,13 @@ class UserLectures extends \yii\db\ActiveRecord
         return true;
     }
 
-    public function getOpened($id)
+    public static function getOpened($id)
     {
         $results = self::find()->where(['user_id' => $id, 'opened' => 1])->asArray()->all();
         return $results ? ArrayHelper::map($results, 'lecture_id', 'id') : [];
     }
 
-    public function getNewLectures($user_id, $ids = []): array
+    public static function getNewLectures($user_id, $ids = []): array
     {
         $ids = array_map('intval', $ids);
         $results = [];
@@ -295,14 +265,14 @@ class UserLectures extends \yii\db\ActiveRecord
         return $results;
     }
 
-    public function getUserLectureByLectureId($lecture_id)
+    public static function getUserLectureByLectureId($lecture_id)
     {
         $user_id = Yii::$app->user->identity->id;
 
         return self::findOne(['user_id' => $user_id, 'lecture_id' => $lecture_id]);
     }
 
-    public function getFirstOpentime($user_id)
+    public static function getFirstOpentime($user_id)
     {
         $userLectures = self::find()->where(['user_id' => $user_id])->asArray()->all();
         $opentimes = array_map(function ($ulecture) {
@@ -330,12 +300,7 @@ class UserLectures extends \yii\db\ActiveRecord
         }
     }
 
-    /**
-     * Sends confirmation email to user
-     *
-     * @return bool whether the email was sent
-     */
-    public function sendEmail($id, $teacherMessage = null, $subject)
+    public static function sendEmail($id, $teacherMessage = null, $subject)
     {
         $user = Users::findOne([
             'id' => $id,
@@ -350,12 +315,7 @@ class UserLectures extends \yii\db\ActiveRecord
         return EmailSender::sendLessonNotification($user, $teacherMessage, $school['email'], $subject);
     }
 
-    /**
-     * Sends confirmation email to user
-     *
-     * @return bool whether the email was sent
-     */
-    public function sendAdminEmail($id, $lecture_id, $x)
+    public static function sendAdminEmail($id, $lecture_id, $x)
     {
         $user = Users::findOne([
             'id' => $id,

@@ -31,7 +31,7 @@ class SchoolSubplanParts extends \yii\db\ActiveRecord
         return $this->hasOne(PlanParts::className(), ['id' => 'planpart_id']);
     }
 
-    public function getForSchoolSubplan($schoolSubplanId)
+    public static function getForSchoolSubplan($schoolSubplanId)
     {
         return self::find()->where(['schoolsubplan_id' => $schoolSubplanId])->joinWith('planpart');
     }

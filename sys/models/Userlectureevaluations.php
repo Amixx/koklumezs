@@ -108,7 +108,7 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLectureEvaluations($user_id, $id)
+    public static function getLectureEvaluations($user_id, $id)
     {
         return ArrayHelper::map(self::find()->where(['user_id' => $user_id, 'lecture_id' => $id])->orderBy(['id' => SORT_ASC])->asArray()->all(), 'evaluation_id', 'evaluation');
     }
@@ -121,18 +121,18 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function hasLectureEvaluations($user_id)
+    public static function hasLectureEvaluations($user_id)
     {
         return ArrayHelper::map(self::find()->where(['user_id' => $user_id])->orderBy(['id' => SORT_ASC])->asArray()->all(), 'lecture_id', 'evaluation_id');
     }
 
-    public function getCommentsResponsesForUser()
+    public static function getCommentsResponsesForUser()
     {
         $myComments = self::getCommentsForUser();
         return $myComments;
     }
 
-    public function getCommentsForUser()
+    public static function getCommentsForUser()
     {
         // $timeToStartShowingComments = new \DateTime('2020-06-27');
         $timeToStartShowingComments = new \DateTime('2019-06-27'); //for debugging
@@ -141,7 +141,7 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
         return self::find()->where(['user_id' => Yii::$app->user->identity->id, 'evaluation_id' => 4])->andWhere(['>=', 'created', $timeFormatted])->with('commentresponses')->asArray()->all();
     }
 
-    public function getComments($id)
+    public static function getComments($id)
     {
         $timeToStartShowingComments = new \DateTime('2020-06-27');
         // $timeToStartShowingComments = new \DateTime('2019-06-27'); for debugging

@@ -40,7 +40,7 @@ class Payer extends \yii\db\ActiveRecord
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }
 
-    public function getForStudent($studentId)
+    public static function getForStudent($studentId)
     {
         return self::find()->where(['user_id' => $studentId])->one();
     }

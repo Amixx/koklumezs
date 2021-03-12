@@ -36,7 +36,7 @@ class SignupQuestions extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getForSchool($schoolId)
+    public static function getForSchool($schoolId)
     {
         return self::find()->where(['school_id' => $schoolId])->asArray()->all();
     }

@@ -7,17 +7,11 @@ use yii\helpers\ArrayHelper;
 
 class Evaluations extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'evaluations';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -26,9 +20,6 @@ class Evaluations extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
@@ -42,35 +33,22 @@ class Evaluations extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getLecturesevaluations()
     {
         return $this->hasMany(Lecturesevaluations::className(), ['evaluation_id' => 'id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getUserlectureevaluations()
     {
         return $this->hasMany(Userlectureevaluations::className(), ['evaluation_id' => 'id']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getEvaluations()
+    public static function getEvaluations()
     {
         return self::find()->where(['not like', 'id', [2,3,5]])->asArray()->all();
     }
 
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getEvaluationsValueTexts()
+    public static function getEvaluationsValueTexts()
     {
         $result = [];
         $data = self::getEvaluations();
@@ -87,24 +65,19 @@ class Evaluations extends \yii\db\ActiveRecord
         return $result;
     }
 
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getEvaluationsTitles()
+    public static function getEvaluationsTitles()
     {
         return ArrayHelper::map(self::find()->where(['not like', 'id', [2,3,5]])->asArray()->all(), 'id', 'title');
     }
 
-    public function getScaleParam()
+    public static function getScaleParam()
     {
         return self::findOne([
             'is_scale' => 1,
         ]);
     }
 
-    public function getVideoParam()
+    public static function getVideoParam()
     {
         return self::findOne([
             'is_video_param' => 1,

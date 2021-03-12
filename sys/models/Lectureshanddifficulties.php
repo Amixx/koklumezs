@@ -69,7 +69,7 @@ class Lectureshanddifficulties extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getLectureDifficulties($id)
+    public static function getLectureDifficulties($id)
     {
         return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'category_id', 'id');
     }
@@ -77,8 +77,8 @@ class Lectureshanddifficulties extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function removeLectureDifficulties($id)
+    public static function removeLectureDifficulties($id)
     {
-        return self::deleteAll(['lecture_id' => $id]);
+        return static::deleteAll(['lecture_id' => $id]);
     }
 }
