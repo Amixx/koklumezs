@@ -67,6 +67,10 @@ class LekcijasController extends Controller
 
         if ($type) { 
             $modelsIds = UserLectures::getLessonsOfType($user->id, $type);
+            if($type === "favourite"){
+                $evaluatedStillLearningIds = UserLectures::getEvaluatedStillLearning($user->id);
+                $modelsIds = array_merge($modelsIds, $evaluatedStillLearningIds);
+            }
 
             if ($modelsIds) {
                 $query = Lectures::find()->where(['in', 'id', $modelsIds]);
@@ -90,7 +94,6 @@ class LekcijasController extends Controller
 
                 $opened = UserLectures::getOpened($user->id);
                 $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
-                $baseUrl = Yii::$app->request->baseUrl;
 
                 $title_filter = Yii::$app->request->get('title_filter');
 
@@ -131,7 +134,6 @@ class LekcijasController extends Controller
 
             $opened = UserLectures::getOpened($user->id);
             $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
-            $baseUrl = Yii::$app->request->baseUrl;
 
             $title_filter = 1;
 

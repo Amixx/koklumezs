@@ -10,17 +10,13 @@ use app\helpers\EmailSender;
 
 class UserLectures extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+    const STILL_LEARNING_TRANSITION_DATE = "2021-03-13 00:00:00";
+
     public static function tableName()
     {
         return 'userlectures';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -33,9 +29,6 @@ class UserLectures extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
@@ -52,35 +45,23 @@ class UserLectures extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getStudent()
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id'])
             ->from(['student' => Users::tableName()]);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getAdmin()
     {
         return $this->hasOne(Users::className(), ['id' => 'assigned'])
             ->from(['admin' => Users::tableName()]);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getLecture()
     {
         return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public static function getUserLectures($id, $sent = 1): array
     {
         //not anymore , 'sent' => $sent
@@ -94,20 +75,30 @@ class UserLectures extends \yii\db\ActiveRecord
         return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public static function getEvaluatedUserLectures($id, $sent = 1): array
     {
         $results = self::find()->where(['user_id' => $id, 'evaluated' => 1, 'sent' => $sent])->asArray()->all();
         return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
     }
 
+    //izgūst tās nodarbības, kas līdz šim (3/12/2021) bijušas nenovērtētas un pie 'vēl mācos' - tām turpmāk jābūt arhīvā
+    public static function getUnevaluatedStillLearning($id){
+        $results = self::find()
+            ->where(['user_id' => $id, 'evaluated' => 0, 'still_learning' => 1])
+            ->andWhere(['<', 'created', self::STILL_LEARNING_TRANSITION_DATE])
+            ->asArray()->all();
+        return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
+    }
 
+    //izgūst tās nodarbības, kas līdz šim (3/12/2021) bijušas novērtētas un pie 'vēl mācos' - tām turpmāk jābūt pie mīļākajām
+    public static function getEvaluatedStillLearning($id){
+        $results = self::find()
+            ->where(['user_id' => $id, 'evaluated' => 1, 'still_learning' => 1])
+            ->andWhere(['<', 'created', self::STILL_LEARNING_TRANSITION_DATE])
+            ->asArray()->all();
+        return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
+    }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public static function getEvaluatedLectures($id): array
     {
         $results = self::find()->where(['user_id' => $id, 'evaluated' => 1])->asArray()->all();
