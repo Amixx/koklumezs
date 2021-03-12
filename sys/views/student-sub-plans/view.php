@@ -84,6 +84,10 @@ if($subplan){
         <?php } ?>
 
     <?php } else { ?>
-        <h3>Tev šobrīd nav piešķirts abonēšanas plāns!</h3>
+        <div style="margin-top: 50px;">
+            <div class="wrap-overlay" style="text-align: center; padding: 10px; border-radius: 16px;">
+                <?= Yii::t('app', '<h2>Hey! You don\'t have an active learning plan.</h2><h4>We hope to work together with you again soon!.<br>You can check out our learning plans here <br><a href="https://www.koklumezs.lv/koklesanas-macibu-programmas">https://www.koklumezs.lv/koklesanas-macibu-programmas</a> <br> <h4>or write us at skola@koklumezs.lv </h4>') ?>
+            </div>
+        </div>
     <?php } ?>
 </div>
