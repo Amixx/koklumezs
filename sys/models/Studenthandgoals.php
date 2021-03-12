@@ -25,10 +25,7 @@ class Studenthandgoals extends \yii\db\ActiveRecord
         return 'studenthandgoals';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    rules()
+    function rules()
     {
         return [
             [['user_id', 'category_id'], 'required'],
@@ -41,7 +38,7 @@ class Studenthandgoals extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    attributeLabels()
+    function attributeLabels()
     {
         return [
             'id' => 'ID',
@@ -50,18 +47,12 @@ class Studenthandgoals extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    getCategory()
+    function getCategory()
     {
         return $this->hasOne(Handdifficulties::className(), ['id' => 'category_id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    getUser()
+    function getUser()
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
     }
