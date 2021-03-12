@@ -292,6 +292,7 @@ class UserController extends Controller
                     $newPayer = true;
                 }
 
+                $payer->user_id = $model->id;
                 $payer->name = $postData["name"];
                 $payer->address = $postData["address"];
                 $payer->personal_code = $postData["personal_code"];
@@ -299,7 +300,7 @@ class UserController extends Controller
                 $payer->pvn_registration_number = $postData["pvn_registration_number"];
                 $payer->bank = $postData["bank"];
                 $payer->swift = $postData["swift"];
-                $payer->account_number = $postData["swift"];
+                $payer->account_number = $postData["account_number"];
 
                 if($newPayer){
                     $payer->save();
