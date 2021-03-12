@@ -16,6 +16,7 @@
             'videoThumb'=> $videoThumb,
             'sortByDifficulty' => $sortByDifficulty,
             'renderRequestButton' => $renderRequestButton,
+            'difficulties' => $difficulties,
         ])?>
         <?=
         $this->render('favouriteANDnew',[
@@ -27,6 +28,7 @@
             'videoThumb'=> $videoThumb,
             'sortByDifficulty' => $sortByDifficulty,
             'renderRequestButton' => false,
+            'difficulties' => $difficulties,
         ])?>
     </div>
 </div>

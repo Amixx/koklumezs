@@ -1135,3 +1135,37 @@ div.has-experience.active, div.rent.active {
         padding: 6px;
     }
 }
+
+.lecture-parameter-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    font-size: 13px;
+    position: absolute;
+    top: 20%;
+    left: 4px;
+    right: 0;
+    text-align: left;
+    padding: 5px 15px;
+    padding-right: 25px;
+    color: white;
+}
+
+.lecture-parameter-line {
+    width: 100%;
+}
+
+.lecture-parameter-title {
+    width: 50%;
+    float: left;
+    margin: 0;
+}
+
+.lecture-parameter-bar {
+    float: right;
+    height: 14px;
+    width: 50%;
+    margin: 0;
+    background-color: rgba(0,0,0,0); 
+    box-shadow:none;
+}
