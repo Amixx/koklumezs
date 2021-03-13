@@ -164,7 +164,7 @@ class UserLectures extends \yii\db\ActiveRecord
 
     public static function getLessonsOfType($id, $type)
     {
-        $condition = ['user_id' => $id, 'sent' => true];
+        $condition = ['user_id' => $id, 'sent' => true, 'still_learning' => false];
         
         if($type == "new") $condition['evaluated'] = false;
         else if ($type == "favourite") $condition['is_favourite'] = true;
@@ -217,7 +217,6 @@ class UserLectures extends \yii\db\ActiveRecord
             $model = self::find()->where(['opened' => 0, 'user_id' => $user_id, 'lecture_id' => $id])->one();
             if ($model) {
                 $model->opened = 1;
-                $model->still_learning = 1;
                 if (!$setOpenTime) {
                     $model->open_times = $model->open_times + 1;
                 }

@@ -3,14 +3,14 @@
 return [
     'class' => 'yii\db\Connection',
     ////datubāze no prod servera
-    'dsn' => 'mysql:host=skola.koklumezs.lv;dbname=dev_skola_sys_db',
-    'username' => 'skola',
-    'password' => 'skola',
-
-    ////lokālā datubāze
-    // 'dsn' => 'mysql:host=host.docker.internal;dbname=skola_sys_db',
+    // 'dsn' => 'mysql:host=skola.koklumezs.lv;dbname=dev_skola_sys_db',
     // 'username' => 'skola',
     // 'password' => 'skola',
+
+    ////lokālā datubāze
+    'dsn' => 'mysql:host=host.docker.internal;dbname=skola_sys_db',
+    'username' => 'skola',
+    'password' => 'skola',
 
     'charset' => 'utf8',
 
