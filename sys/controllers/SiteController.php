@@ -87,14 +87,16 @@ class SiteController extends Controller
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
         $model = new PasswordResetRequestForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
                 Yii::$app->session->setFlash('success', 'Pārbaudiet savu e-pastu, lai turpinātu paroles atjaunošanas procesu.');
                 return $this->goHome();
             } else {
-                Yii::$app->session->setFlash('error', 'Neizdevās nosūtīt e-pasta adresi, lai atjaunotu paroli.');
+                Yii::$app->session->setFlash('error', 'Neizdevās nosūtīt e-pastu, lai atjaunotu paroli.');
             }
         }
+        
         return $this->render('requestPasswordResetToken', [
             'model' => $model,
         ]);

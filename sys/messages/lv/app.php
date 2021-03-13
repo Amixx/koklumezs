@@ -435,7 +435,6 @@ return [
     'Notes' => 'Notis',
     'Hey! Please evaluate the lesson before moving on to the next one!' => 'Lūdzu, novērtē uzdevumu, pirms dodies pie nākamā!',
     'Next lesson' => 'Nākamais uzdevums',
-    'Next lesson' => 'Nākamais uzdevums',
     'Previous assignments in this lesson' => 'Iepriekšējie uzdevumi šajā nodarbībā',
     'Play along video (not required)' => 'Izspēles video (nav nepieciešams)',
     'Open favourite lessons' => 'Atvērt mīļākās nodarbības',
