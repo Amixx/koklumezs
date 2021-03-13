@@ -8,17 +8,14 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\RentForm;
-use app\models\Lectures;
 use app\models\SchoolTeacher;
 use app\models\SignupQuestions;
-use app\models\Evaluations;
-use app\models\Lecturesevaluations;
 use app\models\SignUpForm;
 use app\models\SchoolStudent;
 use app\models\School;
 use app\models\RegistrationLesson;
 use app\models\Users;
-use app\models\StudentSubplans;
+use app\models\StudentSubPlans;
 use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
 use app\models\ResendVerificationEmailForm;
@@ -244,9 +241,9 @@ class SiteController extends Controller
                     }
 
                     if(!$model->ownsInstrument){
-                        $this->redirect(["rent", 'u' => $user['id'], 'l' => $l]);
+                        $this->redirect(["rent", 'u' => $user['id']]);
                     } else if($model->hasExperience) {
-                        $this->redirect(["signup-questions", 'u' => $user['id'], 'l' => $l, 's' => $s]);
+                        $this->redirect(["signup-questions", 'u' => $user['id'], 's' => $s]);
                     }else {
                         Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam spēlēt! Turpmākās 2 nedēļas vari izmēģināt bez maksas!');
                         return $this->redirect(['lekcijas/index']);
@@ -259,17 +256,17 @@ class SiteController extends Controller
         $instrument = strtolower($school['instrument']);
         return $this->render('signup', [
             'model' => $model,
-            'defaultLanguage' => $l,
             'registration_title' => $school['registration_title'],
             'instrument' => $instrument,
         ]);
     }
 
-    public function actionRent($u, $l) {
-        Yii::$app->language = $l;
+    public function actionRent($u) {
         $school = School::getByStudent($u);
         $user = Users::findOne($u);
         $model = new RentForm;
+
+        Yii::$app->language = $user['language'];
 
         $model->fullname = $user['first_name'] . " " . $user['last_name'];
         $model->email = $user['email'];
@@ -287,6 +284,7 @@ class SiteController extends Controller
                 $studentSubplan->save();
 
                 $user->status = 11;
+                $user->phone_number = $model->phone_number;
                 $user->update();
                 
                 InvoiceManager::sendAdvanceInvoice($user, $studentSubplan, true);
@@ -304,9 +302,10 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionSignupQuestions($u, $l, $s){
-        Yii::$app->language = $l;
+    public function actionSignupQuestions($u, $s){
         $user = Users::findOne($u);
+
+        Yii::$app->language = $user['language'];
         
         $schoolSignupQuestions = SignupQuestions::getForSchool($s);
 

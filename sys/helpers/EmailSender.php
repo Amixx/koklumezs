@@ -39,7 +39,7 @@ class EmailSender
             ], [
                 'email' => $studentEmail,
             ])
-            ->setFrom([$schoolEmail => Yii::$app->name])
+            ->setFrom([Yii::$app->params['noreplyEmail'] => Yii::$app->name])
             ->setTo($schoolEmail)
             ->setSubject("Skolēnam nenosūtījās rēķins!")
             ->send();
@@ -51,7 +51,7 @@ class EmailSender
             ->compose(['html' => 'new-user-html', 'text' => 'new-user-text'], [
                 'user' => $user,
             ])
-            ->setFrom([$schoolEmail => Yii::$app->name])
+            ->setFrom([Yii::$app->params['noreplyEmail'] => Yii::$app->name])
             ->setTo($schoolEmail)
             ->setSubject("Reģistrējies jauns skolēns - " . $user['first_name'])
             ->send();
@@ -88,7 +88,7 @@ class EmailSender
             ->compose(['html' => 'instrument-html', 'text' => 'instrument-text'], [
                 'model' => $model,
             ])
-            ->setFrom([$schoolEmail => Yii::$app->name])
+            ->setFrom([Yii::$app->params['noreplyEmail'] => Yii::$app->name])
             ->setTo($schoolEmail)
             ->setSubject("Par kokles iegādāšanos - " . $model['fullname'])
             ->send();
@@ -101,7 +101,7 @@ class EmailSender
                 ['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'],
                 ['user' => $user]
             )
-            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+            ->setFrom([Yii::$app->params['noreplyEmail'] => Yii::$app->name])
             ->setTo($userEmail)
             ->setSubject('Password reset for ' . Yii::$app->name)
             ->send();
@@ -114,7 +114,7 @@ class EmailSender
                 ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
                 ['user' => $user]
             )
-            ->setFrom([Yii::$app->params['senderEmail'] => Yii::$app->name])
+            ->setFrom([Yii::$app->params['noreplyEmail'] => Yii::$app->name])
             ->setTo($userEmail)
             ->setSubject('Account registration at ' . Yii::$app->name)
             ->send();
@@ -143,7 +143,7 @@ class EmailSender
                 ['html' => 'japieskir-lekcija-html', 'text' => 'japieskir-lekcija-text'],
                 ['user' => $user, 'lecture' => $lecture, 'x' => $x]
             )
-            ->setFrom([$schoolEmail => Yii::$app->name])
+            ->setFrom([Yii::$app->params['noreplyEmail'] => Yii::$app->name])
             ->setTo($schoolEmail)
             ->setSubject('Jāpiešķir nodarbība - ' . Yii::$app->name)
             ->send();
