@@ -90,7 +90,8 @@ class ArchiveController extends Controller
         }
 
         return $this->render('index', [
-            'archive' => $archive
+            'archive' => $archive,
+            'archive_filter' => '',
         ]);
     }
 }
