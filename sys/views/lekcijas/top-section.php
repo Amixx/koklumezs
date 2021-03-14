@@ -33,16 +33,6 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
         </div>
     </div>
     <div class="btn-group">
-        <div>
-        <?php if ($lecturefiles) { ?>
-                <button type="button" class="btn btn-orange dropdown-toggle hidden-xs" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
-                    <?= \Yii::t('app', 'Lyrics and notes');?>
-                </button>
-                <div class="dropdown-menu dropdown-menu-lg-left">
-                    <?= $files = $this->render('docs', ['lecturefiles' => $lecturefiles]);?>
-                </div> 
-        <?php } ?>
-        </div>
         <div class="next-lesson">
             <?php if(!$hasEvaluatedLesson){
                 $modalType = "next-lesson";
@@ -58,6 +48,16 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
             } else if($nextLessonId) {
                 echo Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-orange']);
             } ?>  
+        </div>
+        <div>
+        <?php if ($lecturefiles) { ?>
+                <button type="button" class="btn btn-orange dropdown-toggle hidden-xs" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
+                    <?= \Yii::t('app', 'Lyrics and notes');?>
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg-left">
+                    <?= $files = $this->render('docs', ['lecturefiles' => $lecturefiles]);?>
+                </div> 
+        <?php } ?>
         </div>
     </div>
 </div>
