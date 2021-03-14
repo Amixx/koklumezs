@@ -166,7 +166,7 @@ AppAsset::register($this);
                 'label' => \Yii::t('app',  'Metrics'),
                 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations']) and Yii::$app->controller->action->actionMethod != "actionComments",
                 'items' => [
-                    ['label' => \Yii::t('app',  'Student evaluations'), 'url' => ['/user-lecture-evaluations']],
+                    //['label' => \Yii::t('app',  'Student evaluations'), 'url' => ['/user-lecture-evaluations']],
                     ['label' => \Yii::t('app',  'Sent invoices'), 'url' => ['/sent-invoices']],
                 ],
                 'options' => ['class' => 'nav-item dropdown']
