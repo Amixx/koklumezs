@@ -1170,3 +1170,7 @@ div.has-experience.active, div.rent.active {
     box-shadow: none;
     border: 1px solid grey;
 }
+.alert {
+    font-size: 20px;
+    margin-top: 15px;
+}

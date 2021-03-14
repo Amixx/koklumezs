@@ -365,8 +365,8 @@ class UserController extends Controller
         $student = self::findModel($id);
         $student->wants_more_lessons = true;
         $student->update();
-
-        Yii::$app->session->setFlash('success', 'Paldies par ziņu! Nākamajā reizē sūtīsim vairāk uzdevumus! Lai mierīga diena!');
+        $message = \Yii::t('app', 'Paldies par ziņu! Nākamajā reizē sūtīsim vairāk uzdevumus! Lai mierīga diena!');
+        Yii::$app->session->setFlash('success', $message);
         return $this->redirect(Yii::$app->request->referrer);
     }
 

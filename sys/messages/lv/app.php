@@ -452,4 +452,5 @@ return [
     'Passwords don\'t match' => 'Paroles nesakrīt',
     'Unlimited' => 'Neierobežots',
     '<h2>Hey! You don\'t have an active learning plan.</h2><h4>We hope to work together with you again soon!.<br>You can check out our learning plans here <br><a href="https://www.koklumezs.lv/koklesanas-macibu-programmas">https://www.koklumezs.lv/koklesanas-macibu-programmas</a> <br> <h4>or write us at skola@koklumezs.lv </h4>' => '<h2>Hei! Tev nav aktīvs mācību plāns.</h2><h4>Priecāsimies atkal darboties kopā.<br>Ieskaties un izvēlies savu mācību plānu šeit <br><a href="https://www.koklumezs.lv/koklesanas-macibu-programmas">https://www.koklumezs.lv/koklesanas-macibu-programmas</a> <br> <h4>vai raksti skola@koklumezs.lv </h4>',
+    'Thank you! Next time we will send you more lessons! You can rest today!' => 'Paldies par ziņu! Nākamajā reizē sūtīsim vairāk uzdevumus! Lai mierīga diena!',
 ];
