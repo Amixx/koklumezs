@@ -450,4 +450,5 @@ return [
     'Repeat password' => 'Atkārtot Paroli',
     'Passwords don\'t match' => 'Paroles nesakrīt',
     'Unlimited' => 'Neierobežots',
+    'Thank you for your message! Next time we will send more tasks! Have a good day!' => 'Paldies par ziņu! Nākamajā reizē sūtīsim vairāk uzdevumus! Lai mierīga diena!',
 ];

@@ -361,11 +361,17 @@ class UserController extends Controller
     }
 
     public function actionRequestMoreTasks($id){
+        $isGuest = Yii::$app->user->isGuest;
+        if (!$isGuest) {
+            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
+        }
+
         $student = self::findModel($id);
         $student->wants_more_lessons = true;
         $student->update();
 
-        Yii::$app->session->setFlash('success', 'Paldies par ziņu! Nākamajā reizē sūtīsim vairāk uzdevumus! Lai mierīga diena!');
+        Yii::$app->session->setFlash('success', Yii::t('app', 'Thank you for your message! Next time we will send more tasks! Have a good day!'));
         return $this->redirect(Yii::$app->request->referrer);
     }
 
