@@ -120,17 +120,25 @@ class LekcijasController extends Controller
             $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "new");
             $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
 
-            $SortByDifficulty = Yii::$app->request->get('sortByDifficulty');
-            if (!(isset($SortByDifficulty)) || $SortByDifficulty == '' || $SortByDifficulty == 'desc') {
-                $sortByDifficulty = 'asc';
-                $orderBy = ['lectures.complexity' => SORT_ASC];
-            } else {
-                $sortByDifficulty = 'desc';
-                $orderBy = ['lectures.complexity' => SORT_DESC];
+            $newLessons = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->all();
+            $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->all();    
+            
+            function sortFunc($a, $b, $lessonIds){
+                $aId = array_search($a['id'], $lessonIds);
+                $bId = array_search($b['id'], $lessonIds);
+
+                return ($aId < $bId) ? -1 : 1;
             }
 
-            $newLessons = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->orderBy($orderBy)->all();
-            $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->orderBy($orderBy)->all();        
+            $newSortFunc = function($a, $b) use($latestNewLecturesIds){
+                return sortFunc($a, $b, $latestNewLecturesIds);
+            };
+            $favSortFunc = function($a, $b) use($latestFavouriteLecturesIds){
+                return sortFunc($a, $b, $latestFavouriteLecturesIds);
+            };
+            
+            usort($newLessons, $newSortFunc);
+            usort($favouriteLessons, $favSortFunc);
 
             $opened = UserLectures::getOpened($user->id);
             $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
@@ -145,7 +153,6 @@ class LekcijasController extends Controller
                 'pages' => $pages,
                 'userLectureEvaluations' => $userLectureEvaluations,
                 'videoThumb' => $videoThumb,
-                'sortByDifficulty' => $sortByDifficulty,
                 'renderRequestButton' => !$user->wants_more_lessons,
             ]);
         }
@@ -190,11 +197,12 @@ class LekcijasController extends Controller
 
         $nextLessonId = null;
         $userLecture = UserLectures::findOne(['user_id' => $user->id, 'lecture_id' => $id]);
+        
         if($userLecture){
-            $type = $userLecture->is_favourite ? "favourite" : "learning";
+            $type = $userLecture->is_favourite ? "favourite" : "new";
             $nextLessonId = UserLectures::getNextLessonId($user->id, $id, $type);
         }
-
+        
         $difficultyEvaluation = $force ? null : Userlectureevaluations::getLecturedifficultyEvaluation($user->id, $id);
 
         if ($check) {
@@ -235,7 +243,6 @@ class LekcijasController extends Controller
             $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
             $lecturefiles = Lecturesfiles::getLectureFiles($id);
             $hasEvaluatedLesson = $difficultyEvaluation !== null;
-            $baseUrl = Yii::$app->request->baseUrl;
             $relatedLessonIds = RelatedLectures::getRelations($id);
             $dbUser = Users::findOne([$id => $user->id]);
             $userCanDownloadFiles = $dbUser->allowed_to_download_files;

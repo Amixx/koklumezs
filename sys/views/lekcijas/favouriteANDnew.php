@@ -44,7 +44,7 @@ use yii\helpers\Url;
                 <?php } ?>
             </div>
             <div class="row text-center LectureOverview__ButtonRow">
-                <?= Html::a(\Yii::t('app', $clickableTitle), ['?type='.$type.'&sortByDifficulty='.$sortByDifficulty], ['class' => 'btn btn-gray btn-long']) ?>
+                <?= Html::a(\Yii::t('app', $clickableTitle), ['?type='.$type], ['class' => 'btn btn-gray btn-long']) ?>
             </div>  
         <?php } ?>        
     </div>
