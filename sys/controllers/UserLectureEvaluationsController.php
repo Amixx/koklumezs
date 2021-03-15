@@ -44,11 +44,6 @@ class UserLectureEvaluationsController extends Controller
      */
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $isTeacher = Users::isCurrentUserTeacher();
         $searchModel = $isTeacher ? new TeacherUserlectureevaluationsSearch() : new UserlectureevaluationsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, false);
@@ -77,11 +72,6 @@ class UserLectureEvaluationsController extends Controller
 
     public function actionComments()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $isTeacher = Users::isCurrentUserTeacher();
         $searchModel = $isTeacher ? new TeacherUserlectureevaluationsSearch() : new UserlectureevaluationsSearch();
         $get = Yii::$app->request->queryParams;
@@ -110,11 +100,6 @@ class UserLectureEvaluationsController extends Controller
      */
     public function actionView($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -127,12 +112,6 @@ class UserLectureEvaluationsController extends Controller
      */
     public function actionCreate()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $model = new Userlectureevaluations();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -153,11 +132,6 @@ class UserLectureEvaluationsController extends Controller
      */
     public function actionUpdate($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -178,11 +152,6 @@ class UserLectureEvaluationsController extends Controller
      */
     public function actionDelete($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

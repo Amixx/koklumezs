@@ -39,11 +39,6 @@ class SchoolSubplanPartsController extends Controller
 
     public function actionDelete($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $this->findModel($id)->delete();
 
         Yii::$app->session->setFlash('success', 'Plāna daļa noņemta!');

@@ -46,11 +46,6 @@ class AssignController extends \yii\web\Controller
 
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $options = [];
         $onlyThoseWithoutDontBother = true;
         if (Users::isCurrentUserTeacher()) {
@@ -98,11 +93,6 @@ class AssignController extends \yii\web\Controller
     public function actionUserlectures($id = null)
     {
 
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $this->view->params['chatRecipientId'] = $id;
 
         if ($id == null) {

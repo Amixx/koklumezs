@@ -37,12 +37,6 @@ class SchoolFaqsController extends Controller
 
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $schoolId = School::getCurrentSchoolId();
         $dataProvider = new ActiveDataProvider([
             'query' => SchoolFaqs::find()->where(['school_id' => $schoolId]),
@@ -55,11 +49,6 @@ class SchoolFaqsController extends Controller
 
     public function actionView($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -67,11 +56,6 @@ class SchoolFaqsController extends Controller
 
     public function actionCreate()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = new SchoolFaqs();
 
         $schoolId = School::getCurrentSchoolId();
@@ -89,11 +73,6 @@ class SchoolFaqsController extends Controller
 
     function actionUpdate($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -107,23 +86,12 @@ class SchoolFaqsController extends Controller
 
     public function actionDelete($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     public function actionForStudents(){
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $faqs = SchoolFaqs::getForCurrentSchool();
 
         return $this->render('for-students', [

@@ -53,11 +53,6 @@ class LecturesfilesController extends Controller
      */
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $searchModel = new LecturesfilesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $lectures = Lectures::getLectures();
@@ -78,11 +73,6 @@ class LecturesfilesController extends Controller
      */
     public function actionView($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -95,11 +85,6 @@ class LecturesfilesController extends Controller
      */
     public function actionCreate()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = new Lecturesfiles();
         $lectures = Lectures::getLectures();
         $get = Yii::$app->request->queryParams;
@@ -125,11 +110,6 @@ class LecturesfilesController extends Controller
      */
     public function actionUpdate($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = $this->findModel($id);
         $lectures = Lectures::getLectures();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -151,11 +131,6 @@ class LecturesfilesController extends Controller
      */
     public function actionDelete($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

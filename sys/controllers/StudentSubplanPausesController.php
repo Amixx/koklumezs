@@ -37,12 +37,6 @@ class StudentSubplanPausesController extends Controller
     }
 
     public function actionIndex(){
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $dataProvider = new ActiveDataProvider([
             'query' => StudentSubplanPauses::getForCurrentSchool(),
         ]);
@@ -54,11 +48,6 @@ class StudentSubplanPausesController extends Controller
 
     public function actionView($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -66,11 +55,6 @@ class StudentSubplanPausesController extends Controller
 
     public function actionTeacherCreate()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = new StudentSubplanPauses();
         $users = Users::getStudentsForSchool();
 
@@ -98,11 +82,6 @@ class StudentSubplanPausesController extends Controller
 
     public function actionUpdate($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = $this->findModel($id);
         $users = Users::getStudentsForSchool();
 
@@ -129,11 +108,6 @@ class StudentSubplanPausesController extends Controller
 
     public function actionCreate()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = new StudentSubplanPauses();
 
         $remainingPauseWeeks = StudentSubPlans::getRemainingPauseWeeks(Yii::$app->user->identity->id);

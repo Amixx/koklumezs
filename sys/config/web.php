@@ -14,6 +14,13 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    'on beforeAction' => function ($event) {
+        $isGuest = Yii::$app->user->isGuest;
+        if (!$isGuest) {
+            $currentUser = Yii::$app->user->identity;
+            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
+        }
+    },
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation

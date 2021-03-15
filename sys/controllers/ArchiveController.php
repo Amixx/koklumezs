@@ -39,12 +39,6 @@ class ArchiveController extends Controller
 
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $archive = [];
         $user = Yii::$app->user->identity;
         $evaluatedIds = UserLectures::getEvaluatedUserLectures($user->id);

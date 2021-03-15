@@ -39,12 +39,6 @@ class PlanPartsController extends Controller
 
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $schoolId = School::getCurrentSchoolId();
         $dataProvider = new ActiveDataProvider([
             'query' => PlanParts::find()->where(['school_id' => $schoolId]),
@@ -70,12 +64,6 @@ class PlanPartsController extends Controller
 
     public function actionUpdate($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
         
@@ -95,11 +83,6 @@ class PlanPartsController extends Controller
 
     public function actionDelete($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

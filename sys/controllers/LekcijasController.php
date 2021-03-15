@@ -53,11 +53,6 @@ class LekcijasController extends Controller
      */
     public function actionIndex($type = null)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $models = [];
         $pages = [];
         $user = Yii::$app->user->identity;
@@ -166,12 +161,6 @@ class LekcijasController extends Controller
 
     public function actionLekcija($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $model = $this->findModel($id);
         $user = Yii::$app->user->identity;
 
@@ -300,11 +289,6 @@ class LekcijasController extends Controller
 
     public function actionToggleIsFavourite($lectureId)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = UserLectures::findOne(['lecture_id' => $lectureId, 'user_id' => Yii::$app->user->identity->id]);
         $model->is_favourite = !$model->is_favourite;
         $model->update();

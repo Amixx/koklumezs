@@ -51,11 +51,6 @@ class EvaluationsController extends Controller
      */
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $searchModel = new EvaluationsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $get = Yii::$app->request->queryParams;
@@ -74,11 +69,6 @@ class EvaluationsController extends Controller
      */
     public function actionView($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -91,11 +81,6 @@ class EvaluationsController extends Controller
      */
     public function actionCreate()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = new Evaluations();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -116,11 +101,6 @@ class EvaluationsController extends Controller
      */
     public function actionUpdate($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         // $E = array("Viss tik viegls, ka garlaicīgi","Ļoti ļoti viegli, noteikti vajag grūtāk","Izspēlēju vienu reizi un jau viss skaidrs","Diezgan vienkārši","Nācās pastrādāt, bet tiku galā bez milzīgas piepūles","Tiku galā","Diezgan grūti","Itkā saprotu, bet pirksti neklausa","Kaut ko mēģinu, bet pārāk nesanāk","Vispār neko nesaprotu");
         // $s = serialize($E);
         // var_dump($s);die;
@@ -152,11 +132,6 @@ class EvaluationsController extends Controller
      */
     public function actionDelete($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

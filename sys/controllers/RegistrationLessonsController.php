@@ -40,12 +40,6 @@ class RegistrationLessonsController extends Controller
 
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $schoolId = School::getCurrentSchoolId();
         $lectures = Lectures::getLectures();
 
@@ -88,11 +82,6 @@ class RegistrationLessonsController extends Controller
 
     public function actionDelete($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         
         $this->findModel($id)->delete();
 

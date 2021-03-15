@@ -60,11 +60,6 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $get = Yii::$app->request->queryParams;
         $lectures = Lectures::getLectures();
         $isCurrentUserTeacher = Users::isCurrentUserTeacher();
@@ -90,12 +85,6 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $studentSubPlan = StudentSubPlans::getCurrentForStudent($id);
 
         return $this->render('view', [
@@ -111,11 +100,6 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = new Users();
         $difficulties = Difficulties::getDifficulties();
         $handdifficulties = Handdifficulties::getDifficulties();
@@ -184,11 +168,6 @@ class UserController extends Controller
 
     public function actionUpdate($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
         $studentGoals = Studentgoals::getUserGoals($id);
@@ -328,11 +307,6 @@ class UserController extends Controller
 
     public function actionDelete($id)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         Yii::$app
             ->db
             ->createCommand()
@@ -361,12 +335,6 @@ class UserController extends Controller
     }
 
     public function actionRequestMoreTasks($id){
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $student = self::findModel($id);
         $student->wants_more_lessons = true;
         $student->update();

@@ -41,12 +41,6 @@ class StudentSubPlansController extends Controller
     }
 
     public function actionView($id){
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $subplan = StudentSubPlans::getCurrentForStudent($id);
 
         if(!$subplan){
@@ -83,11 +77,6 @@ class StudentSubPlansController extends Controller
 
     public function actionDelete($userId)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         
         StudentSubplans::resetActivePlanForUser($userId);
 

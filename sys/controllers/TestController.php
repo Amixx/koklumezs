@@ -74,12 +74,6 @@ class TestController extends Controller
 
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         // $q = 'SELECT * FROM studentsubplans where
         //     start_date like "%-31" or
         //     start_date like "%-01" OR

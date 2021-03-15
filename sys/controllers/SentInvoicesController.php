@@ -39,12 +39,6 @@ class SentInvoicesController extends Controller
 
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $searchModel = new SentInvoicesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -56,12 +50,6 @@ class SentInvoicesController extends Controller
 
     public function actionUpdate($invoiceNumber)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $model = $this->findAdvanceByNumber($invoiceNumber);
         $post = Yii::$app->request->post();
         $processRequest = isset($post['SentInvoices']) && isset($post['SentInvoices']['paid_date']) && $post['SentInvoices']['paid_date'];
@@ -82,12 +70,6 @@ class SentInvoicesController extends Controller
 
     public function actionRegisterAdvancePayment($userId)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
-
         $post = Yii::$app->request->post();
         $processRequest = $post && isset($post["SentInvoices"]['paid_months']) && isset($post["SentInvoices"]['paid_date']) && $post["SentInvoices"]['paid_months'] && $post["SentInvoices"]['paid_date'];
 

@@ -39,11 +39,6 @@ class FileController extends Controller
 
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $user = Yii::$app->user->identity;
         $force = Yii::$app->request->get('force');
         $userLectureIds =  UserLectures::getUserLectures($user->id);

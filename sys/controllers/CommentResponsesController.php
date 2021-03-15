@@ -35,11 +35,6 @@ class CommentResponsesController extends Controller
     public function actionIndex()
     {
 
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $commentResponses = CommentResponses::getCommentResponsesForUser()->asArray()->all();
 
         $this->view->params['unseen_responses_count'] = CommentResponses::getUnseenCommentsCount();
@@ -58,11 +53,6 @@ class CommentResponsesController extends Controller
     public function actionCreate()
     {
 
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = new CommentResponses;
 
         $model->author_id = Yii::$app->user->identity->id;
@@ -85,11 +75,6 @@ class CommentResponsesController extends Controller
     public function actionUpdate($id)
     {
 
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -111,11 +96,6 @@ class CommentResponsesController extends Controller
     public function actionDelete($id)
     {
 
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

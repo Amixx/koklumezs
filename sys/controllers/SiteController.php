@@ -63,11 +63,6 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $email = isset(Yii::$app->user->identity->email) ? Yii::$app->user->identity->email : null;
 
         if (Users::isAdminOrTeacher($email)) {
@@ -81,11 +76,6 @@ class SiteController extends Controller
 
     public function actionRequestPasswordReset()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = new PasswordResetRequestForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -104,11 +94,6 @@ class SiteController extends Controller
 
     public function actionResetPassword($token)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         try {
             $model = new ResetPasswordForm($token);
         } catch (InvalidArgumentException $e) {
@@ -125,11 +110,6 @@ class SiteController extends Controller
 
     public function actionVerifyEmail($token)
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         try {
             $model = new VerifyEmailForm($token);
         } catch (InvalidArgumentException $e) {
@@ -147,11 +127,6 @@ class SiteController extends Controller
 
     public function actionResendVerificationEmail()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = new ResendVerificationEmailForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
@@ -167,11 +142,6 @@ class SiteController extends Controller
 
     public function actionLogin()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
@@ -185,11 +155,6 @@ class SiteController extends Controller
 
     public function actionLogout()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         Yii::$app->user->logout();
 
         return $this->goHome();
@@ -268,8 +233,6 @@ class SiteController extends Controller
         $user = Users::findOne($u);
         $model = new RentForm;
 
-        Yii::$app->language = $user['language'];
-
         $model->fullname = $user['first_name'] . " " . $user['last_name'];
         $model->email = $user['email'];
         $valid = $model->load(Yii::$app->request->post()) && $model->validate();
@@ -306,8 +269,6 @@ class SiteController extends Controller
 
     public function actionSignupQuestions($u, $s){
         $user = Users::findOne($u);
-
-        Yii::$app->language = $user['language'];
         
         $schoolSignupQuestions = SignupQuestions::getForSchool($s);
 

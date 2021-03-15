@@ -26,11 +26,6 @@ class CronController extends Controller
      */
     public function actionIndex()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $get = Yii::$app->request->queryParams;
         if (!isset($get['send'])) {
             throw new NotFoundHttpException('The requested page does not exist.');
@@ -190,11 +185,6 @@ class CronController extends Controller
 
     public function actionUserlectures()
     {
-        $isGuest = Yii::$app->user->isGuest;
-        if (!$isGuest) {
-            $currentUser = Users::getByEmail(Yii::$app->user->identity->email);
-            if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
-        }
         $get = Yii::$app->request->queryParams;
         if (!isset($get['id'])) {
             throw new NotFoundHttpException('The requested page does not exist.');
