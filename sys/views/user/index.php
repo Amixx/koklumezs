@@ -100,29 +100,41 @@ $planEndMonths = [];
                 'label' => Yii::t('app', 'Paid/Has to pay'),
                 'value' => function ($dataProvider) {
                     $studentSubplan = StudentSubplans::getCurrentForStudent($dataProvider['id']);
+                    $unpaidInvoiceNumbers = SentInvoices::getUnpaidForStudent($dataProvider["id"]);
 
-                    if(!$studentSubplan) return;
-
-                    $color = "#99ff9c";
-                    if ($studentSubplan["times_paid"] < $studentSubplan["sent_invoices_count"]) $color = "#ff9a99";
-                    if ($studentSubplan["times_paid"] > $studentSubplan["sent_invoices_count"]) $color = "#99cfff";
+                    if(!$studentSubplan && !$unpaidInvoiceNumbers) return;
 
                     $invoice = SentInvoices::getLatestForStudent($dataProvider['id']);
-                    if (isset($invoice)) {
-                        $is_advance = $invoice['is_advance'];
-                        $invoiceSentDate = $invoice['sent_date'];
-                        $today = date('Y-m-d');
-                        $warningDate = date('Y-m-d', strtotime($invoiceSentDate. ' +14 days'));
-                        if ($is_advance && $today <= $warningDate) $color = "#cb7119";
-                    }
-
-                    $unpaidInvoiceNumbers = SentInvoices::getUnpaidForStudent($dataProvider["id"]);
                     $studentId = $dataProvider['id'];
-                    $timesPaid = $studentSubplan["times_paid"];
-                    $sentInvoices = $studentSubplan["sent_invoices_count"];
 
                     $html = "";
+                    $addPaymentHtml = "";
+
+                    if($studentSubplan){
+                        $color = "#99ff9c";
+                        if ($studentSubplan["times_paid"] < $studentSubplan["sent_invoices_count"]) $color = "#ff9a99";
+                        if ($studentSubplan["times_paid"] > $studentSubplan["sent_invoices_count"]) $color = "#99cfff";
+
+                        if (isset($invoice)) {
+                            $is_advance = $invoice['is_advance'];
+                            $invoiceSentDate = $invoice['sent_date'];
+                            $today = date('Y-m-d');
+                            $warningDate = date('Y-m-d', strtotime($invoiceSentDate. ' +14 days'));
+                            if ($is_advance && $today <= $warningDate) $color = "#cb7119";
+                        }
+
+                        $timesPaid = $studentSubplan["times_paid"];
+                        $sentInvoices = $studentSubplan["sent_invoices_count"];
+                        $html .= "<div style='text-align:center;background:" . $color . "'>" . $timesPaid . "/" . $sentInvoices . "</div>";
+                        $addPaymentHtml = "<span title='Reģistrēt maksājumu'>
+                            <a
+                                href='/sys/sent-invoices/register-advance-payment?userId=$studentId'
+                                class='glyphicon glyphicon-plus'
+                            ></a></span>";
+                    }
+
                     if($unpaidInvoiceNumbers){   
+                        $html .= "<p>Neapmaksātie rēķini: </p>";
                         foreach($unpaidInvoiceNumbers as $number){
                             $value = $number['invoice_number'];
                             $html .= "
@@ -134,18 +146,14 @@ $planEndMonths = [];
                     }
                     
                     return "
-                        <div style='text-align:center;background:" . $color . "'>" . $timesPaid . "/" . $sentInvoices . "</div>
                         <div style='text-align:center;'>
-                            <p>Neapmaksātie rēķini: </p>
                             $html
                             <span style='margin-right:48px;'><a
                                 href='/sys/cron/remind-to-pay?userId=$studentId'
                                 class='glyphicon glyphicon-envelope'                                
                                 title='Nosūtīt atgādinājumu, ka jāmaksā'
                             ></a></span>
-                            <span title='Reģistrēt maksājumu'>
-                                <a href='/sys/sent-invoices/register-advance-payment?userId=$studentId' class='glyphicon glyphicon-plus'></a>
-                            </span>
+                            $addPaymentHtml
                         </div>
                     ";
                 },
