@@ -95,6 +95,10 @@ h4 {
     position: relative;
 }
 
+.alert-success {
+    font-size: 16px;
+}
+
 .table {
     background:white;
 }
