@@ -90,7 +90,7 @@ class EmailSender
             ])
             ->setFrom([Yii::$app->params['noreplyEmail'] => Yii::$app->name])
             ->setTo($schoolEmail)
-            ->setSubject("Par kokles iegādāšanos - " . $model['fullname'])
+            ->setSubject("Instrumenta īres pieteikums - " . $model['fullname'])
             ->send();
     }
 
