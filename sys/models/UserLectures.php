@@ -170,6 +170,10 @@ class UserLectures extends \yii\db\ActiveRecord
         else if ($type == "favourite") $condition['is_favourite'] = true;
 
         $results = self::find()->where($condition)->orderBy(['id' => SORT_DESC])->all();
+
+        // visas nodarbības, kas piešķirtas pirms update un bijušas atvērtas, tagad atrodas arhīvā
+        if($type === "new") self::filterOutOldOpenedLessons($results);
+
         $results = $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
         return static::filterOutRelatedLessons($results);
     }
@@ -203,6 +207,16 @@ class UserLectures extends \yii\db\ActiveRecord
         }
 
         return $result;
+    }
+
+    public static function filterOutOldOpenedLessons($userLessons){
+        foreach($userLessons as $id => $userLesson){
+            if($userLesson['opened'] && $userLesson['created'] < self::STILL_LEARNING_TRANSITION_DATE){                    
+                unset($userLessons[$id]);
+            }
+        }
+
+        return $userLessons;
     }
 
     public static function getUnsentLectures($id, $evaluated = 0, $sent = 0)
