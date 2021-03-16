@@ -172,7 +172,7 @@ class UserLectures extends \yii\db\ActiveRecord
         $results = self::find()->where($condition)->orderBy(['id' => SORT_DESC])->all();
 
         // visas nodarbības, kas piešķirtas pirms update un bijušas atvērtas, tagad atrodas arhīvā
-        if($type === "new") self::filterOutOldOpenedLessons($results);
+        if($type === "new") $results = self::filterOutOldOpenedLessons($results);
 
         $results = $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
         return static::filterOutRelatedLessons($results);
