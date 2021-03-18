@@ -20,6 +20,8 @@ $config = [
             $currentUser = Yii::$app->user->identity;
             if ($currentUser['language'] === "lv") Yii::$app->language = 'lv';
         }
+
+        date_default_timezone_set('EET');
     },
     'components' => [
         'request' => [

@@ -48,7 +48,6 @@ class UserController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
-                    'open-chat' => ['post'],
                 ],
             ],
         ];
@@ -323,17 +322,7 @@ class UserController extends Controller
 
         return $this->redirect(['index']);
     }
-
-    public function actionOpenChat(){
-        $model = $this->findModel(Yii::$app->user->identity->id);
-        date_default_timezone_set('EET');   
-        $time = time();
-        $currentDateTime = date("Y-m-d H:i:s", $time);
-        $model->last_opened_chat = $currentDateTime;
-        $saved = $model->save();
-        return $saved;
-    }
-
+    
     public function actionRequestMoreTasks($id){
         $student = self::findModel($id);
         $student->wants_more_lessons = true;

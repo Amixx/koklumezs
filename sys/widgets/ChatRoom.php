@@ -42,7 +42,7 @@ class ChatRoom extends Widget {
         parent::init();
         $model = new Chat();
         $model->userModel = $this->userModel;
-        $data = $model->data($this->recipientId);
+        $data = $model->data($this->recipientId, false);
 
         return $this->render('index', [
             'data' => $data,

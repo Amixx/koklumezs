@@ -334,7 +334,7 @@ function setupAssignUserListFilters(){
     loadUnreadMessagesCount();
 }
 
-function reloadChat(message, clearChat, showSpinner, scrollToBottom) {
+function reloadChat(message, clearChat, showSpinner) {
     var url = $(".btn-send-comment").data("url");
     var model = $(".btn-send-comment").data("model");
     var recipient_id = $(".btn-send-comment").data("recipient_id");
@@ -346,6 +346,8 @@ function reloadChat(message, clearChat, showSpinner, scrollToBottom) {
         type: "POST",
         data: {message: message, model: model, recipient_id: recipient_id},
         success: function (data) {
+            loadUnreadMessagesCount();
+
             data = JSON.parse(data);
             if (clearChat) $("#chat_message").val("");
             $("#chat-box").html(data.content);
@@ -380,6 +382,8 @@ var $unreadCount = $(".chat-unread-count");
 function loadUnreadMessagesCount() {
     var url = IS_PROD ? "/sys/chat/get-unread-count" : "/chat/get-unread-count";
 
+    $unreadCount.hide();
+
     $.ajax({
         url: url,
         type: "POST",
@@ -400,7 +404,7 @@ function isChatOpen(){
 
 
 setInterval(function () {
-    if(isChatOpen()) reloadChat('', false, false, false);
+    if(isChatOpen()) reloadChat('', false, false);
 }, 600000); // katru minūti
 
 setInterval(function () {
@@ -410,39 +414,25 @@ setInterval(function () {
 $(".btn-send-comment").on("click", function () {
     var message = $("#chat_message").val();
     $(".chat-unread-count").hide();
-    reloadChat(message, true, false, true);
+    reloadChat(message, true, false);
 });
 
 $("#chat-toggle-button").on('click', function(){
-    openChat();
+    reloadChat("", true, true);
 });
-
-function openChat(){
-    $unreadCount.hide();    
-
-    var url = IS_PROD ? "/sys/user/open-chat" : "/user/open-chat";
-    $.ajax({
-        url: url,
-        type: "POST",
-        success: function(){
-            scrollChatToBottom();
-        }
-    });
-}
 
 $(document).on('click', ".chat-user-item", function(){
     var newRecipientId = $(this).data("userid");
     $(".btn-send-comment").data("recipient_id", newRecipientId);
 
-    reloadChat("", true, true, true);
+    reloadChat("", true, true);
 })
 
 $(document).on('click', ".chat-with-student", function(){
     var newRecipientId = $(this).data("userid");
     $(".btn-send-comment").data("recipient_id", newRecipientId);
 
-    reloadChat("", true, true, true);
-    openChat();
+    reloadChat("", true, true);
     $("#chatModal").modal('show');
 })
 

@@ -58,48 +58,50 @@ class Chat extends \yii\db\ActiveRecord {
         ])->orderBy('id asc')->all();
     }
 
-    public static function unreadCountForCurrentUser(){
-        $currentUserId = Yii::$app->user->identity->id;
+    public static function getUnreadCountInCorrespondence($authorId, $recipientId){
+        $opentime = CorrespondenceOpentimes::getOpentimeValue($authorId, $recipientId);
+        $lastOpenedChat = Yii::$app->user->identity['last_opened_chat'];
+    
+        $query = static::find()
+            ->select(['COUNT(*) as count'])
+            ->where([
+                'recipient_id' => $authorId,
+                'author_id' => $recipientId
+            ]);
 
-        $currentUser = Users::findOne(['id' => $currentUserId]);
-        if($currentUser['last_opened_chat']){
-            $data = static::find()
-                ->select(['COUNT(*) as count'])
-                ->where(['>', 'update_date', $currentUser['last_opened_chat']])
-                ->andWhere(['recipient_id' => $currentUserId])
-                ->createCommand()->queryAll();
-        }else{
-            $data = static::find()
-                ->select(['COUNT(*) as count'])
-                ->andWhere(['recipient_id' => $currentUserId])
-                ->createCommand()->queryAll();
+        if($opentime){
+            $query->andWhere(['>', 'update_date', $opentime]);
         }
         
+        // LEGACY: for transition from last_opened_chat to opentime for each correspondence. remove after a month or so (?)
+        if($lastOpenedChat){
+            $query->andWhere(['>', 'update_date', $lastOpenedChat]);
+        }
+
+        $data = $query->createCommand()->queryAll();
 
         return (int) $data[0]["count"];
     }
 
-    public static function hasNewChats($senderId){
+    public static function unreadCountForCurrentUser(){
         $currentUserId = Yii::$app->user->identity->id;
-        $currentUser = Users::findOne(['id' => $currentUserId]);
 
-        if($currentUser['last_opened_chat']){
-            $data = static::find()
-                ->select(['COUNT(*) as count'])
-                ->where(['>', 'update_date', $currentUser['last_opened_chat']])
-                ->andWhere(['author_id' => $senderId, 'recipient_id' => $currentUserId])
-                ->createCommand()->queryAll();
-        }else{
-            $data = static::find()
-                ->select(['COUNT(*) as count'])
-                ->andWhere(['author_id' => $senderId, 'recipient_id' => $currentUserId])
-                ->createCommand()->queryAll();
+        $totalUnreadCount = 0;
+        $usersWithConversations = self::getUsersWithConversations($currentUserId);
+        foreach($usersWithConversations as $user){
+            $totalUnreadCount += self::getUnreadCountInCorrespondence($currentUserId, $user['id']);
         }
-        $count = (int) $data[0]["count"];
-        return $count > 0;
+        
+        return $totalUnreadCount;
     }
 
-    public static function getUsersWithConversations($authorId, $recipientId){
+    public static function hasNewChats($senderId){
+        $currentUserId = Yii::$app->user->identity->id;
+
+        return self::getUnreadCountInCorrespondence($currentUserId, $senderId);
+    }
+
+    public static function getUsersWithConversations($authorId){
         $userIdsData = static::find()
             ->select(['author_id', 'recipient_id'])
             ->andWhere([
@@ -146,13 +148,17 @@ class Chat extends \yii\db\ActiveRecord {
         else return null;
     }
 
-    public function data($recipientId) {
+    public function data($recipientId, $updateOpentime = true) {
         $output = "";
         $userList = null;
         $currentUserId = Yii::$app->user->identity->id;
         $isTeacher = Users::isCurrentUserTeacher();
         $messages = Chat::recordsForTwoUsers($currentUserId, $recipientId);
-        $usersWithConversations = $isTeacher ? Chat::getUsersWithConversations($currentUserId, $recipientId) : null;
+        $usersWithConversations = $isTeacher ? Chat::getUsersWithConversations($currentUserId) : null;
+
+        if($updateOpentime){
+            CorrespondenceOpentimes::updateOpentime($currentUserId, $recipientId);
+        }
 
         if ($messages)
             foreach ($messages as $message) {
