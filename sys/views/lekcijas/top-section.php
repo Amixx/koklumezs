@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 
-$heartClasses = $uLecture->is_favourite 
+$heartClasses = $uLecture && $uLecture->is_favourite 
     ? 'glyphicon-heart LectureEvaluations__Heart--active'
     : 'glyphicon-heart-empty';
 

@@ -17,7 +17,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                     'newLessons' => $newLessons,
                     'favouriteLessons' => $favouriteLessons,
                     'sortByDifficulty' => $sortByDifficulty,
-                    'currentLessonEvaluated' => $uLecture->evaluated,
+                    'currentLessonEvaluated' => $uLecture && $uLecture->evaluated,
                 ]) ?>
             </div>
         </div>
