@@ -401,7 +401,7 @@ function isChatOpen(){
 
 setInterval(function () {
     if(isChatOpen()) reloadChat('', false, false, false);
-}, 60000); // katru minūti
+}, 600000); // katru minūti
 
 setInterval(function () {
     if(!isChatOpen()) loadUnreadMessagesCount();

@@ -102,7 +102,6 @@ class Chat extends \yii\db\ActiveRecord {
     public static function getUsersWithConversations($authorId, $recipientId){
         $userIdsData = static::find()
             ->select(['author_id', 'recipient_id'])
-            ->distinct()
             ->andWhere([
                 'or',
                 ['author_id' => $authorId],
@@ -114,11 +113,23 @@ class Chat extends \yii\db\ActiveRecord {
 
         $userIds = [];
         foreach($userIdsData as $data){
-            if(!in_array($data['author_id'], $userIds) && $data['author_id'] != $authorId) $userIds[] = $data['author_id'];
-            if(!in_array($data['recipient_id'], $userIds) && $data['recipient_id'] != $authorId) $userIds[] = $data['recipient_id'];
+            if(!in_array($data['author_id'], $userIds) && $data['author_id'] != $authorId){
+                $userIds[] = $data['author_id'];
+            }
+            if(!in_array($data['recipient_id'], $userIds) && $data['recipient_id'] != $authorId) {
+                $userIds[] = $data['recipient_id'];
+            }
         }
 
-        return Users::find()->where(["in", "id", $userIds])->asArray()->all();
+        $users = Users::find()->where(["in", "id", $userIds])->asArray()->all();
+        $usersByIds = array_column($users, NULL, 'id');
+        $usersSorted = array_map(function($id)use($usersByIds){
+            if(isset($usersByIds[$id])){
+                return $usersByIds[$id];
+            }
+        }, $userIds);
+
+        return $usersSorted;
     }
 
     public static function findFirstRecipient(){
