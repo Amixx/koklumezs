@@ -18,8 +18,4 @@ if (isset($sortByDifficulty) && ($sortByDifficulty == 'desc')) {
     'lessons' => $newLessons,
     'currentLessonEvaluated' => $currentLessonEvaluated,
 ]) ?>
-<?= $this->render('lesson-list', [
-    'lessons' => $favouriteLessons,
-    'currentLessonEvaluated' => $currentLessonEvaluated,
-]) ?>
 <?= Html::a(\Yii::t('app', 'Open favourite lessons'), ['?type=favourite'], ['class' => 'btn btn-gray favourite-lessons-button']) ?>

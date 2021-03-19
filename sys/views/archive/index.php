@@ -11,11 +11,12 @@ $this->title = \Yii::t('app', 'Archive');
 ?>
 <div class="lectures-index">
     <div class="row search-section">
-        <div class="col-md-5 col-xs-12">      
+        <div class="col-md-7 col-xs-12">      
             <?= Html::beginForm([''], 'get') ?>
             <div class="display-flex">
                 <?= Html::input('text', 'archive_filter', $archive_filter, ['class' => 'content-input']) ?>
                 <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>
+                <?= Html::a(\Yii::t('app', 'Show all'), '?archive_filter=', ['class' => 'btn btn-orange']) ?>
             </div>
             <?= Html::endForm() ?>
         </div> 
