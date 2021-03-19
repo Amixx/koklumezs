@@ -45,6 +45,10 @@ $this->title = \Yii::t('app',  'School settings');
                 <strong><?= Yii::t('app', 'The link that students can use to join this school'); ?>: </strong>
                 <code><?= $signupUrl ?></code>
             </p>
+            <p>
+                <strong><?= Yii::t('app', 'The link that students can use to login this school'); ?>: </strong>
+                <code><?= $loginUrl ?></code>
+            </p>
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
             <?= $this->render("difficulties", [

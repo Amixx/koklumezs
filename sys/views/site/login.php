@@ -24,7 +24,7 @@ $fieldOptions2 = [
 
 <div class="login-box login-container col-sm-12">
     <div class="login-box-body login login-form">
-
+        <h3 id="login-header"><?= $loginTitle ?></h3>
         <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
 
         <?= $form
