@@ -140,16 +140,26 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionLogin()
+    public function actionLogin($s = '', $l = '')
     {
+        $this->layout = '@app/views/layouts/login';
+        $this->view->params['s'] = $s;
+        $this->view->params['l'] = $l;
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
 
+        $loginTitle = '';
+        if (isset($s)) {
+            $school = School::findOne($s);
+            $loginTitle = $school['login_title'];
+        }
+        
         $model->password = '';
         return $this->render('login', [
             'model' => $model,
+            'loginTitle' => $loginTitle,
         ]);
     }
 
