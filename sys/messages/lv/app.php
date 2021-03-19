@@ -216,6 +216,7 @@ return [
     'Parameters at the moment' => 'Parametri šobrīd',
     'Passive' => 'Pasīvs',
     'Password' => 'Parole',
+    'Create password' => 'Izveidot paroli',
     'Password too short.' => 'Ievadītā parole ir pārāk īsa',
     'Pause the plan' => 'Vēlos paņemt pauzīti no jaunām nodarbībām',
     'Pause weeks' => 'Pauzes nedēļas',

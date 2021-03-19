@@ -51,7 +51,7 @@ function getFieldOptions($fieldName, $hasInfo = false){
             <?= $form
                 ->field($model, 'password', getFieldOptions('password'))
                 ->label(false)
-                ->passwordInput(['placeholder' => Yii::t('app', 'Password')]) ?>
+                ->passwordInput(['placeholder' => Yii::t('app', 'Create password')]) ?>
             <?= $form
                 ->field($model, 'passwordRepeat', getFieldOptions('password'))
                 ->label(false)

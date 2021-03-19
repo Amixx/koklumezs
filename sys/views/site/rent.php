@@ -42,7 +42,6 @@ $this->title = \Yii::t('app',  'Your first kokle');
 
         <div class="col-sm-12 text-center">
             <div>
-                <?= Html::a(\Yii::t('app',  'Back to start'), ['index'], ['class' => 'btn btn-secondary']) ?> 
                 <?= Html::submitButton(\Yii::t('app', 'Submit'), ['class' => 'btn btn-primary btn-flat', 'name' => 'login-button']) ?>
             </div>
         </div>
