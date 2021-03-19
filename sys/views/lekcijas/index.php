@@ -31,11 +31,12 @@ if (isset($sortByDifficulty)) {
     <h3><?= $this->title ?></h3>
     <?php if (count($models) > 1 || isset($title_filter)) { ?>
         <div class="row search-section">
-            <div class="col-md-5 col-xs-12">  
+            <div class="col-md-7 col-xs-12">  
                 <?= Html::beginForm(['/lekcijas/?type='.$type.'&sortByDifficulty='.$sortByDifficulty], 'get') ?>
                 <div class="display-flex">
                     <?= Html::input('text', 'title_filter', $title_filter, ['class' => 'content-input']) ?>
                     <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>                
+                    <?= Html::a(\Yii::t('app', 'Show all'), '?type='.$type.'&sortByDifficulty='.$toggledSortByDifficulty.'&title_filter=', ['class' => 'btn btn-orange']) ?>
                 </div>
                  <?= Html::endForm() ?>
             </div>
