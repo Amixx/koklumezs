@@ -87,7 +87,7 @@ AppAsset::register($this);
             }
         </script>
         <?php
-        if ($schoolId != '') { $navItems[] = ['label' => \Yii::t('app',  'Sign up'), 'url' => [$signupUrl]]; 
+        if (isset($schoolId)) { $navItems[] = ['label' => \Yii::t('app',  'Sign up'), 'url' => [$signupUrl]]; 
 
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],

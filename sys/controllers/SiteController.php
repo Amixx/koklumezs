@@ -140,7 +140,7 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionLogin($s = '', $l = '')
+    public function actionLogin($s = null, $l = null)
     {
         $this->layout = '@app/views/layouts/login';
         $this->view->params['s'] = $s;

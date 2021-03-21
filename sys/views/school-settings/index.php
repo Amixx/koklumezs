@@ -46,7 +46,7 @@ $this->title = \Yii::t('app',  'School settings');
                 <code><?= $signupUrl ?></code>
             </p>
             <p>
-                <strong><?= Yii::t('app', 'The link that students can use to login this school'); ?>: </strong>
+                <strong><?= Yii::t('app', 'The link that students can use to log in this school'); ?>: </strong>
                 <code><?= $loginUrl ?></code>
             </p>
         </div>
