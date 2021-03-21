@@ -131,8 +131,11 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
             </tbody>
         </table>
     </div>
+    <?php if (isset($user) && $user->wants_more_lessons) { ?>
+        <h3 style="color: red;"><?= \Yii::t('app', 'User dosen\'t have enough lessons')?>! </h3>
+    <?php } ?>
     <?php if (isset($user) && $user->about) { ?>
-        <p>Par lietotāju: <b><?= $user->about ?></b>.</p>
+        <p><?= \Yii::t('app', 'About user')?>: <b><?= $user->about ?></b>.</p>
     <?php } ?>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['seven'], 7]); ?>.</p>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['thirty'], 30]); ?>.</p>

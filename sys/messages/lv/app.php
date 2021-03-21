@@ -458,4 +458,5 @@ return [
     'Just as complicated' => 'Tik pat sarežģītu',
     'Challenge' => 'Izaicinājums',
     'How difficult lesson you want' => 'Cik sarežģītu nodarbību tu vēlies',
+    'User dosen\'t have enough lessons' => 'Lietotājam ir pārāk maz nodarbību',
 ];
