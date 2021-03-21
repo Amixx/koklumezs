@@ -15,9 +15,11 @@ use yii\helpers\Url;
             <h4 class="LectureOverview__EmptyText">
                 <?= \Yii::t('app', $emptyText) ?>
             </h4>
-            <?php if($renderRequestButton) { ?>
-                 <div class="row text-center">
-                    <?= Html::a(\Yii::t('app', 'I want more tasks'), ['user/request-more-tasks/?id=' . $userId], ['class' => 'btn btn-orange btn-long']) ?>
+            <?php if($type == 'new' && ($nextLessons[0] != NULL || $nextLessons[1] != NULL || $nextLessons[2] != NULL)) { ?>
+                <div class="row text-center">            
+                    <?= $this->render('moreLessonsModal',[
+                        'nextLessons' => $nextLessons,
+                    ])?>   
                 </div>
             <?php } ?>           
         <?php } else { ?>

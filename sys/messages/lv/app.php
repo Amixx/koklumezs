@@ -454,4 +454,8 @@ return [
     'Passwords don\'t match' => 'Paroles nesakrīt',
     'Unlimited' => 'Neierobežots',
     'Thank you for your message! Next time we will send more tasks! Have a good day!' => 'Paldies par ziņu! Nākamajā reizē sūtīsim vairāk uzdevumus! Lai mierīga diena!',
+    'Easier' => 'Atslodzei',
+    'Just as complicated' => 'Tik pat sarežģītu',
+    'Challenge' => 'Izaicinājums',
+    'How difficult lesson you want' => 'Cik sarežģītu nodarbību tu vēlies',
 ];

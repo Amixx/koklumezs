@@ -3,7 +3,6 @@
 namespace app\controllers;
 
 use app\models\Difficulties;
-use app\models\Evaluations;
 use app\models\Lectures;
 use app\models\LecturesDifficulties;
 use app\models\Lecturesevaluations;
@@ -15,6 +14,7 @@ use app\models\UserLectures;
 use app\models\Users;
 use app\models\School;
 use app\models\SectionsVisible;
+use app\models\StudentGoals;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\VerbFilter;
@@ -140,6 +140,62 @@ class LekcijasController extends Controller
 
             $title_filter = 1;
 
+            $userId = Yii::$app->user->identity->id;
+            $user = Users::findOne($userId);
+
+            $post = Yii::$app->request->post();
+            if ($post) {
+                $goals = StudentGoals::getUserGoals($userId);
+                $goalsnow = StudentGoals::NOW;
+                $goalsum = isset($goals[$goalsnow]) ? array_sum($goals[$goalsnow]) : 0;
+
+                $lessonId = Yii::$app->request->post('lessonId', null);
+                $model = new UserLectures();
+                $model->assigned = $userId;
+                $model->created = date('Y-m-d H:i:s', time());
+                $model->lecture_id = $lessonId;
+                $model->user_id = $userId;
+                $model->user_difficulty = $goalsum;
+                $saved = $model->save();
+                if ($saved) {
+                    $user->wants_more_lessons = true;
+                    $user->update();   
+                    $model->sent = 1;
+                    $model->update();
+                }
+                return $this->redirect(['']);
+            }
+
+            $unassignedLectures = UserLectures::getUnassignedLectures($userId);
+            $avg = UserLectures::getLastThreeComplexityAverage($userId);
+            $nextLessons = [null,null,null];
+            $similar = 3;
+            $max = 20;
+            $total = $similar + $max;
+
+            foreach ($unassignedLectures as $lecture) {
+                $complexity = $lecture->complexity;
+                $fitsEasier = $complexity >= $avg - $total && $complexity < $avg - $similar;
+                $fitsSame = $complexity <= $avg + $total && $complexity > $avg + $similar;
+                $fitsHarder = $complexity >= $avg - $similar && $complexity <= $avg + $similar;
+
+                if ($fitsEasier) {
+                    if (isset($nextLessons[0])) {
+                        if ($nextLessons[0]->complexity < $complexity) $nextLessons[0] = $lecture;
+                } else $nextLessons[0] = $lecture;
+                } else if ($fitsSame) {
+                    if (isset($nextLessons[2])) {
+                        if ($nextLessons[2]->complexity > $complexity) $nextLessons[2] = $lecture;
+                    } else $nextLessons[2] = $lecture;
+                } else if ($fitsHarder) {
+                    if (isset($nextLessons[1])) {
+                        $cdist = abs($avg - $nextLessons[1]->complexity);
+                        $ndist = abs($avg - $complexity);
+                        if ($cdist>$ndist) $nextLessons[1] = $lecture;
+                    } else $nextLessons[1] = $lecture;
+                }
+            }
+
             return $this->render('overview', [
                 'models' => $models,
                 'newLessons' => $newLessons,
@@ -148,7 +204,7 @@ class LekcijasController extends Controller
                 'pages' => $pages,
                 'userLectureEvaluations' => $userLectureEvaluations,
                 'videoThumb' => $videoThumb,
-                'renderRequestButton' => !$user->wants_more_lessons,
+                'nextLessons' => $nextLessons,
             ]);
         }
 

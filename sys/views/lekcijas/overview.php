@@ -14,7 +14,7 @@
             'type' => 'new',
             'emptyText' => 'Congratulations! You\'ve seen all new lessons',
             'videoThumb'=> $videoThumb,
-            'renderRequestButton' => $renderRequestButton,
+            'nextLessons' => $nextLessons,
         ])?>
         <?=
         $this->render('favouriteANDnew',[
@@ -24,7 +24,6 @@
             'type' => 'favourite',
             'emptyText' => 'You have not added any lessons to this section yet. You can do this by marking in any lesson that you want to add it to this section.',
             'videoThumb'=> $videoThumb,
-            'renderRequestButton' => false,
         ])?>
     </div>
 </div>

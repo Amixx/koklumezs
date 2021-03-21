@@ -4,6 +4,8 @@ namespace app\models;
 
 use app\models\Lectures;
 use app\models\Users;
+use app\models\School;
+use app\models\SchoolLecture;
 use Yii;
 use yii\helpers\ArrayHelper;
 use app\helpers\EmailSender;
@@ -333,5 +335,32 @@ class UserLectures extends \yii\db\ActiveRecord
         $lecture = Lectures::findOne($lecture_id);
         
         return EmailSender::sendReminderToTeacher($user, $lecture, $x, $school['email']);
+    }
+
+    public static function getUnassignedLectures($id){
+
+        $school = School::getByStudent($id);
+        $schoolLectures = SchoolLecture::getSchoolLectureIds($school);
+        $userLectures = self::getUserLectures($id);
+        $unassigned = [];
+        foreach ($schoolLectures as $slecture) {
+            $new = true;
+            foreach($userLectures as $ulecture) {
+                if ($slecture == $ulecture) {$new = false; break;}
+            }
+            if ($new) array_push($unassigned, Lectures::findOne($slecture));
+        }
+        return $unassigned;
+    }
+
+    public static function getLastThreeComplexityAverage($id) {
+        $lastLectures = self::getLastLecturesForUser($id,3);
+        $avg = 0;
+        foreach ($lastLectures as $lectureId) {
+            $lecture = Lectures::findOne($lectureId);
+            $avg = $avg + $lecture->complexity;
+        }
+        $avg = (int)round($avg / 3, 0);
+        return $avg;
     }
 }

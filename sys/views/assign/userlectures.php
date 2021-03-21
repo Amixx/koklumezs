@@ -97,6 +97,9 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
                             <?php if ($lecture->is_favourite){ ?> 
                                 <span class="glyphicon glyphicon-heart"></span>
                             <?php } ?> 
+                            <?php if ($lecture->assigned == $lecture->user_id){ ?> 
+                                <span class="glyphicon glyphicon-asterisk"></span>
+                            <?php } ?> 
                         </td>
                         <td align="center"><?= (int) $lecture->opened ? 'Jā' : 'Nē' ?></td>
                         <td align="center"><?= $lecture->open_times ?></td>
