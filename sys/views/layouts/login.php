@@ -11,6 +11,7 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\School;
 
+$school = null;
 $schoolId = array_key_exists('s', $this->params) ? $this->params['s'] : null;
 $lang = array_key_exists('l', $this->params) ? $this->params['l'] : 'lv';
 
