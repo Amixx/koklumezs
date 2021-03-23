@@ -88,6 +88,11 @@ $(document).ready(function() {
         ".info-school-email",
         "<p>Skolas e-pasts tiek izmantots ziņojumu nosūtīšanai skolēniem, kā arī uz šo e-pastu tiek sūtīti paziņojumi.</p>"
     );
+    
+    addPopoverToElement(
+        ".info-school-difficulties_color",
+        "<p>test text.</p>"
+    );
 
     $("#sentinvoices-paid_date").attr("autocomplete", "off");
 });
