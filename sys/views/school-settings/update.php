@@ -65,9 +65,6 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
             'buttonOptions' => ['class' => 'btn btn-default'],
             'multiple' => false,
         ]); ?>
-        <?= $form->field($model, 'difficulties_color')->textInput(['class' => 'form-control form-group has-feedback field-with-info-widget']) ?>
-        <span class="glyphicon glyphicon-info-sign info info-school-difficulties_color" style="margin-top: -50px;"></span>
-
         <?= $form->field($model, 'email')->textInput(['class' => 'form-control form-group has-feedback field-with-info-widget']) ?>
         <span class="glyphicon glyphicon-info-sign info info-school-email" style="margin-top: -50px;"></span>
 

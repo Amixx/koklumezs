@@ -2,7 +2,6 @@
 
 use app\models\Lecturesfiles;
 use app\models\Lectures;
-use app\models\LecturesDifficulties;
 use app\helpers\ThumbnailHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -25,7 +24,6 @@ use yii\helpers\Url;
         <?php } else { ?>
             <div class="row LectureOverview__Content">
                 <?php foreach ($Lectures as $lecture) {
-                    $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($lecture);
                     $lecturefiles = Lecturesfiles::getLectureFiles($lecture->id);
                     $likesCount = Lectures::getLikesCount($lecture->id);
                     $thumbStyle = ThumbnailHelper::getThumbnailStyle($lecture->file, $videoThumb);
@@ -33,18 +31,6 @@ use yii\helpers\Url;
                     <div class="col-xs-6 col-lg-3 text-center lecture-wrap">
                         <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
                         <span class="lecture-title"><?= $lecture->title ?> </span>
-                        <div class="lecture-parameter-container">
-                            <?php
-                            foreach ($difficulties as $id => $name) {
-                                if (isset($lectureDifficulties[$id])) {
-                                    $color = 'progress-bar-info';
-                                    echo '<span class="lecture-parameter-line"><span class="lecture-parameter-title">' . $name . '</span>';
-                                    echo '<div class="progress lecture-parameter-bar"><div class="progress-bar ' . $color . '" role="progressbar" style="width: ' . $lectureDifficulties[$id] . '0%;"></div></div><span>';
-                                }
-                                echo '<br>';
-                            }
-                            ?>
-                        </div>
                         <?php if ($likesCount) { ?>
                             <span class="lecturelikes">
                                 <span class="glyphicon glyphicon-heart lecturelikes-icon"></span>

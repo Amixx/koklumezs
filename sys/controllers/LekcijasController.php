@@ -141,9 +141,6 @@ class LekcijasController extends Controller
 
             $title_filter = 1;
 
-            $schoolId = School::getCurrentSchoolId();
-            $difficulties = Difficulties::getDifficultiesForSchool($schoolId);
-
             return $this->render('overview', [
                 'models' => $models,
                 'newLessons' => $newLessons,
@@ -153,7 +150,6 @@ class LekcijasController extends Controller
                 'userLectureEvaluations' => $userLectureEvaluations,
                 'videoThumb' => $videoThumb,
                 'renderRequestButton' => !$user->wants_more_lessons,
-                'difficulties' => $difficulties,
             ]);
         }
 
