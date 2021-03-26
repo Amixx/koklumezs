@@ -1,32 +1,32 @@
 <div class="visible-xs">
-<?php
+    <?php
 
-use app\helpers\ThumbnailHelper;
+    use app\helpers\ThumbnailHelper;
 
-$thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $videoThumb);
+    $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $videoThumb);
 
-$width = $model->play_along_file ? "38%" : "100%";
-$marginTop = $model->play_along_file ? "60px" : "0px";
-$btnClass = "btn btn-orange dropdown-toggle";
-if($model->play_along_file) {
-    $btnClass .= " btn-narrow";
-}
-?>
-<div style="display: inline-block; width:<?= $width ?>; vertical-align: top; margin-top:8px">
-    <?php if ($lecturefiles) { ?>
-        <button type="button" class="<?= $btnClass ?>" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
-            <?= \Yii::t('app', 'Lyrics and notes');?>
-        </button>
-        <div class="dropdown-menu dropdown-menu-lg-left">
-            <?= $files = $this->render('docs', ['lecturefiles' => $lecturefiles]);?>
-        </div> 
-    <?php } ?>
-    <p style="color:black; margin: <?= $marginTop ?> 0 0 6px"><?= Yii::t('app', 'Previous assignments in this lesson') ?></p>
-</div>
+    $width = $model->play_along_file ? "38%" : "100%";
+    $marginTop = $model->play_along_file ? "60px" : "0px";
+    $btnClass = "btn btn-orange dropdown-toggle";
+    if ($model->play_along_file) {
+        $btnClass .= " btn-narrow";
+    }
+    ?>
+    <div style="display: inline-block; width:<?= $width ?>; vertical-align: top; margin-top:8px">
+        <?php if ($lecturefiles) { ?>
+            <button type="button" class="<?= $btnClass ?>" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
+                <?= \Yii::t('app', 'Lyrics and notes'); ?>
+            </button>
+            <div class="dropdown-menu dropdown-menu-lg-left">
+                <?= $files = $this->render('docs', ['lecturefiles' => $lecturefiles]); ?>
+            </div>
+        <?php } ?>
+        <p style="color:black; margin: <?= $marginTop ?> 0 0 6px"><?= Yii::t('app', 'Previous assignments in this lesson') ?></p>
+    </div>
 
 
-<?php if($model->play_along_file){ ?>
-    <div style="display: inline-block; width:60%;">
+    <?php if ($model->play_along_file) { ?>
+        <div style="display: inline-block; width:60%;">
             <div>
                 <div class="lecture-wrap">
                     <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-mob-<?= $model->id ?>" style="<?= $thumbStyle ?>"></a>
@@ -38,16 +38,16 @@ if($model->play_along_file) {
                     'id' => "mob-" . $model->id,
                 ]) ?>
             </div>
-    </div>
-<?php } ?>
+        </div>
+    <?php } ?>
 
-<?php if ($relatedLectures) { ?>
-    <?= $this->render('related', [
-        'relatedLectures' => $relatedLectures,
-        'lecturefiles' => $lecturefiles,
-        'userEvaluatedLectures' => $userEvaluatedLectures,
-        'videoThumb' => $videoThumb,
-        'modalIdPrefix' => 'mob-'
-    ])?>
-<?php } ?>
+    <?php if ($relatedLectures) { ?>
+        <?= $this->render('related', [
+            'relatedLectures' => $relatedLectures,
+            'lecturefiles' => $lecturefiles,
+            'userEvaluatedLectures' => $userEvaluatedLectures,
+            'videoThumb' => $videoThumb,
+            'modalIdPrefix' => 'mob-'
+        ]) ?>
+    <?php } ?>
 </div>

@@ -45,7 +45,8 @@ class SchoolLecture extends \yii\db\ActiveRecord
         return $this->hasMany(Users::className(), ['id' => 'lecture_id']);
     }
 
-    public static function getForSchool($schoolId){
+    public static function getForSchool($schoolId)
+    {
         return self::find()->where(['school_id' => $schoolId])->asArray()->all();
     }
 
@@ -55,7 +56,8 @@ class SchoolLecture extends \yii\db\ActiveRecord
         return ArrayHelper::map($schoolLectures, 'id', 'lecture_id');
     }
 
-    public static function getSchoolLectureTitles($schoolId){
+    public static function getSchoolLectureTitles($schoolId)
+    {
         $lectureIds = self::getSchoolLectureIds($schoolId);
         return ArrayHelper::map(Lectures::find()->where(['in', 'id', $lectureIds])->asArray()->all(), 'id', 'title');
     }

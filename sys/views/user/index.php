@@ -55,12 +55,12 @@ $planEndMonths = [];
                 },
                 'filter' => Html::dropDownList('TeacherUserSearch[status]', isset($get['TeacherUserSearch']['status']) ? $get['TeacherUserSearch']['status'] : '', app\models\Users::getStatus(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
             ],
-             [
+            [
                 'attribute' => 'Plan price',
                 'label' => Yii::t('app', 'Payment'),
                 'value' => function ($dataProvider) {
                     $studentSubplan = StudentSubplans::getCurrentForStudent($dataProvider['id']);
-                    if(!$studentSubplan || !$studentSubplan["plan"]) return;
+                    if (!$studentSubplan || !$studentSubplan["plan"]) return;
 
                     $planId = $studentSubplan["plan_id"];
                     $totalCost = SchoolSubplanParts::getPlanTotalCost($planId);
@@ -71,19 +71,20 @@ $planEndMonths = [];
                     'TeacherUserSearch[subplan_monthly_cost]',
                     isset($get['TeacherUserSearch']['subplan_monthly_cost']) ? $get['TeacherUserSearch']['subplan_monthly_cost'] : '',
                     $schoolSubPlanPrices,
-                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                ),
             ],
             [
                 'attribute' => 'Plan end date',
                 'label' => Yii::t('app', 'Plan end date'),
                 'value' => function ($dataProvider) {
                     $studentSubplan = StudentSubplans::getCurrentForStudent($dataProvider['id']);
-                    if(!$studentSubplan || !$studentSubplan['plan']) return;
+                    if (!$studentSubplan || !$studentSubplan['plan']) return;
                     if ($studentSubplan['plan']['months'] == '0') return \Yii::t('app',  'Unlimited');
                     $planPauses = StudentSubplanPauses::getForStudentSubplan($studentSubplan['id'])->asArray()->all();
                     $date = date_create($studentSubplan["start_date"]);
                     $date->modify("+" . $studentSubplan['plan']['months'] . "month");
-                    foreach($planPauses as $pause){
+                    foreach ($planPauses as $pause) {
                         $date->modify("+" . $pause['weeks'] . "week");
                     }
                     return date_format($date, 'd-m-Y');
@@ -92,7 +93,8 @@ $planEndMonths = [];
                     'TeacherUserSearch[subplan_end_date]',
                     isset($get['TeacherUserSearch']['subplan_end_date']) ? $get['TeacherUserSearch']['subplan_end_date'] : '',
                     $planEndDates,
-                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                ),
                 'format' => 'raw'
             ],
             [
@@ -102,7 +104,7 @@ $planEndMonths = [];
                     $studentSubplan = StudentSubplans::getCurrentForStudent($dataProvider['id']);
                     $unpaidInvoiceNumbers = SentInvoices::getUnpaidForStudent($dataProvider["id"]);
 
-                    if(!$studentSubplan && !$unpaidInvoiceNumbers) return;
+                    if (!$studentSubplan && !$unpaidInvoiceNumbers) return;
 
                     $invoice = SentInvoices::getLatestForStudent($dataProvider['id']);
                     $studentId = $dataProvider['id'];
@@ -110,7 +112,7 @@ $planEndMonths = [];
                     $html = "";
                     $addPaymentHtml = "";
 
-                    if($studentSubplan){
+                    if ($studentSubplan) {
                         $color = "#99ff9c";
                         if ($studentSubplan["times_paid"] < $studentSubplan["sent_invoices_count"]) $color = "#ff9a99";
                         if ($studentSubplan["times_paid"] > $studentSubplan["sent_invoices_count"]) $color = "#99cfff";
@@ -119,7 +121,7 @@ $planEndMonths = [];
                             $is_advance = $invoice['is_advance'];
                             $invoiceSentDate = $invoice['sent_date'];
                             $today = date('Y-m-d');
-                            $warningDate = date('Y-m-d', strtotime($invoiceSentDate. ' +14 days'));
+                            $warningDate = date('Y-m-d', strtotime($invoiceSentDate . ' +14 days'));
                             if ($is_advance && $today <= $warningDate) $color = "#cb7119";
                         }
 
@@ -133,9 +135,9 @@ $planEndMonths = [];
                             ></a></span>";
                     }
 
-                    if($unpaidInvoiceNumbers){   
+                    if ($unpaidInvoiceNumbers) {
                         $html .= "<p>Neapmaksātie rēķini: </p>";
-                        foreach($unpaidInvoiceNumbers as $number){
+                        foreach ($unpaidInvoiceNumbers as $number) {
                             $value = $number['invoice_number'];
                             $html .= "
                             <p>
@@ -144,7 +146,7 @@ $planEndMonths = [];
                             ";
                         }
                     }
-                    
+
                     return "
                         <div style='text-align:center;'>
                             $html
@@ -165,14 +167,15 @@ $planEndMonths = [];
                         'paid' => Yii::t('app', 'All paid'),
                         'prepaid' => Yii::t('app', 'Prepaid'),
                     ],
-                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                ),
                 'format' => 'html',
             ],
             [
                 'attribute' => 'Chat',
                 'label' => Yii::t('app', 'Chat'),
                 'value' => function ($dataProvider) {
-                    if(!$dataProvider) return;
+                    if (!$dataProvider) return;
 
                     $userId = $dataProvider['id'];
                     return "<span data-userid='$userId' style='width: 41px;' class='btn btn-success glyphicon glyphicon-envelope chat-with-student'>&nbsp;</span>";

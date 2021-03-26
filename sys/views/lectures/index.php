@@ -73,16 +73,16 @@ $this->title = \Yii::t('app', 'Lessons');
                 ],
                 'urlCreator' => function ($action, $model) {
                     if ($action === 'view') {
-                        $url = Url::base(true).'/lekcijas/lekcija/' . $model->id . '?force=1';
+                        $url = Url::base(true) . '/lekcijas/lekcija/' . $model->id . '?force=1';
                         return $url;
                     }
 
                     if ($action === 'update') {
-                        $url = Url::base(true).'/lectures/update/' . $model->id;
+                        $url = Url::base(true) . '/lectures/update/' . $model->id;
                         return $url;
                     }
                     if ($action === 'delete') {
-                        $url = Url::base(true).'/lectures/delete/' . $model->id;
+                        $url = Url::base(true) . '/lectures/delete/' . $model->id;
                         return $url;
                     }
                 }

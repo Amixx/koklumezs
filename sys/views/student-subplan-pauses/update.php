@@ -5,9 +5,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Difficulties */
 
-$this->title = \Yii::t('app', 'Edit plan pause') ;
- ['label' => \Yii::t('app', 'Parameters'), 'url' => ['index']];
- \Yii::t('app', 'Edit');
+$this->title = \Yii::t('app', 'Edit plan pause');
+['label' => \Yii::t('app', 'Parameters'), 'url' => ['index']];
+\Yii::t('app', 'Edit');
 ?>
 <div class="difficulties-update">
 

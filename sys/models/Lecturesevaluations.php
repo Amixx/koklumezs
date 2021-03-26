@@ -49,7 +49,7 @@ class Lecturesevaluations extends \yii\db\ActiveRecord
             'evaluation_id' => \Yii::t('app',  'Evaluation'),
         ];
     }
-    
+
     public function getLecture()
     {
         return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);

@@ -98,7 +98,7 @@ class SchoolSubPlansController extends Controller
         if ($model->load($post)) {
             $model->school_id = $schoolId;
             if ($model->save()) {
-                if(isset($post["file-title"]) && isset($post["file"])){
+                if (isset($post["file-title"]) && isset($post["file"])) {
                     $planFile = new PlanFiles();
                     $planFile->plan_id = $model->id;
                     $planFile->title = $post["file-title"];
@@ -129,26 +129,26 @@ class SchoolSubPlansController extends Controller
         $post = Yii::$app->request->post();
 
         $saved = $model->load($post) && $model->save();
-        if(isset($post["file-title"]) && isset($post["file"])){
+        if (isset($post["file-title"]) && isset($post["file"])) {
             $planFile = new PlanFiles();
             $planFile->plan_id = $model->id;
             $planFile->title = $post["file-title"];
             $planFile->file = $post["file"];
             $planFile->save();
         }
-        if($post && isset($post['SchoolSubplanParts']) && isset($post['SchoolSubplanParts']['planpart_id']) && $post['SchoolSubplanParts']['planpart_id']){
+        if ($post && isset($post['SchoolSubplanParts']) && isset($post['SchoolSubplanParts']['planpart_id']) && $post['SchoolSubplanParts']['planpart_id']) {
             $newSubplanPart->schoolsubplan_id = $model->id;
             $newSubplanPart->planpart_id = (int) $post['SchoolSubplanParts']['planpart_id'];
 
-            if($newSubplanPart->save()){
+            if ($newSubplanPart->save()) {
                 Yii::$app->session->setFlash('success', 'Plāna daļa pievienta!');
                 $newSubplanPart = new SchoolSubplanParts;
-            }             
+            }
         }
 
-        if($saved) return $this->redirect(['view', 'id' => $model->id]);
+        if ($saved) return $this->redirect(['view', 'id' => $model->id]);
 
-        
+
         return $this->render('update', [
             'model' => $model,
             'planFiles' => $planFiles,

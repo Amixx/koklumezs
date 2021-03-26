@@ -91,7 +91,8 @@ class Users extends ActiveRecord implements IdentityInterface
         return $this->hasOne(Payer::className(), ['user_id' => 'id']);
     }
 
-    public static function getFullName($user){
+    public static function getFullName($user)
+    {
         return $user['first_name'] . " " . $user['last_name'];
     }
 
@@ -138,7 +139,8 @@ class Users extends ActiveRecord implements IdentityInterface
         return $dont_bother ? $result : $users;
     }
 
-    public static function getAllStudents(){
+    public static function getAllStudents()
+    {
         $users = self::find()->where(['user_level' => self::ROLE_USER])->joinWith("payer")->asArray()->all();
         $result = [];
         foreach ($users as $u) {
@@ -200,18 +202,19 @@ class Users extends ActiveRecord implements IdentityInterface
         } else {
             $usersData = self::find()->where($params)->andWhere(['in', 'id', $schoolStudentIds])->asArray()->all();
             $users = [];
-            foreach($usersData as $user){
-                $users[$user['id']] = $user['first_name'] . ' ' . $user['last_name']; 
+            foreach ($usersData as $user) {
+                $users[$user['id']] = $user['first_name'] . ' ' . $user['last_name'];
             }
         }
         return $dont_bother ? $result : $users;
     }
 
-    public static function getStudentsWithoutPausesForSchool(){
+    public static function getStudentsWithoutPausesForSchool()
+    {
         $students = self::getStudentsForSchool(true);
-        foreach($students as $key => $student){
+        foreach ($students as $key => $student) {
             $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($student['id']);
-            if($isPlanCurrentlyPaused) unset($students[$key]);
+            if ($isPlanCurrentlyPaused) unset($students[$key]);
         }
         return $students;
     }
@@ -230,7 +233,7 @@ class Users extends ActiveRecord implements IdentityInterface
             $query->andWhere(['in', 'subscription_type', $subTypes]);
         }
 
-         $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
+        $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
 
         if ($dont_bother) {
@@ -239,7 +242,7 @@ class Users extends ActiveRecord implements IdentityInterface
             $result = [];
             foreach ($users as $u) {
                 $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($u['id']);
-                if(!$isPlanCurrentlyPaused){
+                if (!$isPlanCurrentlyPaused) {
                     if ($u['dont_bother'] != null) {
                         $time = time();
                         $check = strtotime($u['dont_bother']);
@@ -250,15 +253,14 @@ class Users extends ActiveRecord implements IdentityInterface
                         $result[$u['id']] = $u;
                     }
                 }
-                
             }
         } else {
             $usersData = self::find()->where($params)->andWhere(['in', 'id', $schoolStudentIds])->asArray()->all();
             $users = [];
-            foreach($usersData as $user){
+            foreach ($usersData as $user) {
                 $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($user['id']);
-                if(!$isPlanCurrentlyPaused) {
-                    $users[$user['id']] = $user['first_name'] . ' ' . $user['last_name']; 
+                if (!$isPlanCurrentlyPaused) {
+                    $users[$user['id']] = $user['first_name'] . ' ' . $user['last_name'];
                 }
             }
         }
@@ -347,7 +349,8 @@ class Users extends ActiveRecord implements IdentityInterface
         return Yii::$app->getSecurity()->validatePassword($password, $this->password);
     }
 
-    public static function doesUserExist($firstName, $lastName, $email){
+    public static function doesUserExist($firstName, $lastName, $email)
+    {
         $data = self::find()->where([
             'first_name' => $firstName,
             'last_name' => $lastName,

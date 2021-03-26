@@ -30,12 +30,12 @@ $fieldOptions2 = [
         <?= $form
             ->field($model, 'email', $fieldOptions1)
             ->label(false)
-            ->textInput(['placeholder' => $model->getAttributeLabel('email'), 'class'=>'login-input']) ?>
+            ->textInput(['placeholder' => $model->getAttributeLabel('email'), 'class' => 'login-input']) ?>
 
         <?= $form
             ->field($model, 'password', $fieldOptions2)
             ->label(false)
-            ->passwordInput(['placeholder' => $model->getAttributeLabel('password'), 'class'=>'login-input']) ?>
+            ->passwordInput(['placeholder' => $model->getAttributeLabel('password'), 'class' => 'login-input']) ?>
 
         <div class="row">
             <div class="col-xs-7 login-remember">

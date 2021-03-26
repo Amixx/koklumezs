@@ -62,7 +62,7 @@ class SchoolSettingsController extends Controller
         $signupQuestionsDataProvider = new ActiveDataProvider([
             'query' => SignupQuestions::find()->where(['school_id' => $schoolId]),
         ]);
-        
+
         return $this->render('index', [
             'settings' => $settings,
             'difficultiesDataProvider' => $difficultiesDataProvider,

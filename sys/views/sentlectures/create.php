@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model app\models\Sentlectures */
 
 $this->title = \Yii::t('app',  'Assigned lessons');
- ['label' => \Yii::t('app',  'Sent lessons'), 'url' => ['index']];
+['label' => \Yii::t('app',  'Sent lessons'), 'url' => ['index']];
 
 ?>
 <div class="sentlectures-create">

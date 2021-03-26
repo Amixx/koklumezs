@@ -39,7 +39,7 @@ $this->title = \Yii::t('app', 'Lessons to assign after registration');
                 <?= $form->field($model, 'lesson_id')->dropDownList($lectures, ['prompt' => '', 'type' => 'number']) ?>
 
                 <?= $form->field(
-                    $model, 
+                    $model,
                     'for_students_with_instrument'
                 )->dropDownList(
                     [
@@ -53,16 +53,18 @@ $this->title = \Yii::t('app', 'Lessons to assign after registration');
                 )->label('Kuriem skolēniem piešķirt nodarbību') ?>
 
                 <?= $form->field(
-                    $model, 
+                    $model,
                     'for_students_with_experience'
                 )->dropDownList(
                     [
                         0 => 'bez pieredzes',
                         1 => 'ar pieredzi'
-                    ], [
+                    ],
+                    [
                         'prompt' => '-- pieredze --',
                         'type' => 'number'
-                    ])->label(false) ?>
+                    ]
+                )->label(false) ?>
 
                 <div class="form-group">
                     <?= Html::submitButton(\Yii::t('app', 'Add'), ['class' => 'btn btn-success']) ?>

@@ -127,7 +127,7 @@ class AssignController extends \yii\web\Controller
                 }
 
                 $user->wants_more_lessons = false;
-                $user->update();   
+                $user->update();
                 $model->sent = 1;
                 $model->update();
                 return $this->refresh();
@@ -142,15 +142,15 @@ class AssignController extends \yii\web\Controller
             $model->user_difficulty = $goalsum;
             $saved = $model->save();
             if ($saved) {
-                $shouldSendEmail = isset($post['sendEmail']) && $post['sendEmail'];               
+                $shouldSendEmail = isset($post['sendEmail']) && $post['sendEmail'];
                 if ($shouldSendEmail) {
                     $teacherMessage = $post['teacherMessage'];
                     $subject = isset($post['subject']) && $post['subject'] ? $post['subject'] : "Jaunas nodarbības";
-                    UserLectures::sendEmail($model->user_id, $teacherMessage, $subject);                 
+                    UserLectures::sendEmail($model->user_id, $teacherMessage, $subject);
                 }
 
                 $user->wants_more_lessons = false;
-                $user->update();   
+                $user->update();
                 $model->sent = 1;
                 $model->update();
             }

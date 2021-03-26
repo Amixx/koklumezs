@@ -39,10 +39,13 @@ AppAsset::register($this);
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133287428-1"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'UA-133287428-1');
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'UA-133287428-1');
     </script>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -63,11 +66,7 @@ AppAsset::register($this);
         <?php
         ob_start(); ?>
 
-        <div
-            id="logo"
-            title="<?= Yii::$app->name ?>"
-            class="school-logo <?= $isAdmin ? 'admin' : '' ?>"
-            style="background-image: <?= $logo ?>;">
+        <div id="logo" title="<?= Yii::$app->name ?>" class="school-logo <?= $isAdmin ? 'admin' : '' ?>" style="background-image: <?= $logo ?>;">
         </div>
         <?php
         $logo = ob_get_clean();
@@ -103,30 +102,30 @@ AppAsset::register($this);
             $navEnd = '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    \Yii::t('app',  'Sign out') .'<br>' . ' (' . Yii::$app->user->identity->first_name . ' ' . Yii::$app->user->identity->last_name . ')',
+                    \Yii::t('app',  'Sign out') . '<br>' . ' (' . Yii::$app->user->identity->first_name . ' ' . Yii::$app->user->identity->last_name . ')',
                     ['class' => 'btn btn-link logout']
                 )
                 . Html::endForm()
                 . '</li>';
         }
 
-        
+
         $renderChat = $isStudent || $isTeacher;
 
-        if($renderChat){
+        if ($renderChat) {
             $recipientId = $isStudent ? $schoolTeacher['user']['id'] : null;
 
             $unreadGroups = Users::isCurrentUserTeacher() ? '<span class="chat-unread-count-groups"></span>' : '';
 
-            $navChat= '<li id="chat-btn-with-icons">'
-                .'<div id="notification-badges">'
-                    . $unreadGroups
-                    .'<span class="chat-unread-count"></span>'
-                .'</div>'
-                .'<button class="btn btn-success teacher-communication-button" id="chat-toggle-button" data-toggle="modal" data-target="#chatModal">'                   
-                    .\Yii::t('app', $chatButtonText)                   
-                .'</button>'                
-                .'</li>';             
+            $navChat = '<li id="chat-btn-with-icons">'
+                . '<div id="notification-badges">'
+                . $unreadGroups
+                . '<span class="chat-unread-count"></span>'
+                . '</div>'
+                . '<button class="btn btn-success teacher-communication-button" id="chat-toggle-button" data-toggle="modal" data-target="#chatModal">'
+                . \Yii::t('app', $chatButtonText)
+                . '</button>'
+                . '</li>';
         }
 
         if ($isGuest) {
@@ -152,7 +151,7 @@ AppAsset::register($this);
             $navItems[] = ['label' => '+', 'url' => ['/lectures/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),];
             $navItems[] = [
                 'label' => \Yii::t('app',  'Subscription plans'),
-                'url' => ['/school-sub-plans'], 
+                'url' => ['/school-sub-plans'],
                 'active' =>  in_array(\Yii::$app->controller->id, ['school-sub-plans']),
                 'items' => [
                     ['label' => \Yii::t('app',  'Subscription plans'), 'url' => ['/school-sub-plans']],
@@ -195,7 +194,7 @@ AppAsset::register($this);
             $navItems[] = ['label' => \Yii::t('app',  'Archive'), 'url' => ['/archive'], 'active' =>  in_array(\Yii::$app->controller->id, ['archive'])];
             // $navItems[] = ['label' => \Yii::t('app',  'suggest a song'), 'url' => ['/'], 'active' =>  in_array(\Yii::$app->controller->id, [''])];
             $navItems[] = ['label' => \Yii::t('app',  'FAQs'), 'url' => ['/school-faqs/for-students'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-faqs'])];
-            $navItems[] = ['label' => \Yii::t('app',  'Subscription plan'), 'url' => ['/student-sub-plans/view/?id='.Yii::$app->user->identity->id], 'active' =>  in_array(\Yii::$app->controller->id, ['student-sub-plans'])];
+            $navItems[] = ['label' => \Yii::t('app',  'Subscription plan'), 'url' => ['/student-sub-plans/view/?id=' . Yii::$app->user->identity->id], 'active' =>  in_array(\Yii::$app->controller->id, ['student-sub-plans'])];
             $navItems[] = $navEnd;
         }
 
@@ -221,14 +220,14 @@ AppAsset::register($this);
 
     </div>
 
-    <?php if($renderChat){
+    <?php if ($renderChat) {
         echo ChatRoom::widget([
             'url' => \yii\helpers\Url::to(['/chat/send-chat']),
             'userModel' =>  \app\models\User::className(),
             'recipientId' => $recipientId,
         ]);
     } ?>
-    
+
     <footer class="footer">
         <div class="container">
             <p class="pull-left">&copy; koklumezs.lv <?= date('Y') ?></p>

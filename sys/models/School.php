@@ -104,7 +104,7 @@ class School extends \yii\db\ActiveRecord
     public static function getCurrentSchoolId()
     {
         $userId = Yii::$app->user->identity->id;
-        if(Users::isCurrentUserTeacher()) return SchoolTeacher::getSchoolTeacher($userId)->school_id;
+        if (Users::isCurrentUserTeacher()) return SchoolTeacher::getSchoolTeacher($userId)->school_id;
         else return SchoolStudent::getSchoolStudent($userId)->school_id;
     }
 }

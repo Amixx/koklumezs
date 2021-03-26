@@ -25,7 +25,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
         <li class="nav-item active">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><?= \Yii::t('app', 'Plan') ?></a>
         </li>
-        <?php if($model->id) { ?>
+        <?php if ($model->id) { ?>
             <li class="nav-item">
                 <a class="nav-link" id="parts-tab" data-toggle="tab" href="#parts" role="tab" aria-controls="parts" aria-selected="false"><?= \Yii::t('app', 'Add plan parts') ?></a>
             </li>
@@ -45,7 +45,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
             <?= $form->field($model, 'message')->textInput() ?>
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
-            <?php if(isset($planFiles)){
+            <?php if (isset($planFiles)) {
                 echo GridView::widget([
                     'dataProvider' => $planFiles,
                     'columns' => [
@@ -66,7 +66,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                             ],
                             'urlCreator' => function ($action, $model) {
                                 if ($action === 'delete') {
-                                    $url = '/sys/plan-files/delete?id='.$model["id"];
+                                    $url = '/sys/plan-files/delete?id=' . $model["id"];
                                     return $url;
                                 }
                             }
@@ -92,7 +92,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
             </label>
         </div>
         <div class="tab-pane fade in" id="parts" role="tabpanel" aria-labelledby="parts-tab">
-            <?php if(isset($subplanParts) && $subplanParts) {
+            <?php if (isset($subplanParts) && $subplanParts) {
                 echo GridView::widget([
                     'dataProvider' => $subplanParts,
                     'columns' => [
@@ -120,7 +120,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                     ],
                 ]);
             } ?>
-            <?php if(isset($newSubplanPart) && isset($schoolSubplanParts)) {?>
+            <?php if (isset($newSubplanPart) && isset($schoolSubplanParts)) { ?>
                 <?= $form->field($newSubplanPart, 'planpart_id')->dropDownList($schoolSubplanParts, ['prompt' => ''])->label(Yii::t('app', 'Plan part')) ?>
             <?php } ?>
         </div>

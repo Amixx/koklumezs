@@ -13,7 +13,8 @@ use Yii;
 
 class InvoiceManager
 {
-    public static function sendAdvanceInvoice($user, $studentSubplan, $sendToRenter = false){
+    public static function sendAdvanceInvoice($user, $studentSubplan, $sendToRenter = false)
+    {
         $schoolSubplan = $studentSubplan['plan'];
         $school = School::getByStudent($user['id']);
         $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
@@ -21,7 +22,7 @@ class InvoiceManager
         $invoiceBasePath = self::getInvoiceBasePath($schoolTeacher['user_id'], true);
         $invoiceNumber = self::generateInvoiceNumber();
         $title = self::generateInvoiceTitle($invoiceNumber, true);
-        $invoicePath = $invoiceBasePath.$title;
+        $invoicePath = $invoiceBasePath . $title;
         $subplanParts = SchoolSubplanParts::getPartsForSubplan($schoolSubplan['id']);
         $subplanCost = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
 
@@ -37,9 +38,9 @@ class InvoiceManager
 
         InvoicePdfFileGenerator::generate($invoicePath, $invoiceContent, $title);
 
-        if($sendToRenter){
+        if ($sendToRenter) {
             $sent = EmailSender::sendInvoiceToRenter($school['renter_message'], $school['email'], $user['email'], $invoicePath);
-        }else{
+        } else {
             $message = isset($schoolSubplan['message']) && $schoolSubplan['message']
                 ? $schoolSubplan['message']
                 : "Nosūtam rēķinu par tekošā mēneša nodarbībām. Lai jauka diena!";
@@ -47,22 +48,23 @@ class InvoiceManager
             $sent = EmailSender::sendEmailWithAdvanceInvoice($message, $school['email'], $user['email'], $invoiceNumber, $invoicePath);
         }
 
-        
+
 
         if ($sent) {
             $studentSubplan->increaseSentInvoicesCount();
 
             SentInvoices::createAdvance($user['id'], $invoiceNumber, $schoolSubplan, $studentSubplan);
-        }else{
+        } else {
             EmailSender::sendWarningToTeacher($user['email'], $school['email']);
         }
     }
 
-    public static function createRealInvoice($model, $invoiceNumber, $userId, $paidDate, $advanceInvoice){
+    public static function createRealInvoice($model, $invoiceNumber, $userId, $paidDate, $advanceInvoice)
+    {
         $school = School::getByStudent($userId);
 
         //pārejas periodā, kamēr ne visiem avansa rēķiniem ir `studentsubplan_id`, jāizlīdzas ar šādu risinājumu!       
-        if($advanceInvoice['studentSubplan'] !== null){  //jaunais variants
+        if ($advanceInvoice['studentSubplan'] !== null) {  //jaunais variants
             $studentSubplan = StudentSubPlans::findOne(['id' => $advanceInvoice['studentsubplan_id']]);
             $schoolSubplan = $studentSubplan["plan"];
         } else { // backups vecajiem
@@ -72,10 +74,10 @@ class InvoiceManager
 
         $studentSubplan->times_paid += 1;
         $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
-        $userFullName = Users::getFullName($model['student']);      
+        $userFullName = Users::getFullName($model['student']);
         $invoiceBasePath = self::getInvoiceBasePath($schoolTeacher['user_id'], false, strtotime($paidDate));
         $title = self::generateInvoiceTitle($invoiceNumber, false);
-        $invoicePath = $invoiceBasePath.$title;
+        $invoicePath = $invoiceBasePath . $title;
         $subplanParts = SchoolSubplanParts::getPartsForSubplan($schoolSubplan['id']);
         $subplanCost = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
 
@@ -100,7 +102,8 @@ class InvoiceManager
         $studentSubplan->save();
     }
 
-    public static function createRealInvoiceForMultipleMonths($userId, $paidMonths, $paidDate){
+    public static function createRealInvoiceForMultipleMonths($userId, $paidMonths, $paidDate)
+    {
         $months = intval($paidMonths, 10);
         $studentSubplan = StudentSubPlans::getCurrentForStudent($userId);
         $schoolSubplan = $studentSubplan["plan"];
@@ -110,8 +113,8 @@ class InvoiceManager
         $invoiceBasePath = self::getInvoiceBasePath($schoolTeacher['user_id'], false, strtotime($paidDate));
         $invoiceNumber = self::generateInvoiceNumber();
         $title = self::generateInvoiceTitle($invoiceNumber, false);
-        $invoicePath = $invoiceBasePath.$title;
-        $userFullName = Users::getFullName($user);  
+        $invoicePath = $invoiceBasePath . $title;
+        $userFullName = Users::getFullName($user);
         $subplanParts = SchoolSubplanParts::getPartsForSubplan($schoolSubplan['id']);
         $subplanCost = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
 
@@ -123,33 +126,36 @@ class InvoiceManager
             'subplanCost' => $subplanCost,
             'subplanParts' => $subplanParts,
             'datePaid' => $paidDate,
-            'months' => $months, 
+            'months' => $months,
             'payer' => $user['payer'],
         ]);
 
         InvoicePdfFileGenerator::generate($invoicePath, $invoiceContent, $title);
 
         SentInvoices::createReal($user['id'], $invoiceNumber, $schoolSubplan, $studentSubplan, $paidDate);
-        
+
         $studentSubplan->times_paid += $months;
         $studentSubplan->save();
     }
 
-    public static function getInvoiceBasePath($teacherId, $isAdvance, $timestamp = null){
+    public static function getInvoiceBasePath($teacherId, $isAdvance, $timestamp = null)
+    {
         $subfolderName = $isAdvance ? "advance" : "real";
-        if(!$timestamp) $timestamp = time();       
-        $folderUrl = "files/user_$teacherId/invoices/".date("M", $timestamp) . "_" . date("Y", $timestamp)."/" . $subfolderName;
+        if (!$timestamp) $timestamp = time();
+        $folderUrl = "files/user_$teacherId/invoices/" . date("M", $timestamp) . "_" . date("Y", $timestamp) . "/" . $subfolderName;
 
         if (!is_dir($folderUrl)) mkdir($folderUrl, 0777, true);
 
         return $folderUrl . "/";
     }
 
-    public static function generateInvoiceNumber(){
+    public static function generateInvoiceNumber()
+    {
         return mt_rand(10000000, 99999999);
     }
 
-    public static function generateInvoiceTitle($invoiceNumber, $isAdvance){
+    public static function generateInvoiceTitle($invoiceNumber, $isAdvance)
+    {
         $prefix = $isAdvance ? "avansa-" : "";
 
         return $prefix . "rekins-$invoiceNumber.pdf";

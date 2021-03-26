@@ -25,7 +25,7 @@ $this->title = \Yii::t('app', 'Subscription plans');
             [
                 'attribute' => 'Monthly cost',
                 'label' => Yii::t('app',  'Monthly cost (with PVN)'),
-                'value' => function($model){
+                'value' => function ($model) {
                     return SchoolSubplanParts::getPlanTotalCost($model->id);
                 },
             ],

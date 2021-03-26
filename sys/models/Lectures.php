@@ -146,7 +146,8 @@ class Lectures extends \yii\db\ActiveRecord
     }
 
 
-    public static function getLikesCount($lectureId){
+    public static function getLikesCount($lectureId)
+    {
         $favUserLectures = UserLectures::find()->where(['lecture_id' => $lectureId, 'is_favourite' => true])->asArray()->all();
 
         return count($favUserLectures);

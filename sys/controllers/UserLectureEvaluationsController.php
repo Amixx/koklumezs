@@ -57,7 +57,7 @@ class UserLectureEvaluationsController extends Controller
         }
         $get = Yii::$app->request->queryParams;
         $commentResponsesDataProvider = CommentResponses::getAllCommentResponses();
-      
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

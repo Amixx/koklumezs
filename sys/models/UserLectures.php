@@ -82,7 +82,8 @@ class UserLectures extends \yii\db\ActiveRecord
     }
 
     //izgūst tās nodarbības, kas līdz šim (3/12/2021) bijušas nenovērtētas un pie 'vēl mācos' - tām turpmāk jābūt arhīvā
-    public static function getUnevaluatedStillLearning($id){
+    public static function getUnevaluatedStillLearning($id)
+    {
         $results = self::find()
             ->where(['user_id' => $id, 'evaluated' => 0, 'still_learning' => 1])
             ->andWhere(['<', 'created', self::STILL_LEARNING_TRANSITION_DATE])
@@ -91,7 +92,8 @@ class UserLectures extends \yii\db\ActiveRecord
     }
 
     //izgūst tās nodarbības, kas līdz šim (3/12/2021) bijušas novērtētas un pie 'vēl mācos' - tām turpmāk jābūt pie mīļākajām
-    public static function getEvaluatedStillLearning($id){
+    public static function getEvaluatedStillLearning($id)
+    {
         $results = self::find()
             ->where(['user_id' => $id, 'evaluated' => 1, 'still_learning' => 1])
             ->andWhere(['<', 'created', self::STILL_LEARNING_TRANSITION_DATE])
@@ -165,14 +167,14 @@ class UserLectures extends \yii\db\ActiveRecord
     public static function getLessonsOfType($id, $type)
     {
         $condition = ['user_id' => $id, 'sent' => true, 'still_learning' => false];
-        
-        if($type == "new") $condition['evaluated'] = false;
+
+        if ($type == "new") $condition['evaluated'] = false;
         else if ($type == "favourite") $condition['is_favourite'] = true;
 
         $results = self::find()->where($condition)->orderBy(['id' => SORT_DESC])->all();
 
         // visas nodarbības, kas piešķirtas pirms update un bijušas atvērtas, tagad atrodas arhīvā
-        if($type === "new") $results = self::filterOutOldOpenedLessons($results);
+        if ($type === "new") $results = self::filterOutOldOpenedLessons($results);
 
         $results = $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
         return static::filterOutRelatedLessons($results);
@@ -185,21 +187,22 @@ class UserLectures extends \yii\db\ActiveRecord
 
     // remove all lessons, which appear as related lessons in a lesson, which has been assigned more recently
     // only the most recently assigned lesson remains
-    public static function filterOutRelatedLessons($mappedIds){
+    public static function filterOutRelatedLessons($mappedIds)
+    {
         $result = $mappedIds;
 
-        foreach($mappedIds as $userLectureId => $lectureId){
+        foreach ($mappedIds as $userLectureId => $lectureId) {
             $relatedLessonIds = RelatedLectures::getRelations($lectureId);
 
-            if(!empty($relatedLessonIds)){
+            if (!empty($relatedLessonIds)) {
                 $largestRelatedLessonId = max(array_keys($relatedLessonIds));
                 $mostRecentUserLessonId = $largestRelatedLessonId > $userLectureId
                     ? $largestRelatedLessonId
                     : $lectureId;
-               
-                foreach($relatedLessonIds as $relatedLessonId => $lessonId){
+
+                foreach ($relatedLessonIds as $relatedLessonId => $lessonId) {
                     $userLessonId = array_search((int)$lessonId, $result);
-                    if($relatedLessonId != $mostRecentUserLessonId && $userLessonId !== false){
+                    if ($relatedLessonId != $mostRecentUserLessonId && $userLessonId !== false) {
                         unset($result[$userLessonId]);
                     }
                 }
@@ -209,9 +212,10 @@ class UserLectures extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public static function filterOutOldOpenedLessons($userLessons){
-        foreach($userLessons as $id => $userLesson){
-            if($userLesson['opened'] && $userLesson['created'] < self::STILL_LEARNING_TRANSITION_DATE){                    
+    public static function filterOutOldOpenedLessons($userLessons)
+    {
+        foreach ($userLessons as $id => $userLesson) {
+            if ($userLesson['opened'] && $userLesson['created'] < self::STILL_LEARNING_TRANSITION_DATE) {
                 unset($userLessons[$id]);
             }
         }
@@ -293,14 +297,15 @@ class UserLectures extends \yii\db\ActiveRecord
     }
 
 
-    public static function getNextLessonId($studentId, $currentLectureId, $type){
+    public static function getNextLessonId($studentId, $currentLectureId, $type)
+    {
         $lectureIds = self::getLessonsOfType($studentId, $type);
         $lectures = Lectures::find()->where(['in', 'id', $lectureIds])->orderBy(['title' => SORT_ASC])->asArray()->all();
 
         $takeNext = false;
-        foreach($lectures as $lecture){
-            if($takeNext) return $lecture['id'];
-            if($lecture["id"] === $currentLectureId) $takeNext = true;
+        foreach ($lectures as $lecture) {
+            if ($takeNext) return $lecture['id'];
+            if ($lecture["id"] === $currentLectureId) $takeNext = true;
         }
     }
 
@@ -331,7 +336,7 @@ class UserLectures extends \yii\db\ActiveRecord
 
         $school = School::getByStudent($id);
         $lecture = Lectures::findOne($lecture_id);
-        
+
         return EmailSender::sendReminderToTeacher($user, $lecture, $x, $school['email']);
     }
 }

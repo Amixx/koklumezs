@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model app\models\UserLectures */
 
 $this->title = \Yii::t('app',  'Assign lesson');
- ['label' => \Yii::t('app',  'Assigned lessons'), 'url' => ['index']];
+['label' => \Yii::t('app',  'Assigned lessons'), 'url' => ['index']];
 
 ?>
 <div class="user-lectures-create">

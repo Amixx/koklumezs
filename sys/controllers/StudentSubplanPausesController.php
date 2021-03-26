@@ -36,7 +36,8 @@ class StudentSubplanPausesController extends Controller
         ];
     }
 
-    public function actionIndex(){
+    public function actionIndex()
+    {
         $dataProvider = new ActiveDataProvider([
             'query' => StudentSubplanPauses::getForCurrentSchool(),
         ]);
@@ -60,14 +61,14 @@ class StudentSubplanPausesController extends Controller
 
         $schoolId = School::getCurrentSchoolId();
         if ($model->load(Yii::$app->request->post())) {
-            if(isset($_POST['user_id'])) $userId = $_POST['user_id'];
+            if (isset($_POST['user_id'])) $userId = $_POST['user_id'];
             $studentSubplan = StudentSubPlans::getCurrentForStudent($userId);
-            if($studentSubplan){
+            if ($studentSubplan) {
                 $model->studentsubplan_id = $studentSubplan['id'];
-                if($model->save()){
+                if ($model->save()) {
                     Yii::$app->session->setFlash('success', 'Plāna pauze izveidota!');
                 }
-            }else{
+            } else {
                 Yii::$app->session->setFlash('error', 'Izvēlētajam skolēnam nav piešķirts plāns!');
             }
 
@@ -99,7 +100,7 @@ class StudentSubplanPausesController extends Controller
 
     public function actionDelete($id)
     {
-        if($this->findModel($id)->delete()){
+        if ($this->findModel($id)->delete()) {
             Yii::$app->session->setFlash('success', 'Plāna pauze dzēsta!');
         }
 
@@ -113,11 +114,11 @@ class StudentSubplanPausesController extends Controller
         $remainingPauseWeeks = StudentSubPlans::getRemainingPauseWeeks(Yii::$app->user->identity->id);
 
         if ($model->load(Yii::$app->request->post())) {
-           if($model["weeks"] > $remainingPauseWeeks){
-               Yii::$app->session->setFlash('error', 'Neizdevās nosūtīt e-pasta adresi, lai atjaunotu paroli.');
-           }else{
+            if ($model["weeks"] > $remainingPauseWeeks) {
+                Yii::$app->session->setFlash('error', 'Neizdevās nosūtīt e-pasta adresi, lai atjaunotu paroli.');
+            } else {
                 $model->save();
-           }           
+            }
         }
 
         return $this->redirect(Yii::$app->request->referrer);

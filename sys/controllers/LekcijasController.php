@@ -60,9 +60,9 @@ class LekcijasController extends Controller
 
         $videoThumb = School::getCurrentSchool()->video_thumbnail;
 
-        if ($type) { 
+        if ($type) {
             $modelsIds = UserLectures::getLessonsOfType($user->id, $type);
-            if($type === "favourite"){
+            if ($type === "favourite") {
                 $evaluatedStillLearningIds = UserLectures::getEvaluatedStillLearning($user->id);
                 $modelsIds = array_merge($modelsIds, $evaluatedStillLearningIds);
             }
@@ -73,7 +73,7 @@ class LekcijasController extends Controller
                 $pages = new Pagination(['totalCount' => $countQuery->count()]);
 
                 $SortByDifficulty = Yii::$app->request->get('sortByDifficulty');
-                
+
                 if (!(isset($SortByDifficulty)) || $SortByDifficulty == '' || $SortByDifficulty == 'desc') {
                     $sortByDifficulty = 'asc';
                     $orderBy = ['lectures.complexity' => SORT_ASC];
@@ -108,7 +108,7 @@ class LekcijasController extends Controller
                     'videoThumb' => $videoThumb,
                     'sortByDifficulty' => $sortByDifficulty,
                     'title_filter' => $title_filter,
-                    
+
                 ]);
             }
         } else {
@@ -116,22 +116,23 @@ class LekcijasController extends Controller
             $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
 
             $newLessons = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->all();
-            $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->all();    
-            
-            function sortFunc($a, $b, $lessonIds){
+            $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->all();
+
+            function sortFunc($a, $b, $lessonIds)
+            {
                 $aId = array_search($a['id'], $lessonIds);
                 $bId = array_search($b['id'], $lessonIds);
 
                 return ($aId < $bId) ? -1 : 1;
             }
 
-            $newSortFunc = function($a, $b) use($latestNewLecturesIds){
+            $newSortFunc = function ($a, $b) use ($latestNewLecturesIds) {
                 return sortFunc($a, $b, $latestNewLecturesIds);
             };
-            $favSortFunc = function($a, $b) use($latestFavouriteLecturesIds){
+            $favSortFunc = function ($a, $b) use ($latestFavouriteLecturesIds) {
                 return sortFunc($a, $b, $latestFavouriteLecturesIds);
             };
-            
+
             usort($newLessons, $newSortFunc);
             usort($favouriteLessons, $favSortFunc);
 
@@ -171,15 +172,13 @@ class LekcijasController extends Controller
         $videoThumb = School::getCurrentSchool()->video_thumbnail;
 
         $SortByDifficulty = Yii::$app->request->get('sortByDifficulty');
-        
+
         if (!(isset($SortByDifficulty)) || $SortByDifficulty == '' || $SortByDifficulty == 'desc') {
             $sortByDifficulty = 'asc';
             $orderBy = ['lectures.complexity' => SORT_ASC];
-
         } else {
             $sortByDifficulty = 'desc';
             $orderBy = ['lectures.complexity' => SORT_DESC];
-
         }
 
         $force = Yii::$app->request->get('force');
@@ -190,21 +189,21 @@ class LekcijasController extends Controller
 
         $nextLessonId = null;
         $userLecture = UserLectures::findOne(['user_id' => $user->id, 'lecture_id' => $id]);
-        
-        if($userLecture){
+
+        if ($userLecture) {
             $type = $userLecture->is_favourite ? "favourite" : "new";
             $nextLessonId = UserLectures::getNextLessonId($user->id, $id, $type);
         }
-        
+
         $difficultyEvaluation = $force ? null : Userlectureevaluations::getLecturedifficultyEvaluation($user->id, $id);
 
         if ($check) {
             $post = Yii::$app->request->post();
-            if(isset($post["difficulty-evaluation"])){
-                if($difficultyEvaluation){
+            if (isset($post["difficulty-evaluation"])) {
+                if ($difficultyEvaluation) {
                     $difficultyEvaluation->evaluation = $post["difficulty-evaluation"];
                     $difficultyEvaluation->update();
-                }else{
+                } else {
                     $difficultyEvaluation = new Userlectureevaluations();
                     $difficultyEvaluation->evaluation_id = 1;
                     $difficultyEvaluation->lecture_id = $model->id;
@@ -219,7 +218,7 @@ class LekcijasController extends Controller
                 }
 
                 $shouldRedirect = isset($post['redirect-lesson-id']) && $post['redirect-lesson-id'];
-                if($shouldRedirect){
+                if ($shouldRedirect) {
                     $redirectLessonId = $post['redirect-lesson-id'];
                     return $this->redirect(["lekcijas/lekcija/$redirectLessonId"]);
                 }
@@ -230,7 +229,7 @@ class LekcijasController extends Controller
             if (!$force) {
                 UserLectures::setSeenByUser($user->id, $id);
             }
-            
+
             $difficulties = Difficulties::getDifficulties();
             $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
             $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
@@ -245,12 +244,12 @@ class LekcijasController extends Controller
             $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "new");
             $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
             $newLessons = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->orderBy($orderBy)->all();
-            $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->orderBy($orderBy)->all();  
-            
+            $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->orderBy($orderBy)->all();
+
             $isStudent = Yii::$app->user->identity->user_level == 'Student';
             $previousUrl = Yii::$app->request->referrer;
-            if($isStudent && $previousUrl){
-                if(strpos($previousUrl, "?") !== false){
+            if ($isStudent && $previousUrl) {
+                if (strpos($previousUrl, "?") !== false) {
                     $previousUrl = strstr($previousUrl, '?', true); // noņem query params
                 }
 
@@ -258,14 +257,14 @@ class LekcijasController extends Controller
                 $lastUrlPart = end($previousUrlSplit);
                 $isDifferentLesson = $lastUrlPart !== $id;
 
-                if($isDifferentLesson){
+                if ($isDifferentLesson) {
                     $lectureView = new LectureViews;
                     $lectureView->user_id = $user->id;
                     $lectureView->lecture_id = $id;
                     $lectureView->save();
                 }
             }
-            
+
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,

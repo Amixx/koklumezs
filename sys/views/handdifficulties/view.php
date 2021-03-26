@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Handdifficulties */
 
 $this->title = $model->id;
- ['label' => \Yii::t('app',  'Categories'), 'url' => ['index']];
+['label' => \Yii::t('app',  'Categories'), 'url' => ['index']];
 
 \yii\web\YiiAsset::register($this);
 ?>

@@ -34,10 +34,13 @@ AppAsset::register($this);
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133287428-1"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'UA-133287428-1');
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'UA-133287428-1');
     </script>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -58,11 +61,7 @@ AppAsset::register($this);
         <?php
         ob_start(); ?>
 
-        <div
-            id="logo"
-            title="<?= Yii::$app->name ?>"
-            class="school-logo"
-            style="background-image: <?= $logo ?>;">
+        <div id="logo" title="<?= Yii::$app->name ?>" class="school-logo" style="background-image: <?= $logo ?>;">
         </div>
         <?php
         $logo = ob_get_clean();

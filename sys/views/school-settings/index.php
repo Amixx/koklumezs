@@ -14,7 +14,7 @@ $this->title = \Yii::t('app',  'School settings');
         <li class="nav-item active">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><?= \Yii::t('app', 'Settings') ?></a>
         </li>
-         <li class="nav-item">
+        <li class="nav-item">
             <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false"><?= \Yii::t('app', 'Parameters') ?></a>
         </li>
         <li class="nav-item">
@@ -35,7 +35,7 @@ $this->title = \Yii::t('app',  'School settings');
                         <th><?= $key ?></th>
                         <td><?= $value ?></td>
                     </tr>
-                    <?php } ?>
+                <?php } ?>
             </table>
 
             <?= Html::a(\Yii::t('app',  'Edit'), ['update'], ['class' => 'btn btn-primary']) ?>
@@ -61,7 +61,7 @@ $this->title = \Yii::t('app',  'School settings');
             <p>
                 <?= Html::a(\Yii::t('app', 'Create a FAQ'), ['/school-faqs/create'], ['class' => 'btn btn-success']) ?>
             </p>
-             <?= GridView::widget([
+            <?= GridView::widget([
                 'dataProvider' => $faqsDataProvider,
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
@@ -72,18 +72,20 @@ $this->title = \Yii::t('app',  'School settings');
                         'template' => '{update} {delete}',
                         'buttons' => [
                             'update' => function ($url, $model) {
-                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, 
-                                    ['title' => Yii::t('app', 'Update')] 
+                                return Html::a(
+                                    '<span class="glyphicon glyphicon-pencil"></span>',
+                                    $url,
+                                    ['title' => Yii::t('app', 'Update')]
                                 );
-                            },    
+                            },
                         ],
                         'urlCreator' => function ($action, $model) {
                             if ($action === 'update') {
-                                $url ='/school-faqs/update?id=' . $model->id;
+                                $url = '/school-faqs/update?id=' . $model->id;
                                 return $url;
                             }
                             if ($action === 'delete') {
-                                $url ='/school-faqs/delete?id=' . $model->id;
+                                $url = '/school-faqs/delete?id=' . $model->id;
                                 return $url;
                             }
                         },
@@ -93,7 +95,7 @@ $this->title = \Yii::t('app',  'School settings');
         </div>
         <div class="tab-pane fade" id="signup-questions" role="tabpanel" aria-labelledby="signup-questions-tab">
             <h1><?= Yii::t("app", "Questions after signup") ?></h1>
-             <?= GridView::widget([
+            <?= GridView::widget([
                 'dataProvider' => $signupQuestionsDataProvider,
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
@@ -107,13 +109,13 @@ $this->title = \Yii::t('app',  'School settings');
                 'method' => 'post',
             ]); ?>
             <label for="new-question-text">
-                <?= Yii::t('app', 'Question text') ?>: 
+                <?= Yii::t('app', 'Question text') ?>:
             </label>
-             <?= Html::textarea('new-question-text', '', ['class' => 'signup-questions-textarea']) ?>
+            <?= Html::textarea('new-question-text', '', ['class' => 'signup-questions-textarea']) ?>
             <div class="form-group">
                 <?= Html::submitButton(\Yii::t('app',  'Submit'), ['class' => 'btn btn-success']) ?>
             </div>
             <?php ActiveForm::end(); ?>
         </div>
-    </div>    
+    </div>
 </div>

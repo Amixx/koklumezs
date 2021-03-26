@@ -60,12 +60,14 @@ class ChatController extends Controller
         ];
     }
 
-    public function actionSendChat(){
+    public function actionSendChat()
+    {
         return json_encode(ChatRoom::sendChat($_POST));
     }
 
-    public function actionGetUnreadCount(){
-        if(Yii::$app->user->isGuest) return 0;
+    public function actionGetUnreadCount()
+    {
+        if (Yii::$app->user->isGuest) return 0;
         return Chat::unreadCountForCurrentUser();
     }
 }

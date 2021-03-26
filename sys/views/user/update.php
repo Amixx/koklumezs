@@ -6,9 +6,9 @@ use yii\helpers\Html;
 /* @var $model app\models\Users */
 
 $this->title = \Yii::t('app',  'Edit user') . ': ' . $model->email;
- ['label' => \Yii::t('app',  'Users'), 'url' => ['index']];
- ['label' => $model->email, 'url' => ['view', 'id' => $model->id]];
- \Yii::t('app',  'Edit');
+['label' => \Yii::t('app',  'Users'), 'url' => ['index']];
+['label' => $model->email, 'url' => ['view', 'id' => $model->id]];
+\Yii::t('app',  'Edit');
 
 $subPlans = isset($schoolSubPlans) ? $schoolSubPlans : null;
 

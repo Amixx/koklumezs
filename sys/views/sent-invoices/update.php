@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 $this->title = \Yii::t('app', 'Invoice No. ') . $model->invoice_number;
- \Yii::t('app', 'Edit');
+\Yii::t('app', 'Edit');
 ?>
 <div>
     <h1><?= Html::encode($this->title) ?></h1>
@@ -15,7 +15,7 @@ $this->title = \Yii::t('app', 'Invoice No. ') . $model->invoice_number;
     ]) ?>
 
     <p><?= Yii::t('app', 'Advance invoice sent date: '); ?><strong><?= $model->sent_date ?></strong>.</p>
-    <?php if($realInvoice != null) { ?>
+    <?php if ($realInvoice != null) { ?>
         <p><?= Yii::t('app', 'Invoice paid date: '); ?><strong><?= $realInvoice->sent_date ?></strong>.</p>
     <?php } else { ?>
         <p><?= Yii::t('app', 'The invoice has not been paid yet'); ?>.</p>

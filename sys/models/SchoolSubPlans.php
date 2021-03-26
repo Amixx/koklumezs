@@ -61,11 +61,11 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
 
         $res = [];
 
-        foreach($data as $item){
+        foreach ($data as $item) {
             $price = SchoolSubplanParts::getPlanTotalCost($item['id']);
             $res[] = $price;
         }
-     
+
         return $res;
     }
 }

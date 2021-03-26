@@ -52,7 +52,8 @@ class SchoolFaqs extends \yii\db\ActiveRecord
         return self::find()->where(['school_id' => $schoolId])->asArray()->all();
     }
 
-    public static function getForCurrentSchool(){
+    public static function getForCurrentSchool()
+    {
         $schoolId = School::getCurrentSchoolId();
         return self::getForSchool($schoolId);
     }

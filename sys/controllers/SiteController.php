@@ -86,7 +86,7 @@ class SiteController extends Controller
                 Yii::$app->session->setFlash('error', 'Neizdevās nosūtīt e-pastu, lai atjaunotu paroli.');
             }
         }
-        
+
         return $this->render('requestPasswordResetToken', [
             'model' => $model,
         ]);
@@ -115,7 +115,7 @@ class SiteController extends Controller
         } catch (InvalidArgumentException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
-        
+
         if ($user = $model->verifyEmail() && Yii::$app->user->login($user)) {
             Yii::$app->session->setFlash('success', 'Your email has been confirmed!');
             return $this->goHome();
@@ -155,7 +155,7 @@ class SiteController extends Controller
             $school = School::findOne($s);
             $loginTitle = $school['login_title'];
         }
-        
+
         $model->password = '';
         return $this->render('login', [
             'model' => $model,
@@ -173,19 +173,19 @@ class SiteController extends Controller
     public function actionSignUp($s, $l)
     {
         $this->layout = '@app/views/layouts/signup';
-        if(!Yii::$app->user->isGuest) Yii::$app->user->logout();
+        if (!Yii::$app->user->isGuest) Yii::$app->user->logout();
 
         Yii::$app->language = $l;
 
         $school = School::findOne($s);
 
         $model = new SignUpForm();
-     
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $model['language'] = $l;
             $userId = $model->signUp();
 
-            if($userId){
+            if ($userId) {
                 $schoolStudent = new SchoolStudent;
 
                 $schoolStudent->school_id = $s;
@@ -193,7 +193,7 @@ class SiteController extends Controller
 
                 $saved = $schoolStudent->save();
 
-                if($saved){
+                if ($saved) {
                     $user = Users::findById($userId);
                     Yii::$app->user->login($user);
 
@@ -202,7 +202,7 @@ class SiteController extends Controller
                     $insertDate = date('Y-m-d H:i:s', time());
                     $insertColumns = [];
 
-                    foreach($firstLectureIds as $lid){
+                    foreach ($firstLectureIds as $lid) {
                         $insertColumns[] = [$schoolTeacher["id"], $userId, $lid, $insertDate, 0, 0, 1];
                     }
 
@@ -213,15 +213,15 @@ class SiteController extends Controller
 
                     EmailSender::sendNewStudentNotification($user, $school['email']);
 
-                    if($school['registration_message'] != null && $model->ownsInstrument){
+                    if ($school['registration_message'] != null && $model->ownsInstrument) {
                         EmailSender::sendPostSignupMessage($school['registration_message'], $school['email'], $user['email']);
                     }
 
-                    if(!$model->ownsInstrument){
+                    if (!$model->ownsInstrument) {
                         $this->redirect(["rent", 'u' => $user['id']]);
-                    } else if($model->hasExperience) {
+                    } else if ($model->hasExperience) {
                         $this->redirect(["signup-questions", 'u' => $user['id'], 's' => $s]);
-                    }else {
+                    } else {
                         Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam spēlēt! Turpmākās 2 nedēļas vari izmēģināt bez maksas!');
                         return $this->redirect(['lekcijas/index']);
                     }
@@ -238,7 +238,8 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionRent($u) {
+    public function actionRent($u)
+    {
         $school = School::getByStudent($u);
         $user = Users::findOne($u);
         $model = new RentForm;
@@ -248,7 +249,7 @@ class SiteController extends Controller
         $valid = $model->load(Yii::$app->request->post()) && $model->validate();
 
         if ($valid) {
-            if($school['renter_message'] != null && $school['rent_schoolsubplan_id'] != null){
+            if ($school['renter_message'] != null && $school['rent_schoolsubplan_id'] != null) {
                 $studentSubplan = new StudentSubPlans;
                 $studentSubplan->user_id = $user['id'];
                 $studentSubplan->plan_id = $school['rent_schoolsubplan_id'];
@@ -261,39 +262,40 @@ class SiteController extends Controller
                 $user->status = 11;
                 $user->phone_number = $model->phone_number;
                 $user->update();
-                
+
                 InvoiceManager::sendAdvanceInvoice($user, $studentSubplan, true);
             }
 
             $sent = EmailSender::sendRentNotification($model, $school['email']);
-            if($sent){
+            if ($sent) {
                 Yii::$app->session->setFlash('success', 'Paldies par tavu pieteikumu! Tuvākajā laikā sazināsimies ar tevi uz tavu norādīto epastu. Tikmēr vari noskatīties video par to, kā darboties platformā!');
                 return $this->redirect(['lekcijas/index']);
             }
         }
 
         return $this->render('rent', [
-            'model' => $model, 
+            'model' => $model,
         ]);
     }
 
-    public function actionSignupQuestions($u, $s){
+    public function actionSignupQuestions($u, $s)
+    {
         $user = Users::findOne($u);
-        
+
         $schoolSignupQuestions = SignupQuestions::getForSchool($s);
 
         $post = Yii::$app->request->post();
-        if($post && isset($post['answers']) && count($post['answers']) > 0){
+        if ($post && isset($post['answers']) && count($post['answers']) > 0) {
             $aboutUser = "";
-            foreach($post['answers'] as $id => $answer){
-                if($answer !== ""){
+            foreach ($post['answers'] as $id => $answer) {
+                if ($answer !== "") {
                     $aboutUser .= $answer;
                     $aboutUser .= "\n";
                 }
             }
             $user['about'] = $aboutUser;
             $saved = $user->save();
-            if($saved){
+            if ($saved) {
                 Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam spēlēt! Turpmākās 2 nedēļas vari izmēģināt bez maksas!');
                 return $this->redirect(['lekcijas/index']);
             }

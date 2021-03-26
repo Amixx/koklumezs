@@ -30,13 +30,13 @@ $this->title = \Yii::t('app',  'Lesson assigning');
     </label>
 </div>
 <div style="display:inline-block">
-        <?= \Yii::t('app', 'Abonement types') ?>:
-        <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-free"><?= \Yii::t('app', 'Free') ?></label>
-        <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-paid"><?= \Yii::t('app', 'Paid') ?></label>
-        <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-lead"><?= \Yii::t('app', 'Lead') ?></label>
-        <!-- noņemts, kamēr nav sataisīta jaunā paužu sistēma -->
-        <!-- <label style="display:inline; margin-right:16px; color:darkgrey;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-pausing"><?= \Yii::t('app', 'Show paused') ?></label> -->
-        <input type="hidden" name="subscription-type-selector" class="subscription-type-selector type-pausing">
+    <?= \Yii::t('app', 'Abonement types') ?>:
+    <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-free"><?= \Yii::t('app', 'Free') ?></label>
+    <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-paid"><?= \Yii::t('app', 'Paid') ?></label>
+    <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-lead"><?= \Yii::t('app', 'Lead') ?></label>
+    <!-- noņemts, kamēr nav sataisīta jaunā paužu sistēma -->
+    <!-- <label style="display:inline; margin-right:16px; color:darkgrey;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-pausing"><?= \Yii::t('app', 'Show paused') ?></label> -->
+    <input type="hidden" name="subscription-type-selector" class="subscription-type-selector type-pausing">
 </div>
 <div class="grid-view">
     <table class="table table-striped table-bordered" id="AssignTable">

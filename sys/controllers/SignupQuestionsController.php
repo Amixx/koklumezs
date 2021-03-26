@@ -72,7 +72,7 @@ class SignupQuestionsController extends Controller
         $model['school_id'] = School::getCurrentSchoolId();
         $model['text'] = Yii::$app->request->post()['new-question-text'];
 
-        if($model->save()) {
+        if ($model->save()) {
             Yii::$app->session->setFlash('success', 'Jautājums pievienots!');
         } else {
             Yii::$app->session->setFlash('error', 'Notikusi kļūda! Jautājums netika pievienots!');

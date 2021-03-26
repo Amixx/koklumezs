@@ -26,7 +26,7 @@ $this->title = \Yii::t('app', 'Plan pauses');
             'start_date',
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{update} {delete}',                      
+                'template' => '{update} {delete}',
             ],
         ],
     ]); ?>

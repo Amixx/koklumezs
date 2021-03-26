@@ -175,7 +175,7 @@ class UserController extends Controller
         $handdifficulties = Handdifficulties::getDifficulties();
         $schoolSubPlans = SchoolSubPlans::getMappedForSelection();
         $studentSubplan = StudentSubPlans::getCurrentForStudent($model->id);
-        if(!$studentSubplan) $studentSubplan = new StudentSubPlans; 
+        if (!$studentSubplan) $studentSubplan = new StudentSubPlans;
 
         if ($model->load($post)) {
             if (!empty($post['Users']['password'])) {
@@ -223,14 +223,14 @@ class UserController extends Controller
             if (isset($post['Users']['about'])) {
                 $model->about = $post['Users']['about'];
             }
-           
+
             if (isset($post['StudentSubPlans'])) {
-                $postData = $post['StudentSubPlans'];              
-              
+                $postData = $post['StudentSubPlans'];
+
                 if ($studentSubplan) {
                     $schoolSubplanChanged = $studentSubplan['plan_id'] !== (int) $postData['plan_id'];
 
-                    if($schoolSubplanChanged){
+                    if ($schoolSubplanChanged) {
                         StudentSubPlans::resetActivePlanForUser($model->id);
 
                         $studentSubplan = new StudentSubPlans;
@@ -241,13 +241,13 @@ class UserController extends Controller
                         $studentSubplan->sent_invoices_count = $postData["sent_invoices_count"] ? $postData["sent_invoices_count"] : 0;
                         $studentSubplan->times_paid = $postData["times_paid"] ? $postData["times_paid"] : 0;
                         $studentSubplan->save();
-                    }else{
+                    } else {
                         $studentSubplan->plan_id = $postData["plan_id"];
                         $studentSubplan->start_date = $postData["start_date"];
                         $studentSubplan->sent_invoices_count = $postData["sent_invoices_count"] ? $postData["sent_invoices_count"] : 0;
                         $studentSubplan->times_paid = $postData["times_paid"] ? $postData["times_paid"] : 0;
                         $studentSubplan->update();
-                    }                    
+                    }
                 } else {
                     StudentSubPlans::resetActivePlanForUser($model->id);
 
@@ -265,7 +265,7 @@ class UserController extends Controller
 
                 $payer = Payer::getForStudent($model->id);
                 $newPayer = false;
-                if(!$payer){
+                if (!$payer) {
                     $payer = new Payer;
                     $newPayer = true;
                 }
@@ -279,7 +279,7 @@ class UserController extends Controller
                 $payer->swift = $postData["swift"];
                 $payer->account_number = $postData["swift"];
 
-                if($newPayer){
+                if ($newPayer) {
                     $payer->save();
                 } else {
                     $payer->update();
@@ -322,8 +322,9 @@ class UserController extends Controller
 
         return $this->redirect(['index']);
     }
-    
-    public function actionRequestMoreTasks($id){
+
+    public function actionRequestMoreTasks($id)
+    {
         $student = self::findModel($id);
         $student->wants_more_lessons = true;
         $student->update();

@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Users */
 
 $this->title = $model->id;
- ['label' => \Yii::t('app',  'Users'), 'url' => ['index']];
+['label' => \Yii::t('app',  'Users'), 'url' => ['index']];
 
 \yii\web\YiiAsset::register($this);
 ?>
@@ -49,7 +49,7 @@ $this->title = $model->id;
                     'user_level',
                     [
                         'attribute' => 'about',
-                    ],                    
+                    ],
                 ],
             ]) ?>
         </div>

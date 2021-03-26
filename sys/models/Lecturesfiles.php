@@ -22,7 +22,7 @@ class Lecturesfiles extends \yii\db\ActiveRecord
         'docs' => ['doc', 'docx', 'pdf', 'txt'],
         'audio' => ['aac', 'alac', 'amr', 'flac', 'mp3', 'opus', 'vorbis', 'ogg', 'wav'],
     ];
-    
+
     public static function tableName()
     {
         return 'lecturesfiles';
@@ -70,19 +70,19 @@ class Lecturesfiles extends \yii\db\ActiveRecord
 
         $lecturefiles = self::find()->where(['lecture_id' => $id])->asArray()->all();
 
-        foreach($lecturefiles as $id => $file){
-            if(!isset($file['file']) || empty($file['file'])) continue;
+        foreach ($lecturefiles as $id => $file) {
+            if (!isset($file['file']) || empty($file['file'])) continue;
 
-            if(strpos($file['file'], "youtube") !== false){
+            if (strpos($file['file'], "youtube") !== false) {
                 $fileGroups['video'][] = $file;
                 continue;
             }
-            
-            $path_info = pathinfo($file['file']);
-            if(!isset($path_info['extension'])) continue;
 
-            foreach(self::FILE_EXTENSIONS as $type => $fileExtensions){
-                if(in_array(strtolower($path_info['extension']), $fileExtensions)){
+            $path_info = pathinfo($file['file']);
+            if (!isset($path_info['extension'])) continue;
+
+            foreach (self::FILE_EXTENSIONS as $type => $fileExtensions) {
+                if (in_array(strtolower($path_info['extension']), $fileExtensions)) {
                     $fileGroups[$type][] = $file;
                     break;
                 }

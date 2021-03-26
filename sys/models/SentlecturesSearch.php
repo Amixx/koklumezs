@@ -47,25 +47,25 @@ class SentlecturesSearch extends Sentlectures
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-        
-         //relations
-         $query->joinWith(['student']);
-                
-         $dataProvider->sort->attributes['student'] = [
-             // The tables are the ones our relation are configured to
-             'asc' => ['student.email' => SORT_ASC],
-             'desc' => ['student.email' => SORT_DESC],
-         ];
- 
-         //relations
-         $query->joinWith(['lecture']);
-                 
-         $dataProvider->sort->attributes['lecture'] = [
-             // The tables are the ones our relation are configured to
-             'asc' => ['lecture.title' => SORT_ASC],
-             'desc' => ['lecture.title' => SORT_DESC],
-         ];
-         
+
+        //relations
+        $query->joinWith(['student']);
+
+        $dataProvider->sort->attributes['student'] = [
+            // The tables are the ones our relation are configured to
+            'asc' => ['student.email' => SORT_ASC],
+            'desc' => ['student.email' => SORT_DESC],
+        ];
+
+        //relations
+        $query->joinWith(['lecture']);
+
+        $dataProvider->sort->attributes['lecture'] = [
+            // The tables are the ones our relation are configured to
+            'asc' => ['lecture.title' => SORT_ASC],
+            'desc' => ['lecture.title' => SORT_DESC],
+        ];
+
         $this->load($params);
 
         if (!$this->validate()) {
@@ -81,7 +81,7 @@ class SentlecturesSearch extends Sentlectures
             'id' => $this->id,
             'user_id' => $this->user_id,
             'lecture_id' => $this->lecture_id,
-            'sent' => $this->sent,            
+            'sent' => $this->sent,
         ]);
 
         return $dataProvider;

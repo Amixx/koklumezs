@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 $this->title = \Yii::t('app', 'Create plan pause');
- ['label' => \Yii::t('app', 'Plan pauses'), 'url' => ['index']];
+['label' => \Yii::t('app', 'Plan pauses'), 'url' => ['index']];
 
 ?>
 <div class="difficulties-create">

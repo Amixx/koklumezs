@@ -91,7 +91,8 @@ class SchoolFaqsController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionForStudents(){
+    public function actionForStudents()
+    {
         $faqs = SchoolFaqs::getForCurrentSchool();
 
         return $this->render('for-students', [

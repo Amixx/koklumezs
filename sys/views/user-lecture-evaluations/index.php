@@ -85,7 +85,7 @@ $this->title = \Yii::t('app',  'Metrics');
         </div>
     </div>
 
-    
+
 
     <?php if (!$isTeacher) {
         echo GridView::widget([

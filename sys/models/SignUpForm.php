@@ -22,18 +22,19 @@ class SignUpForm extends Model
 
     public function rules()
     {
-        return [ 
+        return [
             [['email', 'password', 'passwordRepeat', 'first_name', 'last_name', 'agree', 'ownsInstrument'], 'required'],
             [['rememberMe', 'agree', 'ownsInstrument', 'hasExperience'], 'boolean'],
             ['password', 'validatePassword'],
-            ['passwordRepeat', 'validatePasswordRepeat'], 
+            ['passwordRepeat', 'validatePasswordRepeat'],
             ['agree', 'validateAgree'],
             ['email', 'email'],
             ['email', 'checkIfUserExists'],
         ];
     }
 
-    public function attributeLabels(){
+    public function attributeLabels()
+    {
         return [
             'password' => Yii::t('app', 'Password'),
             'first_name' => Yii::t('app', 'First name'),
@@ -48,7 +49,7 @@ class SignUpForm extends Model
     public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            if(strlen($this->password) < 4){
+            if (strlen($this->password) < 4) {
                 $this->addError($attribute, Yii::t('app', 'Password too short.'));
             }
         }
@@ -57,8 +58,8 @@ class SignUpForm extends Model
     public function validatePasswordRepeat($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            if($this->password != $this->passwordRepeat){
-                $this->addError($attribute, Yii::t('app', 'Passwords don\'t match').'.');
+            if ($this->password != $this->passwordRepeat) {
+                $this->addError($attribute, Yii::t('app', 'Passwords don\'t match') . '.');
             }
         }
     }
@@ -66,15 +67,16 @@ class SignUpForm extends Model
     public function validateAgree($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            if(!$this->agree){
+            if (!$this->agree) {
                 $this->addError($attribute, Yii::t('app', 'Please confirm.'));
             }
-        }       
+        }
     }
 
-    public function checkIfUserExists($attribute, $params){
+    public function checkIfUserExists($attribute, $params)
+    {
         if (!$this->hasErrors()) {
-            if(Users::doesUserExist($this->first_name, $this->last_name, $this->email)){
+            if (Users::doesUserExist($this->first_name, $this->last_name, $this->email)) {
                 $this->addError($attribute, Yii::t('app', 'A profile has already been registered using this e-mail! Have you forgotten your password?'));
             }
         }
@@ -103,7 +105,7 @@ class SignUpForm extends Model
 
             $saved = $user->save();
 
-            if($saved){
+            if ($saved) {
                 return $user->id;
             }
         }

@@ -31,19 +31,22 @@ class PlanParts extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function getPriceWithoutPvn($monthlyCost, $pvnPercent, $months = 1){
-        $totalCost = $monthlyCost*$months;
-        $divider = 1 + ($pvnPercent/100);
+    public static function getPriceWithoutPvn($monthlyCost, $pvnPercent, $months = 1)
+    {
+        $totalCost = $monthlyCost * $months;
+        $divider = 1 + ($pvnPercent / 100);
         return number_format($totalCost / $divider, 2);
     }
 
-    public static function getPvnAmount($monthlyCost, $pvnPercent, $months = 1){
-        $totalCost = $monthlyCost*$months;
+    public static function getPvnAmount($monthlyCost, $pvnPercent, $months = 1)
+    {
+        $totalCost = $monthlyCost * $months;
         return number_format($totalCost - self::getPriceWithoutPvn($totalCost, $pvnPercent), 2);
     }
 
-    public static function getPayAmount($monthlyCost, $months = 1){
-        $totalCost = $monthlyCost*$months;
+    public static function getPayAmount($monthlyCost, $months = 1)
+    {
+        $totalCost = $monthlyCost * $months;
         return number_format($totalCost, 2);
     }
 

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 $this->title = $model->title;
- ['label' => \Yii::t('app',  'School evaluations'), 'url' => ['index']];
+['label' => \Yii::t('app',  'School evaluations'), 'url' => ['index']];
 
 \yii\web\YiiAsset::register($this);
 ?>

@@ -14,7 +14,7 @@ use yii\filters\VerbFilter;
 class SchoolSubplanPartsController extends Controller
 {
     public function behaviors()
-    {   
+    {
         return [
             'access' => [
                 'class' => \yii\filters\AccessControl::className(),

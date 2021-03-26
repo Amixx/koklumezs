@@ -41,7 +41,7 @@ class ResendVerificationEmailForm extends Model
             'email' => $this->email,
             'status' => Users::STATUS_INACTIVE
         ]);
-        
+
         if ($user === null) return false;
 
         return EmailSender::sendEmailVerification($user, $this->email);

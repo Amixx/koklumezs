@@ -51,11 +51,13 @@ class SchoolTeacher extends \yii\db\ActiveRecord
         return self::find()->where(['user_id' => $teacherId])->joinWith('school')->joinWith('user')->one();
     }
 
-    public static function getBySchoolId($schoolId){
+    public static function getBySchoolId($schoolId)
+    {
         return self::find()->where(['school_id' => $schoolId])->joinWith('school')->joinWith('user')->one();
     }
 
-    public static function getByCurrentStudent(){
+    public static function getByCurrentStudent()
+    {
         $studentId = Yii::$app->user->identity->id;
         $schoolId = SchoolStudent::getSchoolStudent($studentId)->school_id;
         return self::getBySchoolId($schoolId);

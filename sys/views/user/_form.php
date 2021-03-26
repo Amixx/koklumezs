@@ -10,7 +10,7 @@ $isTeacher = Users::isCurrentUserTeacher();
 
 <div class="user-form">
 
-    <?php $form = ActiveForm::begin(['enableClientValidation'=>false]); ?>
+    <?php $form = ActiveForm::begin(['enableClientValidation' => false]); ?>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item active">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><?= \Yii::t('app',  'User data') ?></a>
@@ -74,7 +74,7 @@ $isTeacher = Users::isCurrentUserTeacher();
                 <?php } ?>
             </div>
             <div class="form-group">
-                <?= Html::a(\Yii::t('app',  'Remove subscription plan'), ["/student-sub-plans/delete?userId=".$model["id"]], ['class' => 'btn btn-danger']) ?>
+                <?= Html::a(\Yii::t('app',  'Remove subscription plan'), ["/student-sub-plans/delete?userId=" . $model["id"]], ['class' => 'btn btn-danger']) ?>
             </div>
         </div>
         <div class="tab-pane fade" id="payer" role="tabpanel" aria-labelledby="payer-tab">

@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 use yii\jui\DatePicker;
 use app\models\StudentSubPlans;
 
-if($subplan){
+if ($subplan) {
     $this->title = $subplan['plan']['name'];
 }
 \yii\web\YiiAsset::register($this);
@@ -16,7 +16,7 @@ if($subplan){
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php if($subplan){ ?>
+    <?php if ($subplan) { ?>
 
         <?= DetailView::widget([
             'model' => $subplan,
@@ -25,7 +25,9 @@ if($subplan){
                 [
                     'attribute' => 'Plan end date',
                     'label' => Yii::t('app', 'Plan end date'),
-                    'value' => function ($dataProvider) {return StudentSubPlans::getEndDateString($dataProvider['user_id']);},
+                    'value' => function ($dataProvider) {
+                        return StudentSubPlans::getEndDateString($dataProvider['user_id']);
+                    },
                     'format' => 'raw'
                 ],
                 'sent_invoices_count',
@@ -34,28 +36,28 @@ if($subplan){
         ]) ?>
 
         <h3><?= Yii::t('app', 'Plan files') ?></h3>
-        <?php foreach($planFiles as $file){ ?>
-        <p>
-            <a href="<?= $file['file'] ?>" target="_blank"><?= $file['title'] ?></a>
-        </p>
+        <?php foreach ($planFiles as $file) { ?>
+            <p>
+                <a href="<?= $file['file'] ?>" target="_blank"><?= $file['title'] ?></a>
+            </p>
         <?php } ?>
 
-        
-        <?php if($planPauses){
-        echo "<h3>" . Yii::t('app', 'Plan pauses') . "</h3>";
-        echo GridView::widget([
-            'dataProvider' => $planPauses,
-            'columns' => [
-                'weeks',
-                'start_date',
-            ],
-        ]);
+
+        <?php if ($planPauses) {
+            echo "<h3>" . Yii::t('app', 'Plan pauses') . "</h3>";
+            echo GridView::widget([
+                'dataProvider' => $planPauses,
+                'columns' => [
+                    'weeks',
+                    'start_date',
+                ],
+            ]);
         } else { ?>
-        <!-- <p><?= Yii::t('app', 'You have not paused this plan yet') ?>!</p> -->
+            <!-- <p><?= Yii::t('app', 'You have not paused this plan yet') ?>!</p> -->
         <?php } ?>
         <hr>
-        <?php if(!$planCurrentlyPaused) { ?>
-            <?php if($remainingPauseWeeks > 0) { ?>
+        <?php if (!$planCurrentlyPaused) { ?>
+            <?php if ($remainingPauseWeeks > 0) { ?>
                 <h3><?= Yii::t('app', 'Pause the plan') ?></h3>
                 <p><?= Yii::t('app', 'You have to do monthly payments for the pause weeks too. At the end of subscribtion plan all pauses will be summed up and the plan will be extended with free lessons.') ?></p>
                 <?php $form = ActiveForm::begin([
@@ -68,7 +70,7 @@ if($subplan){
                     <input type="number" style="width:75px;" max="<?= $remainingPauseWeeks ?>" min="1" id="studentsubplanpauses-weeks" class="form-control" name="StudentSubplanPauses[weeks]">
                 </div>
                 <?= $form->field($newPause, 'start_date')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])->label(Yii::t('app', 'I will start the pause by this date:')) ?>
-                <?= $form->field($newPause, 'studentsubplan_id')->hiddenInput(['value'=> $subplan['id']])->label(false); ?>
+                <?= $form->field($newPause, 'studentsubplan_id')->hiddenInput(['value' => $subplan['id']])->label(false); ?>
 
                 <div class="form-group">
                     <?= Html::submitButton(\Yii::t('app', 'Submit'), ['class' => 'btn btn-orange']) ?>

@@ -94,9 +94,9 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
                         <td><?= $a ?></td>
                         <td>
                             <?= $lecture->lecture->title ?>
-                            <?php if ($lecture->is_favourite){ ?> 
+                            <?php if ($lecture->is_favourite) { ?>
                                 <span class="glyphicon glyphicon-heart"></span>
-                            <?php } ?> 
+                            <?php } ?>
                         </td>
                         <td align="center"><?= (int) $lecture->opened ? 'Jā' : 'Nē' ?></td>
                         <td align="center"><?= $lecture->open_times ?></td>
@@ -140,7 +140,7 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     <?php } ?>
     <p><?= \Yii::t('app', 'Abilities now') ?>:<?= isset($goals[$goalsnow]) ? '<strong>' . $goalsum . '</strong>' : '<code>Not set</code>' ?></p>
     <p><?= \Yii::t('app', 'Plan end date') ?>: <?= $endDate == null ? \Yii::t('app', 'no plan assigned to pupil') : $endDate  ?></p>
-    <?php if($user->wants_more_lessons){ ?>
+    <?php if ($user->wants_more_lessons) { ?>
         <h4><strong><?= Yii::t('app', 'Student wants more lessons') ?>!</strong></h4>
     <?php } ?>
     <?php if (is_array($PossibleThreeLectures)) {
@@ -184,8 +184,8 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     <!-- noņemu pagaidām, jo nav sataisīts backends -->
     <!-- <div class="row">
         <?php
-        $noOfTasks= 4;
-        for($x=0; $x<$noOfTasks; $x++){?>
+        $noOfTasks = 4;
+        for ($x = 0; $x < $noOfTasks; $x++) { ?>
             <div class="col-md-3">
                 <?= $manualLectures ? $form->field($model, "lecture_id[$x]")
                     ->dropDownList(
@@ -202,9 +202,9 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
             $lectureTexts,
             ['prompt' => '']
         ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
-  
-    
-    
+
+
+
     <label for="sendEmail"><?= Yii::t('app', 'Send message to student') ?>
         <input type="checkbox" name="sendEmail">
     </label>

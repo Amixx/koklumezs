@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Lecturesfiles */
 
 $this->title = $model->id;
- ['label' => \Yii::t('app',  'Files'), 'url' => ['index']];
+['label' => \Yii::t('app',  'Files'), 'url' => ['index']];
 
 \yii\web\YiiAsset::register($this);
 ?>

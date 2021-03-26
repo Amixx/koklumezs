@@ -5,17 +5,25 @@ use yii\bootstrap\ActiveForm;
 
 $this->title = \Yii::t('app',  'Sign up');
 
-function getFieldOptions($fieldName, $hasInfo = false){
+function getFieldOptions($fieldName, $hasInfo = false)
+{
     $glyphon = 'user';
     $classes = 'form-group has-feedback';
 
-    switch($fieldName) {
-        case 'password': $glyphon = 'lock'; break;
-        case 'email': $glyphon = 'envelope'; break;
-        case 'phone_number': $glyphon = 'earphone'; break;
-        default: break;
-    } 
-    if($hasInfo) $classes .= ' field-with-info-widget';
+    switch ($fieldName) {
+        case 'password':
+            $glyphon = 'lock';
+            break;
+        case 'email':
+            $glyphon = 'envelope';
+            break;
+        case 'phone_number':
+            $glyphon = 'earphone';
+            break;
+        default:
+            break;
+    }
+    if ($hasInfo) $classes .= ' field-with-info-widget';
 
     return [
         'options' => ['class' => $classes],
@@ -27,7 +35,7 @@ function getFieldOptions($fieldName, $hasInfo = false){
 <div class="login-box">
     <div class="login-box-body login">
         <h3><?= $registration_title ?></h3>
-        
+
         <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
 
         <div class="signup-form-section">
@@ -40,7 +48,7 @@ function getFieldOptions($fieldName, $hasInfo = false){
                 ->field($model, 'last_name', getFieldOptions('last_name'))
                 ->label(false)
                 ->textInput(['placeholder' => Yii::t('app', 'Surname')]) ?>
-        </div>    
+        </div>
 
         <div class="signup-form-section">
             <?= $form
@@ -60,31 +68,31 @@ function getFieldOptions($fieldName, $hasInfo = false){
 
         <div id="has-instrument">
             <?= $form->field(
-                $model, 
-                'ownsInstrument', 
+                $model,
+                'ownsInstrument',
                 ['labelOptions' => ['class' => 'signup-checkbox-label']]
             )->dropDownList(
                 [false => \Yii::t('app',  'No'), true => \Yii::t('app', 'Yes')],
                 ['prompt' => '', 'class' => 'small-dropdown']
-            )->label(Yii::t('app', 'Do you have your own').' '.$instrument.'?') ?>
+            )->label(Yii::t('app', 'Do you have your own') . ' ' . $instrument . '?') ?>
         </div>
         <div class="has-experience">
             <?= $form->field(
-                $model, 
-                'hasExperience', 
+                $model,
+                'hasExperience',
                 ['labelOptions' => ['class' => 'signup-checkbox-label']]
             )->dropDownList(
                 [false => \Yii::t('app',  'No'), true => \Yii::t('app', 'Yes')],
                 ['prompt' => '', 'class' => 'small-dropdown']
             )->label(Yii::t('app', 'Have you played this instrument before?')) ?>
         </div>
-        
-        <div style='margin-top: 16px;'>
-        <?= $form->field($model, 'agree')->checkBox()
-            ->label(\Yii::t('app','I agree to receive emails regarding information about lectures, the education process, and events')); ?>
-        </div>  
 
-        <div class="row" style="margin-top: 32px;"> 
+        <div style='margin-top: 16px;'>
+            <?= $form->field($model, 'agree')->checkBox()
+                ->label(\Yii::t('app', 'I agree to receive emails regarding information about lectures, the education process, and events')); ?>
+        </div>
+
+        <div class="row" style="margin-top: 32px;">
             <div class="col-xs-12 col-md-4">
                 <?= Html::submitButton(\Yii::t('app',  'Sign up'), ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button', 'id' => 'registration-button']) ?>
             </div>
