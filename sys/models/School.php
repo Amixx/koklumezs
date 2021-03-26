@@ -103,4 +103,10 @@ class School extends \yii\db\ActiveRecord
         if(Users::isCurrentUserTeacher()) return SchoolTeacher::getSchoolTeacher($userId)->school_id;
         else return SchoolStudent::getSchoolStudent($userId)->school_id;
     }
-}
+
+    //public static function getDifficultiesColor($)
+    //{
+    //    $difficulties_color = Schools::find()->where(['id' => $, 'difficulties_color' => true])->one();
+    //    return count($difficulties_color);
+    //}
+}//

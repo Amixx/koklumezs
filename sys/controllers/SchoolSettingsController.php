@@ -116,4 +116,10 @@ class SchoolSettingsController extends Controller
 
         return $this->redirect(['index']);
     }
+/*
+    public function changeDifficultiesColor($difficulties_color)
+    {
+        if($difficulties_color)
+
+    }*/
 }
