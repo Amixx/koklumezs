@@ -43,12 +43,12 @@ class SentInvoices extends \yii\db\ActiveRecord
 
     public function getStudent()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id'])->joinWith('payer');
+        return $this->hasOne(Users::class, ['id' => 'user_id'])->joinWith('payer');
     }
 
     public function getStudentSubplan()
     {
-        return $this->hasOne(StudentSubPlans::className(), ['id' => 'studentsubplan_id'])->joinWith('plan');
+        return $this->hasOne(StudentSubPlans::class, ['id' => 'studentsubplan_id'])->joinWith('plan');
     }
 
     public static function getForCurrentSchool()

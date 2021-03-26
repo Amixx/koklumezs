@@ -28,7 +28,7 @@ class SchoolSubplanParts extends \yii\db\ActiveRecord
 
     public function getPlanpart()
     {
-        return $this->hasOne(PlanParts::className(), ['id' => 'planpart_id']);
+        return $this->hasOne(PlanParts::class, ['id' => 'planpart_id']);
     }
 
     public static function getForSchoolSubplan($schoolSubplanId)

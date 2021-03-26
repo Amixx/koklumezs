@@ -37,7 +37,7 @@ class Lecturesfiles extends \yii\db\ActiveRecord
             [['file', 'lecture_id'], 'required'],
             [['file', 'title', 'thumb'], 'string'],
             [['lecture_id'], 'integer'],
-            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
+            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::class, 'targetAttribute' => ['lecture_id' => 'id']],
         ];
     }
 
@@ -57,7 +57,7 @@ class Lecturesfiles extends \yii\db\ActiveRecord
 
     public function getLecture()
     {
-        return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
+        return $this->hasOne(Lectures::class, ['id' => 'lecture_id']);
     }
 
     public static function getLectureFiles($id)

@@ -43,7 +43,7 @@ class TestController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
                     // allow authenticated users
                     [

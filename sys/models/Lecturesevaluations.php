@@ -33,8 +33,8 @@ class Lecturesevaluations extends \yii\db\ActiveRecord
         return [
             [['lecture_id', 'evaluation_id'], 'required'],
             [['lecture_id', 'evaluation_id'], 'integer'],
-            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
-            [['evaluation_id'], 'exist', 'skipOnError' => true, 'targetClass' => Evaluations::className(), 'targetAttribute' => ['evaluation_id' => 'id']],
+            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::class, 'targetAttribute' => ['lecture_id' => 'id']],
+            [['evaluation_id'], 'exist', 'skipOnError' => true, 'targetClass' => Evaluations::class, 'targetAttribute' => ['evaluation_id' => 'id']],
         ];
     }
 
@@ -52,7 +52,7 @@ class Lecturesevaluations extends \yii\db\ActiveRecord
 
     public function getLecture()
     {
-        return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
+        return $this->hasOne(Lectures::class, ['id' => 'lecture_id']);
     }
 
     /**
@@ -60,7 +60,7 @@ class Lecturesevaluations extends \yii\db\ActiveRecord
      */
     public function getEvaluation()
     {
-        return $this->hasOne(Evaluations::className(), ['id' => 'evaluation_id']);
+        return $this->hasOne(Evaluations::class, ['id' => 'evaluation_id']);
     }
 
     /**

@@ -82,13 +82,13 @@ class Users extends ActiveRecord implements IdentityInterface
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            TimestampBehavior::class,
         ];
     }
 
     public function getPayer()
     {
-        return $this->hasOne(Payer::className(), ['user_id' => 'id']);
+        return $this->hasOne(Payer::class, ['user_id' => 'id']);
     }
 
     public static function getFullName($user)
@@ -524,6 +524,6 @@ class Users extends ActiveRecord implements IdentityInterface
      */
     public function getLecture()
     {
-        return $this->hasOne(Lectures::className(), ['id' => 'last_lecture']);
+        return $this->hasOne(Lectures::class, ['id' => 'last_lecture']);
     }
 }

@@ -33,11 +33,11 @@ class CommentResponses extends \yii\db\ActiveRecord
 
     public function getAuthor()
     {
-        return $this->hasOne(Users::className(), ['id' => 'author_id']);
+        return $this->hasOne(Users::class, ['id' => 'author_id']);
     }
     public function getUserlectureevaluation()
     {
-        return $this->hasOne(Userlectureevaluations::className(), ['id' => 'userlectureevaluation_id']);
+        return $this->hasOne(Userlectureevaluations::class, ['id' => 'userlectureevaluation_id']);
     }
 
 

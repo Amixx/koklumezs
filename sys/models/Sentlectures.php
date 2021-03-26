@@ -35,8 +35,8 @@ class Sentlectures extends \yii\db\ActiveRecord
             [['user_id', 'lecture_id'], 'required'],
             [['user_id', 'lecture_id', 'sent'], 'integer'],
             [['created'], 'safe'],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
-            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['user_id' => 'id']],
+            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::class, 'targetAttribute' => ['lecture_id' => 'id']],
         ];
     }
 
@@ -59,7 +59,7 @@ class Sentlectures extends \yii\db\ActiveRecord
      */
     public function getStudent()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id'])
+        return $this->hasOne(Users::class, ['id' => 'user_id'])
             ->from(['student' => Users::tableName()]);
     }
 
@@ -68,7 +68,7 @@ class Sentlectures extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(Users::class, ['id' => 'user_id']);
     }
 
     /**
@@ -76,7 +76,7 @@ class Sentlectures extends \yii\db\ActiveRecord
      */
     public function getLecture()
     {
-        return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
+        return $this->hasOne(Lectures::class, ['id' => 'lecture_id']);
     }
 
     public static function getLectureCount($user = null, $lecture = null)

@@ -30,7 +30,7 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
 
     public function getStudentPlan()
     {
-        return $this->hasOne(StudentSubPlans::className(), ['id' => 'studentsubplan_id'])->joinWith('plan')->joinWith('user');
+        return $this->hasOne(StudentSubPlans::class, ['id' => 'studentsubplan_id'])->joinWith('plan')->joinWith('user');
     }
 
     public static function getForStudent($studentId)

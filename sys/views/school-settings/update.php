@@ -29,7 +29,7 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
 
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'background_image')->widget(InputFile::className(), [
+        <?= $form->field($model, 'background_image')->widget(InputFile::class, [
             'language' => 'lv',
             'controller' => 'elfinder',
             'filter' => ['image'],
@@ -38,7 +38,7 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
             'buttonOptions' => ['class' => 'btn btn-default'],
             'multiple' => false,
         ]); ?>
-        <?= $form->field($model, 'registration_background_image')->widget(InputFile::className(), [
+        <?= $form->field($model, 'registration_background_image')->widget(InputFile::class, [
             'language' => 'lv',
             'controller' => 'elfinder',
             'filter' => ['image'],
@@ -47,7 +47,7 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
             'buttonOptions' => ['class' => 'btn btn-default'],
             'multiple' => false,
         ]); ?>
-        <?= $form->field($model, 'video_thumbnail')->widget(InputFile::className(), [
+        <?= $form->field($model, 'video_thumbnail')->widget(InputFile::class, [
             'language' => 'lv',
             'controller' => 'elfinder',
             'filter' => ['image'],
@@ -56,7 +56,7 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
             'buttonOptions' => ['class' => 'btn btn-default'],
             'multiple' => false,
         ]); ?>
-        <?= $form->field($model, 'logo')->widget(InputFile::className(), [
+        <?= $form->field($model, 'logo')->widget(InputFile::class, [
             'language' => 'lv',
             'controller' => 'elfinder',
             'filter' => ['image'],
@@ -68,18 +68,18 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
         <?= $form->field($model, 'email')->textInput(['class' => 'form-control form-group has-feedback field-with-info-widget']) ?>
         <span class="glyphicon glyphicon-info-sign info info-school-email" style="margin-top: -50px;"></span>
 
-        <?= $form->field($model, 'registration_message')->widget(CKEditor::className(), [
+        <?= $form->field($model, 'registration_message')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
 
-        <?= $form->field($model, 'registration_title')->widget(CKEditor::className(), [
+        <?= $form->field($model, 'registration_title')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
-        <?= $form->field($model, 'login_title')->widget(CKEditor::className(), [
+        <?= $form->field($model, 'login_title')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
 
-        <?= $form->field($model, 'renter_message')->widget(CKEditor::className(), [
+        <?= $form->field($model, 'renter_message')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
 

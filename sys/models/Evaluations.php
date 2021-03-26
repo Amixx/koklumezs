@@ -35,12 +35,12 @@ class Evaluations extends \yii\db\ActiveRecord
 
     public function getLecturesevaluations()
     {
-        return $this->hasMany(Lecturesevaluations::className(), ['evaluation_id' => 'id']);
+        return $this->hasMany(Lecturesevaluations::class, ['evaluation_id' => 'id']);
     }
 
     public function getUserlectureevaluations()
     {
-        return $this->hasMany(Userlectureevaluations::className(), ['evaluation_id' => 'id']);
+        return $this->hasMany(Userlectureevaluations::class, ['evaluation_id' => 'id']);
     }
 
     public static function getEvaluations()

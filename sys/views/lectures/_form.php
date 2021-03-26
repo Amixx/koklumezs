@@ -47,11 +47,11 @@ $inputFileOptions = [
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
             <?= $form->field($model, 'title')->textInput() ?>
-            <?= $form->field($model, 'description')->widget(CKEditor::className(), [
+            <?= $form->field($model, 'description')->widget(CKEditor::class, [
                 'editorOptions' => $ckeditorOptions,
             ]) ?>
-            <?= $form->field($model, 'file')->widget(InputFile::className(), $inputFileOptions); ?>
-            <?= $form->field($model, 'play_along_file')->widget(InputFile::className(), $inputFileOptions); ?>
+            <?= $form->field($model, 'file')->widget(InputFile::class, $inputFileOptions); ?>
+            <?= $form->field($model, 'play_along_file')->widget(InputFile::class, $inputFileOptions); ?>
             <?= $this->render('related', ['lectures' => $lectures, 'relatedLectures' => $relatedLectures]) ?>
             <small><?= \Yii::t('app', 'If you need to add more files, go to section "Files"') ?></small><br /><br />
         </div>

@@ -30,8 +30,8 @@ class Studenthandgoals extends \yii\db\ActiveRecord
         return [
             [['user_id', 'category_id'], 'required'],
             [['user_id', 'category_id'], 'integer'],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Handdifficulties::className(), 'targetAttribute' => ['category_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Handdifficulties::class, 'targetAttribute' => ['category_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -49,12 +49,12 @@ class Studenthandgoals extends \yii\db\ActiveRecord
 
     function getCategory()
     {
-        return $this->hasOne(Handdifficulties::className(), ['id' => 'category_id']);
+        return $this->hasOne(Handdifficulties::class, ['id' => 'category_id']);
     }
 
     function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(Users::class, ['id' => 'user_id']);
     }
 
     public static function removeUserGoals($id)

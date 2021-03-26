@@ -37,7 +37,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
             <?= $form->field($model, 'name')->textInput() ?>
-            <?= $form->field($model, 'description')->widget(CKEditor::className(), [
+            <?= $form->field($model, 'description')->widget(CKEditor::class, [
                 'editorOptions' => $ckeditorOptions,
             ]) ?>
             <?= $form->field($model, 'months')->textInput() ?>

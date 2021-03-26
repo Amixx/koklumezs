@@ -12,7 +12,7 @@ use  yii\jui\DatePicker;
 
     <?php if ($realInvoice == null) { ?>
         <div class="form-group">
-            <?= $form->field($model, 'paid_date')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])->label(Yii::t('app', 'Date of payment:')) ?>
+            <?= $form->field($model, 'paid_date')->widget(DatePicker::class, ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])->label(Yii::t('app', 'Date of payment:')) ?>
             <?= Html::submitButton(\Yii::t('app', 'Mark as paid'), ['class' => 'btn btn-success']) ?>
         </div>
     <?php } else { ?>

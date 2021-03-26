@@ -24,7 +24,7 @@ class SignupQuestions extends \yii\db\ActiveRecord
 
     public function getSchool()
     {
-        return $this->hasOne(Users::className(), ['id' => 'school_id']);
+        return $this->hasOne(Users::class, ['id' => 'school_id']);
     }
 
     public function attributeLabels()

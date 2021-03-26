@@ -52,7 +52,7 @@ class Handdifficulties extends \yii\db\ActiveRecord
      */
     public function getHanddifficulties()
     {
-        return $this->hasMany(Handdifficulties::className(), ['category_id' => 'id']);
+        return $this->hasMany(Handdifficulties::class, ['category_id' => 'id']);
     }
 
     /**

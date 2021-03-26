@@ -69,7 +69,7 @@ if ($subplan) {
                     <label class="control-label" for="studentsubplanpauses-weeks"><?= Yii::t('app', 'For how long? (Max: {0} weeks)', [$remainingPauseWeeks]) ?></label>
                     <input type="number" style="width:75px;" max="<?= $remainingPauseWeeks ?>" min="1" id="studentsubplanpauses-weeks" class="form-control" name="StudentSubplanPauses[weeks]">
                 </div>
-                <?= $form->field($newPause, 'start_date')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])->label(Yii::t('app', 'I will start the pause by this date:')) ?>
+                <?= $form->field($newPause, 'start_date')->widget(DatePicker::class, ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])->label(Yii::t('app', 'I will start the pause by this date:')) ?>
                 <?= $form->field($newPause, 'studentsubplan_id')->hiddenInput(['value' => $subplan['id']])->label(false); ?>
 
                 <div class="form-group">

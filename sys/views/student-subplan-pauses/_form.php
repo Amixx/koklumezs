@@ -13,7 +13,7 @@ use  yii\jui\DatePicker;
 
     <?= $form->field($model, 'weeks')->textInput() ?>
 
-    <?= $form->field($model, 'start_date')->textInput()->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv']) ?>
+    <?= $form->field($model, 'start_date')->textInput()->widget(DatePicker::class, ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv']) ?>
 
     <div class="form-group">
         <?= Html::submitButton(\Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>

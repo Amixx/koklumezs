@@ -33,8 +33,8 @@ class RelatedLectures extends \yii\db\ActiveRecord
         return [
             [['lecture_id', 'related_id'], 'required'],
             [['lecture_id', 'related_id'], 'integer'],
-            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
-            [['related_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['related_id' => 'id']],
+            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::class, 'targetAttribute' => ['lecture_id' => 'id']],
+            [['related_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::class, 'targetAttribute' => ['related_id' => 'id']],
         ];
     }
 
@@ -55,7 +55,7 @@ class RelatedLectures extends \yii\db\ActiveRecord
      */
     public function getRel()
     {
-        return $this->hasMany(Lectures::className(), ['id' => 'related_id']);
+        return $this->hasMany(Lectures::class, ['id' => 'related_id']);
     }
 
 
@@ -64,7 +64,7 @@ class RelatedLectures extends \yii\db\ActiveRecord
      */
     public function getLecture()
     {
-        return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
+        return $this->hasOne(Lectures::class, ['id' => 'lecture_id']);
     }
 
     /**

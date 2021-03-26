@@ -28,7 +28,7 @@ class AssignController extends \yii\web\Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
                     // allow authenticated users
                     [

@@ -34,12 +34,12 @@ class StudentSubPlans extends \yii\db\ActiveRecord
 
     public function getPlan()
     {
-        return $this->hasOne(SchoolSubPlans::className(), ['id' => 'plan_id']);
+        return $this->hasOne(SchoolSubPlans::class, ['id' => 'plan_id']);
     }
 
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(Users::class, ['id' => 'user_id']);
     }
 
     public static function getCurrentForStudent($studentId)

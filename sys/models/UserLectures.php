@@ -23,9 +23,9 @@ class UserLectures extends \yii\db\ActiveRecord
             [['lecture_id', 'user_id', 'assigned'], 'required'],
             [['lecture_id', 'user_id', 'assigned', 'opened', 'sent'], 'integer'],
             [['created', 'opentime', 'sent', 'open_times', 'user_difficulty'], 'safe'],
-            [['assigned'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['assigned' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
-            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
+            [['assigned'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['assigned' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['user_id' => 'id']],
+            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::class, 'targetAttribute' => ['lecture_id' => 'id']],
         ];
     }
 
@@ -47,19 +47,19 @@ class UserLectures extends \yii\db\ActiveRecord
 
     public function getStudent()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id'])
+        return $this->hasOne(Users::class, ['id' => 'user_id'])
             ->from(['student' => Users::tableName()]);
     }
 
     public function getAdmin()
     {
-        return $this->hasOne(Users::className(), ['id' => 'assigned'])
+        return $this->hasOne(Users::class, ['id' => 'assigned'])
             ->from(['admin' => Users::tableName()]);
     }
 
     public function getLecture()
     {
-        return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
+        return $this->hasOne(Lectures::class, ['id' => 'lecture_id']);
     }
 
     public static function getUserLectures($id, $sent = 1): array

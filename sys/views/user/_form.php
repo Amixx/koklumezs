@@ -55,7 +55,7 @@ $isTeacher = Users::isCurrentUserTeacher();
 
             <?= $form->field($model, 'about')->textArea(['rows' => 6]) ?>
 
-            <?= $form->field($model, 'dont_bother')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv']) ?>
+            <?= $form->field($model, 'dont_bother')->widget(DatePicker::class, ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv']) ?>
 
             <?= $form->field($model, 'allowed_to_download_files')->dropDownList([0 => \Yii::t('app',  'No'), 1 => \Yii::t('app',  'Yes')], ['prompt' => '', 'value' => $model['allowed_to_download_files'] == true ? 1 : 0]) ?>
         </div>
@@ -68,7 +68,7 @@ $isTeacher = Users::isCurrentUserTeacher();
             <div class="form-group">
                 <?php if (isset($schoolSubPlans) && $schoolSubPlans) { ?>
                     <?= $form->field($studentSubplan, 'plan_id')->dropDownList($schoolSubPlans, ['prompt' => ''])->label(Yii::t('app', 'Subscription plan')) ?>
-                    <?= $form->field($studentSubplan, 'start_date')->widget(DatePicker::classname(), ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])->label(Yii::t('app', 'Start date')) ?>
+                    <?= $form->field($studentSubplan, 'start_date')->widget(DatePicker::class, ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])->label(Yii::t('app', 'Start date')) ?>
                     <?= $form->field($studentSubplan, 'sent_invoices_count')->textInput(['type' => 'number'])->label(Yii::t('app', 'Sent invoices count')) ?>
                     <?= $form->field($studentSubplan, 'times_paid')->textInput(['type' => 'number'])->label(Yii::t('app', 'Times paid')) ?>
                 <?php } ?>

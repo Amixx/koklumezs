@@ -33,8 +33,8 @@ class Lectureshanddifficulties extends \yii\db\ActiveRecord
         return [
             [['lecture_id', 'category_id'], 'required'],
             [['lecture_id', 'category_id'], 'integer'],
-            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Handdifficulties::className(), 'targetAttribute' => ['category_id' => 'id']],
+            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::class, 'targetAttribute' => ['lecture_id' => 'id']],
+            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Handdifficulties::class, 'targetAttribute' => ['category_id' => 'id']],
         ];
     }
 
@@ -55,7 +55,7 @@ class Lectureshanddifficulties extends \yii\db\ActiveRecord
      */
     public function getLecture()
     {
-        return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
+        return $this->hasOne(Lectures::class, ['id' => 'lecture_id']);
     }
 
     /**
@@ -63,7 +63,7 @@ class Lectureshanddifficulties extends \yii\db\ActiveRecord
      */
     public function getCategory()
     {
-        return $this->hasOne(Handdifficulties::className(), ['id' => 'category_id']);
+        return $this->hasOne(Handdifficulties::class, ['id' => 'category_id']);
     }
 
     /**

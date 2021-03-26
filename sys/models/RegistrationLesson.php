@@ -33,7 +33,7 @@ class RegistrationLesson extends \yii\db\ActiveRecord
 
     public function getLesson()
     {
-        return $this->hasOne(Lectures::className(), ['id' => 'lesson_id']);
+        return $this->hasOne(Lectures::class, ['id' => 'lesson_id']);
     }
 
     public static function getLessonIds($schoolId, $ownsInstrument, $hasExperience)
