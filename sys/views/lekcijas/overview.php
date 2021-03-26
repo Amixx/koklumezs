@@ -17,6 +17,7 @@
             'sortByDifficulty' => $sortByDifficulty,
             'renderRequestButton' => $renderRequestButton,
             'difficulties' => $difficulties,
+            'difficultiesColor' => $difficultiesColor,
         ])?>
         <?=
         $this->render('favouriteANDnew',[
@@ -29,6 +30,7 @@
             'sortByDifficulty' => $sortByDifficulty,
             'renderRequestButton' => false,
             'difficulties' => $difficulties,
+                'difficultiesColor' => $difficultiesColor,
         ])?>
     </div>
 </div>

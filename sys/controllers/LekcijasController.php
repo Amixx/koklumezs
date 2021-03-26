@@ -137,6 +137,7 @@ class LekcijasController extends Controller
 
             $schoolId = School::getCurrentSchoolId();
             $difficulties = Difficulties::getDifficultiesForSchool($schoolId);
+            $difficultiesColor = School::getDifficultiesColor($schoolId);
 
             return $this->render('overview', [
                 'models' => $models,
@@ -149,6 +150,7 @@ class LekcijasController extends Controller
                 'sortByDifficulty' => $sortByDifficulty,
                 'renderRequestButton' => !$user->wants_more_lessons,
                 'difficulties' => $difficulties,
+                'difficultiesColor' => $difficultiesColor,
             ]);
         }
 

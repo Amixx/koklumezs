@@ -28,7 +28,7 @@ use yii\helpers\Url;
                     $lecturefiles = Lecturesfiles::getLectureFiles($lecture->id);
                     $likesCount = Lectures::getLikesCount($lecture->id);
                     $thumbStyle = ThumbnailHelper::getThumbnailStyle($lecture->file, $videoThumb);
-                    //$color = School::getDifficultiesColor();
+                                       
                     ?>                              
                     <div class="col-xs-6 col-lg-3 text-center lecture-wrap">
                         <a
@@ -40,11 +40,9 @@ use yii\helpers\Url;
                         <div class="lecture-parameter-container">
                             <?php   
                                 foreach ($difficulties as $id => $name) {          
-                                    if (isset($lectureDifficulties[$id])) {
-                                        if(empty($color))
-                                            $color = "red";
+                                    if (isset($lectureDifficulties[$id])) {                                     
                                         echo '<span class="lecture-parameter-line"><span class="lecture-parameter-title">'.$name.'</span>';
-                                        echo '<div class="progress lecture-parameter-bar"><div class="progress-bar" role="progressbar" style="width: '.$lectureDifficulties[$id].'0%; background-color:'.$color.';"></div></div><span>';
+                                        echo '<div class="progress lecture-parameter-bar"><div class="progress-bar" role="progressbar" style="width: '.$lectureDifficulties[$id].'0%; background-color:'.$difficultiesColor.';"></div></div><span>';
                                     }
                                     echo '<br>';
                                 }
