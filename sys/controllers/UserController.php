@@ -164,6 +164,11 @@ class UserController extends Controller
 
         if (!$studentSubplan) {
             $studentSubplan = new StudentSubPlans;
+            $studentSubplan->user_id = $model->id;
+            $studentSubplan->start_date = date('Y-m-d H:i:s', time());
+            $studentSubplan->sent_invoices_count = 0;
+            $studentSubplan->times_paid = 0;
+            $studentSubplan->is_active = true;
         }
 
         if ($model->load($post)) {
@@ -189,40 +194,22 @@ class UserController extends Controller
                 $model->about = $post['Users']['about'];
             }
 
-            if (isset($post['StudentSubPlans'])) {
-                $postData = $post['StudentSubPlans'];
+            if (isset($post['StudentSubPlans']) && $post['StudentSubPlans']['plan_id']) {
+                $schoolSubplanChanged = $studentSubplan['plan_id'] !== (int) $post['StudentSubPlans']['plan_id'];
+                $resetActivePlan = $studentSubplan['id'] && $schoolSubplanChanged;
+                $createNewPlan = !$studentSubplan['id'];
 
-                if ($studentSubplan) {
-                    $schoolSubplanChanged = $studentSubplan['plan_id'] !== (int) $postData['plan_id'];
-
-                    if ($schoolSubplanChanged) {
-                        StudentSubPlans::resetActivePlanForUser($model->id);
-
-                        $studentSubplan = new StudentSubPlans;
-                        $studentSubplan->user_id = $model->id;
-                        $studentSubplan->plan_id = $postData["plan_id"];
-                        $studentSubplan->is_active = true;
-                        $studentSubplan->start_date = $postData["start_date"];
-                        $studentSubplan->sent_invoices_count = $postData["sent_invoices_count"] ? $postData["sent_invoices_count"] : 0;
-                        $studentSubplan->times_paid = $postData["times_paid"] ? $postData["times_paid"] : 0;
-                        $studentSubplan->save();
-                    } else {
-                        $studentSubplan->plan_id = $postData["plan_id"];
-                        $studentSubplan->start_date = $postData["start_date"];
-                        $studentSubplan->sent_invoices_count = $postData["sent_invoices_count"] ? $postData["sent_invoices_count"] : 0;
-                        $studentSubplan->times_paid = $postData["times_paid"] ? $postData["times_paid"] : 0;
-                        $studentSubplan->update();
-                    }
-                } else {
+                if ($resetActivePlan) {
                     StudentSubPlans::resetActivePlanForUser($model->id);
+                }
 
-                    $studentSubplan = new StudentSubPlans;
-                    $studentSubplan->user_id = $model->id;
-                    $studentSubplan->plan_id = $postData["plan_id"];
-                    $studentSubplan->is_active = true;
-                    $studentSubplan->start_date = $postData["start_date"];
-                    $studentSubplan->times_paid = $postData["times_paid"];
-                    $studentSubplan->save();
+                $studentSubplan->load($post);
+                if ($studentSubplan->validate()) {
+                    $resetActivePlan || $createNewPlan
+                        ? $studentSubplan->save()
+                        : $studentSubplan->update();
+                } else {
+                    Yii::$app->session->setFlash('error', 'Plāns netika saglabāts - nepareiza informācija!');
                 }
             }
             if (isset($post['Users']['payer']) && $post['Users']['payer']) {
@@ -248,9 +235,8 @@ class UserController extends Controller
                     $payer->save();
                 } else {
                     $payer->update();
+                    Yii::$app->session->setFlash('success', 'Maksātāja informācija saglabāta!');
                 }
-
-                Yii::$app->session->setFlash('success', 'Maksātāja informācija saglabāta!');
             }
 
             $model->update();
