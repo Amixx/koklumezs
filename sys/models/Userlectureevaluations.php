@@ -4,8 +4,6 @@ namespace app\models;
 
 use yii\helpers\ArrayHelper;
 use Yii;
-use yii\db\ActiveQuery;
-use yii\db\Query;
 
 /**
  * This is the model class for table "userlectureevaluations".
@@ -128,8 +126,7 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
 
     public static function getCommentsResponsesForUser()
     {
-        $myComments = self::getCommentsForUser();
-        return $myComments;
+        return self::getCommentsForUser();
     }
 
     public static function getCommentsForUser()

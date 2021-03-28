@@ -48,52 +48,35 @@ class SignUpForm extends Model
 
     public function validatePassword($attribute, $params)
     {
-        if (!$this->hasErrors()) {
-            if (strlen($this->password) < 4) {
-                $this->addError($attribute, Yii::t('app', 'Password too short.'));
-            }
+        if (!$this->hasErrors() && strlen($this->password) < 4) {
+            $this->addError($attribute, Yii::t('app', 'Password too short.'));
         }
     }
 
     public function validatePasswordRepeat($attribute, $params)
     {
-        if (!$this->hasErrors()) {
-            if ($this->password != $this->passwordRepeat) {
-                $this->addError($attribute, Yii::t('app', 'Passwords don\'t match') . '.');
-            }
+        if (!$this->hasErrors() && $this->password != $this->passwordRepeat) {
+            $this->addError($attribute, Yii::t('app', 'Passwords don\'t match') . '.');
         }
     }
 
     public function validateAgree($attribute, $params)
     {
-        if (!$this->hasErrors()) {
-            if (!$this->agree) {
-                $this->addError($attribute, Yii::t('app', 'Please confirm.'));
-            }
+        if (!$this->hasErrors() && !$this->agree) {
+            $this->addError($attribute, Yii::t('app', 'Please confirm.'));
         }
     }
 
     public function checkIfUserExists($attribute, $params)
     {
-        if (!$this->hasErrors()) {
-            if (Users::doesUserExist($this->first_name, $this->last_name, $this->email)) {
-                $this->addError($attribute, Yii::t('app', 'A profile has already been registered using this e-mail! Have you forgotten your password?'));
-            }
+        if (!$this->hasErrors() && Users::doesUserExist($this->first_name, $this->last_name, $this->email)) {
+            $this->addError($attribute, Yii::t('app', 'A profile has already been registered using this e-mail! Have you forgotten your password?'));
         }
     }
 
     public function signUp()
     {
         if ($this->validate()) {
-            // $logged = Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
-            // if ($logged) {
-            //     $model = Users::findOne($this->_user->id);
-            //     if ($model) {
-            //         $model->last_login = date('Y-m-d H:i:s', time());
-            //         $model->update();
-            //     }
-            // }
-            // return $logged;
             $user = new Users();
             $user->password = Yii::$app->security->generatePasswordHash($this->password);
             $user->first_name = $this->first_name;

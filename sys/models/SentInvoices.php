@@ -2,8 +2,6 @@
 
 namespace app\models;
 
-use app\models\SchoolTeacher;
-
 use Yii;
 
 class SentInvoices extends \yii\db\ActiveRecord
@@ -62,8 +60,11 @@ class SentInvoices extends \yii\db\ActiveRecord
     public static function getLatestForStudent($studentId)
     {
         $studentInvoices = self::find()->where(['user_id' => $studentId])->orderBy(['sent_date' => SORT_DESC])->asArray()->all();
-        if ($studentInvoices && count($studentInvoices) > 0) return $studentInvoices[0];
-        else return null;
+        if ($studentInvoices && !empty($studentInvoices)) {
+            return $studentInvoices[0];
+        } else {
+            return null;
+        }
     }
 
     public static function getUnpaidForStudent($studentId)
@@ -75,8 +76,11 @@ class SentInvoices extends \yii\db\ActiveRecord
             NOT IN ( SELECT invoice_number FROM sentinvoices WHERE is_advance = false )";
         $data = Yii::$app->db->createCommand($query)->queryAll();
 
-        if ($data && count($data) > 0) return $data;
-        else return null;
+        if ($data && count($data) > 0) {
+            return $data;
+        } else {
+            return null;
+        }
     }
 
     public static function getRealInvoice($invoiceNumber)

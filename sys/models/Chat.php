@@ -25,18 +25,20 @@ class Chat extends \yii\db\ActiveRecord
 
     public function getAuthor()
     {
-        if (isset($this->userModel))
+        if (isset($this->userModel)) {
             return $this->hasOne($this->userModel, ['id' => 'author_id']);
-        else
+        } else {
             return $this->hasOne(Yii::$app->getUser()->identityClass, ['id' => 'author_id']);
+        }
     }
 
     public function getRecipient()
     {
-        if (isset($this->userModel))
+        if (isset($this->userModel)) {
             return $this->hasOne($this->userModel, ['id' => 'recipient_id']);
-        else
+        } else {
             return $this->hasOne(Yii::$app->getUser()->identityClass, ['id' => 'recipient_id']);
+        }
     }
 
     public function attributeLabels()
@@ -137,13 +139,11 @@ class Chat extends \yii\db\ActiveRecord
 
         $users = Users::find()->where(["in", "id", $userIds])->asArray()->all();
         $usersByIds = array_column($users, NULL, 'id');
-        $usersSorted = array_map(function ($id) use ($usersByIds) {
+        return array_map(function ($id) use ($usersByIds) {
             if (isset($usersByIds[$id])) {
                 return $usersByIds[$id];
             }
         }, $userIds);
-
-        return $usersSorted;
     }
 
     public static function findFirstRecipient()
@@ -157,8 +157,11 @@ class Chat extends \yii\db\ActiveRecord
             ->limit(1)
             ->one();
 
-        if ($data) return $data['recipient_id'];
-        else return null;
+        if ($data) {
+            return $data['recipient_id'];
+        } else {
+            return null;
+        }
     }
 
     public function data($recipientId, $updateOpentime = true)
@@ -174,7 +177,7 @@ class Chat extends \yii\db\ActiveRecord
             CorrespondenceOpentimes::updateOpentime($currentUserId, $recipientId);
         }
 
-        if ($messages)
+        if ($messages) {
             foreach ($messages as $message) {
                 $output .= '<div class="item">
                 <p class="message">   
@@ -186,14 +189,18 @@ class Chat extends \yii\db\ActiveRecord
                 </p>
             </div>';
             }
+        }
+
 
         if ($usersWithConversations) {
             foreach ($usersWithConversations as $user) {
                 $isActive = $user['id'] == $recipientId;
                 $style = $isActive ? "background-color:#b0f3fc;" : "";
                 $hasNewChats = Chat::hasNewChats($user['id']);
-                if ($hasNewChats)
+                if ($hasNewChats) {
                     $style .= "font-weight: bold;";
+                }
+
                 $userList .= "
                   <li class='chat-user-item' data-userid='" . $user['id'] . "' style='" . $style . "'>
                     <span class='glyphicon glyphicon-user'></span>

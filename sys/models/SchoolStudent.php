@@ -3,8 +3,6 @@
 namespace app\models;
 
 use yii\helpers\ArrayHelper;
-use app\models\Lectures;
-use Yii;
 
 class SchoolStudent extends \yii\db\ActiveRecord
 {
@@ -57,10 +55,4 @@ class SchoolStudent extends \yii\db\ActiveRecord
     {
         return self::find()->where(['user_id' => $studentId])->joinWith('school')->joinWith('user')->one();
     }
-
-
-    // public static function getRelations($id): array
-    // {
-    //     return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'id', 'related_id');
-    // }
 }

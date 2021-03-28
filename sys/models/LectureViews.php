@@ -4,8 +4,6 @@ namespace app\models;
 
 use app\models\Lectures;
 use app\models\Users;
-use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "lectureViews".
@@ -69,9 +67,10 @@ class LectureViews extends \yii\db\ActiveRecord
 
     public static function getDayResult($id, $days = 7)
     {
-        $result = 0;
-        $data = self::find()->where(['user_id' => $id])->andWhere('datetime >= DATE_SUB(CURDATE(), INTERVAL ' . $days . ' DAY)')->orderBy(['id' => SORT_DESC])->all();
-        $result = count($data);
-        return $result;
+        $data = self::find()
+            ->where(['user_id' => $id])
+            ->andWhere('datetime >= DATE_SUB(CURDATE(), INTERVAL ' . $days . ' DAY)')
+            ->orderBy(['id' => SORT_DESC])->all();
+        return count($data);
     }
 }

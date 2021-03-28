@@ -2,10 +2,6 @@
 
 namespace app\models;
 
-use yii\helpers\ArrayHelper;
-
-use Yii;
-
 /**
  * This is the model class for table "difficulties".
  *

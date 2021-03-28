@@ -2,8 +2,6 @@
 
 namespace app\models;
 
-use Yii;
-
 class PlanFiles extends \yii\db\ActiveRecord
 {
     public static function tableName()

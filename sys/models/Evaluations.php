@@ -2,7 +2,6 @@
 
 namespace app\models;
 
-use Yii;
 use yii\helpers\ArrayHelper;
 
 class Evaluations extends \yii\db\ActiveRecord

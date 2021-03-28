@@ -175,29 +175,17 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function isUserAdmin($email)
     {
-        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN])) {
-            return true;
-        } else {
-            return false;
-        }
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN]);
     }
 
     public static function isStudent($email)
     {
-        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_USER])) {
-            return true;
-        } else {
-            return false;
-        }
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_USER]);
     }
 
     public static function isTeacher($email)
     {
-        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER])) {
-            return true;
-        } else {
-            return false;
-        }
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER]);
     }
 
     public static function getStatus()

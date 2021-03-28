@@ -168,13 +168,18 @@ class UserLectures extends \yii\db\ActiveRecord
     {
         $condition = ['user_id' => $id, 'sent' => true, 'still_learning' => false];
 
-        if ($type == "new") $condition['evaluated'] = false;
-        else if ($type == "favourite") $condition['is_favourite'] = true;
+        if ($type == "new") {
+            $condition['evaluated'] = false;
+        } else if ($type == "favourite") {
+            $condition['is_favourite'] = true;
+        }
 
         $results = self::find()->where($condition)->orderBy(['id' => SORT_DESC])->all();
 
         // visas nodarbības, kas piešķirtas pirms update un bijušas atvērtas, tagad atrodas arhīvā
-        if ($type === "new") $results = self::filterOutOldOpenedLessons($results);
+        if ($type === "new") {
+            $results = self::filterOutOldOpenedLessons($results);
+        }
 
         $results = $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
         return static::filterOutRelatedLessons($results);
@@ -242,7 +247,7 @@ class UserLectures extends \yii\db\ActiveRecord
                 $setOpenTime = $model->update();
             } else {
                 $model = self::find()->where(['opened' => 1, 'user_id' => $user_id, 'lecture_id' => $id])->one();
-                if ($model and !$setOpenTime) {
+                if ($model && !$setOpenTime) {
                     $model->open_times = (int) $model->open_times + 1;
                     $setOpenTime = $model->update();
                 }
@@ -304,8 +309,12 @@ class UserLectures extends \yii\db\ActiveRecord
 
         $takeNext = false;
         foreach ($lectures as $lecture) {
-            if ($takeNext) return $lecture['id'];
-            if ($lecture["id"] === $currentLectureId) $takeNext = true;
+            if ($takeNext) {
+                return $lecture['id'];
+            }
+            if ($lecture["id"] === $currentLectureId) {
+                $takeNext = true;
+            }
         }
     }
 

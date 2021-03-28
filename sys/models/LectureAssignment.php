@@ -4,7 +4,6 @@ namespace app\models;
 
 use app\models\LecturesDifficulties;
 use app\models\RelatedLectures;
-use app\models\Sentlectures;
 use app\models\Studentgoals;
 use app\models\UserLectures;
 use Yii;

@@ -93,7 +93,7 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
     public static function getLecturesByDifficulty($sum, $returnRandom = false): array
     {
         $sums = self::getLectureSums();
-        if ($returnRandom and isset($sums[$sum])) {
+        if ($returnRandom && isset($sums[$sum])) {
             $len = count($sums[$sum]);
             $random = rand(0, $len - 1);
             return [$sums[$sum][$random]];

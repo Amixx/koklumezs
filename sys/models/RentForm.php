@@ -35,10 +35,8 @@ class RentForm extends Model
 
     public function validatePhoneNumber($attribute, $params)
     {
-        if (!$this->hasErrors()) {
-            if ($this->phone_number[0] !== '+' && strlen($this->phone_number) !== 8) {
-                $this->addError($attribute, Yii::t('app', 'Invalid phone number.'));
-            }
+        if (!$this->hasErrors() && $this->phone_number[0] !== '+' && strlen($this->phone_number) !== 8) {
+            $this->addError($attribute, Yii::t('app', 'Invalid phone number.'));
         }
     }
 }

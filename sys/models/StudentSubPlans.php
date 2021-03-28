@@ -50,7 +50,9 @@ class StudentSubPlans extends \yii\db\ActiveRecord
     public static function getPlanEndDatesForCurrentSchoolStudents()
     {
         $isAdmin = \Yii::$app->user->identity->user_level == 'Admin';
-        if ($isAdmin) return [];
+        if ($isAdmin) {
+            return [];
+        }
 
         $schoolId = School::getCurrentSchoolId();
         $studentPlans = self::find()->joinWith("plan")->andFilterWhere(['schoolsubplans.school_id' => $schoolId, 'is_active' => true])->asArray()->all();
@@ -67,7 +69,9 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         }, $studentPlans);
 
         usort($planEndDates, function ($a, $b) {
-            if ($a == $b) return 0;
+            if ($a == $b) {
+                return 0;
+            }
             return ($a < $b) ? -1 : 1;
         });
 
@@ -88,11 +92,15 @@ class StudentSubPlans extends \yii\db\ActiveRecord
             $readableDate = date("M", $timestamp) . " " . date("Y", $timestamp);
 
             $alreadyAdded = false;
-            foreach ($endDatesMapped as $key => $value) {
-                if ($readableDate === $value) $alreadyAdded = true;
+            foreach ($endDatesMapped as $value) {
+                if ($readableDate === $value) {
+                    $alreadyAdded = true;
+                }
             }
 
-            if (!$alreadyAdded) $endDatesMapped[$endDate] = $readableDate;
+            if (!$alreadyAdded) {
+                $endDatesMapped[$endDate] = $readableDate;
+            }
         }
 
         return $endDatesMapped;
@@ -101,7 +109,9 @@ class StudentSubPlans extends \yii\db\ActiveRecord
     public static function getRemainingPauseWeeks($studentId)
     {
         $subplan = self::getCurrentForStudent($studentId);
-        if (!$subplan) return 0;
+        if (!$subplan) {
+            return 0;
+        }
 
         $pauses = StudentSubplanPauses::getForStudentSubplan($subplan['id'])->asArray()->all();
         $totalPausedWeeks = 0;
@@ -114,7 +124,9 @@ class StudentSubPlans extends \yii\db\ActiveRecord
 
     public static function isPlanCurrentlyPaused($studentId)
     {
-        if (!StudentSubplanPauses::studentHasAnyPauses($studentId)) return false;
+        if (!StudentSubplanPauses::studentHasAnyPauses($studentId)) {
+            return false;
+        }
 
         $mostRecentPause = StudentSubplanPauses::getMostRecentPauseForStudent($studentId);
         $pauseStartDate = strtotime($mostRecentPause['start_date']);
@@ -127,8 +139,12 @@ class StudentSubPlans extends \yii\db\ActiveRecord
     public static function getEndDateString($studentId)
     {
         $subplan = self::getCurrentForStudent($studentId);
-        if ($subplan == null) return null;
-        if ($subplan['plan']['months'] == "0") return \Yii::t('app',  'Unlimited');
+        if ($subplan == null) {
+            return null;
+        }
+        if ($subplan['plan']['months'] == "0") {
+            return \Yii::t('app',  'Unlimited');
+        }
         $planPauses = StudentSubplanPauses::getForStudentSubplan($subplan['id'])->asArray()->all();
         $date = date_create($subplan["start_date"]);
         $date->modify("+" . $subplan['plan']['months'] . "month");
@@ -139,14 +155,17 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         $today = date('Y-m-d');
         $warningDate = date('Y-m-d', strtotime($date . ' -7 days'));
 
-        if ($warningDate <= $today) return "<span style='background: red;'>" . $date . "</span>";
-        else return "<span>" . $date . "</span>";
+        $spanStyle = $warningDate <= $today ? "style='background: red;'" : "";
+
+        return "<span $spanStyle>" . $date . "</span>";
     }
 
     public static function shouldSendAdvanceInvoice($studentSubplan)
     {
-        if ($studentSubplan === null || $studentSubplan["plan"] === null) return false;
-        if (!self::isSameDayAsPlanStart($studentSubplan)) return false;
+        if ($studentSubplan === null || $studentSubplan["plan"] === null || !self::isSameDayAsPlanStart($studentSubplan)) {
+            return false;
+        }
+
         $planMonths = $studentSubplan['plan']['months'];
         $planUnlimited = $planMonths === 0;
         $planEnded = $studentSubplan['sent_invoices_count'] == $planMonths;
@@ -157,7 +176,9 @@ class StudentSubPlans extends \yii\db\ActiveRecord
 
     public static function hasPaidInAdvance($studentSubplan)
     {
-        if ($studentSubplan === null || $studentSubplan["plan"] === null) return false;
+        if ($studentSubplan === null || $studentSubplan["plan"] === null) {
+            return false;
+        }
         return $studentSubplan['times_paid'] > $studentSubplan['sent_invoices_count'];
     }
 

@@ -36,7 +36,9 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
     public static function getForStudent($studentId)
     {
         $subplan = StudentSubPlans::getCurrentForStudent($studentId);
-        if ($subplan == null) return null;
+        if ($subplan == null) {
+            return null;
+        }
 
         return self::getForStudentSubplan($subplan['id']);
     }
@@ -54,7 +56,9 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
     public static function getMostRecentPauseForStudent($studentId)
     {
         $subplan = StudentSubPlans::getCurrentForStudent($studentId);
-        if ($subplan == null) return null;
+        if ($subplan == null) {
+            return null;
+        }
 
         return self::find()->where(['studentsubplan_id' => $subplan['id']])->orderBy(['start_date' => SORT_DESC])->asArray()->all()[0];
     }
@@ -62,7 +66,9 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
     public static function studentHasAnyPauses($studentId)
     {
         $subplan = StudentSubPlans::getCurrentForStudent($studentId);
-        if ($subplan == null) return null;
+        if ($subplan == null) {
+            return null;
+        }
 
         return self::find()->where(['studentsubplan_id' => $subplan['id']])->count() > 0;
     }
@@ -76,16 +82,22 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
     public static function isStudentCurrentlyPaused($studentId)
     {
         $studentPauses = self::getForStudent($studentId);
-        if ($studentPauses == null) return false;
+        if ($studentPauses == null) {
+            return false;
+        }
         $res = false;
 
         date_default_timezone_set('EET');
         foreach ($studentPauses->asArray()->all() as $pause) {
             $weeks = $pause['weeks'];
-            if ($weeks == 0) continue;
+            if ($weeks == 0) {
+                continue;
+            }
 
             $date = date('Y-m-d H:m:s', strtotime("-$weeks week"));
-            if ($pause['start_date'] > $date) $res = true;
+            if ($pause['start_date'] > $date) {
+                $res = true;
+            }
         }
 
         return $res;

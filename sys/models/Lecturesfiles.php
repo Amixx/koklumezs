@@ -2,7 +2,6 @@
 
 namespace app\models;
 
-use Yii;
 
 /**
  * This is the model class for table "lecturesfiles".
@@ -71,7 +70,9 @@ class Lecturesfiles extends \yii\db\ActiveRecord
         $lecturefiles = self::find()->where(['lecture_id' => $id])->asArray()->all();
 
         foreach ($lecturefiles as $id => $file) {
-            if (!isset($file['file']) || empty($file['file'])) continue;
+            if (!isset($file['file']) || empty($file['file'])) {
+                continue;
+            }
 
             if (strpos($file['file'], "youtube") !== false) {
                 $fileGroups['video'][] = $file;
@@ -79,7 +80,9 @@ class Lecturesfiles extends \yii\db\ActiveRecord
             }
 
             $path_info = pathinfo($file['file']);
-            if (!isset($path_info['extension'])) continue;
+            if (!isset($path_info['extension'])) {
+                continue;
+            }
 
             foreach (self::FILE_EXTENSIONS as $type => $fileExtensions) {
                 if (in_array(strtolower($path_info['extension']), $fileExtensions)) {

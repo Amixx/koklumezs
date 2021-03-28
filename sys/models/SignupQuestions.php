@@ -2,10 +2,6 @@
 
 namespace app\models;
 
-use yii\helpers\ArrayHelper;
-
-use Yii;
-
 class SignupQuestions extends \yii\db\ActiveRecord
 {
     public static function tableName()

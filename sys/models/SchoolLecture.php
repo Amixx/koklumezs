@@ -4,7 +4,6 @@ namespace app\models;
 
 use yii\helpers\ArrayHelper;
 use app\models\Lectures;
-use Yii;
 
 class SchoolLecture extends \yii\db\ActiveRecord
 {
