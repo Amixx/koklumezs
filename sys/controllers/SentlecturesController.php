@@ -47,7 +47,7 @@ class SentlecturesController extends Controller
     public function actionIndex()
     {
         $searchModel = new SentlecturesSearch();
-        $students = Users::getActiveStudents();
+        $students = Users::getActiveStudentEmails();
         $lectures = Lectures::getLectures();
         $get = Yii::$app->request->queryParams;
         $dataProvider = $searchModel->search($get);

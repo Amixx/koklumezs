@@ -16,9 +16,7 @@ $this->title = \Yii::t('app',  'Create user');
     <?= $this->render('_form', [
         'model' => $model,
         'studentGoals' => $studentGoals,
-        'studentHandGoals' => $studentHandGoals,
         'difficulties' => $difficulties,
-        'handdifficulties' => $handdifficulties,
         'studentSubplan' => $studentSubplan,
     ]) ?>
 

@@ -49,7 +49,7 @@ class UserLecturesController extends Controller
     public function actionIndex()
     {
         $searchModel = new UserLecturesSearch();
-        $students = Users::getActiveStudents();
+        $students = Users::getActiveStudentEmails();
         $admins = Users::getAdmins();
         $lectures = Lectures::getLectures();
         $lectureObjects = Lectures::getLecturesObjects();
@@ -101,7 +101,7 @@ class UserLecturesController extends Controller
         $model->created = date('Y-m-d H:i:s', time());
         $post = Yii::$app->request->post();
         $lectures = [];
-        $students = Users::getActiveStudents();
+        $students = Users::getActiveStudentEmails();
         $seasonSelected = $hideParams = false;
         $seasons = Lectures::getSeasons();
         $userLecturesTimes = $selected = $lectureDifficulties = $userLectures = $lastLectures = [];
@@ -196,7 +196,7 @@ class UserLecturesController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        $students = Users::getActiveStudents();
+        $students = Users::getActiveStudentEmails();
         $lectures = Lectures::getLectures();
         $userLecturesTimes = UserLectures::getUserLectureTimes($model->user_id);
         $lastLecturesIds = UserLectures::getLastLecturesForUser($model->user_id);

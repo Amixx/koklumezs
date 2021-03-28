@@ -115,4 +115,28 @@ class Studentgoals extends \yii\db\ActiveRecord
             return null;
         }
     }
+
+    public static function addCurrentGoals($currentGoals, $userId)
+    {
+        foreach ($currentGoals as $pid => $value) {
+            $goal = new Studentgoals();
+            $goal->user_id = $userId;
+            $goal->diff_id = $pid;
+            $goal->type = Studentgoals::NOW;
+            $goal->value = $value ?? 0;
+            $goal->save();
+        }
+    }
+
+    public static function addFutureGoals($futureGoals, $userId)
+    {
+        foreach ($futureGoals as $pid => $value) {
+            $goal = new Studentgoals();
+            $goal->user_id = $userId;
+            $goal->diff_id = $pid;
+            $goal->type = Studentgoals::FUTURE;
+            $goal->value = $value ?? 0;
+            $goal->save();
+        }
+    }
 }

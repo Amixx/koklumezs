@@ -9,8 +9,6 @@ use app\models\UserSearch;
 use app\models\TeacherUserSearch;
 use app\models\Studentgoals;
 use app\models\Difficulties;
-use app\models\Handdifficulties;
-use app\models\Studenthandgoals;
 use app\models\SchoolSubPlans;
 use app\models\School;
 use app\models\SchoolTeacher;
@@ -95,7 +93,6 @@ class UserController extends Controller
     {
         $model = new Users();
         $difficulties = Difficulties::getDifficulties();
-        $handdifficulties = Handdifficulties::getDifficulties();
         $post = Yii::$app->request->post();
         $currentUserEmail = Yii::$app->user->identity->email;
         $currentUser = Users::getByEmail($currentUserEmail);
@@ -151,9 +148,7 @@ class UserController extends Controller
         return $this->render('create', [
             'model' => $model,
             'studentGoals' => [],
-            'studentHandGoals' => [],
             'difficulties' => $difficulties,
-            'handdifficulties' => $handdifficulties,
             'studentSubplan' => $studentSubplan,
         ]);
     }
@@ -163,9 +158,7 @@ class UserController extends Controller
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
         $studentGoals = Studentgoals::getUserGoals($id);
-        $studentHandGoals = Studenthandgoals::getUserGoals($id);
         $difficulties = Difficulties::getDifficulties();
-        $handdifficulties = Handdifficulties::getDifficulties();
         $schoolSubPlans = SchoolSubPlans::getMappedForSelection();
         $studentSubplan = StudentSubPlans::getCurrentForStudent($model->id);
 
@@ -182,33 +175,10 @@ class UserController extends Controller
             if (isset($post['studentgoals'])) {
                 Studentgoals::removeUserGoals($id);
                 if (isset($post['studentgoals']['now'])) {
-                    foreach ($post['studentgoals']['now'] as $pid => $value) {
-                        $goal = new Studentgoals();
-                        $goal->user_id = $model->id;
-                        $goal->diff_id = $pid;
-                        $goal->type = Studentgoals::NOW;
-                        $goal->value = $value ?? 0;
-                        $goal->save();
-                    }
+                    Studentgoals::addCurrentGoals($post['studentgoals']['now'], $model->id);
                 }
                 if (isset($post['studentgoals']['future'])) {
-                    foreach ($post['studentgoals']['future'] as $pid => $value) {
-                        $goal = new Studentgoals();
-                        $goal->user_id = $model->id;
-                        $goal->diff_id = $pid;
-                        $goal->type = Studentgoals::FUTURE;
-                        $goal->value = $value ?? 0;
-                        $goal->save();
-                    }
-                }
-            }
-            if (isset($post['studenthandgoals'])) {
-                Studenthandgoals::removeUserGoals($id);
-                foreach ($post['studenthandgoals'] as $pid => $value) {
-                    $goal = new Studenthandgoals();
-                    $goal->user_id = $model->id;
-                    $goal->category_id = $pid;
-                    $goal->save();
+                    Studentgoals::addFutureGoals($post['studentgoals']['future'], $model->id);
                 }
             }
             $model->allowed_to_download_files = false;
@@ -290,9 +260,7 @@ class UserController extends Controller
             return $this->render('update', [
                 'model' => $model,
                 'studentGoals' => $studentGoals,
-                'studentHandGoals' => $studentHandGoals,
                 'difficulties' => $difficulties,
-                'handdifficulties' => $handdifficulties,
                 'schoolSubPlans' => $schoolSubPlans,
                 'studentSubplan' => $studentSubplan,
             ]);

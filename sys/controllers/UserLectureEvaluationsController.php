@@ -40,7 +40,7 @@ class UserLectureEvaluationsController extends Controller
         $isTeacher = Users::isCurrentUserTeacher();
         $searchModel = $isTeacher ? new TeacherUserlectureevaluationsSearch() : new UserlectureevaluationsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, false);
-        $students = Users::getActiveStudents();
+        $students = Users::getActiveStudentEmails();
         $lectures = Lectures::getLectures();
         $evaluations = Evaluations::getEvaluationsTitles();
         if (Yii::$app->language == 'lv') {
@@ -70,7 +70,7 @@ class UserLectureEvaluationsController extends Controller
         $get = Yii::$app->request->queryParams;
         $get["UserlectureevaluationsSearch"]["evaluation_id"] = 4;
         $dataProvider = $searchModel->search($get, true);
-        $students = Users::getActiveStudents();
+        $students = Users::getActiveStudentEmails();
         $lectures = Lectures::getLectures();
         $evaluations = Evaluations::getEvaluationsTitles();
 

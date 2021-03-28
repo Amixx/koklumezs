@@ -118,7 +118,19 @@ class Users extends ActiveRecord implements IdentityInterface
     public static function getActiveStudents()
     {
         $params = ['user_level' => self::ROLE_USER, 'status' => self::STATUS_ACTIVE];
-        return ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'email');
+        $users = self::find()->where($params)->asArray()->all();
+
+        $result = [];
+        foreach ($users as $u) {
+            $result[$u['id']] = $u;
+        }
+        return $result;
+    }
+
+    public static function getActiveStudentEmails()
+    {
+        $students = self::getActiveStudentEmails();
+        return ArrayHelper::map($students, 'id', 'email');
     }
 
     public static function getAllStudents()
@@ -135,7 +147,25 @@ class Users extends ActiveRecord implements IdentityInterface
     public static function getStudents()
     {
         $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE, self::STATUS_PASSIVE]];
-        return ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'email');
+        $users = self::find()->where($params)->asArray()->all();
+
+        $result = [];
+        foreach ($users as $u) {
+            $result[$u['id']] = $u;
+        }
+    }
+
+    public static function getStudentsWithoutPausesForSchool()
+    {
+        $students = self::getStudentsForSchool();
+        foreach ($students as $key => $student) {
+            $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($student['id']);
+            if ($isPlanCurrentlyPaused) {
+                unset($students[$key]);
+            }
+        }
+
+        return $students;
     }
 
     public static function getStudentsForSchool()
@@ -144,50 +174,56 @@ class Users extends ActiveRecord implements IdentityInterface
         $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
         $usersData = self::find()->where($params)->andWhere(['in', 'id', $schoolStudentIds])->asArray()->all();
-        $users = [];
-        foreach ($usersData as $user) {
-            $users[$user['id']] = $user['first_name'] . ' ' . $user['last_name'];
+
+        $result = [];
+        foreach ($usersData as $u) {
+            $result[$u['id']] = $u;
         }
 
-        return $users;
+        return $result;
     }
 
-    public static function getStudentsWithoutPausesForSchool()
+    public static function getStudentNamesForSchool()
     {
         $students = self::getStudentsForSchool();
-        foreach ($students as $key => $student) {
-            $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($student['id']);
-            if ($isPlanCurrentlyPaused) unset($students[$key]);
+        $studentNames = [];
+
+        foreach ($students as $student) {
+            $studentNames[$student['id']] = $student['first_name'] . ' ' . $student['last_name'];
         }
-        return $students;
+
+        return $studentNames;
     }
 
     public static function getStudentsWithParams($lang, $subTypes)
     {
         $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE]];
+        $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
+        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
+
         if ($lang) {
             $params['language'] = $lang;
-        };
+        }
         if ($subTypes && in_array("pausing", $subTypes)) {;
             array_push($params['status'], self::STATUS_PASSIVE);
         }
         $query = self::find()->where($params);
+        $query->andWhere(['in', 'id', $schoolStudentIds]);
         if ($subTypes) {
             $query->andWhere(['in', 'subscription_type', $subTypes]);
         }
 
-        $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
-        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
+        $users = $query->asArray()->all();
 
-        $usersData = self::find()->where($params)->andWhere(['in', 'id', $schoolStudentIds])->asArray()->all();
-        $users = [];
-        foreach ($usersData as $user) {
-            $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($user['id']);
+        $result = [];
+        foreach ($users as $u) {
+            $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($u['id']);
             if (!$isPlanCurrentlyPaused) {
-                $users[$user['id']] = $user['first_name'] . ' ' . $user['last_name'];
+                $result[$u['id']] = $u;
             }
         }
-        return $users;
+
+        return $result;
     }
 
     /**

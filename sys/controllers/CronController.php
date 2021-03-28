@@ -270,11 +270,6 @@ class CronController extends Controller
     {
         $students = Users::getAllStudents();
 
-        var_dump(count($students));
-        echo "<hr>";
-        var_dump($students[15]);
-        die();
-
         foreach ($students as $student) {
             $studentSubplan = StudentSubPlans::getCurrentForStudent($student["id"]);
 

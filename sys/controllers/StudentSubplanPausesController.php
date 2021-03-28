@@ -53,7 +53,7 @@ class StudentSubplanPausesController extends Controller
     public function actionTeacherCreate()
     {
         $model = new StudentSubplanPauses();
-        $users = Users::getStudentsForSchool();
+        $users = Users::getStudentNamesForSchool();
 
         if ($model->load(Yii::$app->request->post())) {
             if (isset($_POST['user_id'])) {
@@ -81,7 +81,7 @@ class StudentSubplanPausesController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $users = Users::getStudentsForSchool();
+        $users = Users::getStudentNamesForSchool();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Plāna pauzes labojumi saglabāti!');

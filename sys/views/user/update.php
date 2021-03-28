@@ -20,7 +20,6 @@ $subPlans = isset($schoolSubPlans) ? $schoolSubPlans : null;
     <?= $this->render('_form', [
         'model' => $model,
         'studentGoals' => $studentGoals,
-        'studentHandGoals' => $studentHandGoals,
         'difficulties' => $difficulties,
         'schoolSubPlans' => $subPlans,
         'studentSubplan' => $studentSubplan,
