@@ -55,8 +55,6 @@ $isTeacher = Users::isCurrentUserTeacher();
 
             <?= $form->field($model, 'about')->textArea(['rows' => 6]) ?>
 
-            <?= $form->field($model, 'dont_bother')->widget(DatePicker::class, ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv']) ?>
-
             <?= $form->field($model, 'allowed_to_download_files')->dropDownList([0 => \Yii::t('app',  'No'), 1 => \Yii::t('app',  'Yes')], ['prompt' => '', 'value' => $model['allowed_to_download_files'] == true ? 1 : 0]) ?>
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">

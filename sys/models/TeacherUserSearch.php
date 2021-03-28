@@ -20,7 +20,7 @@ class TeacherUserSearch extends Users
     {
         return [
             [['id'], 'integer'],
-            [['first_name', 'last_name', 'language', 'subscription_type', 'status', 'last_login', 'dont_bother', 'user_level',], 'safe'],
+            [['first_name', 'last_name', 'language', 'subscription_type', 'status', 'last_login', 'user_level',], 'safe'],
         ];
     }
 
@@ -79,8 +79,7 @@ class TeacherUserSearch extends Users
             ->andFilterWhere(['like', 'user_level', $this->user_level])
             ->andFilterWhere(['like', 'subscription_type', $this->subscription_type])
             ->andFilterWhere(['like', 'status', $this->status])
-            ->andFilterWhere(['like', 'last_login', $this->last_login])
-            ->andFilterWhere(['like', 'dont_bother', $this->dont_bother]);
+            ->andFilterWhere(['like', 'last_login', $this->last_login]);
 
         if (isset($params["TeacherUserSearch"])) {
             $continue = $params["TeacherUserSearch"]["subplan_monthly_cost"]

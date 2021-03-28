@@ -46,11 +46,10 @@ class AssignController extends Controller
     public function actionIndex()
     {
         $options = [];
-        $onlyThoseWithoutDontBother = true;
         if (Users::isCurrentUserTeacher()) {
             $users = Users::getStudentsWithoutPausesForSchool();
         } else {
-            $users = Users::getStudents($onlyThoseWithoutDontBother);
+            $users = Users::getStudents();
         }
 
         $evaluations = [];
@@ -95,11 +94,10 @@ class AssignController extends Controller
         $this->view->params['chatRecipientId'] = $id;
 
         if ($id == null) {
-            $onlyThoseWithoutDontBother = true;
             if (Users::isCurrentUserTeacher()) {
                 $users = Users::getStudentsWithoutPausesForSchool();
             } else {
-                $users = Users::getStudents($onlyThoseWithoutDontBother);
+                $users = Users::getStudents();
             }
             $id = key($users);
         }
@@ -181,10 +179,9 @@ class AssignController extends Controller
             }
         }
 
-        $onlyThoseWithoutDontBother = true;
         $filterLang = array_key_exists("lang", $get) ? $get["lang"] : null;
         $filterSubTypes = (array_key_exists("subTypes", $get) && isset($get["subTypes"]) && $get["subTypes"] !== '') ? explode(",", $get["subTypes"]) : null;
-        $users = Users::getStudentsWithParams($onlyThoseWithoutDontBother, $filterLang, $filterSubTypes);
+        $users = Users::getStudentsWithParams($filterLang, $filterSubTypes);
 
         if (Users::isCurrentUserTeacher()) {
             $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);

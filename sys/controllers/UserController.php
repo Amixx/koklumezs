@@ -113,7 +113,6 @@ class UserController extends Controller
             }
             $model->password = \Yii::$app->security->generatePasswordHash($model->password);
             $model->created_at = date('Y-m-d H:i:s', time());
-            $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
             $model->allowed_to_download_files = false;
             if (isset($post['Users']['allowed_to_download_files']) && $post['Users']['allowed_to_download_files']) {
                 $model->allowed_to_download_files = $post['Users']['allowed_to_download_files'];
@@ -169,7 +168,10 @@ class UserController extends Controller
         $handdifficulties = Handdifficulties::getDifficulties();
         $schoolSubPlans = SchoolSubPlans::getMappedForSelection();
         $studentSubplan = StudentSubPlans::getCurrentForStudent($model->id);
-        if (!$studentSubplan) $studentSubplan = new StudentSubPlans;
+
+        if (!$studentSubplan) {
+            $studentSubplan = new StudentSubPlans;
+        }
 
         if ($model->load($post)) {
             if (!empty($post['Users']['password'])) {
@@ -209,7 +211,6 @@ class UserController extends Controller
                     $goal->save();
                 }
             }
-            $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
             $model->allowed_to_download_files = false;
             if (isset($post['Users']['allowed_to_download_files'])) {
                 $model->allowed_to_download_files = $post['Users']['allowed_to_download_files'];

@@ -20,7 +20,20 @@ class UserSearch extends Users
     {
         return [
             [['id', 'last_lecture'], 'integer'],
-            [['first_name', 'last_name', 'phone_number', 'email', 'user_level', 'language', 'subscription_type', 'status', 'user_level', 'last_login', 'last_lecture', 'dont_bother', 'allowed_to_download_files'], 'safe'],
+            [[
+                'first_name',
+                'last_name',
+                'phone_number',
+                'email',
+                'user_level',
+                'language',
+                'subscription_type',
+                'status',
+                'user_level',
+                'last_login',
+                'last_lecture',
+                'allowed_to_download_files'
+            ], 'safe'],
         ];
     }
 
@@ -79,7 +92,6 @@ class UserSearch extends Users
             ->andFilterWhere(['like', 'subscription_type', $this->subscription_type])
             ->andFilterWhere(['like', 'status', $this->status])
             ->andFilterWhere(['like', 'last_login', $this->last_login])
-            ->andFilterWhere(['like', 'dont_bother', $this->dont_bother])
             ->andFilterWhere(['like', 'allowed_to_download_files', $this->allowed_to_download_files]);
 
         return $dataProvider;

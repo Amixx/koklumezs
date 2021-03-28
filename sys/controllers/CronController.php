@@ -29,8 +29,7 @@ class CronController extends Controller
         if (!isset($get['send'])) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-        $onlyThoseWithoutDontBother = true;
-        $users = Users::getActiveStudents($onlyThoseWithoutDontBother);
+        $users = Users::getActiveStudents();
         $queue = [];
         $spam = true;
         $dbg = Yii::$app->request->get('dbg');
@@ -270,32 +269,38 @@ class CronController extends Controller
     public function actionTest()
     {
         $students = Users::getAllStudents();
-        
+
+        var_dump(count($students));
+        echo "<hr>";
+        var_dump($students[15]);
+        die();
+
         foreach ($students as $student) {
             $studentSubplan = StudentSubPlans::getCurrentForStudent($student["id"]);
 
-            if(StudentSubPlans::shouldSendAdvanceInvoice($studentSubplan)){
+            if (StudentSubPlans::shouldSendAdvanceInvoice($studentSubplan)) {
                 InvoiceManager::sendAdvanceInvoice($student, $studentSubplan);
-            } else if(StudentSubPlans::hasPaidInAdvance($studentSubplan)){
+            } else if (StudentSubPlans::hasPaidInAdvance($studentSubplan)) {
                 $studentSubplan->increaseSentInvoicesCount();
             }
         }
     }
 
-    public function actionRemindToPay($userId){    
-        $user = Users::findOne($userId);  
-        $school = School::getByStudent($userId); 
-        
-        if($user){
-            $sent = EmailSender::sendReminderToPay($school['email'], $user['email']);            
+    public function actionRemindToPay($userId)
+    {
+        $user = Users::findOne($userId);
+        $school = School::getByStudent($userId);
+
+        if ($user) {
+            $sent = EmailSender::sendReminderToPay($school['email'], $user['email']);
         }
 
-        if($sent) {
+        if ($sent) {
             Yii::$app->session->setFlash('success', 'Atgādinājums nosūtīts!');
         } else {
             Yii::$app->session->setFlash('error', 'Atgādinājums netika nosūtīts!');
         }
-        
+
         return $this->redirect(Yii::$app->request->referrer);
     }
 }
