@@ -4,7 +4,6 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Users;
-use app\models\School;
 use app\models\SchoolEvaluations;
 use app\models\SchoolTeacher;
 use yii\web\Controller;
@@ -23,15 +22,13 @@ class SchoolEvaluationsController extends Controller
             'access' => [
                 'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         }
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [

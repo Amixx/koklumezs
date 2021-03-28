@@ -3,7 +3,6 @@
 namespace app\controllers;
 
 use app\models\LectureAssignment;
-use app\models\SentInvoices;
 use app\models\School;
 use app\models\Sentlectures;
 use app\models\Studentgoals;
@@ -289,7 +288,7 @@ class CronController extends Controller
         
         if($user){
             $sent = EmailSender::sendReminderToPay($school['email'], $user['email']);            
-        };
+        }
 
         if($sent) {
             Yii::$app->session->setFlash('success', 'Atgādinājums nosūtīts!');

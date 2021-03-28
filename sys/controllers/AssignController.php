@@ -13,13 +13,12 @@ use app\models\Users;
 use app\models\SchoolLecture;
 use app\models\SchoolTeacher;
 use app\models\SchoolStudent;
-use app\models\School;
 use app\models\LectureViews;
 use app\models\StudentSubPlans;
 use Yii;
 use yii\web\Controller;
 
-class AssignController extends \yii\web\Controller
+class AssignController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -34,7 +33,7 @@ class AssignController extends \yii\web\Controller
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         },
                     ],
@@ -123,7 +122,7 @@ class AssignController extends \yii\web\Controller
                 if ($shouldSendEmail) {
                     $subject = isset($post['subject']) && $post['subject'] ? $post['subject'] : "Jaunas nodarbības";
                     $teacherMessage = $post['teacherMessage'];
-                    UserLectures::sendEmail($model->user_id, $teacherMessage, $subject);
+                    UserLectures::sendEmail($model->user_id, $subject, $teacherMessage);
                 }
 
                 $user->wants_more_lessons = false;
@@ -133,7 +132,7 @@ class AssignController extends \yii\web\Controller
                 return $this->refresh();
             }
         }
-        if (isset($get['assign']) and is_numeric($get['assign'])) {
+        if (isset($get['assign']) && is_numeric($get['assign'])) {
             $model = new UserLectures();
             $model->assigned = Yii::$app->user->identity->id;
             $model->created = date('Y-m-d H:i:s', time());
@@ -146,7 +145,7 @@ class AssignController extends \yii\web\Controller
                 if ($shouldSendEmail) {
                     $teacherMessage = $post['teacherMessage'];
                     $subject = isset($post['subject']) && $post['subject'] ? $post['subject'] : "Jaunas nodarbības";
-                    UserLectures::sendEmail($model->user_id, $teacherMessage, $subject);
+                    UserLectures::sendEmail($model->user_id, $subject, $teacherMessage);
                 }
 
                 $user->wants_more_lessons = false;
@@ -159,7 +158,6 @@ class AssignController extends \yii\web\Controller
         $options = [];
         $evaluations = [];
         $lectureDifficulties = [];
-        $videoFrequencies = [];
         $lastlectures = [];
         $videoParam = Evaluations::getVideoParam();
         $evaluationsTitles = Evaluations::getEvaluationsTitles();
@@ -185,7 +183,7 @@ class AssignController extends \yii\web\Controller
 
         $onlyThoseWithoutDontBother = true;
         $filterLang = array_key_exists("lang", $get) ? $get["lang"] : null;
-        $filterSubTypes = (array_key_exists("subTypes", $get) and isset($get["subTypes"]) && $get["subTypes"] !== '') ? explode(",", $get["subTypes"]) : null;
+        $filterSubTypes = (array_key_exists("subTypes", $get) && isset($get["subTypes"]) && $get["subTypes"] !== '') ? explode(",", $get["subTypes"]) : null;
         $users = Users::getStudentsWithParams($onlyThoseWithoutDontBother, $filterLang, $filterSubTypes);
 
         if (Users::isCurrentUserTeacher()) {

@@ -5,10 +5,8 @@ namespace app\controllers;
 use Yii;
 use app\models\Users;
 use app\models\SchoolSubplanParts;
-use app\models\School;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 
 class SchoolSubplanPartsController extends Controller
@@ -22,7 +20,7 @@ class SchoolSubplanPartsController extends Controller
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         }
                     ],

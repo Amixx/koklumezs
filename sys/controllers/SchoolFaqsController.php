@@ -3,10 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Users;
 use app\models\School;
 use app\models\SchoolFaqs;
-use app\models\SchoolTeacher;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\data\ActiveDataProvider;

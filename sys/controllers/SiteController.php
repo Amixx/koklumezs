@@ -22,6 +22,7 @@ use app\models\ResendVerificationEmailForm;
 use app\models\VerifyEmailForm;
 use app\helpers\EmailSender;
 use app\helpers\InvoiceManager;
+use yii\web\BadRequestHttpException;
 
 class SiteController extends Controller
 {
@@ -96,7 +97,7 @@ class SiteController extends Controller
     {
         try {
             $model = new ResetPasswordForm($token);
-        } catch (InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
@@ -112,7 +113,7 @@ class SiteController extends Controller
     {
         try {
             $model = new VerifyEmailForm($token);
-        } catch (InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
 
@@ -173,7 +174,9 @@ class SiteController extends Controller
     public function actionSignUp($s, $l)
     {
         $this->layout = '@app/views/layouts/signup';
-        if (!Yii::$app->user->isGuest) Yii::$app->user->logout();
+        if (!Yii::$app->user->isGuest) {
+            Yii::$app->user->logout();
+        }
 
         Yii::$app->language = $l;
 
@@ -287,7 +290,7 @@ class SiteController extends Controller
         $post = Yii::$app->request->post();
         if ($post && isset($post['answers']) && count($post['answers']) > 0) {
             $aboutUser = "";
-            foreach ($post['answers'] as $id => $answer) {
+            foreach ($post['answers'] as $answer) {
                 if ($answer !== "") {
                     $aboutUser .= $answer;
                     $aboutUser .= "\n";

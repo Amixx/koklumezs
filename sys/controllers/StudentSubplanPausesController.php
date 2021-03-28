@@ -5,13 +5,11 @@ namespace app\controllers;
 use Yii;
 use app\models\StudentSubPlans;
 use app\models\Users;
-use app\models\PlanFiles;
 use app\models\StudentSubplanPauses;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
-use app\models\School;
 use yii\helpers\Url;
 
 class StudentSubplanPausesController extends Controller
@@ -22,12 +20,10 @@ class StudentSubplanPausesController extends Controller
             'access' => [
                 'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [
@@ -59,9 +55,10 @@ class StudentSubplanPausesController extends Controller
         $model = new StudentSubplanPauses();
         $users = Users::getStudentsForSchool();
 
-        $schoolId = School::getCurrentSchoolId();
         if ($model->load(Yii::$app->request->post())) {
-            if (isset($_POST['user_id'])) $userId = $_POST['user_id'];
+            if (isset($_POST['user_id'])) {
+                $userId = $_POST['user_id'];
+            }
             $studentSubplan = StudentSubPlans::getCurrentForStudent($userId);
             if ($studentSubplan) {
                 $model->studentsubplan_id = $studentSubplan['id'];

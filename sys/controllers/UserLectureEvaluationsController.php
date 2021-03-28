@@ -9,18 +9,11 @@ use app\models\TeacherUserlectureevaluationsSearch;
 use app\models\Users;
 use app\models\Lectures;
 use app\models\Evaluations;
-use app\models\SentInvoices;
-use app\models\School;
 use app\models\CommentResponses;
-use app\models\CommentresponsesSearch;
-use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * UserLectureEvaluationsController implements the CRUD actions for Userlectureevaluations model.
- */
 class UserLectureEvaluationsController extends Controller
 {
     /**

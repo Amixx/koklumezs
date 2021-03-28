@@ -4,16 +4,11 @@ namespace app\controllers;
 
 use Yii;
 use app\models\StudentSubPlans;
-use app\models\Users;
 use app\models\PlanFiles;
-use app\models\SentInvoices;
 use app\models\StudentSubplanPauses;
-use app\models\SchoolSubPlans;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
-use kartik\mpdf\Pdf;
 
 class StudentSubPlansController extends Controller
 {
@@ -23,12 +18,10 @@ class StudentSubPlansController extends Controller
             'access' => [
                 'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [

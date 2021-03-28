@@ -6,7 +6,6 @@ use Yii;
 use app\models\Users;
 use app\models\Handdifficulties;
 use app\models\HanddifficultiesSearch;
-use app\models\School;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -25,15 +24,13 @@ class HanddifficultiesController extends Controller
             'access' => [
                 'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isUserAdmin(Yii::$app->user->identity->email);
                         }
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [

@@ -22,7 +22,7 @@ class SentInvoicesController extends Controller
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         }
                     ],

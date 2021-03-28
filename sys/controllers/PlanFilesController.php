@@ -4,7 +4,6 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Users;
-use app\models\Lectures;
 use app\models\PlanFiles;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -21,11 +20,10 @@ class PlanFilesController extends Controller
             'access' => [
                 'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         },
                     ],

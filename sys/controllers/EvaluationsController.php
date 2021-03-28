@@ -6,7 +6,6 @@ use Yii;
 use app\models\Users;
 use app\models\Evaluations;
 use app\models\EvaluationsSearch;
-use app\models\School;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -29,7 +28,7 @@ class EvaluationsController extends Controller
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         }
                     ],
@@ -101,9 +100,6 @@ class EvaluationsController extends Controller
      */
     public function actionUpdate($id)
     {
-        // $E = array("Viss tik viegls, ka garlaicīgi","Ļoti ļoti viegli, noteikti vajag grūtāk","Izspēlēju vienu reizi un jau viss skaidrs","Diezgan vienkārši","Nācās pastrādāt, bet tiku galā bez milzīgas piepūles","Tiku galā","Diezgan grūti","Itkā saprotu, bet pirksti neklausa","Kaut ko mēģinu, bet pārāk nesanāk","Vispār neko nesaprotu");
-        // $s = serialize($E);
-        // var_dump($s);die;
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
         if ($post) {

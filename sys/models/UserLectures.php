@@ -309,7 +309,7 @@ class UserLectures extends \yii\db\ActiveRecord
         }
     }
 
-    public static function sendEmail($id, $teacherMessage = null, $subject)
+    public static function sendEmail($id, $subject, $teacherMessage = null)
     {
         $user = Users::findOne([
             'id' => $id,

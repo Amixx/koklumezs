@@ -3,35 +3,16 @@
 namespace app\controllers;
 
 use yii\data\ActiveDataProvider;
-use app\models\Difficulties;
-use app\models\Evaluations;
-use app\models\LectureAssignment;
-use app\models\Lectures;
 use app\models\PlanFiles;
 use app\models\SchoolSubplanParts;
 use app\models\PlanParts;
-use app\models\LecturesDifficulties;
-use app\models\Lecturesevaluations;
-use app\models\Lecturesfiles;
-use app\models\Lectureshanddifficulties;
-use app\models\RelatedLectures;
-use app\models\Studentgoals;
-use app\models\Userlectureevaluations;
-use app\models\UserLectures;
-use app\models\Users;
 use app\models\SchoolSubPlans;
-use app\models\StudentSubplanPauses;
-use app\models\SectionsVisible;
 use app\models\School;
 use Yii;
-use yii\data\Pagination;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-/**
- * ArchiveController implements the actions for Lectures model by student.
- */
 class SchoolSubPlansController extends Controller
 {
     public function behaviors()
@@ -40,15 +21,13 @@ class SchoolSubPlansController extends Controller
             'access' => [
                 'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return !empty(Yii::$app->user->identity);
                         },
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [
@@ -146,7 +125,9 @@ class SchoolSubPlansController extends Controller
             }
         }
 
-        if ($saved) return $this->redirect(['view', 'id' => $model->id]);
+        if ($saved) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
 
 
         return $this->render('update', [

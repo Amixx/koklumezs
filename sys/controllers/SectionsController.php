@@ -6,31 +6,25 @@ use Yii;
 use app\models\Users;
 use app\models\SectionsVisible;
 use app\models\SectionsVisibleSearch;
-use app\models\School;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 class SectionsController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isUserAdmin(Yii::$app->user->identity->email);
                         }
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [

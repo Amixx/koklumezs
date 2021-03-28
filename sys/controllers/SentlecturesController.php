@@ -7,14 +7,10 @@ use app\models\Users;
 use app\models\Lectures;
 use app\models\Sentlectures;
 use app\models\SentlecturesSearch;
-use app\models\School;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * SentlecturesController implements the CRUD actions for Sentlectures model.
- */
 class SentlecturesController extends Controller
 {
     /**
@@ -26,15 +22,13 @@ class SentlecturesController extends Controller
             'access' => [
                 'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         },
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [

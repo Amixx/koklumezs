@@ -3,13 +3,9 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Users;
 use app\models\Difficulties;
-use app\models\DifficultiesSearch;
 use app\models\School;
-use app\models\SchoolTeacher;
 use app\models\SignupQuestions;
-use app\models\SchoolStudent;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\data\ActiveDataProvider;
@@ -26,7 +22,6 @@ class SignupQuestionsController extends Controller
             'access' => [
                 'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],

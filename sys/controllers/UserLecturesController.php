@@ -8,15 +8,11 @@ use app\models\LecturesDifficulties;
 use app\models\UserLectures;
 use app\models\UserLecturesSearch;
 use app\models\Users;
-use app\models\School;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-/**
- * UserLecturesController implements the CRUD actions for UserLectures model.
- */
 class UserLecturesController extends Controller
 {
     /**
@@ -28,15 +24,13 @@ class UserLecturesController extends Controller
             'access' => [
                 'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         },
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [
@@ -85,7 +79,7 @@ class UserLecturesController extends Controller
         ]);
     }
 
-    private function getLectureDiffs($data)
+    private static function getLectureDiffs($data)
     {
         $result = [];
         foreach ($data as $id) {
@@ -110,7 +104,6 @@ class UserLecturesController extends Controller
         $students = Users::getActiveStudents();
         $seasonSelected = $hideParams = false;
         $seasons = Lectures::getSeasons();
-        //$lectures = Lectures::getLectures();
         $userLecturesTimes = $selected = $lectureDifficulties = $userLectures = $lastLectures = [];
         $difficulties = Difficulties::getDifficulties();
         if ($post) {
@@ -121,8 +114,7 @@ class UserLecturesController extends Controller
                 $saved = $model->save();
                 if ($saved) {
                     $lectureName = Lectures::findOne($model->lecture_id)->title;
-                    $sent = UserLectures::sendEmail($model->user_id, $lectureName);
-                    // $model->sent = (int) $sent;
+                    UserLectures::sendEmail($model->user_id, $lectureName);
                     $model->sent = 1;
                     $model->update();
                 }
@@ -148,14 +140,14 @@ class UserLecturesController extends Controller
                         }
                     } else {
                         $lectures = Lectures::getLecturesForUser($userLectures);
-                        if (!empty($seasonSelected) and !empty($lectures)) {
+                        if (!empty($seasonSelected) && !empty($lectures)) {
                             $ids = array_keys($lectures);
                             $lectures = Lectures::getLecturesBySeasonAndIds($ids, $seasonSelected, true);
                         }
                     }
                 } else {
                     $lectures = Lectures::getLecturesForUser($userLectures);
-                    if (!empty($seasonSelected) and !empty($lectures)) {
+                    if (!empty($seasonSelected) && !empty($lectures)) {
                         $ids = array_keys($lectures);
                         $lectures = Lectures::getLecturesBySeasonAndIds($ids, $seasonSelected, true);
                     }
@@ -197,11 +189,8 @@ class UserLecturesController extends Controller
         $model = $this->findModel($id);
         $outofLectures = false;
         $post = Yii::$app->request->post();
-        $seasons = $userLecturesTimes = $selected = $lectureDifficulties = $userLectures = $lastLectures = [];
-        $difficulties = Difficulties::getDifficulties();
+        $seasons = $userLecturesTimes = $selected = $lectureDifficulties = $lastLectures = [];
         if (isset($post['UserLectures']['lecture_id']) && $model->load($post) && $model->save()) {
-            //$sent = self::sendEmail($model->user_id, $model->lecture_id);
-            //$model->sent = (int) $sent;
             $model->evaluated = isset($post["UserLectures"]["evaluated"]) ? $post["UserLectures"]["evaluated"] : 0;
             $model->update();
             return $this->redirect(['view', 'id' => $model->id]);

@@ -3,7 +3,6 @@
 namespace app\controllers;
 
 use app\models\Difficulties;
-use app\models\Evaluations;
 use app\models\Lectures;
 use app\models\LecturesDifficulties;
 use app\models\Lecturesevaluations;
@@ -29,15 +28,13 @@ class LekcijasController extends Controller
             'access' => [
                 'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return !empty(Yii::$app->user->identity);
                         },
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [
@@ -56,7 +53,6 @@ class LekcijasController extends Controller
         $models = [];
         $pages = [];
         $user = Yii::$app->user->identity;
-        // $modelsIds = UserLectures::getUserLectures($user->id);
 
         $videoThumb = School::getCurrentSchool()->video_thumbnail;
 

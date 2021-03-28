@@ -21,11 +21,6 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-use yii\helpers\ArrayHelper;
-
-/**
- * UserController implements the CRUD actions for Users model.
- */
 class UserController extends Controller
 {
     public function behaviors()
@@ -37,8 +32,7 @@ class UserController extends Controller
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
-                            // return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
+                        'matchCallback' => function () {
                             return true;
                         }
                     ],
@@ -110,7 +104,7 @@ class UserController extends Controller
 
         if ($model->load($post)) {
             $isNewUserTeacher = isset($post['Users']['user_level']) && $post['Users']['user_level'] == 'Teacher';
-            if ($isNewUserTeacher and !$post['teacher_instrument']) {
+            if ($isNewUserTeacher && !$post['teacher_instrument']) {
                 Yii::$app->session->setFlash('error', "Norādiet skolotāja instrumentu!");
                 return $this->redirect(['create']);
             }
@@ -144,7 +138,7 @@ class UserController extends Controller
                 $newSchoolStudent = new SchoolStudent;
                 $newSchoolStudent->school_id = $teacher->school_id;
                 $newSchoolStudent->user_id = $model->id;
-                $studentAddedToSchool = $newSchoolStudent->save();
+                $newSchoolStudent->save();
             }
             if ($created) {
                 Yii::$app->session->setFlash('success', "User created successfully!");
