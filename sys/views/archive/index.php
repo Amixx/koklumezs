@@ -36,12 +36,6 @@ $this->title = \Yii::t('app', 'Archive');
                 <div class="col-md-6 col-lg-3 text-center lecture-wrap">
                     <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
                     <?= $lecture->title ?>
-                    <?php if ($userLecture->is_favourite) { ?>
-                        <div class="icon-favourite"></div>
-                    <?php } ?>
-                    <?php if ($userLecture->still_learning) { ?>
-                        <div class="icon-still-learning"></div>
-                    <?php } ?>
                     <?php if ($likesCount) { ?>
                         <span class="lecturelikes lecturelikes-archive">
                             <span class="glyphicon glyphicon-heart lecturelikes-icon"></span>
