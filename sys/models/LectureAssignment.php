@@ -81,7 +81,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
             $nextLectures = $lecture_id ? RelatedLectures::getRelations($lecture_id) : [];
             $foundNext = false;
             if (!empty($nextLectures)) {
-                if ($dbg and !empty($nextLectures)) {
+                if ($dbg && !empty($nextLectures)) {
                     echo 'NEXT RELATED LECTURES<pre>';
                     print_r($nextLectures);
                     echo '</pre>';
@@ -97,7 +97,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                     //found match in kids
                     if ($lectureDifficulty == $result) {
                         $foundNext = $next;
-                        if (!$dbg and !$returnIds) {
+                        if (!$dbg && !$returnIds) {
                             //change user params
                             self::changeUserParams($user_id, $next);
                         }
@@ -126,10 +126,10 @@ class LectureAssignment extends \yii\db\ActiveRecord
                  */
                 $kids = [];
                 if ($lecture_id) {
-                    if (($x == 1) or ($x == 10)) {
+                    if (($x == 1) || ($x == 10)) {
                     } else {
                         $kids = self::getKidRelation($lecture_id);
-                        if ($dbg and !empty($kids)) {
+                        if ($dbg && !empty($kids)) {
                             echo 'KIDS<pre>';
                             print_r($kids);
                             echo '</pre>';
@@ -143,7 +143,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                         //found match in kids
                         if ($lectureDifficulty == $result) {
                             $foundKid = $kid;
-                            if (!$dbg and !$returnIds) {
+                            if (!$dbg && !$returnIds) {
                                 //change user params
                                 self::changeUserParams($user_id, $kid);
                             }
@@ -195,7 +195,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                         }
                     }
                     if ($newLecture) {
-                        if (!$dbg and !$returnIds) {
+                        if (!$dbg && !$returnIds) {
                             //change user params
                             self::changeUserParams($user_id, $newLecture);
                         }
@@ -366,7 +366,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                 $result = $difficulty;
         }
         /** maybe, will see..
-        if ($result and ($userDifficulty > $lectureDifficulty)) {
+        if ($result && ($userDifficulty > $lectureDifficulty)) {
 
          * evaluating old lecture, skill is greater by default
          */
@@ -387,7 +387,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                 //check if user is not already signed to found lectures
                 $newIds = UserLectures::getNewLectures($user, $ids);
 
-                if (!empty($newIds) and !$dbg) {
+                if (!empty($newIds) && !$dbg) {
                     // foreach ($newIds as $lec) {
                     //     $skipErrors = true;
                     //     $model = new UserLectures();
@@ -399,7 +399,7 @@ class LectureAssignment extends \yii\db\ActiveRecord
                     //     $saved = $model->save($skipErrors);
                     //     //dont send now, only when needed, twice a week or smthn..
                     //     $sendNow = false;
-                    //     if ($saved and ($sendNow or $spam)) {
+                    //     if ($saved & ($sendNow || $spam)) {
                     //         //noņemt e-pastu automātisko sūtīšanu. Cilvēkiem uzrādās tie kā "Nedroši"
                     //         //$sent = UserLectures::sendEmail($model->user_id, $model->lecture_id);
                     //         $sent = 1;
