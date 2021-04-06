@@ -14,7 +14,10 @@ use yii\helpers\Html;
                         <span><strong><?= $comment['student']['first_name'] ?></strong>: </span>
                         <span><?= $comment['evaluation'] ?></span>
                     </div>
-                    <?= Html::submitButton(\Yii::t('app',  'Reply'), ['class' => 'btn btn-primary btn-sm ReplyButton', 'id' => 'comment-' . $comment['id']]) ?>
+                    <?= Html::submitButton(
+                        \Yii::t('app',  'Reply'),
+                        ['class' => 'btn btn-primary btn-sm ReplyButton', 'id' => 'comment-' . $comment['id']]
+                    ) ?>
                 </div>
 
             </div>
@@ -25,7 +28,10 @@ use yii\helpers\Html;
                             <span><strong><?= $response['author']['first_name'] ?></strong>: </span>
                             <span><?= $response['text'] ?></span>
                         </div>
-                        <?= Html::submitButton(\Yii::t('app',  'Reply'), ['class' => 'btn btn-primary btn-sm ReplyButton', 'id' => 'comment-' . $comment['id']]) ?>
+                        <?= Html::submitButton(
+                            \Yii::t('app',  'Reply'),
+                            ['class' => 'btn btn-primary btn-sm ReplyButton', 'id' => 'comment-' . $comment['id']]
+                        ) ?>
                     </div>
                 <?php } ?>
 

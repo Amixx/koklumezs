@@ -1,7 +1,20 @@
 <?php
-/* @var $this yii\web\View */
 
 use yii\helpers\Html;
+
+$empty = '<code>Not set</code>';
+
+$getEvaluations = function ($etid, $id) use ($empty, $evaluations, $evaluationsValues) {
+    if (isset($evaluations[$id][$etid])) {
+        if (isset($evaluationsValues[$etid]) && isset($evaluationsValues[$etid][(int) $evaluations[$id][$etid]])) {
+            return $evaluationsValues[$etid][(int) $evaluations[$id][$etid]];
+        } else if (isset($evaluations[$id][$etid])) {
+            return $evaluations[$id][$etid];
+        }
+    }
+
+    return $empty;
+};
 
 $this->title = \Yii::t('app',  'Lesson assigning');
 ?>
@@ -31,27 +44,31 @@ $this->title = \Yii::t('app',  'Lesson assigning');
 </div>
 <div style="display:inline-block">
     <?= \Yii::t('app', 'Abonement types') ?>:
-    <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-free"><?= \Yii::t('app', 'Free') ?></label>
-    <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-paid"><?= \Yii::t('app', 'Paid') ?></label>
-    <label style="display:inline; margin-right:16px;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-lead"><?= \Yii::t('app', 'Lead') ?></label>
-    <!-- noņemts, kamēr nav sataisīta jaunā paužu sistēma -->
-    <!-- <label style="display:inline; margin-right:16px; color:darkgrey;"><input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-pausing"><?= \Yii::t('app', 'Show paused') ?></label> -->
+    <label style="display:inline; margin-right:16px;">
+        <input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-free"><?= \Yii::t('app', 'Free') ?>
+    </label>
+    <label style="display:inline; margin-right:16px;">
+        <input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-paid"><?= \Yii::t('app', 'Paid') ?>
+    </label>
+    <label style="display:inline; margin-right:16px;">
+        <input type="checkbox" name="subscription-type-selector" class="subscription-type-selector type-lead"><?= \Yii::t('app', 'Lead') ?>
+    </label>
     <input type="hidden" name="subscription-type-selector" class="subscription-type-selector type-pausing">
 </div>
 <div class="grid-view">
     <table class="table table-striped table-bordered" id="AssignTable">
         <thead>
             <tr>
-                <th>#</th>
-                <th><?= \Yii::t('app', 'User') ?></th>
-                <th><?= \Yii::t('app', 'Last lesson') ?></th>
-                <th><?= \Yii::t('app', 'Times played') ?></th>
-                <th><?= \Yii::t('app', 'Difficulty') ?></th>
+                <th scope="col">#</th>
+                <th scope="col"><?= \Yii::t('app', 'User') ?></th>
+                <th scope="col"><?= \Yii::t('app', 'Last lesson') ?></th>
+                <th scope="col"><?= \Yii::t('app', 'Times played') ?></th>
+                <th scope="col"><?= \Yii::t('app', 'Difficulty') ?></th>
                 <?php foreach ($evaluationsTitles as $et) { ?>
-                    <th><?= \Yii::t('app', $et) ?></th>
+                    <th scope="col"><?= \Yii::t('app', $et) ?></th>
                 <?php } ?>
-                <th><?= \Yii::t('app', 'Abilities') ?></th>
-                <th class="action-column"><?= \Yii::t('app', 'Actions') ?></th>
+                <th scope="col"><?= \Yii::t('app', 'Abilities') ?></th>
+                <th scope="col" class="action-column"><?= \Yii::t('app', 'Actions') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -60,23 +77,22 @@ $this->title = \Yii::t('app',  'Lesson assigning');
                 <tr>
                     <td><?= $a ?></td>
                     <td><?= $user['first_name'] ?> <?= $user['last_name'] ?></td>
-                    <td><?= isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->title : '<code>Not set</code>' ?></td>
-                    <td align="center"><?= isset($lastlectures[$id]) ? $lastlectures[$id]['open_times'] : '<code>Not set</code>' ?></td>
-                    <td align="center"><?= isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->complexity : '<code>Not set</code>' ?></td>
-                    <?php foreach ($evaluationsTitles as $etid => $et) { ?>
-                        <td align="center">
-                            <?php if (isset($evaluations[$id][$etid])) {
-                                echo isset($evaluationsValues[$etid]) ? (isset($evaluationsValues[$etid][(int) $evaluations[$id][$etid]]) ? $evaluationsValues[$etid][(int) $evaluations[$id][$etid]] : '<code>Not set</code>') : (isset($evaluations[$id][$etid]) ? $evaluations[$id][$etid] : '<code>Not set</code>');
-                            } else {
-                                echo '<code>Not set</code>';
-                            }  ?>
-                        </td>
-                    <?php } ?>
-                    <td align="center"><?= isset($goals[$id][$goalsnow]) ? array_sum($goals[$id][$goalsnow]) : '<code>Not set</code>' ?></td>
-                    <td align="center">
-                        <span data-userid='<?= $user['id'] ?>' style='width: 41px;' class='btn btn-success glyphicon glyphicon-envelope chat-with-student'>&nbsp;</span>
+                    <td><?= isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->title : $empty ?></td>
+                    <td class="text-center"><?= isset($lastlectures[$id]) ? $lastlectures[$id]['open_times'] : $empty ?></td>
+                    <td class="text-center"><?= isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->complexity : $empty ?></td>
+                    <?= $this->render('evaluation-titles', [
+                        'evaluationsTitles' => $evaluationsTitles,
+                        'evaluationsValues' => $evaluationsValues,
+                        'evaluations' => $evaluations,
+                        'id' => $id,
+                    ]) ?>
+                    <td class="text-center"><?= isset($goals[$id][$goalsnow]) ? array_sum($goals[$id][$goalsnow]) : $empty ?></td>
+                    <td class="text-center">
+                        <span data-userid='<?= $user['id'] ?>' style='width: 41px;' class='btn btn-success glyphicon glyphicon-envelope chat-with-student'>
+                            &nbsp;
+                        </span>
                     </td>
-                    <td align="center">
+                    <td class="text-center">
                         <?= Html::a(
                             '<span class="glyphicon glyphicon-eye-open"> </span>',
                             ['/assign/userlectures', 'id' => $id],
@@ -102,6 +118,5 @@ $this->title = \Yii::t('app',  'Lesson assigning');
             <?php $a++;
             } ?>
         </tbody>
-
     </table>
 </div>

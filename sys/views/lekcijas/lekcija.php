@@ -69,7 +69,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                         ['lectureAudioFiles' => $lecturefiles['audio']]
                     ); ?>
                 <?php } ?>
-                <?php if ($difficulties and $lectureDifficulties and $difficultiesVisible) { ?>
+                <?php if ($difficulties && $lectureDifficulties && $difficultiesVisible) { ?>
                     <?= $this->render('difficulties', ['difficulties' => $difficulties, 'lectureDifficulties' => $lectureDifficulties]) ?>
                 <?php } ?>
 

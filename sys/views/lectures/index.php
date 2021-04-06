@@ -40,7 +40,14 @@ $this->title = \Yii::t('app', 'Lessons');
                 'value' => function ($dataProvider) {
                     return $dataProvider->complexity;
                 },
-                'filter' => Html::dropDownList('TeacherLecturesSearch[complexity]', isset($get['TeacherLecturesSearch']['complexity']) ? $get['TeacherLecturesSearch']['complexity'] : '', Lectures::getComplexity(), ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList(
+                    'TeacherLecturesSearch[complexity]',
+                    isset($get['TeacherLecturesSearch']['complexity'])
+                        ? $get['TeacherLecturesSearch']['complexity']
+                        : '',
+                    Lectures::getComplexity(),
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                ),
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -51,7 +58,11 @@ $this->title = \Yii::t('app', 'Lessons');
                         return Html::a(
                             '<span class="glyphicon glyphicon-eye-open"> </span>',
                             $url,
-                            ['title' => \Yii::t('app', 'View'), 'data-pjax' => '0', 'onclick' => "window.open('" . $url . "','newwindow','width=1200,height=1200');return false;"]
+                            [
+                                'title' => \Yii::t('app', 'View'),
+                                'data-pjax' => '0',
+                                'onclick' => "window.open('" . $url . "','newwindow','width=1200,height=1200');return false;"
+                            ]
                         );
                     },
                     'update' => function ($url) {
@@ -73,17 +84,14 @@ $this->title = \Yii::t('app', 'Lessons');
                 ],
                 'urlCreator' => function ($action, $model) {
                     if ($action === 'view') {
-                        $url = Url::base(true) . '/lekcijas/lekcija/' . $model->id . '?force=1';
-                        return $url;
+                        return Url::base(true) . '/lekcijas/lekcija/' . $model->id . '?force=1';
                     }
 
                     if ($action === 'update') {
-                        $url = Url::base(true) . '/lectures/update/' . $model->id;
-                        return $url;
+                        return Url::base(true) . '/lectures/update/' . $model->id;
                     }
                     if ($action === 'delete') {
-                        $url = Url::base(true) . '/lectures/delete/' . $model->id;
-                        return $url;
+                        return Url::base(true) . '/lectures/delete/' . $model->id;
                     }
                 }
             ],

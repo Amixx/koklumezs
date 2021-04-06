@@ -6,7 +6,9 @@
 <?php if ($lecturefiles) {  ?>
     <table class="table table-striped table-bordered">
         <?php foreach ($lecturefiles as $type => $fileGroup) {
-            if (empty($fileGroup)) continue;
+            if (empty($fileGroup)) {
+                continue;
+            }
 
             switch ($type) {
                 case 'video':
@@ -23,7 +25,7 @@
             }
         ?>
             <tr>
-                <th colspan="2" class="text-center"><?= $typeText ?></th>
+                <th scope="row" colspan="2" class="text-center"><?= $typeText ?></th>
             </tr>
             <?php foreach ($fileGroup as $id => $file) {
                 $view = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/create', 'id' => $file['id']]);
@@ -33,9 +35,15 @@
                 <tr>
                     <td><?= $file['title'] ?></td>
                     <td>
-                        <a target="_blank" href="<?= $view ?>" title=<?= \Yii::t('app',  'View') ?> aria-label=<?= \Yii::t('app',  'View') ?> data-pjax="0"><span class="glyphicon glyphicon-eye-open"></span></a>
-                        <a target="_blank" href="<?= $up ?>" title=<?= \Yii::t('app',  'Edit') ?> aria-label=<?= \Yii::t('app',  'Edit') ?> data-pjax="0"><span class="glyphicon glyphicon-pencil"></span></a>
-                        <a href="<?= $del ?>" title=<?= \Yii::t('app',  'Delete') ?> aria-label=<?= \Yii::t('app',  'Delete') ?> data-pjax="0" data-confirm=<?= \Yii::t('app',  'Do you really want to delete this file?') ?> data-method="post"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a target="_blank" href="<?= $view ?>" title=<?= \Yii::t('app',  'View') ?> aria-label=<?= \Yii::t('app',  'View') ?> data-pjax="0">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                        </a>
+                        <a target="_blank" href="<?= $up ?>" title=<?= \Yii::t('app',  'Edit') ?> aria-label=<?= \Yii::t('app',  'Edit') ?> data-pjax="0">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <a href="<?= $del ?>" title=<?= \Yii::t('app',  'Delete') ?> aria-label=<?= \Yii::t('app',  'Delete') ?> data-pjax="0" data-confirm=<?= \Yii::t('app',  'Do you really want to delete this file?') ?> data-method="post">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </a>
                     </td>
                 </tr>
         <?php }

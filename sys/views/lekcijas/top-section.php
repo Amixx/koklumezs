@@ -53,7 +53,9 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
                     'redirectLessonId' => $nextLessonId,
                 ]);
                 if ($nextLessonId) { ?>
-                    <button type="button" class="btn btn-orange" data-toggle="modal" data-target="#alertEvaluation-<?= $modalType ?>"><?= \Yii::t('app',  'Next lesson'); ?></button>
+                    <button type="button" class="btn btn-orange" data-toggle="modal" data-target="#alertEvaluation-<?= $modalType ?>">
+                        <?= \Yii::t('app',  'Next lesson'); ?>
+                    </button>
             <?php }
             } else if ($nextLessonId) {
                 echo Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-orange']);

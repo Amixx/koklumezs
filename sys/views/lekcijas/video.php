@@ -11,11 +11,13 @@
                     \"sources\": [{ \"type\": \"video/youtube\",
                     \"src\": \"$fileUrl\"}]
                 }"
-                : "{}"
+                : "{}";
+
+            $poster = isset($thumbnail) && $thumbnail ? $thumbnail : '';
         ?>
             <div class="col-md-12">
                 <h4 class="visible-xs video-title-mobile"><?= $file['title'] ?></h4>
-                <video id="my-player<?= $idPrefix ?><?= $id ?>" class="video-js vjs-layout-x-large vjs-big-play-centered" controls preload="auto" poster="<?= isset($thumbnail) && $thumbnail ? $thumbnail : '' ?>" data-setup='<?= $dataSetup ?>'>
+                <video id="my-player<?= $idPrefix ?><?= $id ?>" class="video-js vjs-layout-x-large vjs-big-play-centered" controls preload="auto" poster="<?= $poster ?>" data-setup='<?= $dataSetup ?>'>
                     <?php if (!$isYoutubeVideo) { ?>
                         <source src="<?= $fileUrl ?>" type="video/<?= strtolower($path_info['extension']) ?>">
                         </source>

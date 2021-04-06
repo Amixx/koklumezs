@@ -4,12 +4,13 @@ use app\models\Lecturesfiles;
 use app\helpers\ThumbnailHelper;
 
 if ($relatedLectures) {
-    if (!isset($modalIdPrefix)) $modalIdPrefix = "";
+    if (!isset($modalIdPrefix)) {
+        $modalIdPrefix = "";
+    }
 ?>
     <h4 class="hidden-xs"><?= \Yii::t('app',  'Previous assignments in this lesson') ?></h4>
     <div class="lectures-related">
         <?php foreach ($relatedLectures as $model) {
-            // if (in_array($model->id, $userEvaluatedLectures)) continue;
             $lecturefiles = Lecturesfiles::getLectureFiles($model->id);
             $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->file, $videoThumb);
         ?>

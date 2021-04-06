@@ -21,7 +21,11 @@ $this->title = \Yii::t('app', 'Archive');
             <?= Html::endForm() ?>
         </div>
         <div class="col-md-5 col-xs-12">
-            <?= Html::a(\Yii::t('app', 'Open all favourite lessons'), Url::base(true) . "/lekcijas/?type=favourite&sortByDifficulty=asc", ['class' => 'btn btn-gray sort-button']); ?>
+            <?= Html::a(
+                \Yii::t('app', 'Open all favourite lessons'),
+                Url::base(true) . "/lekcijas/?type=favourite&sortByDifficulty=asc",
+                ['class' => 'btn btn-gray sort-button']
+            ); ?>
         </div>
     </div>
     <?php

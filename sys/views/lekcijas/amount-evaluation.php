@@ -27,7 +27,9 @@ $evaluations = [
 ];
 
 $isEmojiActive = function ($name) use ($evaluations, $difficultyEvaluation) {
-    if (!$difficultyEvaluation) return false;
+    if (!$difficultyEvaluation) {
+        return false;
+    }
 
     $evalIndex = array_search($name, array_column($evaluations, 'emoji-name'));
 
@@ -48,7 +50,9 @@ $isEmojiActive = function ($name) use ($evaluations, $difficultyEvaluation) {
             <?php foreach ($evaluations as $evaluation) {
                 $name = $evaluation['emoji-name'];
                 $emojiClass = "emoji emoji-$name";
-                if ($isEmojiActive($name)) $emojiClass .= " active";
+                if ($isEmojiActive($name)) {
+                    $emojiClass .= " active";
+                }
             ?>
 
                 <span data-role="evaluation-emoji" data-value="<?= $evaluation['value'] ?>" class="<?= $emojiClass ?>"></span>

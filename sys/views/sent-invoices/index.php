@@ -65,7 +65,9 @@ $this->title = \Yii::t('app',  'Users');
             [
                 'attribute' => 'user name',
                 'value' => function ($dataProvider) {
-                    if (!$dataProvider['student']) return;
+                    if (!$dataProvider['student']) {
+                        return;
+                    }
 
                     return $dataProvider['student']['first_name'] . ' ' . $dataProvider['student']['last_name'];
                 },
@@ -77,7 +79,20 @@ $this->title = \Yii::t('app',  'Users');
                 'value' => function ($dataProvider) {
                     return $dataProvider['is_advance'] ? Yii::t('app', 'Advance') : Yii::t('app', 'Final');
                 },
-                'filter' => Html::dropDownList('SentInvoicesSearch[is_advance]', isset($get['SentInvoicesSearch[is_advance]']) ? $get['SentInvoicesSearch[is_advance]'] : '', [0 => Yii::t('app', 'Final'), 1 => Yii::t('app', 'Advance')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList(
+                    'SentInvoicesSearch[is_advance]',
+                    isset($get['SentInvoicesSearch[is_advance]'])
+                        ? $get['SentInvoicesSearch[is_advance]']
+                        : '',
+                    [
+                        0 => Yii::t('app', 'Final'),
+                        1 => Yii::t('app', 'Advance')
+                    ],
+                    [
+                        'prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --',
+                        'class' => 'form-control'
+                    ]
+                ),
             ],
             'plan_name',
             'plan_price',

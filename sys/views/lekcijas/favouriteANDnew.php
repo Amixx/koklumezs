@@ -18,7 +18,11 @@ use yii\helpers\Url;
             </h4>
             <?php if ($renderRequestButton) { ?>
                 <div class="row text-center">
-                    <?= Html::a(\Yii::t('app', 'I want more tasks'), ['user/request-more-tasks/?id=' . $userId], ['class' => 'btn btn-orange btn-long']) ?>
+                    <?= Html::a(
+                        \Yii::t('app', 'I want more tasks'),
+                        ['user/request-more-tasks/?id=' . $userId],
+                        ['class' => 'btn btn-orange btn-long']
+                    ) ?>
                 </div>
             <?php } ?>
         <?php } else { ?>

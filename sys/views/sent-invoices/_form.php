@@ -12,7 +12,9 @@ use  yii\jui\DatePicker;
 
     <?php if ($realInvoice == null) { ?>
         <div class="form-group">
-            <?= $form->field($model, 'paid_date')->widget(DatePicker::class, ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])->label(Yii::t('app', 'Date of payment:')) ?>
+            <?= $form->field($model, 'paid_date')
+                ->widget(DatePicker::class, ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])
+                ->label(Yii::t('app', 'Date of payment:')) ?>
             <?= Html::submitButton(\Yii::t('app', 'Mark as paid'), ['class' => 'btn btn-success']) ?>
         </div>
     <?php } else { ?>
@@ -34,7 +36,7 @@ use  yii\jui\DatePicker;
             ]
         ) ?>
 
-        <?php if ($realInvoice != null)
+        <?php if ($realInvoice != null) {
             echo Html::a(
                 \Yii::t('app', 'Delete real invoice'),
                 ['/sent-invoices/delete', 'id' => $realInvoice->id],
@@ -42,7 +44,8 @@ use  yii\jui\DatePicker;
                     'class' => 'btn btn-danger',
                     'data' => ['confirm' => \Yii::t('app', 'Do you really want to delete this entry?')],
                 ]
-            ) ?>
+            );
+        } ?>
     </div>
 
     <?php ActiveForm::end(); ?>

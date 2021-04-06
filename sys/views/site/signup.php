@@ -23,7 +23,9 @@ function getFieldOptions($fieldName, $hasInfo = false)
         default:
             break;
     }
-    if ($hasInfo) $classes .= ' field-with-info-widget';
+    if ($hasInfo) {
+        $classes .= ' field-with-info-widget';
+    }
 
     return [
         'options' => ['class' => $classes],
@@ -94,7 +96,10 @@ function getFieldOptions($fieldName, $hasInfo = false)
 
         <div class="row" style="margin-top: 32px;">
             <div class="col-xs-12 col-md-4">
-                <?= Html::submitButton(\Yii::t('app',  'Sign up'), ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button', 'id' => 'registration-button']) ?>
+                <?= Html::submitButton(
+                    \Yii::t('app',  'Sign up'),
+                    ['class' => 'btn btn-primary btn-block btn-flat', 'name' => 'login-button', 'id' => 'registration-button']
+                ) ?>
             </div>
         </div>
 

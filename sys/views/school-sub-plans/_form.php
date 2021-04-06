@@ -23,15 +23,21 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
     <?php $form = ActiveForm::begin(); ?>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item active">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><?= \Yii::t('app', 'Plan') ?></a>
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                <?= \Yii::t('app', 'Plan') ?>
+            </a>
         </li>
         <?php if ($model->id) { ?>
             <li class="nav-item">
-                <a class="nav-link" id="parts-tab" data-toggle="tab" href="#parts" role="tab" aria-controls="parts" aria-selected="false"><?= \Yii::t('app', 'Add plan parts') ?></a>
+                <a class="nav-link" id="parts-tab" data-toggle="tab" href="#parts" role="tab" aria-controls="parts" aria-selected="false">
+                    <?= \Yii::t('app', 'Add plan parts') ?>
+                </a>
             </li>
         <?php } ?>
         <li class="nav-item">
-            <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false"><?= \Yii::t('app', 'Plan files') ?></a>
+            <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false">
+                <?= \Yii::t('app', 'Plan files') ?>
+            </a>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -56,7 +62,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                             'class' => 'yii\grid\ActionColumn',
                             'template' => '{delete}',
                             'buttons' => [
-                                'delete' => function ($url, $model) {
+                                'delete' => function ($url) {
                                     return Html::a(
                                         '<span class="glyphicon glyphicon-trash"> </span>',
                                         $url,
@@ -66,8 +72,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                             ],
                             'urlCreator' => function ($action, $model) {
                                 if ($action === 'delete') {
-                                    $url = '/sys/plan-files/delete?id=' . $model["id"];
-                                    return $url;
+                                    return '/sys/plan-files/delete?id=' . $model["id"];
                                 }
                             }
                         ],
@@ -103,7 +108,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                             'class' => 'yii\grid\ActionColumn',
                             'template' => '{delete}',
                             'buttons' => [
-                                'delete' => function ($url, $model) {
+                                'delete' => function ($url) {
                                     return Html::a(
                                         '<span class="glyphicon glyphicon-trash"> </span>',
                                         $url,
@@ -121,7 +126,9 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                 ]);
             } ?>
             <?php if (isset($newSubplanPart) && isset($schoolSubplanParts)) { ?>
-                <?= $form->field($newSubplanPart, 'planpart_id')->dropDownList($schoolSubplanParts, ['prompt' => ''])->label(Yii::t('app', 'Plan part')) ?>
+                <?= $form->field($newSubplanPart, 'planpart_id')
+                    ->dropDownList($schoolSubplanParts, ['prompt' => ''])
+                    ->label(Yii::t('app', 'Plan part')) ?>
             <?php } ?>
         </div>
         <div class="form-group">

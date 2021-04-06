@@ -16,7 +16,8 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
 
 ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="lv">
 
 <head>
     <meta http-equiv=Content-Type content="text/html; charset=UTF-8">
@@ -181,10 +182,10 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
             </table>
             <table class="bordered-table">
                 <tr>
-                    <th>Nosaukums</th>
-                    <th>Cena bez PVN (Eur)</th>
-                    <th>PVN (<?= $subplan["pvn_percent"] ?>%)</th>
-                    <th>Summa (Eur)</th>
+                    <th scope="col">Nosaukums</th>
+                    <th scope="col">Cena bez PVN (Eur)</th>
+                    <th scope="col">PVN (<?= $subplan["pvn_percent"] ?>%)</th>
+                    <th scope="col">Summa (Eur)</th>
                 </tr>
                 <?php foreach ($subplanParts as $part) { ?>
                     <tr>

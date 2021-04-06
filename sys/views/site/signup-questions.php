@@ -20,7 +20,10 @@ $this->title = \Yii::t('app',  'A few questions before you begin');
 
         <div class="col-sm-12 text-center">
             <div>
-                <?= Html::submitButton(\Yii::t('app',  'Submit'), ['class' => 'btn btn-primary btn-flat', 'name' => 'login-button']) ?>
+                <?= Html::submitButton(
+                    \Yii::t('app',  'Submit'),
+                    ['class' => 'btn btn-primary btn-flat', 'name' => 'login-button']
+                ) ?>
             </div>
         </div>
 

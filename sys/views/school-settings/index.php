@@ -12,19 +12,31 @@ $this->title = \Yii::t('app',  'School settings');
     <h1><?= Html::encode($this->title) ?></h1>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item active">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><?= \Yii::t('app', 'Settings') ?></a>
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                <?= \Yii::t('app', 'Settings') ?>
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false"><?= \Yii::t('app', 'Parameters') ?></a>
+            <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false">
+                <?= \Yii::t('app', 'Parameters') ?>
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="faqs-tab" data-toggle="tab" href="#faqs" role="tab" aria-controls="faqs" aria-selected="false"><?= \Yii::t('app', 'FAQs') ?></a>
+            <a class="nav-link" id="faqs-tab" data-toggle="tab" href="#faqs" role="tab" aria-controls="faqs" aria-selected="false">
+                <?= \Yii::t('app', 'FAQs') ?>
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="signup-questions-tab" data-toggle="tab" href="#signup-questions" role="tab" aria-controls="signup-questions" aria-selected="false"><?= \Yii::t('app', 'Questions after signup') ?></a>
+            <a class="nav-link" id="signup-questions-tab" data-toggle="tab" href="#signup-questions" role="tab" aria-controls="signup-questions" aria-selected="false">
+                <?= \Yii::t('app', 'Questions after signup') ?>
+            </a>
         </li>
         <li class="nav-item">
-            <?= Html::a(\Yii::t('app', 'Registration lessons'), ['/registration-lessons'], ['class' => 'nav-link']) ?>
+            <?= Html::a(
+                \Yii::t('app', 'Registration lessons'),
+                ['/registration-lessons'],
+                ['class' => 'nav-link']
+            ) ?>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -32,7 +44,7 @@ $this->title = \Yii::t('app',  'School settings');
             <table class="table table-striped table-bordered">
                 <?php foreach ($settings as $key => $value) { ?>
                     <tr>
-                        <th><?= $key ?></th>
+                        <th scope="row"><?= $key ?></th>
                         <td><?= $value ?></td>
                     </tr>
                 <?php } ?>
@@ -71,7 +83,7 @@ $this->title = \Yii::t('app',  'School settings');
                         'class' => 'yii\grid\ActionColumn',
                         'template' => '{update} {delete}',
                         'buttons' => [
-                            'update' => function ($url, $model) {
+                            'update' => function ($url) {
                                 return Html::a(
                                     '<span class="glyphicon glyphicon-pencil"></span>',
                                     $url,
@@ -81,12 +93,10 @@ $this->title = \Yii::t('app',  'School settings');
                         ],
                         'urlCreator' => function ($action, $model) {
                             if ($action === 'update') {
-                                $url = '/school-faqs/update?id=' . $model->id;
-                                return $url;
+                                return '/school-faqs/update?id=' . $model->id;
                             }
                             if ($action === 'delete') {
-                                $url = '/school-faqs/delete?id=' . $model->id;
-                                return $url;
+                                return '/school-faqs/delete?id=' . $model->id;
                             }
                         },
                     ],

@@ -21,6 +21,7 @@ use app\models\ResetPasswordForm;
 use app\models\ResendVerificationEmailForm;
 use app\models\VerifyEmailForm;
 use app\helpers\EmailSender;
+use app\helpers\GuestLayoutHelper;
 use app\helpers\InvoiceManager;
 use yii\web\BadRequestHttpException;
 
@@ -144,18 +145,22 @@ class SiteController extends Controller
     public function actionLogin($s = null, $l = null)
     {
         $this->layout = '@app/views/layouts/login';
-        $this->view->params['s'] = $s;
-        $this->view->params['l'] = $l;
+
+        Yii::$app->language = $l;
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
 
         $loginTitle = '';
+        $school = null;
         if (isset($s)) {
             $school = School::findOne($s);
             $loginTitle = $school['login_title'];
         }
+
+        $layoutHelper = new GuestLayoutHelper($school);
+        $this->view->params['layoutHelper'] = $layoutHelper;
 
         $model->password = '';
         return $this->render('login', [
@@ -181,6 +186,8 @@ class SiteController extends Controller
         Yii::$app->language = $l;
 
         $school = School::findOne($s);
+        $layoutHelper = new GuestLayoutHelper($school);
+        $this->view->params['layoutHelper'] = $layoutHelper;
 
         $model = new SignUpForm();
 

@@ -28,19 +28,40 @@ $this->title = \Yii::t('app',  'Assigned lessons');
                 'attribute' => 'lecture_id',
                 'format' => 'raw',
                 'value' => 'lecture.title',
-                'filter' => Html::dropDownList('UserLecturesSearch[lecture_id]', isset($get['UserLecturesSearch']['lecture_id']) ? $get['UserLecturesSearch']['lecture_id'] : '', $lectures, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList(
+                    'UserLecturesSearch[lecture_id]',
+                    isset($get['UserLecturesSearch']['lecture_id'])
+                        ? $get['UserLecturesSearch']['lecture_id']
+                        : '',
+                    $lectures,
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                ),
             ],
             [
                 'attribute' => 'user_id',
                 'format' => 'raw',
                 'value' => 'student.email',
-                'filter' => Html::dropDownList('UserLecturesSearch[user_id]', isset($get['UserLecturesSearch']['user_id']) ? $get['UserLecturesSearch']['user_id'] : '', $students, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList(
+                    'UserLecturesSearch[user_id]',
+                    isset($get['UserLecturesSearch']['user_id'])
+                        ? $get['UserLecturesSearch']['user_id']
+                        : '',
+                    $students,
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                ),
             ],
             [
                 'attribute' => 'assigned',
                 'format' => 'raw',
                 'value' => 'admin.email',
-                'filter' => Html::dropDownList('UserLecturesSearch[assigned]', isset($get['UserLecturesSearch']['assigned']) ? $get['UserLecturesSearch']['assigned'] : '', $admins, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList(
+                    'UserLecturesSearch[assigned]',
+                    isset($get['UserLecturesSearch']['assigned'])
+                        ? $get['UserLecturesSearch']['assigned']
+                        : '',
+                    $admins,
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                ),
             ],
             [
                 'attribute' => 'created',
@@ -59,7 +80,14 @@ $this->title = \Yii::t('app',  'Assigned lessons');
                 'value' => function ($dataProvider) {
                     return $dataProvider->opened == 1 ? \Yii::t('app',  'Yes') : \Yii::t('app',  'No');
                 },
-                'filter' => Html::dropDownList('UserLecturesSearch[opened]', isset($get['UserLecturesSearch']['opened']) ? $get['UserLecturesSearch']['opened'] : '', [0 => \Yii::t('app',  'Not opened'), 1 => \Yii::t('app',  'Opened')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList(
+                    'UserLecturesSearch[opened]',
+                    isset($get['UserLecturesSearch']['opened'])
+                        ? $get['UserLecturesSearch']['opened']
+                        : '',
+                    [0 => \Yii::t('app',  'Not opened'), 1 => \Yii::t('app',  'Opened')],
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                ),
             ],
             [
                 'attribute' => 'opentime',
@@ -78,7 +106,14 @@ $this->title = \Yii::t('app',  'Assigned lessons');
                 'value' => function ($dataProvider) {
                     return $dataProvider->sent == 1 ? \Yii::t('app',  'Yes') : \Yii::t('app',  'No');
                 },
-                'filter' => Html::dropDownList('UserLecturesSearch[sent]', isset($get['UserLecturesSearch']['sent']) ? $get['UserLecturesSearch']['sent'] : '', [0 => \Yii::t('app',  'Isn\'t'), 1 => \Yii::t('app',  'Is')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList(
+                    'UserLecturesSearch[sent]',
+                    isset($get['UserLecturesSearch']['sent'])
+                        ? $get['UserLecturesSearch']['sent']
+                        : '',
+                    [0 => \Yii::t('app',  'Isn\'t'), 1 => \Yii::t('app',  'Is')],
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                ),
             ],
             [
                 'attribute' => 'evaluated',
@@ -86,24 +121,34 @@ $this->title = \Yii::t('app',  'Assigned lessons');
                 'value' => function ($dataProvider) {
                     return $dataProvider->evaluated == 1 ? \Yii::t('app',  'Yes') : \Yii::t('app',  'No');
                 },
-                'filter' => Html::dropDownList('UserLecturesSearch[evaluated]', isset($get['UserLecturesSearchevaluatedsent']) ? $get['UserLecturesSearch']['evaluated'] : '', [0 => \Yii::t('app',  'Isn\'t'), 1 => \Yii::t('app',  'Is')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList(
+                    'UserLecturesSearch[evaluated]',
+                    isset($get['UserLecturesSearchevaluatedsent'])
+                        ? $get['UserLecturesSearch']['evaluated']
+                        : '',
+                    [0 => \Yii::t('app',  'Isn\'t'), 1 => \Yii::t('app',  'Is')],
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                ),
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view}',
                 'buttons' => [
-                    'view' => function ($url, $model) {
+                    'view' => function ($url) {
                         return Html::a(
                             '<span class="glyphicon glyphicon-eye-open"> </span>',
                             $url,
-                            ['title' => 'View', 'data-pjax' => '0', 'onclick' => "window.open('" . $url . "','newwindow','width=1200,height=1200');return false;"]
+                            [
+                                'title' => 'View',
+                                'data-pjax' => '0',
+                                'onclick' => "window.open('" . $url . "','newwindow','width=1200,height=1200');return false;"
+                            ]
                         );
                     },
                 ],
-                'urlCreator' => function ($action, $model, $key, $index) {
+                'urlCreator' => function ($action, $model) {
                     if ($action === 'view') {
-                        $url = '/sys/lekcijas/lekcija/' . $model['lecture_id'] . '?force=1';
-                        return $url;
+                        return '/sys/lekcijas/lekcija/' . $model['lecture_id'] . '?force=1';
                     }
                 }
             ],

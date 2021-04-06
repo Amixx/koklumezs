@@ -18,9 +18,6 @@ $this->title = \Yii::t('app',  'Files');
         <?= Html::a(\Yii::t('app',  'Add file'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); 
-    ?>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -44,7 +41,14 @@ $this->title = \Yii::t('app',  'Files');
                 'attribute' => 'lecture_id',
                 'format' => 'raw',
                 'value' => 'lecture.title',
-                'filter' => Html::dropDownList('LecturesfilesSearch[lecture_id]', isset($get['LecturesfilesSearch']['lecture_id']) ? $get['LecturesfilesSearch']['lecture_id'] : '', $lectures, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList(
+                    'LecturesfilesSearch[lecture_id]',
+                    isset($get['LecturesfilesSearch']['lecture_id'])
+                        ? $get['LecturesfilesSearch']['lecture_id']
+                        : '',
+                    $lectures,
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                ),
             ],
 
             ['class' => 'yii\grid\ActionColumn'],
