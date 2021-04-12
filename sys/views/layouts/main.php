@@ -26,6 +26,7 @@ $this->beginPage() ?>
 
         <div id="logo" title="<?= Yii::$app->name ?>" class="<?= $layoutHelper->getLogoClass() ?>" style="background-image: <?= $logo ?>;">
         </div>
+        <?= $layoutHelper->getChatButton() ?>
         <?php
         $logo = ob_get_clean();
 

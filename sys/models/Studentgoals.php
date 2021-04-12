@@ -94,6 +94,11 @@ class Studentgoals extends \yii\db\ActiveRecord
         $result = 0;
         $sum = 0;
         $count = count($data) - 1;
+
+        if ($count === 0) {
+            return 0;
+        }
+
         foreach ($data as $d) {
             $sum += (int)$d['value'];
         }

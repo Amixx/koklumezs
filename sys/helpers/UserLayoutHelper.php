@@ -105,7 +105,6 @@ class UserLayoutHelper extends LayoutHelper
                 ['label' => 'Izsūtītie e-pasti', 'url' => ['/sentlectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['sentlectures'])],
             ],
             'teacher' => [
-                $this->getNavChat(),
                 ['label' => \Yii::t('app',  'School'), 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),],
                 ['label' => '+', 'url' => ['/assign/userlectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),],
                 ['label' => \Yii::t('app',  'Students'), 'url' => ['/user'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])],
@@ -136,7 +135,6 @@ class UserLayoutHelper extends LayoutHelper
                 ['label' => \Yii::t('app',  'Settings'), 'url' => ['/school-settings'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-settings'])],
             ],
             'student' => [
-                $this->getNavChat(),
                 [
                     'label' => \Yii::t('app',  'Lessons'),
                     'active' =>  in_array(\Yii::$app->controller->id, ['lekcijas']),
@@ -157,12 +155,13 @@ class UserLayoutHelper extends LayoutHelper
         ];
     }
 
-    private function getNavChat()
+    public function getChatButton()
     {
         $chatButtonText = $this->isTeacher ? "Chat with students" : "Send us a message";
         $unreadGroups = $this->isTeacher ? '<span class="chat-unread-count-groups"></span>' : '';
+        $outerClass = $this->isTeacher ? "teacher" : "student";
 
-        return '<li id="chat-btn-with-icons">'
+        return '<div id="chat-btn-with-icons" class="' . $outerClass . '">'
             . '<div id="notification-badges">'
             . $unreadGroups
             . '<span class="chat-unread-count"></span>'
@@ -170,6 +169,6 @@ class UserLayoutHelper extends LayoutHelper
             . '<button class="btn btn-success teacher-communication-button" id="chat-toggle-button" data-toggle="modal" data-target="#chatModal">'
             . \Yii::t('app', $chatButtonText)
             . '</button>'
-            . '</li>';
+            . '</div>';
     }
 }

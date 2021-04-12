@@ -573,11 +573,15 @@ div.has-experience.active, div.rent.active {
     margin-bottom: 32px;
 }
 
-.nav>li#chat-btn-with-icons{
-    margin-right: 20px; 
-    position: relative;
+#chat-btn-with-icons {
+    top: 20px;
+    position: absolute;
     display: inline-block;
-    margin-left: -80px;
+    left: 370px;
+}
+
+#chat-btn-with-icons.teacher {
+    left: 100px;
 }
 
 .teacher-communication-button {
@@ -920,17 +924,34 @@ div.has-experience.active, div.rent.active {
     display: flex;
 }
 
-@media(max-width:1200px) {
+@media(max-width: 1199px) {
     .video-js {
         width: 520px;
         height: 293px;
     }
+
+    .school-logo {
+        display: none;
+    }
+
+    #chat-btn-with-icons {
+        left: 175px;
+    }
+
+    #chat-btn-with-icons.teacher {
+        left: -105px;
+    }
 }
 
-@media(max-width: 992px){
+
+@media(max-width: 991.5px){
     .video-js {
         width: 704px;
         height: 396px;
+    }
+
+    #chat-btn-with-icons, #chat-btn-with-icons.teacher {
+        left: -45px;
     }
 }
 
@@ -944,11 +965,6 @@ div.has-experience.active, div.rent.active {
     }
 }
 
-@media(max-width:1199px) {
-    .school-logo {
-        display: none;
-    }
-}
 
 @media(max-width:768px) {
     .video-js {
@@ -1096,9 +1112,13 @@ div.has-experience.active, div.rent.active {
     .btn-long {
         padding: 6px 40px;
     }
-    .nav>li#chat-btn-with-icons{
+    #chat-btn-with-icons, #chat-btn-with-icons.teacher {
         margin-left: 12px;
+        position: absolute;
+        top: 12px;
+        left: 80px;
     }
+    
     .btn-narrow {
         padding: 6px 10px;
     }
