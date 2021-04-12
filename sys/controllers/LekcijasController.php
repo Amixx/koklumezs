@@ -157,7 +157,7 @@ class LekcijasController extends Controller
                 $saved = $model->save();
                 if ($saved) {
                     $user->wants_more_lessons = true;
-                    $user->update();   
+                    $user->update();
                     $model->sent = 1;
                     $model->update();
                 }
@@ -166,7 +166,7 @@ class LekcijasController extends Controller
 
             $unassignedLectures = UserLectures::getUnassignedLectures($userId);
             $avg = UserLectures::getLastThreeComplexityAverage($userId);
-            $nextLessons = [null,null,null];
+            $nextLessons = [null, null, null];
             $similar = 3;
             $max = 20;
             $total = $similar + $max;
@@ -180,7 +180,7 @@ class LekcijasController extends Controller
                 if ($fitsEasier) {
                     if (isset($nextLessons[0])) {
                         if ($nextLessons[0]->complexity < $complexity) $nextLessons[0] = $lecture;
-                } else $nextLessons[0] = $lecture;
+                    } else $nextLessons[0] = $lecture;
                 } else if ($fitsSame) {
                     if (isset($nextLessons[2])) {
                         if ($nextLessons[2]->complexity > $complexity) $nextLessons[2] = $lecture;
@@ -189,7 +189,7 @@ class LekcijasController extends Controller
                     if (isset($nextLessons[1])) {
                         $cdist = abs($avg - $nextLessons[1]->complexity);
                         $ndist = abs($avg - $complexity);
-                        if ($cdist>$ndist) $nextLessons[1] = $lecture;
+                        if ($cdist > $ndist) $nextLessons[1] = $lecture;
                     } else $nextLessons[1] = $lecture;
                 }
             }
@@ -203,6 +203,7 @@ class LekcijasController extends Controller
                 'userLectureEvaluations' => $userLectureEvaluations,
                 'videoThumb' => $videoThumb,
                 'nextLessons' => $nextLessons,
+                'renderRequestButton' => !$user->wants_more_lessons,
             ]);
         }
 

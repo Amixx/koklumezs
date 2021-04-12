@@ -575,7 +575,7 @@ div.has-experience.active, div.rent.active {
 
 #chat-btn-with-icons {
     top: 20px;
-    position: absolute;
+    position: fixed;
     display: inline-block;
     left: calc(50% - 210px);
     z-index: 1050; /* slikti :))) */
