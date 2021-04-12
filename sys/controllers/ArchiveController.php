@@ -4,7 +4,6 @@ namespace app\controllers;
 
 use app\models\Lectures;
 use app\models\UserLectures;
-use app\models\Users;
 use app\models\School;
 use Yii;
 use yii\filters\VerbFilter;
@@ -16,13 +15,13 @@ class ArchiveController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
                     // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return !empty(Yii::$app->user->identity);
                         },
                     ],
@@ -30,7 +29,7 @@ class ArchiveController extends Controller
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [],
             ],
         ];

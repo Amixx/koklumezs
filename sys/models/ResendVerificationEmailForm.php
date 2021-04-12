@@ -2,7 +2,6 @@
 
 namespace app\models;
 
-use Yii;
 use app\models\Users;
 use yii\base\Model;
 use app\helpers\EmailSender;
@@ -41,8 +40,10 @@ class ResendVerificationEmailForm extends Model
             'email' => $this->email,
             'status' => Users::STATUS_INACTIVE
         ]);
-        
-        if ($user === null) return false;
+
+        if ($user === null) {
+            return false;
+        }
 
         return EmailSender::sendEmailVerification($user, $this->email);
     }

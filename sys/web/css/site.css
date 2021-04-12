@@ -388,36 +388,6 @@ a.desc:after {
     width: 68%;
 }
 
-.icon-favourite {
-    display:inline;
-}
-
-.icon-favourite:after{
-    content: "";
-    position: absolute;
-    height: 10px;
-    width: 10px;
-    background: #ea1e92;
-    border-radius: 50%;
-    margin-top: 6px;
-    margin-left: 5px;
-}
-
-.icon-still-learning {
-    display:inline;
-}
-
-.icon-still-learning:after{
-    content: "";
-    position: absolute;
-    height: 10px;
-    width: 10px;
-    background: #1e92ea;
-    border-radius: 50%;
-    margin-top: 6px;
-    margin-left: 20px;
-}
-
 .LectureOverview__Wrap:first-child {
     padding-right: 20px;
 }
@@ -603,11 +573,16 @@ div.has-experience.active, div.rent.active {
     margin-bottom: 32px;
 }
 
-.nav>li#chat-btn-with-icons{
-    margin-right: 20px; 
-    position: relative;
+#chat-btn-with-icons {
+    top: 20px;
+    position: absolute;
     display: inline-block;
-    margin-left: -80px;
+    left: calc(50% - 210px);
+    z-index: 1050; /* slikti :))) */
+}
+
+#chat-btn-with-icons.teacher {
+    left: calc(50% - 500px);
 }
 
 .teacher-communication-button {
@@ -950,17 +925,34 @@ div.has-experience.active, div.rent.active {
     display: flex;
 }
 
-@media(max-width:1200px) {
+@media(max-width: 1199px) {
     .video-js {
         width: 520px;
         height: 293px;
     }
+
+    .school-logo {
+        display: none;
+    }
+
+    #chat-btn-with-icons {
+        left: calc(50% - 310px);
+    }
+
+    #chat-btn-with-icons.teacher {
+        left: calc(50% - 580px);
+    }
 }
 
-@media(max-width: 992px){
+
+@media(max-width: 991.5px){
     .video-js {
         width: 704px;
         height: 396px;
+    }
+
+    #chat-btn-with-icons, #chat-btn-with-icons.teacher {
+        left: calc(50% - 380px);
     }
 }
 
@@ -974,11 +966,6 @@ div.has-experience.active, div.rent.active {
     }
 }
 
-@media(max-width:1199px) {
-    .school-logo {
-        display: none;
-    }
-}
 
 @media(max-width:768px) {
     .video-js {
@@ -1126,9 +1113,12 @@ div.has-experience.active, div.rent.active {
     .btn-long {
         padding: 6px 40px;
     }
-    .nav>li#chat-btn-with-icons{
-        margin-left: 12px;
+    #chat-btn-with-icons, #chat-btn-with-icons.teacher {
+        top: 12px;
+        right: 70px;
+        left: auto;
     }
+    
     .btn-narrow {
         padding: 6px 10px;
     }

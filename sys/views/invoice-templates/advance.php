@@ -7,7 +7,7 @@ $payDate = date_create($dateToday);
 date_add($payDate, date_interval_create_from_date_string("14 days"));
 $payDateString = date_format($payDate, "d.m.Y.");
 
-$divider = 1 + ($subplan['pvn_percent']/100);
+$divider = 1 + ($subplan['pvn_percent'] / 100);
 $priceWithoutPvn = number_format($subplanCost / $divider, 2);
 $pvnAmount = number_format($subplanCost - $priceWithoutPvn, 2);
 $payAmount = number_format($subplanCost, 2);
@@ -16,7 +16,8 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
 
 ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="lv">
 
 <head>
     <meta http-equiv=Content-Type content="text/html; charset=UTF-8">
@@ -58,7 +59,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                     <td>
                         LV44103120159
                     </td>
-                </tr>               
+                </tr>
                 <tr>
                     <td class="leftcol">
                         Juridiskā adrese:
@@ -97,8 +98,8 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                         <strong><?= $usePayer ? $payer['name'] : $fullName ?></strong>
                     </td>
                 </tr>
-                <?php if($usePayer){ ?>
-                    <?php if($payer['personal_code']) { ?>
+                <?php if ($usePayer) { ?>
+                    <?php if ($payer['personal_code']) { ?>
                         <tr>
                             <td class="leftcol">
                                 Personas kods:
@@ -106,9 +107,9 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                             <td>
                                 <?= $payer['personal_code'] ?>
                             </td>
-                        </tr>   
+                        </tr>
                     <?php } ?>
-                    <?php if($payer['registration_number']) { ?>
+                    <?php if ($payer['registration_number']) { ?>
                         <tr>
                             <td class="leftcol">
                                 Reģistrācijas Nr.:
@@ -116,9 +117,9 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                             <td>
                                 <?= $payer['registration_number'] ?>
                             </td>
-                        </tr>   
+                        </tr>
                     <?php } ?>
-                    <?php if($payer['pvn_registration_number']) { ?>
+                    <?php if ($payer['pvn_registration_number']) { ?>
                         <tr>
                             <td class="leftcol">
                                 PVN reģistrācijas Nr.:
@@ -126,9 +127,9 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                             <td>
                                 <?= $payer['pvn_registration_number'] ?>
                             </td>
-                        </tr>   
+                        </tr>
                     <?php } ?>
-                    <?php if($payer['address']) { ?>
+                    <?php if ($payer['address']) { ?>
                         <tr>
                             <td class="leftcol">
                                 Adrese:
@@ -136,37 +137,37 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                             <td>
                                 <?= $payer['address'] ?>
                             </td>
-                        </tr>   
+                        </tr>
                     <?php } ?>
-                    <?php if($payer['bank']) { ?>
+                    <?php if ($payer['bank']) { ?>
                         <tr>
                             <td class="leftcol">
-                                Banka: 
+                                Banka:
                             </td>
                             <td>
                                 <?= $payer['bank'] ?>
                             </td>
-                        </tr>   
+                        </tr>
                     <?php } ?>
-                    <?php if($payer['swift']) { ?>
+                    <?php if ($payer['swift']) { ?>
                         <tr>
                             <td class="leftcol">
-                                SWIFT: 
+                                SWIFT:
                             </td>
                             <td>
                                 <?= $payer['swift'] ?>
                             </td>
                         </tr>
                     <?php } ?>
-                    <?php if($payer['account_number']) { ?>
+                    <?php if ($payer['account_number']) { ?>
                         <tr>
                             <td class="leftcol">
-                                Konta Nr.: 
+                                Konta Nr.:
                             </td>
                             <td>
                                 <strong><?= $payer['account_number'] ?></strong>
                             </td>
-                        </tr>   
+                        </tr>
                     <?php } ?>
                 <?php } else { ?>
                     <tr>
@@ -181,12 +182,12 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
             </table>
             <table class="bordered-table">
                 <tr>
-                    <th>Nosaukums</th>
-                    <th>Cena bez PVN (Eur)</th>
-                    <th>PVN (<?= $subplan["pvn_percent"] ?>%)</th>
-                    <th>Summa (Eur)</th>
+                    <th scope="col">Nosaukums</th>
+                    <th scope="col">Cena bez PVN (Eur)</th>
+                    <th scope="col">PVN (<?= $subplan["pvn_percent"] ?>%)</th>
+                    <th scope="col">Summa (Eur)</th>
                 </tr>
-                <?php foreach($subplanParts as $part) { ?>
+                <?php foreach ($subplanParts as $part) { ?>
                     <tr>
                         <td><?= $part['title'] ?></td>
                         <td><?= PlanParts::getPriceWithoutPvn($part['monthly_cost'], $subplan['pvn_percent']) ?></td>

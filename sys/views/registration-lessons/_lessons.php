@@ -7,7 +7,7 @@ use yii\grid\GridView;
 <div class="col-sm-6">
     <h3><?= Yii::t('app', $title) ?></h3>
 
-        <?= GridView::widget([
+    <?= GridView::widget([
         'dataProvider' => $model,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],

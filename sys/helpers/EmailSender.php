@@ -7,12 +7,14 @@ use Yii;
 
 class EmailSender
 {
-    public static function sendEmailWithAdvanceInvoice($message, $schoolEmail, $studentEmail, $invoiceNumber, $invoicePath){
+    public static function sendEmailWithAdvanceInvoice($message, $schoolEmail, $studentEmail, $invoiceNumber, $invoicePath)
+    {
         return Yii::$app
             ->mailer
             ->compose(
                 ['html' => 'rekins-html', 'text' => 'rekins-text'],
-                ['message' => $message])
+                ['message' => $message]
+            )
             ->setFrom([$schoolEmail => Yii::$app->name])
             ->setTo($studentEmail)
             ->setSubject("Avansa rēķins $invoiceNumber - " . Yii::$app->name)
@@ -20,7 +22,8 @@ class EmailSender
             ->send();
     }
 
-    public static function sendReminderToPay($schoolEmail, $userEmail){
+    public static function sendReminderToPay($schoolEmail, $userEmail)
+    {
         return Yii::$app
             ->mailer
             ->compose(['html' => 'reminder-to-pay-html', 'text' => 'reminder-to-pay-text'])
@@ -30,11 +33,12 @@ class EmailSender
             ->send();
     }
 
-    public static function sendWarningToTeacher($studentEmail, $schoolEmail){
+    public static function sendWarningToTeacher($studentEmail, $schoolEmail)
+    {
         return Yii::$app
             ->mailer
             ->compose([
-                'html' => 'invoice-not-sent-html', 
+                'html' => 'invoice-not-sent-html',
                 'text' => 'invoice-not-sent-text'
             ], [
                 'email' => $studentEmail,
@@ -45,7 +49,8 @@ class EmailSender
             ->send();
     }
 
-    public static function sendNewStudentNotification($user, $schoolEmail){
+    public static function sendNewStudentNotification($user, $schoolEmail)
+    {
         return Yii::$app
             ->mailer
             ->compose(['html' => 'new-user-html', 'text' => 'new-user-text'], [
@@ -57,7 +62,8 @@ class EmailSender
             ->send();
     }
 
-    public static function sendPostSignupMessage($registrationMessage, $schoolEmail, $userEmail){
+    public static function sendPostSignupMessage($registrationMessage, $schoolEmail, $userEmail)
+    {
         return Yii::$app
             ->mailer
             ->compose(['html' => 'blank-message-html', 'text' => 'blank-message-text'], [
@@ -69,7 +75,8 @@ class EmailSender
             ->send();
     }
 
-    public static function sendInvoiceToRenter($renterMessage, $schoolEmail, $userEmail, $invoicePath){
+    public static function sendInvoiceToRenter($renterMessage, $schoolEmail, $userEmail, $invoicePath)
+    {
         return Yii::$app
             ->mailer
             ->compose(['html' => 'blank-message-html', 'text' => 'blank-message-text'], [
@@ -82,7 +89,8 @@ class EmailSender
             ->send();
     }
 
-    public static function sendRentNotification($model, $schoolEmail){
+    public static function sendRentNotification($model, $schoolEmail)
+    {
         return Yii::$app
             ->mailer
             ->compose(['html' => 'instrument-html', 'text' => 'instrument-text'], [
@@ -94,7 +102,8 @@ class EmailSender
             ->send();
     }
 
-    public static function sendPasswordReset($user, $userEmail){
+    public static function sendPasswordReset($user, $userEmail)
+    {
         return Yii::$app
             ->mailer
             ->compose(
@@ -107,7 +116,8 @@ class EmailSender
             ->send();
     }
 
-    public static function sendEmailVerification($user, $userEmail){
+    public static function sendEmailVerification($user, $userEmail)
+    {
         return Yii::$app
             ->mailer
             ->compose(
@@ -120,7 +130,8 @@ class EmailSender
             ->send();
     }
 
-    public static function sendLessonNotification($user, $teacherMessage, $schoolEmail, $subject){
+    public static function sendLessonNotification($user, $teacherMessage, $schoolEmail, $subject)
+    {
         return Yii::$app
             ->mailer
             ->compose(
@@ -136,7 +147,8 @@ class EmailSender
             ->send();
     }
 
-    public static function sendReminderToTeacher($user, $lecture, $x, $schoolEmail){
+    public static function sendReminderToTeacher($user, $lecture, $x, $schoolEmail)
+    {
         return Yii::$app
             ->mailer
             ->compose(

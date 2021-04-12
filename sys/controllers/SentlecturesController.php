@@ -7,14 +7,10 @@ use app\models\Users;
 use app\models\Lectures;
 use app\models\Sentlectures;
 use app\models\SentlecturesSearch;
-use app\models\School;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * SentlecturesController implements the CRUD actions for Sentlectures model.
- */
 class SentlecturesController extends Controller
 {
     /**
@@ -24,21 +20,19 @@ class SentlecturesController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         },
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -53,7 +47,7 @@ class SentlecturesController extends Controller
     public function actionIndex()
     {
         $searchModel = new SentlecturesSearch();
-        $students = Users::getActiveStudents();
+        $students = Users::getActiveStudentEmails();
         $lectures = Lectures::getLectures();
         $get = Yii::$app->request->queryParams;
         $dataProvider = $searchModel->search($get);

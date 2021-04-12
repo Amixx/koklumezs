@@ -3,9 +3,9 @@
 use yii\helpers\Html;
 
 $this->title = \Yii::t('app', 'Edit FAQ') . ': ' . $model->question;
- ['label' => \Yii::t('app', 'FAQs'), 'url' => ['index']];
- ['label' => $model->question, 'url' => ['view', 'id' => $model->id]];
- \Yii::t('app', 'Edit');
+['label' => \Yii::t('app', 'FAQs'), 'url' => ['index']];
+['label' => $model->question, 'url' => ['view', 'id' => $model->id]];
+\Yii::t('app', 'Edit');
 ?>
 <div class="difficulties-update">
 

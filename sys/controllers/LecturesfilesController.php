@@ -7,8 +7,6 @@ use app\models\Users;
 use app\models\Lectures;
 use app\models\Lecturesfiles;
 use app\models\LecturesfilesSearch;
-use app\models\School;
-use app\models\RelatedLectures;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -25,21 +23,19 @@ class LecturesfilesController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         },
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -91,7 +87,7 @@ class LecturesfilesController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
-        if (isset($get['lecture_id']) and is_numeric($get['lecture_id'])) {
+        if (isset($get['lecture_id']) && is_numeric($get['lecture_id'])) {
             $model->lecture_id = (int)$get['lecture_id'];
         }
         return $this->render('create', [

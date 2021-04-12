@@ -72,7 +72,6 @@ class Users extends ActiveRecord implements IdentityInterface
             'about' => \Yii::t('app',  'About user'),
             'last_login' => \Yii::t('app',  'Last logged in'),
             'last_lecture' => \Yii::t('app',  'Last lesson'),
-            'dont_bother' => \Yii::t('app',  'Do not bother'),
             'status' => \Yii::t('app',  'Status'),
             'allowed_to_download_files' => \Yii::t('app',  'Allowed to download files'),
             'wants_more_lessons' => \Yii::t('app',  'Wants more lessons'),
@@ -82,16 +81,17 @@ class Users extends ActiveRecord implements IdentityInterface
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            TimestampBehavior::class,
         ];
     }
 
     public function getPayer()
     {
-        return $this->hasOne(Payer::className(), ['user_id' => 'id']);
+        return $this->hasOne(Payer::class, ['user_id' => 'id']);
     }
 
-    public static function getFullName($user){
+    public static function getFullName($user)
+    {
         return $user['first_name'] . " " . $user['last_name'];
     }
 
@@ -115,154 +115,115 @@ class Users extends ActiveRecord implements IdentityInterface
         return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_TEACHER])->asArray()->all(), 'id', 'email');
     }
 
-    public static function getActiveStudents($dont_bother = false)
+    public static function getActiveStudents()
     {
         $params = ['user_level' => self::ROLE_USER, 'status' => self::STATUS_ACTIVE];
-        if ($dont_bother) {
-            $users = self::find()->where($params)->asArray()->all();
-            $result = [];
-            foreach ($users as $u) {
-                if ($u['dont_bother'] != null) {
-                    $time = time();
-                    $check = strtotime($u['dont_bother']);
-                    if ($check < $time) {
-                        $result[$u['id']] = $u;
-                    }
-                } else {
-                    $result[$u['id']] = $u;
-                }
-            }
-        } else {
-            $users = ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'email');
-        }
-        return $dont_bother ? $result : $users;
-    }
+        $users = self::find()->where($params)->asArray()->all();
 
-    public static function getAllStudents(){
-        $users = self::find()->where(['user_level' => self::ROLE_USER])->joinWith("payer")->asArray()->all();
         $result = [];
         foreach ($users as $u) {
-            if ($u['dont_bother'] != null) {
-                $time = time();
-                $check = strtotime($u['dont_bother']);
-                if ($check < $time) {
-                    $result[$u['id']] = $u;
-                }
-            } else {
-                $result[$u['id']] = $u;
-            }
+            $result[$u['id']] = $u;
         }
         return $result;
     }
 
-    public static function getStudents($dont_bother = false)
+    public static function getActiveStudentEmails()
     {
-        $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE, self::STATUS_PASSIVE]];
-        if ($dont_bother) {
-            $users = self::find()->where($params)->asArray()->all();
-            $result = [];
-            foreach ($users as $u) {
-                if ($u['dont_bother'] != null) {
-                    $time = time();
-                    $check = strtotime($u['dont_bother']);
-                    if ($check < $time) {
-                        $result[$u['id']] = $u;
-                    }
-                } else {
-                    $result[$u['id']] = $u;
-                }
-            }
-        } else {
-            $users = ArrayHelper::map(self::find()->where($params)->asArray()->all(), 'id', 'email');
-        }
-        return $dont_bother ? $result : $users;
+        $students = self::getActiveStudents();
+        return ArrayHelper::map($students, 'id', 'email');
     }
 
-    public static function getStudentsForSchool($dont_bother = false)
+    public static function getAllStudents()
+    {
+        $users = self::find()->where(['user_level' => self::ROLE_USER])->joinWith("payer")->asArray()->all();
+        $result = [];
+        foreach ($users as $u) {
+            $result[$u['id']] = $u;
+        }
+
+        return $result;
+    }
+
+    public static function getStudents()
+    {
+        $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE, self::STATUS_PASSIVE]];
+        $users = self::find()->where($params)->asArray()->all();
+
+        $result = [];
+        foreach ($users as $u) {
+            $result[$u['id']] = $u;
+        }
+    }
+
+    public static function getStudentsWithoutPausesForSchool()
+    {
+        $students = self::getStudentsForSchool();
+        foreach ($students as $key => $student) {
+            $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($student['id']);
+            if ($isPlanCurrentlyPaused) {
+                unset($students[$key]);
+            }
+        }
+
+        return $students;
+    }
+
+    public static function getStudentsForSchool()
     {
         $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE, self::STATUS_PASSIVE]];
         $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
-        if ($dont_bother) {
-            $users = self::find()->where($params)->andWhere(['in', 'id', $schoolStudentIds])->asArray()->all();
-            $result = [];
-            foreach ($users as $u) {
-                if ($u['dont_bother'] != null) {
-                    $time = time();
-                    $check = strtotime($u['dont_bother']);
-                    if ($check < $time) {
-                        $result[$u['id']] = $u;
-                    }
-                } else {
-                    $result[$u['id']] = $u;
-                }
-            }
-        } else {
-            $usersData = self::find()->where($params)->andWhere(['in', 'id', $schoolStudentIds])->asArray()->all();
-            $users = [];
-            foreach($usersData as $user){
-                $users[$user['id']] = $user['first_name'] . ' ' . $user['last_name']; 
-            }
+        $usersData = self::find()->where($params)->andWhere(['in', 'id', $schoolStudentIds])->asArray()->all();
+
+        $result = [];
+        foreach ($usersData as $u) {
+            $result[$u['id']] = $u;
         }
-        return $dont_bother ? $result : $users;
+
+        return $result;
     }
 
-    public static function getStudentsWithoutPausesForSchool(){
-        $students = self::getStudentsForSchool(true);
-        foreach($students as $key => $student){
-            $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($student['id']);
-            if($isPlanCurrentlyPaused) unset($students[$key]);
+    public static function getStudentNamesForSchool()
+    {
+        $students = self::getStudentsForSchool();
+        $studentNames = [];
+
+        foreach ($students as $student) {
+            $studentNames[$student['id']] = $student['first_name'] . ' ' . $student['last_name'];
         }
-        return $students;
+
+        return $studentNames;
     }
 
-    public static function getStudentsWithParams($dont_bother = false, $lang, $subTypes)
+    public static function getStudentsWithParams($lang, $subTypes)
     {
         $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE]];
+        $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
+        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
+
         if ($lang) {
             $params['language'] = $lang;
-        };
-        if ($subTypes && in_array("pausing", $subTypes)) {;
+        }
+        if ($subTypes && in_array("pausing", $subTypes)) {
             array_push($params['status'], self::STATUS_PASSIVE);
         }
         $query = self::find()->where($params);
+        $query->andWhere(['in', 'id', $schoolStudentIds]);
         if ($subTypes) {
             $query->andWhere(['in', 'subscription_type', $subTypes]);
         }
 
-         $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
-        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
+        $users = $query->asArray()->all();
 
-        if ($dont_bother) {
-            $users = $query->asArray()->all();
-
-            $result = [];
-            foreach ($users as $u) {
-                $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($u['id']);
-                if(!$isPlanCurrentlyPaused){
-                    if ($u['dont_bother'] != null) {
-                        $time = time();
-                        $check = strtotime($u['dont_bother']);
-                        if ($check < $time) {
-                            $result[$u['id']] = $u;
-                        }
-                    } else {
-                        $result[$u['id']] = $u;
-                    }
-                }
-                
-            }
-        } else {
-            $usersData = self::find()->where($params)->andWhere(['in', 'id', $schoolStudentIds])->asArray()->all();
-            $users = [];
-            foreach($usersData as $user){
-                $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($user['id']);
-                if(!$isPlanCurrentlyPaused) {
-                    $users[$user['id']] = $user['first_name'] . ' ' . $user['last_name']; 
-                }
+        $result = [];
+        foreach ($users as $u) {
+            $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($u['id']);
+            if (!$isPlanCurrentlyPaused) {
+                $result[$u['id']] = $u;
             }
         }
-        return $dont_bother ? $result : $users;
+
+        return $result;
     }
 
     /**
@@ -347,7 +308,8 @@ class Users extends ActiveRecord implements IdentityInterface
         return Yii::$app->getSecurity()->validatePassword($password, $this->password);
     }
 
-    public static function doesUserExist($firstName, $lastName, $email){
+    public static function doesUserExist($firstName, $lastName, $email)
+    {
         $data = self::find()->where([
             'first_name' => $firstName,
             'last_name' => $lastName,
@@ -441,44 +403,30 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function isUserAdmin($email)
     {
-        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN])) {
-            return true;
-        } else {
-            return false;
-        }
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN]);
     }
 
     public static function isStudent($email)
     {
-        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_USER])) {
-            return true;
-        } else {
-            return false;
-        }
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_USER]);
     }
 
     public static function isTeacher($email)
     {
-        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER])) {
-            return true;
-        } else {
-            return false;
-        }
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER]);
     }
 
     public static function isCurrentUserTeacher()
     {
-        if (!isset(Yii::$app->user->identity->email)) return false;
+        if (!isset(Yii::$app->user->identity->email)) {
+            return false;
+        }
         return self::isTeacher(Yii::$app->user->identity->email);
     }
 
     public static function isAdminOrTeacher($email)
     {
-        if (static::findOne(['email' => $email, 'user_level' => [self::ROLE_ADMIN, self::ROLE_TEACHER]])) {
-            return true;
-        } else {
-            return false;
-        }
+        return (bool) static::findOne(['email' => $email, 'user_level' => [self::ROLE_ADMIN, self::ROLE_TEACHER]]);
     }
 
     public static function getStatus()
@@ -521,6 +469,6 @@ class Users extends ActiveRecord implements IdentityInterface
      */
     public function getLecture()
     {
-        return $this->hasOne(Lectures::className(), ['id' => 'last_lecture']);
+        return $this->hasOne(Lectures::class, ['id' => 'last_lecture']);
     }
 }

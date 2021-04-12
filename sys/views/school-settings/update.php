@@ -18,8 +18,18 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
     ]
 );
 
+$fileInputSettings = [
+    'language' => 'lv',
+    'controller' => 'elfinder',
+    'filter' => ['image'],
+    'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
+    'options' => ['class' => 'form-control'],
+    'buttonOptions' => ['class' => 'btn btn-default'],
+    'multiple' => false,
+];
+
 $this->title = \Yii::t('app',  'Edit school settings') . ': ';
- \Yii::t('app',  'Edit');
+\Yii::t('app',  'Edit');
 ?>
 <div class="school-settings-update">
 
@@ -29,57 +39,25 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
 
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'background_image')->widget(InputFile::className(), [
-            'language' => 'lv',
-            'controller' => 'elfinder',
-            'filter' => ['image'],
-            'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
-            'options' => ['class' => 'form-control'],
-            'buttonOptions' => ['class' => 'btn btn-default'],
-            'multiple' => false,
-        ]); ?>
-        <?= $form->field($model, 'registration_background_image')->widget(InputFile::className(), [
-            'language' => 'lv',
-            'controller' => 'elfinder',
-            'filter' => ['image'],
-            'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
-            'options' => ['class' => 'form-control'],
-            'buttonOptions' => ['class' => 'btn btn-default'],
-            'multiple' => false,
-        ]); ?>
-        <?= $form->field($model, 'video_thumbnail')->widget(InputFile::className(), [
-            'language' => 'lv',
-            'controller' => 'elfinder',
-            'filter' => ['image'],
-            'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
-            'options' => ['class' => 'form-control'],
-            'buttonOptions' => ['class' => 'btn btn-default'],
-            'multiple' => false,
-        ]); ?>
-        <?= $form->field($model, 'logo')->widget(InputFile::className(), [
-            'language' => 'lv',
-            'controller' => 'elfinder',
-            'filter' => ['image'],
-            'template' => '<div class="input-group">{input}<span class="input-group-btn">{button}</span></div>',
-            'options' => ['class' => 'form-control'],
-            'buttonOptions' => ['class' => 'btn btn-default'],
-            'multiple' => false,
-        ]); ?>
+        <?= $form->field($model, 'background_image')->widget(InputFile::class, $fileInputSettings); ?>
+        <?= $form->field($model, 'registration_background_image')->widget(InputFile::class, $fileInputSettings); ?>
+        <?= $form->field($model, 'video_thumbnail')->widget(InputFile::class, $fileInputSettings); ?>
+        <?= $form->field($model, 'logo')->widget(InputFile::class, $fileInputSettings); ?>
         <?= $form->field($model, 'email')->textInput(['class' => 'form-control form-group has-feedback field-with-info-widget']) ?>
         <span class="glyphicon glyphicon-info-sign info info-school-email" style="margin-top: -50px;"></span>
 
-        <?= $form->field($model, 'registration_message')->widget(CKEditor::className(), [
+        <?= $form->field($model, 'registration_message')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
 
-        <?= $form->field($model, 'registration_title')->widget(CKEditor::className(), [
+        <?= $form->field($model, 'registration_title')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
-        <?= $form->field($model, 'login_title')->widget(CKEditor::className(), [
+        <?= $form->field($model, 'login_title')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
 
-        <?= $form->field($model, 'renter_message')->widget(CKEditor::className(), [
+        <?= $form->field($model, 'renter_message')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
 

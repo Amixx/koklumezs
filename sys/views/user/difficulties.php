@@ -7,8 +7,10 @@
                 <label class="control-label" for="studentgoals-title-now<?= $id ?>"><?= \Yii::t('app',  $name) ?></label>
                 <select id="studentgoals-title-now<?= $id ?>" class="form-control" name="studentgoals[now][<?= $id ?>]" aria-required="true" aria-invalid="false">
                     <option value=""></option>
-                    <?php for ($a = 1; $a <= 10; $a++) { ?>
-                        <option value="<?= $a ?>" <?= (isset($studentGoals['Šobrīd'][$id]) and  ($studentGoals['Šobrīd'][$id] == $a)) ? 'selected' : '' ?>><?= $a ?></option>
+                    <?php for ($a = 1; $a <= 10; $a++) {
+                        $selected = (isset($studentGoals['Šobrīd'][$id]) && ($studentGoals['Šobrīd'][$id] == $a)) ? 'selected' : '';
+                    ?>
+                        <option value="<?= $a ?>" <?= $selected ?>><?= $a ?></option>
                     <?php } ?>
                 </select>
                 <div class="help-block"></div>
@@ -23,8 +25,10 @@
                 <label class="control-label" for="studentgoals-title-future<?= $id ?>"><?= \Yii::t('app',  $name) ?></label>
                 <select id="studentgoals-title-future<?= $id ?>" class="form-control" name="studentgoals[future][<?= $id ?>]" aria-required="true" aria-invalid="false">
                     <option value=""></option>
-                    <?php for ($a = 1; $a <= 10; $a++) { ?>
-                        <option value="<?= $a ?>" <?= (isset($studentGoals['Vēlamais'][$id]) and  ($studentGoals['Vēlamais'][$id] == $a)) ? 'selected' : '' ?>><?= $a ?></option>
+                    <?php for ($a = 1; $a <= 10; $a++) {
+                        $selected = (isset($studentGoals['Vēlamais'][$id]) && ($studentGoals['Vēlamais'][$id] == $a)) ? 'selected' : '';
+                    ?>
+                        <option value="<?= $a ?>" <?= $selected  ?>><?= $a ?></option>
                     <?php } ?>
                 </select>
                 <div class="help-block"></div>

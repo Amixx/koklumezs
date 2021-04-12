@@ -33,11 +33,11 @@ class CommentResponses extends \yii\db\ActiveRecord
 
     public function getAuthor()
     {
-        return $this->hasOne(Users::className(), ['id' => 'author_id']);
+        return $this->hasOne(Users::class, ['id' => 'author_id']);
     }
     public function getUserlectureevaluation()
     {
-        return $this->hasOne(Userlectureevaluations::className(), ['id' => 'userlectureevaluation_id']);
+        return $this->hasOne(Userlectureevaluations::class, ['id' => 'userlectureevaluation_id']);
     }
 
 
@@ -53,18 +53,27 @@ class CommentResponses extends \yii\db\ActiveRecord
     public static function getUnseenCommentsCount()
     {
         $user_id = Yii::$app->user->identity->id;
-        $userLectureEvaluationIds = Userlectureevaluations::find()->where(['evaluation_id' => 4, 'user_id' => $user_id])->select('id');
-        $commentResponses = static::find()->where(['= any', 'userlectureevaluation_id', $userLectureEvaluationIds])->andWhere(['seen_by_author' => false])->joinWith('userlectureevaluation')->joinWith('userlectureevaluation.lecture');
+        $userLectureEvaluationIds = Userlectureevaluations::find()
+            ->where(['evaluation_id' => 4, 'user_id' => $user_id])
+            ->select('id');
+        $commentResponses = static::find()
+            ->where(['= any', 'userlectureevaluation_id', $userLectureEvaluationIds])
+            ->andWhere(['seen_by_author' => false])
+            ->joinWith('userlectureevaluation')
+            ->joinWith('userlectureevaluation.lecture');
         return count($commentResponses->asArray()->all());
     }
 
     public static function getCommentResponsesForUser()
     {
         $user_id = Yii::$app->user->identity->id;
-        $userLectureEvaluationIds = Userlectureevaluations::find()->where(['evaluation_id' => 4, 'user_id' => $user_id])->select('id');
-        $commentResponses = static::find()->where(['= any', 'userlectureevaluation_id', $userLectureEvaluationIds])->joinWith('userlectureevaluation')->joinWith('userlectureevaluation.lecture');
-
-        return $commentResponses;
+        $userLectureEvaluationIds = Userlectureevaluations::find()
+            ->where(['evaluation_id' => 4, 'user_id' => $user_id])
+            ->select('id');
+        return static::find()
+            ->where(['= any', 'userlectureevaluation_id', $userLectureEvaluationIds])
+            ->joinWith('userlectureevaluation')
+            ->joinWith('userlectureevaluation.lecture');
     }
 
     public static function markResponsesAsSeen()

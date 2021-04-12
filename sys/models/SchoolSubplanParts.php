@@ -26,9 +26,9 @@ class SchoolSubplanParts extends \yii\db\ActiveRecord
         ];
     }
 
-     public function getPlanpart()
+    public function getPlanpart()
     {
-        return $this->hasOne(PlanParts::className(), ['id' => 'planpart_id']);
+        return $this->hasOne(PlanParts::class, ['id' => 'planpart_id']);
     }
 
     public static function getForSchoolSubplan($schoolSubplanId)
@@ -36,19 +36,21 @@ class SchoolSubplanParts extends \yii\db\ActiveRecord
         return self::find()->where(['schoolsubplan_id' => $schoolSubplanId])->joinWith('planpart');
     }
 
-    public static function getPartsForSubplan($schoolSubplanId){
+    public static function getPartsForSubplan($schoolSubplanId)
+    {
         $data = self::getForSchoolSubplan($schoolSubplanId)->asArray()->all();
 
-        return array_map(function($d){
+        return array_map(function ($d) {
             return $d['planpart'];
         }, $data);
     }
 
-    public static function getPlanTotalCost($schoolSubplanId){
+    public static function getPlanTotalCost($schoolSubplanId)
+    {
         $plans = self::getForSchoolSubplan($schoolSubplanId)->asArray()->all();
         $totalCost = 0;
 
-        foreach($plans as $plan){
+        foreach ($plans as $plan) {
             $totalCost += $plan['planpart']['monthly_cost'];
         }
 

@@ -4,8 +4,6 @@ namespace app\models;
 
 use yii\helpers\ArrayHelper;
 use Yii;
-use yii\db\ActiveQuery;
-use yii\db\Query;
 
 /**
  * This is the model class for table "userlectureevaluations".
@@ -42,9 +40,9 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
             [['evaluation'], 'string'],
             [['public_comment'], 'boolean'],
             [['created'], 'safe'],
-            [['evaluation_id'], 'exist', 'skipOnError' => true, 'targetClass' => Evaluations::className(), 'targetAttribute' => ['evaluation_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
-            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
+            [['evaluation_id'], 'exist', 'skipOnError' => true, 'targetClass' => Evaluations::class, 'targetAttribute' => ['evaluation_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['user_id' => 'id']],
+            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::class, 'targetAttribute' => ['lecture_id' => 'id']],
         ];
     }
 
@@ -68,7 +66,7 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
      */
     public function getEvalua()
     {
-        return $this->hasOne(Evaluations::className(), ['id' => 'evaluation_id']);
+        return $this->hasOne(Evaluations::class, ['id' => 'evaluation_id']);
     }
 
     /**
@@ -76,7 +74,7 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(Users::class, ['id' => 'user_id']);
     }
 
     /**
@@ -84,7 +82,7 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
      */
     public function getStudent()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id'])
+        return $this->hasOne(Users::class, ['id' => 'user_id'])
             ->from(['student' => Users::tableName()]);
     }
 
@@ -93,7 +91,7 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
      */
     public function getLecture()
     {
-        return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
+        return $this->hasOne(Lectures::class, ['id' => 'lecture_id']);
     }
 
     /**
@@ -101,7 +99,7 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
      */
     public function getEvaluation()
     {
-        return $this->hasOne(Evaluations::className(), ['id' => 'evaluation_id']);
+        return $this->hasOne(Evaluations::class, ['id' => 'evaluation_id']);
     }
 
 
@@ -115,7 +113,7 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
 
     public function getCommentresponses()
     {
-        return $this->hasMany(CommentResponses::className(), ['id' => 'evaluation_id']);
+        return $this->hasMany(CommentResponses::class, ['id' => 'evaluation_id']);
     }
 
     /**
@@ -128,8 +126,7 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
 
     public static function getCommentsResponsesForUser()
     {
-        $myComments = self::getCommentsForUser();
-        return $myComments;
+        return self::getCommentsForUser();
     }
 
     public static function getCommentsForUser()
@@ -149,11 +146,12 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
         return self::find()->where(['evaluation_id' => 4, 'lecture_id' => $id])->andWhere(['>=', 'created', $timeFormatted])->orderBy(['created' => SORT_DESC])->joinWith('student')->asArray()->all();
     }
 
-    public static function getLecturedifficultyEvaluation($userId, $lectureId){
+    public static function getLecturedifficultyEvaluation($userId, $lectureId)
+    {
         $difficultyEvaluationId = 1;
 
         return self::find()->where([
-            'lecture_id' => $lectureId, 
+            'lecture_id' => $lectureId,
             'evaluation_id' => $difficultyEvaluationId,
             'user_id' => $userId,
         ])->one();

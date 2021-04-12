@@ -26,21 +26,21 @@ $this->title = \Yii::t('app', 'Parameters');
             [
                 'class' => 'yii\grid\ActionColumn',
                 'buttons' => [
-                    'view' => function ($url, $model) {
+                    'view' => function ($url) {
                         return Html::a(
                             '<span class="glyphicon glyphicon-eye-open"> </span>',
                             $url,
                             ['title' => 'View', 'data-pjax' => '0']
                         );
                     },
-                    'update' => function ($url, $model) {
+                    'update' => function ($url) {
                         return Html::a(
                             '<span class="glyphicon glyphicon-pencil"> </span>',
                             $url,
                             ['title' => 'Update', 'data-pjax' => '0']
                         );
                     },
-                    'delete' => function ($url, $model) {
+                    'delete' => function ($url) {
                         return Html::a(
                             '<span class="glyphicon glyphicon-trash"> </span>',
                             $url,
@@ -48,19 +48,16 @@ $this->title = \Yii::t('app', 'Parameters');
                         );
                     },
                 ],
-                'urlCreator' => function ($action, $model, $key, $index) {
+                'urlCreator' => function ($action, $model) {
                     if ($action === 'view') {
-                        $url = '/sys/difficulties/view/' . $model['id'];
-                        return $url;
+                        return '/sys/difficulties/view/' . $model['id'];
                     }
 
                     if ($action === 'update') {
-                        $url = '/sys/difficulties/update/' . $model['id'];
-                        return $url;
+                        return '/sys/difficulties/update/' . $model['id'];
                     }
                     if ($action === 'delete') {
-                        $url = '/sys/difficulties/delete/' . $model['id'];
-                        return $url;
+                        return '/sys/difficulties/delete/' . $model['id'];
                     }
                 }
             ],

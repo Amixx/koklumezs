@@ -3,10 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Users;
 use app\models\School;
 use app\models\SchoolFaqs;
-use app\models\SchoolTeacher;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\data\ActiveDataProvider;
@@ -18,7 +16,7 @@ class SchoolFaqsController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
@@ -27,7 +25,7 @@ class SchoolFaqsController extends Controller
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -91,7 +89,8 @@ class SchoolFaqsController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionForStudents(){
+    public function actionForStudents()
+    {
         $faqs = SchoolFaqs::getForCurrentSchool();
 
         return $this->render('for-students', [

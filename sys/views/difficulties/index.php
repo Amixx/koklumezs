@@ -3,10 +3,6 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\DifficultiesSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
 $this->title = \Yii::t('app', 'Parameters');
 ?>
 <div class="difficulties-index">
@@ -25,6 +21,4 @@ $this->title = \Yii::t('app', 'Parameters');
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-
-
 </div>

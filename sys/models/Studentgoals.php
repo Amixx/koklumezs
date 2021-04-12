@@ -37,8 +37,8 @@ class Studentgoals extends \yii\db\ActiveRecord
             [['user_id', 'type', 'diff_id', 'value'], 'required'],
             [['user_id', 'diff_id', 'value'], 'integer'],
             [['type'], 'string'],
-            [['diff_id'], 'exist', 'skipOnError' => true, 'targetClass' => Difficulties::className(), 'targetAttribute' => ['diff_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['diff_id'], 'exist', 'skipOnError' => true, 'targetClass' => Difficulties::class, 'targetAttribute' => ['diff_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -61,7 +61,7 @@ class Studentgoals extends \yii\db\ActiveRecord
      */
     public function getDiff()
     {
-        return $this->hasOne(Difficulties::className(), ['id' => 'diff_id']);
+        return $this->hasOne(Difficulties::class, ['id' => 'diff_id']);
     }
 
     /**
@@ -69,7 +69,7 @@ class Studentgoals extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(Users::class, ['id' => 'user_id']);
     }
 
     public static function getUserGoals($id)
@@ -94,6 +94,11 @@ class Studentgoals extends \yii\db\ActiveRecord
         $result = 0;
         $sum = 0;
         $count = count($data) - 1;
+
+        if ($count === 0) {
+            return 0;
+        }
+
         foreach ($data as $d) {
             $sum += (int)$d['value'];
         }
@@ -113,6 +118,30 @@ class Studentgoals extends \yii\db\ActiveRecord
             return self::deleteAll($params);
         } else {
             return null;
+        }
+    }
+
+    public static function addCurrentGoals($currentGoals, $userId)
+    {
+        foreach ($currentGoals as $pid => $value) {
+            $goal = new Studentgoals();
+            $goal->user_id = $userId;
+            $goal->diff_id = $pid;
+            $goal->type = Studentgoals::NOW;
+            $goal->value = $value ?? 0;
+            $goal->save();
+        }
+    }
+
+    public static function addFutureGoals($futureGoals, $userId)
+    {
+        foreach ($futureGoals as $pid => $value) {
+            $goal = new Studentgoals();
+            $goal->user_id = $userId;
+            $goal->diff_id = $pid;
+            $goal->type = Studentgoals::FUTURE;
+            $goal->value = $value ?? 0;
+            $goal->save();
         }
     }
 }

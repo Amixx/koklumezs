@@ -2,10 +2,6 @@
 
 namespace app\models;
 
-use yii\helpers\ArrayHelper;
-
-use Yii;
-
 class SignupQuestions extends \yii\db\ActiveRecord
 {
     public static function tableName()
@@ -24,7 +20,7 @@ class SignupQuestions extends \yii\db\ActiveRecord
 
     public function getSchool()
     {
-        return $this->hasOne(Users::className(), ['id' => 'school_id']);
+        return $this->hasOne(Users::class, ['id' => 'school_id']);
     }
 
     public function attributeLabels()

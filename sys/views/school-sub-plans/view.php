@@ -5,7 +5,7 @@ use yii\widgets\DetailView;
 use yii\grid\GridView;
 
 $this->title = $model->name;
- ['label' => \Yii::t('app', 'Subscription plans'), 'url' => ['index']];
+['label' => \Yii::t('app', 'Subscription plans'), 'url' => ['index']];
 
 \yii\web\YiiAsset::register($this);
 ?>

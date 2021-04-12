@@ -43,7 +43,7 @@ class TestController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
                     // allow authenticated users
                     [
@@ -106,7 +106,7 @@ class TestController extends Controller
         //         }
         //         $res = round($sum / count($lectureDifficulties));
         //     }
-            
+
         //     if($lecture['complexity'] != $res){
         //         $l = Lectures::find()->where(['id' => $lecture['id']])->one();
         //         $l->complexity = $res;

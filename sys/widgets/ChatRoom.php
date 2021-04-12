@@ -8,11 +8,11 @@ use app\models\Chat;
 use app\models\Users;
 use app\models\SchoolTeacher;
 
-class ChatRoom extends Widget {
+class ChatRoom extends Widget
+{
 
     public $sourcePath = '@vendor/assets';
-    public $css = [
-    ];
+    public $css = [];
     public $js = [
         'js/custom.js',
     ];
@@ -25,7 +25,8 @@ class ChatRoom extends Widget {
     public $model;
     public $recipientId;
 
-    public function init() {
+    public function init()
+    {
         $this->model = new Chat();
         if ($this->userModel === NULL) {
             $this->userModel = Yii::$app->getUser()->identityClass;
@@ -38,7 +39,8 @@ class ChatRoom extends Widget {
         parent::init();
     }
 
-    public function run() {
+    public function run()
+    {
         parent::init();
         $model = new Chat();
         $model->userModel = $this->userModel;
@@ -52,7 +54,8 @@ class ChatRoom extends Widget {
         ]);
     }
 
-    public static function sendChat($post) {
+    public static function sendChat($post)
+    {
         if (isset($post['message']))
             $message = $post['message'];
         if (isset($post['model']))

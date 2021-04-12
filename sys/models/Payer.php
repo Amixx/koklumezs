@@ -37,7 +37,7 @@ class Payer extends \yii\db\ActiveRecord
 
     public function getStudent()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(Users::class, ['id' => 'user_id']);
     }
 
     public static function getForStudent($studentId)

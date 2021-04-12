@@ -62,7 +62,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            TimestampBehavior::class,
         ];
     }
 
@@ -175,29 +175,17 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function isUserAdmin($email)
     {
-        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN])) {
-            return true;
-        } else {
-            return false;
-        }
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN]);
     }
 
     public static function isStudent($email)
     {
-        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_USER])) {
-            return true;
-        } else {
-            return false;
-        }
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_USER]);
     }
 
     public static function isTeacher($email)
     {
-        if (static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER])) {
-            return true;
-        } else {
-            return false;
-        }
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER]);
     }
 
     public static function getStatus()
@@ -219,11 +207,11 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function getAuthors()
     {
-        return $this->hasMany(Projects::className(), ['created_by' => 'id']);
+        return $this->hasMany(Projects::class, ['created_by' => 'id']);
     }
 
     public function getChanges()
     {
-        return $this->hasMany(Projects::className(), ['change_by' => 'id']);
+        return $this->hasMany(Projects::class, ['change_by' => 'id']);
     }
 }

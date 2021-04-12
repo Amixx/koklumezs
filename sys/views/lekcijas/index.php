@@ -20,7 +20,7 @@ if (isset($sortByDifficulty)) {
     if ($sortByDifficulty == 'desc') {
         $toggledSortByDifficulty = 'asc';
         $sortByDifficultyLabel = 'From hardest to easiest';
-    } else if ($sortByDifficulty == 'asc') {     
+    } else if ($sortByDifficulty == 'asc') {
         $toggledSortByDifficulty = 'desc';
         $sortByDifficultyLabel = 'From easiest to hardest';
     }
@@ -31,18 +31,26 @@ if (isset($sortByDifficulty)) {
     <h3><?= $this->title ?></h3>
     <?php if (count($models) > 1 || isset($title_filter)) { ?>
         <div class="row search-section">
-            <div class="col-md-7 col-xs-12">  
-                <?= Html::beginForm(['/lekcijas/?type='.$type.'&sortByDifficulty='.$sortByDifficulty], 'get') ?>
+            <div class="col-md-7 col-xs-12">
+                <?= Html::beginForm(['/lekcijas/?type=' . $type . '&sortByDifficulty=' . $sortByDifficulty], 'get') ?>
                 <div class="display-flex">
                     <?= Html::input('text', 'title_filter', $title_filter, ['class' => 'content-input']) ?>
-                    <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>                
-                    <?= Html::a(\Yii::t('app', 'Show all'), '?type='.$type.'&sortByDifficulty='.$toggledSortByDifficulty.'&title_filter=', ['class' => 'btn btn-orange']) ?>
+                    <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>
+                    <?= Html::a(
+                        \Yii::t('app', 'Show all'),
+                        '?type=' . $type . '&sortByDifficulty=' . $toggledSortByDifficulty . '&title_filter=',
+                        ['class' => 'btn btn-orange']
+                    ) ?>
                 </div>
-                 <?= Html::endForm() ?>
+                <?= Html::endForm() ?>
             </div>
-            <div class="col-md-5 col-xs-12" > 
+            <div class="col-md-5 col-xs-12">
                 <?= Html::input('hidden', 'sortByDifficulty', $toggledSortByDifficulty) ?>
-                <?= Html::a(\Yii::t('app', $sortByDifficultyLabel), '?type='.$type.'&sortByDifficulty='.$sortByDifficulty.'&title_filter='.$title_filter,['class' => 'btn btn-gray sort-button']) ?>
+                <?= Html::a(
+                    \Yii::t('app', $sortByDifficultyLabel),
+                    '?type=' . $type . '&sortByDifficulty=' . $sortByDifficulty . '&title_filter=' . $title_filter,
+                    ['class' => 'btn btn-gray sort-button']
+                ) ?>
             </div>
         </div>
     <?php } ?>
@@ -66,7 +74,6 @@ if (isset($sortByDifficulty)) {
     </div>
     <?php
     if ($pages) {
-        // display pagination
         echo LinkPager::widget([
             'pagination' => $pages,
         ]);

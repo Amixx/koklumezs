@@ -6,7 +6,8 @@ use kartik\mpdf\Pdf;
 
 class InvoicePdfFileGenerator
 {
-    public static function generate($invoicePath, $content, $title){
+    public static function generate($invoicePath, $content, $title)
+    {
         $css = self::getInvoiceCss();
 
         $pdf = new Pdf([
@@ -23,7 +24,8 @@ class InvoicePdfFileGenerator
         $pdf->render();
     }
 
-    public static function getInvoiceCss(){
+    public static function getInvoiceCss()
+    {
         return '
             body {
                 font-family: Arial, serif;

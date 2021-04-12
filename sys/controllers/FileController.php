@@ -4,11 +4,9 @@ namespace app\controllers;
 
 use app\models\Lecturesfiles;
 use app\models\UserLectures;
-use app\models\Users;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 
 class FileController extends Controller
 {
@@ -16,21 +14,19 @@ class FileController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return !empty(Yii::$app->user->identity);
                         },
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [],
             ],
         ];
@@ -50,7 +46,7 @@ class FileController extends Controller
 
             $isAlreadyAdded = false;
             foreach ($userLectureFiles as $file) {
-                foreach($lectureFiles['docs'] as $lectureFile){
+                foreach ($lectureFiles['docs'] as $lectureFile) {
                     if ($file['title'] == $lectureFile['title']) {
                         $isAlreadyAdded = true;
                         break;
@@ -59,10 +55,10 @@ class FileController extends Controller
             }
 
             if (!$isAlreadyAdded) {
-                foreach($lectureFiles['docs'] as $file){
+                foreach ($lectureFiles['docs'] as $file) {
                     array_push($userLectureFiles, $file);
-                }   
-            }         
+                }
+            }
         }
 
         if ($note_filter) {
@@ -92,6 +88,5 @@ class FileController extends Controller
             'note_filter' => $note_filter,
             'force' => $force
         ]);
-        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

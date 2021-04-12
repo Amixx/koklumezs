@@ -11,10 +11,12 @@ $this->title = \Yii::t('app',  'Your first kokle');
     <div class="rent-form row">
 
         <div class="container">
-            <h2><?= Yii::t('app','Rent kokle') ?></h2>
-            <p style="font-size:16px"> <?=Yii::t('app', 'If you wish to rent kokle (10 euro/month), after invoice payment we will send kokle to Omniva parcel machine of your choice (shipping 5 euro)')?> </p> 
-            <p style="color:red"> <?=Yii::t('app', 'Please fill every field')?> </p>
-        </div>    
+            <h2><?= Yii::t('app', 'Rent kokle') ?></h2>
+            <p style="font-size:16px">
+                <?= Yii::t('app', 'If you wish to rent kokle (10 euro/month), after invoice payment we will send kokle to Omniva parcel machine of your choice (shipping 5 euro)') ?>
+            </p>
+            <p style="color:red"> <?= Yii::t('app', 'Please fill every field') ?> </p>
+        </div>
 
         <?php $form = ActiveForm::begin(['id' => 'rent-form', 'enableClientValidation' => false]); ?>
         <div class="form-group col-sm-6">

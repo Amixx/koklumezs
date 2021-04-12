@@ -3,56 +3,35 @@
 namespace app\controllers;
 
 use yii\data\ActiveDataProvider;
-use app\models\Difficulties;
-use app\models\Evaluations;
-use app\models\LectureAssignment;
-use app\models\Lectures;
 use app\models\PlanFiles;
 use app\models\SchoolSubplanParts;
 use app\models\PlanParts;
-use app\models\LecturesDifficulties;
-use app\models\Lecturesevaluations;
-use app\models\Lecturesfiles;
-use app\models\Lectureshanddifficulties;
-use app\models\RelatedLectures;
-use app\models\Studentgoals;
-use app\models\Userlectureevaluations;
-use app\models\UserLectures;
-use app\models\Users;
 use app\models\SchoolSubPlans;
-use app\models\StudentSubplanPauses;
-use app\models\SectionsVisible;
 use app\models\School;
 use Yii;
-use yii\data\Pagination;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-/**
- * ArchiveController implements the actions for Lectures model by student.
- */
 class SchoolSubPlansController extends Controller
 {
     public function behaviors()
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return !empty(Yii::$app->user->identity);
                         },
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [],
             ],
         ];
@@ -98,7 +77,7 @@ class SchoolSubPlansController extends Controller
         if ($model->load($post)) {
             $model->school_id = $schoolId;
             if ($model->save()) {
-                if(isset($post["file-title"]) && isset($post["file"])){
+                if (isset($post["file-title"]) && isset($post["file"])) {
                     $planFile = new PlanFiles();
                     $planFile->plan_id = $model->id;
                     $planFile->title = $post["file-title"];
@@ -129,26 +108,28 @@ class SchoolSubPlansController extends Controller
         $post = Yii::$app->request->post();
 
         $saved = $model->load($post) && $model->save();
-        if(isset($post["file-title"]) && isset($post["file"])){
+        if (isset($post["file-title"]) && isset($post["file"])) {
             $planFile = new PlanFiles();
             $planFile->plan_id = $model->id;
             $planFile->title = $post["file-title"];
             $planFile->file = $post["file"];
             $planFile->save();
         }
-        if($post && isset($post['SchoolSubplanParts']) && isset($post['SchoolSubplanParts']['planpart_id']) && $post['SchoolSubplanParts']['planpart_id']){
+        if ($post && isset($post['SchoolSubplanParts']) && isset($post['SchoolSubplanParts']['planpart_id']) && $post['SchoolSubplanParts']['planpart_id']) {
             $newSubplanPart->schoolsubplan_id = $model->id;
             $newSubplanPart->planpart_id = (int) $post['SchoolSubplanParts']['planpart_id'];
 
-            if($newSubplanPart->save()){
+            if ($newSubplanPart->save()) {
                 Yii::$app->session->setFlash('success', 'Plāna daļa pievienta!');
                 $newSubplanPart = new SchoolSubplanParts;
-            }             
+            }
         }
 
-        if($saved) return $this->redirect(['view', 'id' => $model->id]);
+        if ($saved) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
 
-        
+
         return $this->render('update', [
             'model' => $model,
             'planFiles' => $planFiles,

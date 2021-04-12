@@ -6,9 +6,9 @@ use yii\helpers\Html;
 /* @var $model app\models\Evaluations */
 
 $this->title = \Yii::t('app',  'Edit school evaluation') . ': ' . $model->title;
- ['label' => \Yii::t('app',  'Evaluations'), 'url' => ['index']];
- ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
- \Yii::t('app',  'Edit');
+['label' => \Yii::t('app',  'Evaluations'), 'url' => ['index']];
+['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
+\Yii::t('app',  'Edit');
 ?>
 <div class="evaluations-update">
 

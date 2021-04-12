@@ -11,7 +11,7 @@ $this->title = \Yii::t('app', 'Archive');
 ?>
 <div class="lectures-index">
     <div class="row search-section">
-        <div class="col-md-7 col-xs-12">      
+        <div class="col-md-7 col-xs-12">
             <?= Html::beginForm([''], 'get') ?>
             <div class="display-flex">
                 <?= Html::input('text', 'archive_filter', $archive_filter, ['class' => 'content-input']) ?>
@@ -19,9 +19,13 @@ $this->title = \Yii::t('app', 'Archive');
                 <?= Html::a(\Yii::t('app', 'Show all'), '?archive_filter=', ['class' => 'btn btn-orange']) ?>
             </div>
             <?= Html::endForm() ?>
-        </div> 
-        <div class="col-md-5 col-xs-12"> 
-             <?= Html::a(\Yii::t('app', 'Open all favourite lessons'), Url::base(true) . "/lekcijas/?type=favourite&sortByDifficulty=asc", ['class' => 'btn btn-gray sort-button']); ?>
+        </div>
+        <div class="col-md-5 col-xs-12">
+            <?= Html::a(
+                \Yii::t('app', 'Open all favourite lessons'),
+                Url::base(true) . "/lekcijas/?type=favourite&sortByDifficulty=asc",
+                ['class' => 'btn btn-gray sort-button']
+            ); ?>
         </div>
     </div>
     <?php
@@ -36,13 +40,7 @@ $this->title = \Yii::t('app', 'Archive');
                 <div class="col-md-6 col-lg-3 text-center lecture-wrap">
                     <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
                     <?= $lecture->title ?>
-                    <?php if ($userLecture->is_favourite) { ?>
-                        <div class="icon-favourite"></div>
-                    <?php } ?>
-                    <?php if ($userLecture->still_learning) { ?>
-                        <div class="icon-still-learning"></div>
-                    <?php } ?>
-                    <?php if($likesCount) { ?>
+                    <?php if ($likesCount) { ?>
                         <span class="lecturelikes lecturelikes-archive">
                             <span class="glyphicon glyphicon-heart lecturelikes-icon"></span>
                             <span class="lecturelikes-count"><?= $likesCount ?></span>

@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Evaluations */
 
 $this->title = $model->title;
- ['label' => \Yii::t('app',  'Evaluations'), 'url' => ['index']];
+['label' => \Yii::t('app',  'Evaluations'), 'url' => ['index']];
 
 \yii\web\YiiAsset::register($this);
 ?>

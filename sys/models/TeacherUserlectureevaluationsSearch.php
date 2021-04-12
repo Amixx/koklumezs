@@ -101,7 +101,7 @@ class TeacherUserlectureevaluationsSearch extends Userlectureevaluations
             $query->andFilterWhere(['evaluation_id' => 4]);
         }
 
-        if (count($schoolLectureIds) > 0 and count($schoolStudentIds) > 0) {
+        if (!empty($schoolLectureIds) && !empty($schoolStudentIds)) {
             $query->andFilterWhere([
                 'AND',
                 ['in', 'lecture_id', $schoolLectureIds],

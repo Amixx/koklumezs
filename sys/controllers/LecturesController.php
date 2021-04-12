@@ -10,10 +10,8 @@ use app\models\Lecturesfiles;
 use app\models\LecturesSearch;
 use app\models\TeacherLecturesSearch;
 use app\models\RelatedLectures;
-use app\models\Handdifficulties;
 use app\models\Lecturesevaluations;
 use app\models\LecturesDifficulties;
-use app\models\Lectureshanddifficulties;
 use app\models\SchoolLecture;
 use app\models\SchoolTeacher;
 use app\models\School;
@@ -37,21 +35,19 @@ class LecturesController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         },
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['GET'],
                 ],
@@ -97,7 +93,6 @@ class LecturesController extends Controller
     {
         $schoolId = School::getCurrentSchoolId();
         $difficulties = Difficulties::getDifficultiesForSchool($schoolId);
-        $handdifficulties = Handdifficulties::getDifficulties();
         $evaluations = Evaluations::getEvaluations();
         $lectures = SchoolLecture::getSchoolLectureTitles($schoolId);
         $post = Yii::$app->request->post();
@@ -143,14 +138,6 @@ class LecturesController extends Controller
                     }
                 }
             }
-            if (isset($post['handdifficulties'])) {
-                foreach ($post['handdifficulties'] as $pid => $value) {
-                    $handdifficulty = new Lectureshanddifficulties();
-                    $handdifficulty->category_id = $pid;
-                    $handdifficulty->lecture_id = $model->id;
-                    $handdifficulty->save();
-                }
-            }
             foreach ($evaluations as $eval) {
                 $evaluation = new Lecturesevaluations();
                 $evaluation->evaluation_id = (int) $eval['id'];
@@ -171,7 +158,6 @@ class LecturesController extends Controller
         return $this->render('create', [
             'model' => $model,
             'difficulties' => $difficulties,
-            'handdifficulties' => $handdifficulties,
             'evaluations' => $evaluations,
             'lectures' => $lectures,
         ]);
@@ -183,9 +169,7 @@ class LecturesController extends Controller
         $post = Yii::$app->request->post();
         $difficulties = Difficulties::getDifficultiesForSchool($schoolId);
         $evaluations = Evaluations::getEvaluations();
-        $handdifficulties = Handdifficulties::getDifficulties();
         $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
-        $lectureHandDifficulties = Lectureshanddifficulties::getLectureDifficulties($id);
         $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
         $lecturefiles = Lecturesfiles::getLectureFiles($id);
         $relatedLectures = RelatedLectures::getRelations($id);
@@ -224,15 +208,6 @@ class LecturesController extends Controller
                 $model->updated = date('Y-m-d H:i:s', time());
                 $model->save(false);
             }
-            if (isset($post['handdifficulties'])) {
-                Lectureshanddifficulties::removeLectureDifficulties($id);
-                foreach ($post['handdifficulties'] as $pid => $value) {
-                    $handdifficulty = new Lectureshanddifficulties();
-                    $handdifficulty->category_id = $pid;
-                    $handdifficulty->lecture_id = $model->id;
-                    $handdifficulty->save();
-                }
-            }
             if (isset($post['evaluations'])) {
                 Lecturesevaluations::removeLectureEvalutions($id);
                 foreach ($post['evaluations'] as $eid => $value) {
@@ -260,10 +235,8 @@ class LecturesController extends Controller
         return $this->render('update', [
             'model' => $model,
             'difficulties' => $difficulties,
-            'handdifficulties' => $handdifficulties,
             'evaluations' => $evaluations,
             'lectureDifficulties' => $lectureDifficulties,
-            'lectureHandDifficulties' => $lectureHandDifficulties,
             'lectureEvaluations' => $lectureEvaluations,
             'lecturefiles' => $lecturefiles,
             'relatedLectures' => $relatedLectures,

@@ -17,19 +17,19 @@ class SentInvoicesController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         }
                     ],
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -54,7 +54,7 @@ class SentInvoicesController extends Controller
         $post = Yii::$app->request->post();
         $processRequest = isset($post['SentInvoices']) && isset($post['SentInvoices']['paid_date']) && $post['SentInvoices']['paid_date'];
 
-        if($processRequest){
+        if ($processRequest) {
             InvoiceManager::createRealInvoice($model, $invoiceNumber, $model['user_id'], $post['SentInvoices']['paid_date'], $model);
 
             return $this->redirect(Yii::$app->request->referrer);
@@ -73,10 +73,10 @@ class SentInvoicesController extends Controller
         $post = Yii::$app->request->post();
         $processRequest = $post && isset($post["SentInvoices"]['paid_months']) && isset($post["SentInvoices"]['paid_date']) && $post["SentInvoices"]['paid_months'] && $post["SentInvoices"]['paid_date'];
 
-        if($processRequest){
+        if ($processRequest) {
             InvoiceManager::createRealInvoiceForMultipleMonths($userId, $post["SentInvoices"]['paid_months'],  $post["SentInvoices"]['paid_date']);
 
-            Yii::$app->session->setFlash('success', 'Maksājums tika reģistrēts!');            
+            Yii::$app->session->setFlash('success', 'Maksājums tika reģistrēts!');
             return $this->redirect(["user/index"]);
         }
 
@@ -91,7 +91,7 @@ class SentInvoicesController extends Controller
     {
         $deleted = $this->findById($id)->delete();
 
-         if($deleted) {
+        if ($deleted) {
             Yii::$app->session->setFlash('success', 'Rēķins izdzēsts!');
         } else {
             Yii::$app->session->setFlash('error', 'Notikusi kļūda! Rēķins netika izdzēsts!');

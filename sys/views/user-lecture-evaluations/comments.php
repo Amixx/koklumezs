@@ -20,13 +20,27 @@ $this->title = \Yii::t('app',  'Student evaluations');
                 'attribute' => 'lecture_id',
                 'format' => 'raw',
                 'value' => 'lecture.title',
-                'filter' => Html::dropDownList('UserlectureevaluationsSearch[lecture_id]', isset($get['UserlectureevaluationsSearch']['lecture_id']) ? $get['UserlectureevaluationsSearch']['lecture_id'] : '', $lectures, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList(
+                    'UserlectureevaluationsSearch[lecture_id]',
+                    isset($get['UserlectureevaluationsSearch']['lecture_id'])
+                        ? $get['UserlectureevaluationsSearch']['lecture_id']
+                        : '',
+                    $lectures,
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                ),
             ],
             [
                 'attribute' => 'user_id',
                 'format' => 'raw',
                 'value' => 'student.email',
-                'filter' => Html::dropDownList('UserlectureevaluationsSearch[user_id]', isset($get['UserlectureevaluationsSearch']['user_id']) ? $get['UserlectureevaluationsSearch']['user_id'] : '', $students, ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList(
+                    'UserlectureevaluationsSearch[user_id]',
+                    isset($get['UserlectureevaluationsSearch']['user_id'])
+                        ? $get['UserlectureevaluationsSearch']['user_id']
+                        : '',
+                    $students,
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                ),
             ],
             'evaluation:ntext',
             [
@@ -44,7 +58,7 @@ $this->title = \Yii::t('app',  'Student evaluations');
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view}',
                 'buttons' => [
-                    'view' => function ($url, $model) {
+                    'view' => function ($url) {
                         return Html::a(
                             '<span class="glyphicon glyphicon-eye-open"> </span>',
                             $url,
@@ -52,10 +66,9 @@ $this->title = \Yii::t('app',  'Student evaluations');
                         );
                     },
                 ],
-                'urlCreator' => function ($action, $model, $key, $index) {
+                'urlCreator' => function ($action, $model) {
                     if ($action === 'view') {
-                        $url = '/sys/lekcijas/lekcija/' . $model['lecture_id'] . '?force=1';
-                        return $url;
+                        return '/sys/lekcijas/lekcija/' . $model['lecture_id'] . '?force=1';
                     }
                 }
             ],

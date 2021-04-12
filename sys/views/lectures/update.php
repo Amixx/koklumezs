@@ -6,9 +6,9 @@ use yii\helpers\Html;
 /* @var $model app\models\Lectures */
 
 $this->title = \Yii::t('app', 'Edit lesson') . ': ' . $model->title;
- ['label' => \Yii::t('app',  'Lessons'), 'url' => ['index']];
- ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
- \Yii::t('app',  'Edit');
+['label' => \Yii::t('app',  'Lessons'), 'url' => ['index']];
+['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
+\Yii::t('app',  'Edit');
 ?>
 <div class="lectures-update">
 
@@ -17,10 +17,8 @@ $this->title = \Yii::t('app', 'Edit lesson') . ': ' . $model->title;
     <?= $this->render('_form', [
         'model' => $model,
         'difficulties' => $difficulties,
-        'handdifficulties' => $handdifficulties,
         'evaluations' => $evaluations,
         'lectureDifficulties' => $lectureDifficulties,
-        'lectureHandDifficulties' => $lectureHandDifficulties,
         'lectureEvaluations' => $lectureEvaluations,
         'lecturefiles' => $lecturefiles,
         'lectures' => $lectures,

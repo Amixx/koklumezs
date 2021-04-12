@@ -35,23 +35,29 @@ $inputFileOptions = [
     <?php $form = ActiveForm::begin(); ?>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item active">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><?= \Yii::t('app', 'Lesson') ?></a>
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                <?= \Yii::t('app', 'Lesson') ?>
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false"><?= \Yii::t('app', 'Parameters') ?></a>
+            <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false">
+                <?= \Yii::t('app', 'Parameters') ?>
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false"><?= \Yii::t('app', 'Files') ?></a>
+            <a class="nav-link" id="files-tab" data-toggle="tab" href="#files" role="tab" aria-controls="files" aria-selected="false">
+                <?= \Yii::t('app', 'Files') ?>
+            </a>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
             <?= $form->field($model, 'title')->textInput() ?>
-            <?= $form->field($model, 'description')->widget(CKEditor::className(), [
+            <?= $form->field($model, 'description')->widget(CKEditor::class, [
                 'editorOptions' => $ckeditorOptions,
             ]) ?>
-            <?= $form->field($model, 'file')->widget(InputFile::className(), $inputFileOptions); ?>
-            <?= $form->field($model, 'play_along_file')->widget(InputFile::className(), $inputFileOptions); ?>
+            <?= $form->field($model, 'file')->widget(InputFile::class, $inputFileOptions); ?>
+            <?= $form->field($model, 'play_along_file')->widget(InputFile::class, $inputFileOptions); ?>
             <?= $this->render('related', ['lectures' => $lectures, 'relatedLectures' => $relatedLectures]) ?>
             <small><?= \Yii::t('app', 'If you need to add more files, go to section "Files"') ?></small><br /><br />
         </div>

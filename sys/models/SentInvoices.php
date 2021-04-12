@@ -1,7 +1,6 @@
 <?php
 
 namespace app\models;
-use app\models\SchoolTeacher;
 
 use Yii;
 
@@ -42,28 +41,34 @@ class SentInvoices extends \yii\db\ActiveRecord
 
     public function getStudent()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id'])->joinWith('payer');
+        return $this->hasOne(Users::class, ['id' => 'user_id'])->joinWith('payer');
     }
 
     public function getStudentSubplan()
     {
-        return $this->hasOne(StudentSubPlans::className(), ['id' => 'studentsubplan_id'])->joinWith('plan');
+        return $this->hasOne(StudentSubPlans::class, ['id' => 'studentsubplan_id'])->joinWith('plan');
     }
 
-    public static function getForCurrentSchool(){
+    public static function getForCurrentSchool()
+    {
         $schoolId = School::getCurrentSchoolId();
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($schoolId);
 
         return self::find()->andWhere(['and', ['in', 'sentinvoices.user_id', $schoolStudentIds]])->joinWith('student');
     }
 
-    public static function getLatestForStudent($studentId){
+    public static function getLatestForStudent($studentId)
+    {
         $studentInvoices = self::find()->where(['user_id' => $studentId])->orderBy(['sent_date' => SORT_DESC])->asArray()->all();
-        if($studentInvoices && count($studentInvoices) > 0) return $studentInvoices[0];
-        else return null;
+        if ($studentInvoices && !empty($studentInvoices)) {
+            return $studentInvoices[0];
+        } else {
+            return null;
+        }
     }
 
-    public static function getUnpaidForStudent($studentId){
+    public static function getUnpaidForStudent($studentId)
+    {
         $query = "SELECT invoice_number FROM sentinvoices
             WHERE is_advance = true
             AND user_id = $studentId
@@ -71,15 +76,20 @@ class SentInvoices extends \yii\db\ActiveRecord
             NOT IN ( SELECT invoice_number FROM sentinvoices WHERE is_advance = false )";
         $data = Yii::$app->db->createCommand($query)->queryAll();
 
-        if($data && count($data) > 0) return $data;
-        else return null;
+        if ($data && count($data) > 0) {
+            return $data;
+        } else {
+            return null;
+        }
     }
-    
-    public static function getRealInvoice($invoiceNumber){
+
+    public static function getRealInvoice($invoiceNumber)
+    {
         return self::find()->where(['invoice_number' => $invoiceNumber, 'is_advance' => false])->one();
     }
 
-    public static function createAdvance($userId, $invoiceNumber, $schoolSubplan, $studentSubplan){
+    public static function createAdvance($userId, $invoiceNumber, $schoolSubplan, $studentSubplan)
+    {
         $invoice = new SentInvoices;
         $invoice->user_id = $userId;
         $invoice->studentsubplan_id = $studentSubplan['id'];
@@ -91,7 +101,8 @@ class SentInvoices extends \yii\db\ActiveRecord
         $invoice->save();
     }
 
-    public static function createReal($studentId, $invoiceNumber, $schoolSubplan, $studentSubplan, $paidDate){
+    public static function createReal($studentId, $invoiceNumber, $schoolSubplan, $studentSubplan, $paidDate)
+    {
         $invoice = new SentInvoices;
         $invoice->user_id = $studentId;
         $invoice->studentsubplan_id = $studentSubplan['id'];

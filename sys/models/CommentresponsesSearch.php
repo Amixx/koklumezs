@@ -60,7 +60,6 @@ class CommentresponsesSearch extends CommentResponses
         //     'id' => $this->commentResponsesId,
         // ]);
 
-        // $query->andFilterWhere(['like', 'text', $params['CommentresponsesSearch']['text']]);
 
         return $dataProvider;
     }

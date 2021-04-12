@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Users */
 
 $this->title = $model->id;
- ['label' => \Yii::t('app',  'Users'), 'url' => ['index']];
+['label' => \Yii::t('app',  'Users'), 'url' => ['index']];
 
 \yii\web\YiiAsset::register($this);
 ?>
@@ -28,10 +28,14 @@ $this->title = $model->id;
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item active">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><?= \Yii::t('app', 'Student') ?></a>
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                <?= \Yii::t('app', 'Student') ?>
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="plan-tab" data-toggle="tab" href="#plan" role="tab" aria-controls="plan" aria-selected="false"><?= \Yii::t('app', 'Student\'s subscription plan') ?></a>
+            <a class="nav-link" id="plan-tab" data-toggle="tab" href="#plan" role="tab" aria-controls="plan" aria-selected="false">
+                <?= \Yii::t('app', 'Student\'s subscription plan') ?>
+            </a>
         </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -49,14 +53,17 @@ $this->title = $model->id;
                     'user_level',
                     [
                         'attribute' => 'about',
-                    ],                    
+                    ],
                 ],
             ]) ?>
         </div>
         <div class="tab-pane fade" id="plan" role="tabpanel" aria-labelledby="plan-tab">
             <?php if ($studentSubPlan == null) { ?>
                 <h3><?= Yii::t('app', 'User has no subscription plan') ?>!</h3>
-                <p><?= Html::a(\Yii::t('app',  'You can give the student a plan in the edit page') . '!', ['update', 'id' => $model->id]) ?></p>
+                <p><?= Html::a(
+                        \Yii::t('app',  'You can give the student a plan in the edit page') . '!',
+                        ['update', 'id' => $model->id]
+                    ) ?></p>
             <?php } else {
                 echo DetailView::widget([
                     'model' => $studentSubPlan,
@@ -81,7 +88,4 @@ $this->title = $model->id;
             } ?>
         </div>
     </div>
-
-
-
 </div>

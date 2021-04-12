@@ -19,8 +19,8 @@ class SchoolTeacher extends \yii\db\ActiveRecord
             [['school_id', 'user_id', 'instrument'], 'required'],
             [['school_id', 'user_id'], 'integer'],
             [['instrument'], 'string'],
-            [['school_id'], 'exist', 'skipOnError' => true, 'targetClass' => School::className(), 'targetAttribute' => ['school_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['school_id'], 'exist', 'skipOnError' => true, 'targetClass' => School::class, 'targetAttribute' => ['school_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -38,12 +38,12 @@ class SchoolTeacher extends \yii\db\ActiveRecord
 
     public function getSchool()
     {
-        return $this->hasOne(School::className(), ['id' => 'school_id']);
+        return $this->hasOne(School::class, ['id' => 'school_id']);
     }
 
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(Users::class, ['id' => 'user_id']);
     }
 
     public static function getSchoolTeacher($teacherId)
@@ -51,11 +51,13 @@ class SchoolTeacher extends \yii\db\ActiveRecord
         return self::find()->where(['user_id' => $teacherId])->joinWith('school')->joinWith('user')->one();
     }
 
-    public static function getBySchoolId($schoolId){
+    public static function getBySchoolId($schoolId)
+    {
         return self::find()->where(['school_id' => $schoolId])->joinWith('school')->joinWith('user')->one();
     }
 
-    public static function getByCurrentStudent(){
+    public static function getByCurrentStudent()
+    {
         $studentId = Yii::$app->user->identity->id;
         $schoolId = SchoolStudent::getSchoolStudent($studentId)->school_id;
         return self::getBySchoolId($schoolId);

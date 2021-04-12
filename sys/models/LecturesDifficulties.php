@@ -35,8 +35,8 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
             [['diff_id', 'lecture_id', 'value'], 'required'],
             [['diff_id', 'lecture_id'], 'integer'],
             [['value'], 'string', 'max' => 50],
-            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
-            [['diff_id'], 'exist', 'skipOnError' => true, 'targetClass' => Difficulties::className(), 'targetAttribute' => ['diff_id' => 'id']],
+            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::class, 'targetAttribute' => ['lecture_id' => 'id']],
+            [['diff_id'], 'exist', 'skipOnError' => true, 'targetClass' => Difficulties::class, 'targetAttribute' => ['diff_id' => 'id']],
         ];
     }
 
@@ -58,7 +58,7 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
      */
     public function getLecture()
     {
-        return $this->hasOne(Lectures::className(), ['id' => 'lecture_id']);
+        return $this->hasOne(Lectures::class, ['id' => 'lecture_id']);
     }
 
     /**
@@ -66,7 +66,7 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
      */
     public function getDiff()
     {
-        return $this->hasOne(Difficulties::className(), ['id' => 'diff_id']);
+        return $this->hasOne(Difficulties::class, ['id' => 'diff_id']);
     }
 
     /**
@@ -93,7 +93,7 @@ class LecturesDifficulties extends \yii\db\ActiveRecord
     public static function getLecturesByDifficulty($sum, $returnRandom = false): array
     {
         $sums = self::getLectureSums();
-        if ($returnRandom and isset($sums[$sum])) {
+        if ($returnRandom && isset($sums[$sum])) {
             $len = count($sums[$sum]);
             $random = rand(0, $len - 1);
             return [$sums[$sum][$random]];

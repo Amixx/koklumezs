@@ -13,13 +13,12 @@ use app\models\Users;
 use app\models\SchoolLecture;
 use app\models\SchoolTeacher;
 use app\models\SchoolStudent;
-use app\models\School;
 use app\models\LectureViews;
 use app\models\StudentSubPlans;
 use Yii;
 use yii\web\Controller;
 
-class AssignController extends \yii\web\Controller
+class AssignController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -28,13 +27,13 @@ class AssignController extends \yii\web\Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
                     // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         },
                     ],
@@ -47,11 +46,10 @@ class AssignController extends \yii\web\Controller
     public function actionIndex()
     {
         $options = [];
-        $onlyThoseWithoutDontBother = true;
         if (Users::isCurrentUserTeacher()) {
             $users = Users::getStudentsWithoutPausesForSchool();
         } else {
-            $users = Users::getStudents($onlyThoseWithoutDontBother);
+            $users = Users::getStudents();
         }
 
         $evaluations = [];
@@ -96,11 +94,10 @@ class AssignController extends \yii\web\Controller
         $this->view->params['chatRecipientId'] = $id;
 
         if ($id == null) {
-            $onlyThoseWithoutDontBother = true;
             if (Users::isCurrentUserTeacher()) {
                 $users = Users::getStudentsWithoutPausesForSchool();
             } else {
-                $users = Users::getStudents($onlyThoseWithoutDontBother);
+                $users = Users::getStudents();
             }
             $id = key($users);
         }
@@ -123,17 +120,17 @@ class AssignController extends \yii\web\Controller
                 if ($shouldSendEmail) {
                     $subject = isset($post['subject']) && $post['subject'] ? $post['subject'] : "Jaunas nodarbības";
                     $teacherMessage = $post['teacherMessage'];
-                    UserLectures::sendEmail($model->user_id, $teacherMessage, $subject);
+                    UserLectures::sendEmail($model->user_id, $subject, $teacherMessage);
                 }
 
                 $user->wants_more_lessons = false;
-                $user->update();   
+                $user->update();
                 $model->sent = 1;
                 $model->update();
                 return $this->refresh();
             }
         }
-        if (isset($get['assign']) and is_numeric($get['assign'])) {
+        if (isset($get['assign']) && is_numeric($get['assign'])) {
             $model = new UserLectures();
             $model->assigned = Yii::$app->user->identity->id;
             $model->created = date('Y-m-d H:i:s', time());
@@ -142,15 +139,15 @@ class AssignController extends \yii\web\Controller
             $model->user_difficulty = $goalsum;
             $saved = $model->save();
             if ($saved) {
-                $shouldSendEmail = isset($post['sendEmail']) && $post['sendEmail'];               
+                $shouldSendEmail = isset($post['sendEmail']) && $post['sendEmail'];
                 if ($shouldSendEmail) {
                     $teacherMessage = $post['teacherMessage'];
                     $subject = isset($post['subject']) && $post['subject'] ? $post['subject'] : "Jaunas nodarbības";
-                    UserLectures::sendEmail($model->user_id, $teacherMessage, $subject);                 
+                    UserLectures::sendEmail($model->user_id, $subject, $teacherMessage);
                 }
 
                 $user->wants_more_lessons = false;
-                $user->update();   
+                $user->update();
                 $model->sent = 1;
                 $model->update();
             }
@@ -159,7 +156,6 @@ class AssignController extends \yii\web\Controller
         $options = [];
         $evaluations = [];
         $lectureDifficulties = [];
-        $videoFrequencies = [];
         $lastlectures = [];
         $videoParam = Evaluations::getVideoParam();
         $evaluationsTitles = Evaluations::getEvaluationsTitles();
@@ -183,10 +179,9 @@ class AssignController extends \yii\web\Controller
             }
         }
 
-        $onlyThoseWithoutDontBother = true;
         $filterLang = array_key_exists("lang", $get) ? $get["lang"] : null;
-        $filterSubTypes = (array_key_exists("subTypes", $get) and isset($get["subTypes"]) && $get["subTypes"] !== '') ? explode(",", $get["subTypes"]) : null;
-        $users = Users::getStudentsWithParams($onlyThoseWithoutDontBother, $filterLang, $filterSubTypes);
+        $filterSubTypes = (array_key_exists("subTypes", $get) && isset($get["subTypes"]) && $get["subTypes"] !== '') ? explode(",", $get["subTypes"]) : null;
+        $users = Users::getStudentsWithParams($filterLang, $filterSubTypes);
 
         if (Users::isCurrentUserTeacher()) {
             $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);

@@ -33,18 +33,20 @@ class RegistrationLesson extends \yii\db\ActiveRecord
 
     public function getLesson()
     {
-        return $this->hasOne(Lectures::className(), ['id' => 'lesson_id']);
+        return $this->hasOne(Lectures::class, ['id' => 'lesson_id']);
     }
 
-    public static function getLessonIds($schoolId, $ownsInstrument, $hasExperience){
+    public static function getLessonIds($schoolId, $ownsInstrument, $hasExperience)
+    {
         $regLessons = self::find()->where(['school_id' => $schoolId, 'for_students_with_instrument' => $ownsInstrument, 'for_students_with_experience' => $hasExperience])->asArray()->all();
 
-        return array_map(function($regLesson){
+        return array_map(function ($regLesson) {
             return $regLesson['lesson_id'];
         }, $regLessons);
     }
 
-    public static function getLessonsForIndex($schoolId, $withInstrument, $withExperience){
+    public static function getLessonsForIndex($schoolId, $withInstrument, $withExperience)
+    {
         return static::find()->where(['school_id' => $schoolId, 'for_students_with_instrument' => $withInstrument, 'for_students_with_experience' => $withExperience])->joinWith('lesson');
     }
 }

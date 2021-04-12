@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model app\models\Users */
 
 $this->title = \Yii::t('app',  'Create user');
- ['label' => \Yii::t('app',  'Users'), 'url' => ['index']];
+['label' => \Yii::t('app',  'Users'), 'url' => ['index']];
 
 ?>
 <div class="user-create">
@@ -16,9 +16,7 @@ $this->title = \Yii::t('app',  'Create user');
     <?= $this->render('_form', [
         'model' => $model,
         'studentGoals' => $studentGoals,
-        'studentHandGoals' => $studentHandGoals,
         'difficulties' => $difficulties,
-        'handdifficulties' => $handdifficulties,
         'studentSubplan' => $studentSubplan,
     ]) ?>
 

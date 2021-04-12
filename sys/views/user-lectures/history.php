@@ -4,9 +4,14 @@
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
-                <th><?= \Yii::t('app',  'Date') ?></th>
+                <th scope="col"><?= \Yii::t('app',  'Date') ?></th>
                 <?php foreach ($lastLectures as $lecture) { ?>
-                    <th><?= isset($userLecturesTimes[$lecture->id]) ? $userLecturesTimes[$lecture->id] : '' ?></th>
+                    <th scope="col">
+                        <?= isset($userLecturesTimes[$lecture->id])
+                            ? $userLecturesTimes[$lecture->id]
+                            : ''
+                        ?>
+                    </th>
                 <?php } ?>
             </tr>
         </thead>
@@ -21,7 +26,13 @@
                 <tr>
                     <td><?= $diff ?></td>
                     <?php foreach ($lastLectures as $lecture) { ?>
-                        <td><?= isset($lectureDifficulties[$lecture->id][$diffId]) ? $lectureDifficulties[$lecture->id][$diffId] : '-' ?></td>
+                        <td>
+                            <?=
+                            isset($lectureDifficulties[$lecture->id][$diffId])
+                                ? $lectureDifficulties[$lecture->id][$diffId]
+                                : '-'
+                            ?>
+                        </td>
                     <?php } ?>
                 </tr>
             <?php } ?>

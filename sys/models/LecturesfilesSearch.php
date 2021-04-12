@@ -18,7 +18,7 @@ class LecturesfilesSearch extends Lecturesfiles
     {
         return [
             [['id', 'lecture_id'], 'integer'],
-            [['file','title','lecture_id'], 'safe'],
+            [['file', 'title', 'lecture_id'], 'safe'],
         ];
     }
 
@@ -62,8 +62,7 @@ class LecturesfilesSearch extends Lecturesfiles
             'lecture_id' => $this->lecture_id,
         ]);
 
-        $query->andFilterWhere(['like', 'file', $this->file])->
-        andFilterWhere(['like', 'title', $this->title]);
+        $query->andFilterWhere(['like', 'file', $this->file])->andFilterWhere(['like', 'title', $this->title]);
 
         return $dataProvider;
     }

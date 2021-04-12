@@ -17,19 +17,19 @@ class PlanPartsController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         }
                     ],
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -46,32 +46,32 @@ class PlanPartsController extends Controller
         $model = new PlanParts;
 
         $post = Yii::$app->request->post();
-        if($post){
+        if ($post) {
             $model->load($post);
             $model->school_id = $schoolId;
 
-            if($model->validate() && $model->save()){
+            if ($model->validate() && $model->save()) {
                 Yii::$app->session->setFlash('success', 'Plāna daļa izveidota!');
                 $model = new PlanParts;
             }
         }
-        
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'model' => $model,
-        ]);        
+        ]);
     }
 
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
-        
+
         if ($post) {
             $model->load($post);
             $saved = $model->validate() && $model->save();
 
-            if($saved){
+            if ($saved) {
                 return $this->redirect(['index']);
             }
         }

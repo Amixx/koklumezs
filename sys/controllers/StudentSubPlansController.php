@@ -4,16 +4,11 @@ namespace app\controllers;
 
 use Yii;
 use app\models\StudentSubPlans;
-use app\models\Users;
 use app\models\PlanFiles;
-use app\models\SentInvoices;
 use app\models\StudentSubplanPauses;
-use app\models\SchoolSubPlans;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
-use kartik\mpdf\Pdf;
 
 class StudentSubPlansController extends Controller
 {
@@ -21,18 +16,16 @@ class StudentSubPlansController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['get'],
                 ],
@@ -40,10 +33,11 @@ class StudentSubPlansController extends Controller
         ];
     }
 
-    public function actionView($id){
+    public function actionView($id)
+    {
         $subplan = StudentSubPlans::getCurrentForStudent($id);
 
-        if(!$subplan){
+        if (!$subplan) {
             return $this->render('view', [
                 'subplan' => null,
                 'planFiles' => null,
@@ -56,12 +50,12 @@ class StudentSubPlansController extends Controller
 
         $planFiles = PlanFiles::getFilesForPlan($subplan["plan_id"])->asArray()->all();
         $planPauses = null;
-        if(StudentSubplanPauses::studentHasAnyPauses($id)){
+        if (StudentSubplanPauses::studentHasAnyPauses($id)) {
             $planPauses = new ActiveDataProvider([
                 'query' => StudentSubplanPauses::getForStudentSubplan($subplan['id']),
             ]);
         }
-        $newPause = new StudentSubplanPauses;    
+        $newPause = new StudentSubplanPauses;
         $remainingPauseWeeks = StudentSubPlans::getRemainingPauseWeeks($id);
         $planCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($id);
 
@@ -77,7 +71,7 @@ class StudentSubPlansController extends Controller
 
     public function actionDelete($userId)
     {
-        
+
         StudentSubplans::resetActivePlanForUser($userId);
 
         return $this->redirect(Yii::$app->request->referrer);

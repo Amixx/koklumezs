@@ -9,18 +9,11 @@ use app\models\TeacherUserlectureevaluationsSearch;
 use app\models\Users;
 use app\models\Lectures;
 use app\models\Evaluations;
-use app\models\SentInvoices;
-use app\models\School;
 use app\models\CommentResponses;
-use app\models\CommentresponsesSearch;
-use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-/**
- * UserLectureEvaluationsController implements the CRUD actions for Userlectureevaluations model.
- */
 class UserLectureEvaluationsController extends Controller
 {
     /**
@@ -30,7 +23,7 @@ class UserLectureEvaluationsController extends Controller
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -47,7 +40,7 @@ class UserLectureEvaluationsController extends Controller
         $isTeacher = Users::isCurrentUserTeacher();
         $searchModel = $isTeacher ? new TeacherUserlectureevaluationsSearch() : new UserlectureevaluationsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, false);
-        $students = Users::getActiveStudents();
+        $students = Users::getActiveStudentEmails();
         $lectures = Lectures::getLectures();
         $evaluations = Evaluations::getEvaluationsTitles();
         if (Yii::$app->language == 'lv') {
@@ -57,7 +50,7 @@ class UserLectureEvaluationsController extends Controller
         }
         $get = Yii::$app->request->queryParams;
         $commentResponsesDataProvider = CommentResponses::getAllCommentResponses();
-      
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -77,7 +70,7 @@ class UserLectureEvaluationsController extends Controller
         $get = Yii::$app->request->queryParams;
         $get["UserlectureevaluationsSearch"]["evaluation_id"] = 4;
         $dataProvider = $searchModel->search($get, true);
-        $students = Users::getActiveStudents();
+        $students = Users::getActiveStudentEmails();
         $lectures = Lectures::getLectures();
         $evaluations = Evaluations::getEvaluationsTitles();
 

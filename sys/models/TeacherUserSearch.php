@@ -20,7 +20,7 @@ class TeacherUserSearch extends Users
     {
         return [
             [['id'], 'integer'],
-            [['first_name', 'last_name', 'language', 'subscription_type', 'status', 'last_login', 'dont_bother', 'user_level',], 'safe'],
+            [['first_name', 'last_name', 'language', 'subscription_type', 'status', 'last_login', 'user_level',], 'safe'],
         ];
     }
 
@@ -70,7 +70,7 @@ class TeacherUserSearch extends Users
             'last_lecture' => $this->last_lecture
         ]);
 
-        
+
 
 
         $query->andFilterWhere(['like', 'first_name', $this->first_name])
@@ -79,21 +79,20 @@ class TeacherUserSearch extends Users
             ->andFilterWhere(['like', 'user_level', $this->user_level])
             ->andFilterWhere(['like', 'subscription_type', $this->subscription_type])
             ->andFilterWhere(['like', 'status', $this->status])
-            ->andFilterWhere(['like', 'last_login', $this->last_login])
-            ->andFilterWhere(['like', 'dont_bother', $this->dont_bother]);
-       
-        if(isset($params["TeacherUserSearch"])) {
+            ->andFilterWhere(['like', 'last_login', $this->last_login]);
+
+        if (isset($params["TeacherUserSearch"])) {
             $continue = $params["TeacherUserSearch"]["subplan_monthly_cost"]
                 || $params["TeacherUserSearch"]["subplan_end_date"]
                 || $params["TeacherUserSearch"]["subplan_paid_type"];
-            
-            if($continue){
+
+            if ($continue) {
                 $studentSubplans = StudentSubPlans::find()->where(['in', 'user_id', $schoolStudentIds])->andWhere(['is_active' => true])->joinWith('plan');
 
-                if($params["TeacherUserSearch"]["subplan_monthly_cost"] !== ""){
+                if ($params["TeacherUserSearch"]["subplan_monthly_cost"] !== "") {
                     $planPrices = SchoolSubPlans::getPrices();
                     $selectedPrice = $planPrices[$params["TeacherUserSearch"]["subplan_monthly_cost"]];
-                
+
                     $filterSql = "SELECT id FROM schoolsubplans 
                         WHERE schoolsubplans.id IN (
                             SELECT schoolsubplan_id FROM schoolsubplanparts WHERE (
@@ -108,7 +107,7 @@ class TeacherUserSearch extends Users
                     $studentSubplans->andFilterWhere(['in', 'plan_id', $planIds]);
                 }
 
-                if($params["TeacherUserSearch"]["subplan_end_date"]){
+                if ($params["TeacherUserSearch"]["subplan_end_date"]) {
                     $date = new \DateTime($params["TeacherUserSearch"]["subplan_end_date"]);
                     $firstDayOfMonth = date_format(
                         ($date)->modify('first day of this month'),
@@ -118,7 +117,7 @@ class TeacherUserSearch extends Users
                         ($date)->modify('last day of this month'),
                         'Y-m-d'
                     );
-                        
+
                     $filterSql = '
                         DATE_ADD(
                             DATE_ADD(studentsubplans.start_date, INTERVAL schoolsubplans.months MONTH),
@@ -127,18 +126,18 @@ class TeacherUserSearch extends Users
                                 WHERE studentsubplan_id = studentsubplans.id) WEEK)
                     ';
 
-                    if($firstDayOfMonth && $lastDayOfMonth){
+                    if ($firstDayOfMonth && $lastDayOfMonth) {
                         $studentSubplans->andFilterWhere(['between', $filterSql, $firstDayOfMonth, $lastDayOfMonth]);
                     }
                 }
 
-                if($params["TeacherUserSearch"]["subplan_paid_type"]){
+                if ($params["TeacherUserSearch"]["subplan_paid_type"]) {
                     $type = $params["TeacherUserSearch"]["subplan_paid_type"];
-                    if($type == "late"){
+                    if ($type == "late") {
                         $sign = '<';
-                    }else if($type == "paid"){
+                    } else if ($type == "paid") {
                         $sign = '=';
-                    }else if($type == "prepaid"){
+                    } else if ($type == "prepaid") {
                         $sign = '>';
                     }
 
@@ -148,7 +147,7 @@ class TeacherUserSearch extends Users
                 $studentSubplanData = $studentSubplans->asArray()->all();
 
                 $userIds = [];
-                foreach($studentSubplanData as $studentSubplan){
+                foreach ($studentSubplanData as $studentSubplan) {
                     $userIds[] = $studentSubplan['user_id'];
                 }
 

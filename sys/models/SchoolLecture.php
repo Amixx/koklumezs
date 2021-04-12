@@ -4,7 +4,6 @@ namespace app\models;
 
 use yii\helpers\ArrayHelper;
 use app\models\Lectures;
-use Yii;
 
 class SchoolLecture extends \yii\db\ActiveRecord
 {
@@ -18,8 +17,8 @@ class SchoolLecture extends \yii\db\ActiveRecord
         return [
             [['school_id', 'lecture_id'], 'required'],
             [['school_id', 'lecture_id'], 'integer'],
-            [['school_id'], 'exist', 'skipOnError' => true, 'targetClass' => School::className(), 'targetAttribute' => ['school_id' => 'id']],
-            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::className(), 'targetAttribute' => ['lecture_id' => 'id']],
+            [['school_id'], 'exist', 'skipOnError' => true, 'targetClass' => School::class, 'targetAttribute' => ['school_id' => 'id']],
+            [['lecture_id'], 'exist', 'skipOnError' => true, 'targetClass' => Lectures::class, 'targetAttribute' => ['lecture_id' => 'id']],
         ];
     }
 
@@ -37,15 +36,16 @@ class SchoolLecture extends \yii\db\ActiveRecord
 
     public function getSchool()
     {
-        return $this->hasOne(School::className(), ['id' => 'school_id']);
+        return $this->hasOne(School::class, ['id' => 'school_id']);
     }
 
     public function getLessons()
     {
-        return $this->hasMany(Users::className(), ['id' => 'lecture_id']);
+        return $this->hasMany(Users::class, ['id' => 'lecture_id']);
     }
 
-    public static function getForSchool($schoolId){
+    public static function getForSchool($schoolId)
+    {
         return self::find()->where(['school_id' => $schoolId])->asArray()->all();
     }
 
@@ -55,7 +55,8 @@ class SchoolLecture extends \yii\db\ActiveRecord
         return ArrayHelper::map($schoolLectures, 'id', 'lecture_id');
     }
 
-    public static function getSchoolLectureTitles($schoolId){
+    public static function getSchoolLectureTitles($schoolId)
+    {
         $lectureIds = self::getSchoolLectureIds($schoolId);
         return ArrayHelper::map(Lectures::find()->where(['in', 'id', $lectureIds])->asArray()->all(), 'id', 'title');
     }

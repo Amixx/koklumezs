@@ -3,8 +3,6 @@
 namespace app\models;
 
 use yii\helpers\ArrayHelper;
-use app\models\Lectures;
-use Yii;
 
 class SchoolStudent extends \yii\db\ActiveRecord
 {
@@ -18,8 +16,8 @@ class SchoolStudent extends \yii\db\ActiveRecord
         return [
             [['school_id', 'user_id'], 'required'],
             [['school_id', 'user_id'], 'integer'],
-            [['school_id'], 'exist', 'skipOnError' => true, 'targetClass' => School::className(), 'targetAttribute' => ['school_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['school_id'], 'exist', 'skipOnError' => true, 'targetClass' => School::class, 'targetAttribute' => ['school_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -34,17 +32,17 @@ class SchoolStudent extends \yii\db\ActiveRecord
 
     public function getSchool()
     {
-        return $this->hasOne(School::className(), ['id' => 'school_id']);
+        return $this->hasOne(School::class, ['id' => 'school_id']);
     }
 
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(Users::class, ['id' => 'user_id']);
     }
 
     public function getStudents()
     {
-        return $this->hasMany(Users::className(), ['id' => 'user_id']);
+        return $this->hasMany(Users::class, ['id' => 'user_id']);
     }
 
     public static function getSchoolStudentIds($schoolId)
@@ -57,10 +55,4 @@ class SchoolStudent extends \yii\db\ActiveRecord
     {
         return self::find()->where(['user_id' => $studentId])->joinWith('school')->joinWith('user')->one();
     }
-
-
-    // public static function getRelations($id): array
-    // {
-    //     return ArrayHelper::map(self::find()->where(['lecture_id' => $id])->asArray()->all(), 'id', 'related_id');
-    // }
 }

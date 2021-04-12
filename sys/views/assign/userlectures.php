@@ -4,6 +4,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+$empty = '<code>Not set</code>';
+
 $subscriptionTypeText;
 $subscriptionTypeClassSuffix;
 if ($user['subscription_type'] == 'free') {
@@ -60,7 +62,12 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
         </span>
     <?php } ?>
 
-    <h1 style="display:inline"><span>(<?= $currentUserIndex + 1 ?>/<?= $userCount ?>)</span> <?= $this->title . " (<span class='text-" . $subscriptionTypeClassSuffix . "'>" . $subscriptionTypeText . "</span>)" ?></h1>
+    <h1 style="display:inline">
+        <span>
+            (<?= $currentUserIndex + 1 ?>/<?= $userCount ?>)
+        </span>
+        <?= $this->title . " (<span class='text-" . $subscriptionTypeClassSuffix . "'>" . $subscriptionTypeText . "</span>)" ?>
+    </h1>
 
     <?php
     if ($nextUserId) { ?>
@@ -75,15 +82,15 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th><?= \Yii::t('app', 'Last lesson') ?></th>
-                    <th><?= \Yii::t('app', 'Opened') ?></th>
-                    <th><?= \Yii::t('app', 'Times played') ?></th>
-                    <th><?= \Yii::t('app', 'Difficulty') ?></th>
+                    <th scope="col">#</th>
+                    <th scope="col"><?= \Yii::t('app', 'Last lesson') ?></th>
+                    <th scope="col"><?= \Yii::t('app', 'Opened') ?></th>
+                    <th scope="col"><?= \Yii::t('app', 'Times played') ?></th>
+                    <th scope="col"><?= \Yii::t('app', 'Difficulty') ?></th>
                     <?php foreach ($evaluationsTitles as $et) { ?>
-                        <th><?= \Yii::t('app', $et) ?></th>
+                        <th scope="col"><?= \Yii::t('app', $et) ?></th>
                     <?php } ?>
-                    <th><?= \Yii::t('app', 'Abilities') ?></th>
+                    <th scope="col"><?= \Yii::t('app', 'Abilities') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -94,26 +101,23 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
                         <td><?= $a ?></td>
                         <td>
                             <?= $lecture->lecture->title ?>
-                            <?php if ($lecture->is_favourite){ ?> 
+                            <?php if ($lecture->is_favourite) { ?>
                                 <span class="glyphicon glyphicon-heart"></span>
                             <?php } ?> 
                             <?php if ($lecture->assigned == $lecture->user_id){ ?> 
                                 <span class="glyphicon glyphicon-asterisk"></span>
                             <?php } ?> 
                         </td>
-                        <td align="center"><?= (int) $lecture->opened ? 'Jā' : 'Nē' ?></td>
-                        <td align="center"><?= $lecture->open_times ?></td>
-                        <td align="center"><?= $lecture->lecture->complexity ? $lecture->lecture->complexity : '<code>Not set</code>' ?></td>
-                        <?php foreach ($evaluationsTitles as $etid => $et) { ?>
-                            <td align="center">
-                                <?php if (isset($evaluations[$lecture->lecture_id][$etid])) {
-                                    echo isset($evaluationsValues[$etid]) ? (isset($evaluationsValues[$etid][$evaluations[$lecture->lecture_id][$etid]]) ? $evaluationsValues[$etid][$evaluations[$lecture->lecture_id][$etid]] : '<code>Not set</code>') : (isset($evaluations[$lecture->lecture_id][$etid]) ? $evaluations[$lecture->lecture_id][$etid] : '<code>Not set</code>');
-                                } else {
-                                    echo '<code>Not set</code>';
-                                }  ?>
-                            </td>
-                        <?php } ?>
-                        <td align="center"><?= isset($lecture->user_difficulty) ? $lecture->user_difficulty : '<code>Not set</code>' ?></td>
+                        <td class="text-center"><?= (int) $lecture->opened ? 'Jā' : 'Nē' ?></td>
+                        <td class="text-center"><?= $lecture->open_times ?></td>
+                        <td class="text-center"><?= $lecture->lecture->complexity ? $lecture->lecture->complexity : $empty ?></td>
+                        <?= $this->render('evaluation-titles', [
+                            'evaluationsTitles' => $evaluationsTitles,
+                            'evaluationsValues' => $evaluationsValues,
+                            'evaluations' => $evaluations,
+                            'id' => $lecture->lecture_id,
+                        ]) ?>
+                        <td class="text-center"><?= isset($lecture->user_difficulty) ? $lecture->user_difficulty : $empty ?></td>
                         <td><?= Html::a(
                                 '<span>Dzēst</span>',
                                 ['/user-lectures/delete', 'id' => $lecture->id],
@@ -135,7 +139,7 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
         <h3 style="color: red;"><?= \Yii::t('app', 'User dosen\'t have enough lessons')?>! </h3>
     <?php } ?>
     <?php if (isset($user) && $user->about) { ?>
-        <p><?= \Yii::t('app', 'About user')?>: <b><?= $user->about ?></b>.</p>
+        <p><?= \Yii::t('app', 'About user')?>: <strong><?= $user->about ?></strong>.</p>
     <?php } ?>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['seven'], 7]); ?>.</p>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['thirty'], 30]); ?>.</p>
@@ -144,22 +148,24 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     <?php } else { ?>
         <p><?= \Yii::t('app', 'User has not opened any lessons yet') ?>!</p>
     <?php } ?>
-    <p><?= \Yii::t('app', 'Abilities now') ?>:<?= isset($goals[$goalsnow]) ? '<strong>' . $goalsum . '</strong>' : '<code>Not set</code>' ?></p>
+    <p><?= \Yii::t('app', 'Abilities now') ?>:<?= isset($goals[$goalsnow]) ? '<strong>' . $goalsum . '</strong>' : $empty ?></p>
     <p><?= \Yii::t('app', 'Plan end date') ?>: <?= $endDate == null ? \Yii::t('app', 'no plan assigned to pupil') : $endDate  ?></p>
-    <?php if($user->wants_more_lessons){ ?>
+    <?php if ($user->wants_more_lessons) { ?>
         <h4><strong><?= Yii::t('app', 'Student wants more lessons') ?>!</strong></h4>
     <?php } ?>
     <?php if (is_array($PossibleThreeLectures)) {
         $limit = 3;
     ?>
-
         <h3><?= \Yii::t('app', 'Suitable lessons') ?>:</h3>
-        <?php
-        foreach ($PossibleThreeLectures as $lid) {
-            if ($limit == 0) break;
-            if (!isset($manualLectures[$lid])) continue;
-        ?>
-            <p><?= Html::a(
+        <?php foreach ($PossibleThreeLectures as $lid) {
+            if ($limit == 0) {
+                break;
+            }
+            if (!isset($manualLectures[$lid])) {
+                continue;
+            } ?>
+            <p>
+                <?= Html::a(
                     '<span class="glyphicon glyphicon-plus"></span>' . $manualLectures[$lid],
                     ['/assign/userlectures', 'id' => $id, 'assign' => $lid],
                     [
@@ -175,7 +181,12 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
             $limit--;
         }
     } else { ?>
-        <h3><?= \Yii::t('app', 'New difficulty') ?>: <strong><?= $PossibleThreeLectures > 0 ? $PossibleThreeLectures : $goalsum ?></strong> <small>[<?= \Yii::t('app', 'No suitable lessons found') ?>]</small></h3>
+        <h3><?= \Yii::t('app', 'New difficulty') ?>:
+            <strong>
+                <?= $PossibleThreeLectures > 0 ? $PossibleThreeLectures : $goalsum ?>
+            </strong>
+            <small>[<?= \Yii::t('app', 'No suitable lessons found') ?>]</small>
+        </h3>
     <?php } ?>
     <h3><?= \Yii::t('app', 'Manual assignment of lessons') ?>:</h3>
 
@@ -190,8 +201,8 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     <!-- noņemu pagaidām, jo nav sataisīts backends -->
     <!-- <div class="row">
         <?php
-        $noOfTasks= 4;
-        for($x=0; $x<$noOfTasks; $x++){?>
+        $noOfTasks = 4;
+        for ($x = 0; $x < $noOfTasks; $x++) { ?>
             <div class="col-md-3">
                 <?= $manualLectures ? $form->field($model, "lecture_id[$x]")
                     ->dropDownList(
@@ -208,9 +219,9 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
             $lectureTexts,
             ['prompt' => '']
         ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
-  
-    
-    
+
+
+
     <label for="sendEmail"><?= Yii::t('app', 'Send message to student') ?>
         <input type="checkbox" name="sendEmail">
     </label>

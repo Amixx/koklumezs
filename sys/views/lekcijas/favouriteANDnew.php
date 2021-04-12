@@ -1,4 +1,5 @@
 <?php
+
 use app\models\Lecturesfiles;
 use app\models\Lectures;
 use app\helpers\ThumbnailHelper;
@@ -19,24 +20,28 @@ use yii\helpers\Url;
                 <div class="row text-center">            
                     <?= $this->render('moreLessonsModal',[
                         'nextLessons' => $nextLessons,
-                    ])?>   
+                    ])?>  
+            <?php }
+            if ($renderRequestButton) { ?>
+                <div class="row text-center">
+                    <?= Html::a(
+                        \Yii::t('app', 'I want more tasks'),
+                        ['user/request-more-tasks/?id=' . $userId],
+                        ['class' => 'btn btn-orange btn-long']
+                    ) ?>
                 </div>
-            <?php } ?>           
+            <?php } ?>
         <?php } else { ?>
             <div class="row LectureOverview__Content">
                 <?php foreach ($Lectures as $lecture) {
                     $lecturefiles = Lecturesfiles::getLectureFiles($lecture->id);
                     $likesCount = Lectures::getLikesCount($lecture->id);
                     $thumbStyle = ThumbnailHelper::getThumbnailStyle($lecture->file, $videoThumb);
-                    ?>                              
+                ?>
                     <div class="col-xs-6 col-lg-3 text-center lecture-wrap">
-                        <a
-                            class="lecture-thumb"
-                            href="<?= Url::to(['lekcijas/lekcija', 'id' => $lecture->id]) ?>"
-                            style="<?= $thumbStyle ?>"
-                        ></a>
+                        <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
                         <span class="lecture-title"><?= $lecture->title ?> </span>
-                        <?php if($likesCount) { ?>
+                        <?php if ($likesCount) { ?>
                             <span class="lecturelikes">
                                 <span class="glyphicon glyphicon-heart lecturelikes-icon"></span>
                                 <span class="lecturelikes-count"><?= $likesCount ?></span>
@@ -46,8 +51,8 @@ use yii\helpers\Url;
                 <?php } ?>
             </div>
             <div class="row text-center LectureOverview__ButtonRow">
-                <?= Html::a(\Yii::t('app', $clickableTitle), ['?type='.$type], ['class' => 'btn btn-gray btn-long']) ?>
-            </div>  
-        <?php } ?>        
+                <?= Html::a(\Yii::t('app', $clickableTitle), ['?type=' . $type], ['class' => 'btn btn-gray btn-long']) ?>
+            </div>
+        <?php } ?>
     </div>
-</div> 
+</div>

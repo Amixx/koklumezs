@@ -1,4 +1,4 @@
-<?php if(!empty($lectureAudioFiles)){ ?>
+<?php if (!empty($lectureAudioFiles)) { ?>
     <div class="row">
         <?php foreach ($lectureAudioFiles as $id => $file) {
             $path_info = pathinfo($file['file']);

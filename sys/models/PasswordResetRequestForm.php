@@ -2,7 +2,6 @@
 
 namespace app\models;
 
-use Yii;
 use yii\base\Model;
 use app\models\Users;
 use app\helpers\EmailSender;

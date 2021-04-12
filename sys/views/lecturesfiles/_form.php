@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
             ['prompt' => ''] // options
         ); ?>
 
-    <?= $form->field($model, 'file')->widget(InputFile::className(), [
+    <?= $form->field($model, 'file')->widget(InputFile::class, [
         'language' => 'lv',
         'controller' => 'elfinder', // вставляем название контроллера, по умолчанию равен elfinder
         'filter' => ['image', 'application/pdf', 'text', 'video', 'audio', 'word', 'text/plain', 'application'], // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
@@ -31,7 +31,7 @@ use yii\widgets\ActiveForm;
         'multiple' => false, // возможность выбора нескольких файлов
     ]); ?>
 
-    <?= $form->field($model, 'thumb')->widget(InputFile::className(), [
+    <?= $form->field($model, 'thumb')->widget(InputFile::class, [
         'language' => 'lv',
         'controller' => 'elfinder', // вставляем название контроллера, по умолчанию равен elfinder
         'filter' => ['image'], // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes

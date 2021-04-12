@@ -7,9 +7,7 @@ use yii\helpers\Url;
 use app\models\Users;
 use app\models\School;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\StudentQuestions;
 use app\models\Difficulties;
 use app\models\SignupQuestions;
 use app\models\SchoolSubPlans;
@@ -25,21 +23,19 @@ class SchoolSettingsController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isCurrentUserTeacher();
                         }
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -62,7 +58,7 @@ class SchoolSettingsController extends Controller
         $signupQuestionsDataProvider = new ActiveDataProvider([
             'query' => SignupQuestions::find()->where(['school_id' => $schoolId]),
         ]);
-        
+
         return $this->render('index', [
             'settings' => $settings,
             'difficultiesDataProvider' => $difficultiesDataProvider,
@@ -76,7 +72,6 @@ class SchoolSettingsController extends Controller
 
     public function actionUpdate()
     {
-        $model = new School;
         $post = Yii::$app->request->post();
         $model = School::getByTeacher(Yii::$app->user->identity->id);
         $schoolSubPlans = SchoolSubPlans::getMappedForSelection();

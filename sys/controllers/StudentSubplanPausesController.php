@@ -5,13 +5,11 @@ namespace app\controllers;
 use Yii;
 use app\models\StudentSubPlans;
 use app\models\Users;
-use app\models\PlanFiles;
 use app\models\StudentSubplanPauses;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
-use app\models\School;
 use yii\helpers\Url;
 
 class StudentSubplanPausesController extends Controller
@@ -20,23 +18,22 @@ class StudentSubplanPausesController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-                    // allow authenticated users
                     [
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-                    // everything else is denied
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
             ],
         ];
     }
 
-    public function actionIndex(){
+    public function actionIndex()
+    {
         $dataProvider = new ActiveDataProvider([
             'query' => StudentSubplanPauses::getForCurrentSchool(),
         ]);
@@ -56,18 +53,19 @@ class StudentSubplanPausesController extends Controller
     public function actionTeacherCreate()
     {
         $model = new StudentSubplanPauses();
-        $users = Users::getStudentsForSchool();
+        $users = Users::getStudentNamesForSchool();
 
-        $schoolId = School::getCurrentSchoolId();
         if ($model->load(Yii::$app->request->post())) {
-            if(isset($_POST['user_id'])) $userId = $_POST['user_id'];
+            if (isset($_POST['user_id'])) {
+                $userId = $_POST['user_id'];
+            }
             $studentSubplan = StudentSubPlans::getCurrentForStudent($userId);
-            if($studentSubplan){
+            if ($studentSubplan) {
                 $model->studentsubplan_id = $studentSubplan['id'];
-                if($model->save()){
+                if ($model->save()) {
                     Yii::$app->session->setFlash('success', 'Plāna pauze izveidota!');
                 }
-            }else{
+            } else {
                 Yii::$app->session->setFlash('error', 'Izvēlētajam skolēnam nav piešķirts plāns!');
             }
 
@@ -83,7 +81,7 @@ class StudentSubplanPausesController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $users = Users::getStudentsForSchool();
+        $users = Users::getStudentNamesForSchool();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Plāna pauzes labojumi saglabāti!');
@@ -99,7 +97,7 @@ class StudentSubplanPausesController extends Controller
 
     public function actionDelete($id)
     {
-        if($this->findModel($id)->delete()){
+        if ($this->findModel($id)->delete()) {
             Yii::$app->session->setFlash('success', 'Plāna pauze dzēsta!');
         }
 
@@ -113,11 +111,11 @@ class StudentSubplanPausesController extends Controller
         $remainingPauseWeeks = StudentSubPlans::getRemainingPauseWeeks(Yii::$app->user->identity->id);
 
         if ($model->load(Yii::$app->request->post())) {
-           if($model["weeks"] > $remainingPauseWeeks){
-               Yii::$app->session->setFlash('error', 'Neizdevās nosūtīt e-pasta adresi, lai atjaunotu paroli.');
-           }else{
+            if ($model["weeks"] > $remainingPauseWeeks) {
+                Yii::$app->session->setFlash('error', 'Neizdevās nosūtīt e-pasta adresi, lai atjaunotu paroli.');
+            } else {
                 $model->save();
-           }           
+            }
         }
 
         return $this->redirect(Yii::$app->request->referrer);

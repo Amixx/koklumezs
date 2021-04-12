@@ -9,8 +9,10 @@
             <label class="control-label" for="season-title"> <?= \Yii::t('app',  'Season') ?></label>
             <select id="season-title" class="form-control" name="season" aria-required="true" aria-invalid="false">
                 <option value=""></option>
-                <?php foreach ($seasons as $season) { ?>
-                    <option value="<?= $season ?>" <?= (isset($seasonSelected) and ($seasonSelected == $season)) ? 'selected' : '' ?>><?= $season ?></option>
+                <?php foreach ($seasons as $season) {
+                    $selected = (isset($seasonSelected) && ($seasonSelected == $season)) ? 'selected' : '';
+                ?>
+                    <option value="<?= $season ?>" <?= $selected ?>><?= $season ?></option>
                 <?php } ?>
             </select>
             <div class="help-block"></div>

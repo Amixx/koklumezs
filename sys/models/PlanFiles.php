@@ -2,8 +2,6 @@
 
 namespace app\models;
 
-use Yii;
-
 class PlanFiles extends \yii\db\ActiveRecord
 {
     public static function tableName()
@@ -17,7 +15,7 @@ class PlanFiles extends \yii\db\ActiveRecord
             [['file', 'plan_id', 'title'], 'required'],
             [['file', 'title'], 'string'],
             [['plan_id'], 'integer'],
-            [['plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => SchoolSubPlans::className(), 'targetAttribute' => ['plan_id' => 'id']],
+            [['plan_id'], 'exist', 'skipOnError' => true, 'targetClass' => SchoolSubPlans::class, 'targetAttribute' => ['plan_id' => 'id']],
         ];
     }
 
@@ -33,7 +31,7 @@ class PlanFiles extends \yii\db\ActiveRecord
 
     public function getPlan()
     {
-        return $this->hasOne(SchoolSubPlans::className(), ['id' => 'plan_id']);
+        return $this->hasOne(SchoolSubPlans::class, ['id' => 'plan_id']);
     }
 
     public static function getFilesForPlan($planId)

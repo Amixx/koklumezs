@@ -9,8 +9,6 @@ use app\models\UserSearch;
 use app\models\TeacherUserSearch;
 use app\models\Studentgoals;
 use app\models\Difficulties;
-use app\models\Handdifficulties;
-use app\models\Studenthandgoals;
 use app\models\SchoolSubPlans;
 use app\models\School;
 use app\models\SchoolTeacher;
@@ -21,31 +19,25 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-use yii\helpers\ArrayHelper;
-
-/**
- * UserController implements the CRUD actions for Users model.
- */
 class UserController extends Controller
 {
     public function behaviors()
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
-                            // return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
+                        'matchCallback' => function () {
                             return true;
                         }
                     ],
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['post'],
                 ],
@@ -101,7 +93,6 @@ class UserController extends Controller
     {
         $model = new Users();
         $difficulties = Difficulties::getDifficulties();
-        $handdifficulties = Handdifficulties::getDifficulties();
         $post = Yii::$app->request->post();
         $currentUserEmail = Yii::$app->user->identity->email;
         $currentUser = Users::getByEmail($currentUserEmail);
@@ -110,7 +101,7 @@ class UserController extends Controller
 
         if ($model->load($post)) {
             $isNewUserTeacher = isset($post['Users']['user_level']) && $post['Users']['user_level'] == 'Teacher';
-            if ($isNewUserTeacher and !$post['teacher_instrument']) {
+            if ($isNewUserTeacher && !$post['teacher_instrument']) {
                 Yii::$app->session->setFlash('error', "Norādiet skolotāja instrumentu!");
                 return $this->redirect(['create']);
             }
@@ -119,7 +110,6 @@ class UserController extends Controller
             }
             $model->password = \Yii::$app->security->generatePasswordHash($model->password);
             $model->created_at = date('Y-m-d H:i:s', time());
-            $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
             $model->allowed_to_download_files = false;
             if (isset($post['Users']['allowed_to_download_files']) && $post['Users']['allowed_to_download_files']) {
                 $model->allowed_to_download_files = $post['Users']['allowed_to_download_files'];
@@ -144,7 +134,7 @@ class UserController extends Controller
                 $newSchoolStudent = new SchoolStudent;
                 $newSchoolStudent->school_id = $teacher->school_id;
                 $newSchoolStudent->user_id = $model->id;
-                $studentAddedToSchool = $newSchoolStudent->save();
+                $newSchoolStudent->save();
             }
             if ($created) {
                 Yii::$app->session->setFlash('success', "User created successfully!");
@@ -158,9 +148,7 @@ class UserController extends Controller
         return $this->render('create', [
             'model' => $model,
             'studentGoals' => [],
-            'studentHandGoals' => [],
             'difficulties' => $difficulties,
-            'handdifficulties' => $handdifficulties,
             'studentSubplan' => $studentSubplan,
         ]);
     }
@@ -170,12 +158,18 @@ class UserController extends Controller
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
         $studentGoals = Studentgoals::getUserGoals($id);
-        $studentHandGoals = Studenthandgoals::getUserGoals($id);
         $difficulties = Difficulties::getDifficulties();
-        $handdifficulties = Handdifficulties::getDifficulties();
         $schoolSubPlans = SchoolSubPlans::getMappedForSelection();
         $studentSubplan = StudentSubPlans::getCurrentForStudent($model->id);
-        if(!$studentSubplan) $studentSubplan = new StudentSubPlans; 
+
+        if (!$studentSubplan) {
+            $studentSubplan = new StudentSubPlans;
+            $studentSubplan->user_id = $model->id;
+            $studentSubplan->start_date = date('Y-m-d H:i:s', time());
+            $studentSubplan->sent_invoices_count = 0;
+            $studentSubplan->times_paid = 0;
+            $studentSubplan->is_active = true;
+        }
 
         if ($model->load($post)) {
             if (!empty($post['Users']['password'])) {
@@ -186,36 +180,12 @@ class UserController extends Controller
             if (isset($post['studentgoals'])) {
                 Studentgoals::removeUserGoals($id);
                 if (isset($post['studentgoals']['now'])) {
-                    foreach ($post['studentgoals']['now'] as $pid => $value) {
-                        $goal = new Studentgoals();
-                        $goal->user_id = $model->id;
-                        $goal->diff_id = $pid;
-                        $goal->type = Studentgoals::NOW;
-                        $goal->value = $value ?? 0;
-                        $goal->save();
-                    }
+                    Studentgoals::addCurrentGoals($post['studentgoals']['now'], $model->id);
                 }
                 if (isset($post['studentgoals']['future'])) {
-                    foreach ($post['studentgoals']['future'] as $pid => $value) {
-                        $goal = new Studentgoals();
-                        $goal->user_id = $model->id;
-                        $goal->diff_id = $pid;
-                        $goal->type = Studentgoals::FUTURE;
-                        $goal->value = $value ?? 0;
-                        $goal->save();
-                    }
+                    Studentgoals::addFutureGoals($post['studentgoals']['future'], $model->id);
                 }
             }
-            if (isset($post['studenthandgoals'])) {
-                Studenthandgoals::removeUserGoals($id);
-                foreach ($post['studenthandgoals'] as $pid => $value) {
-                    $goal = new Studenthandgoals();
-                    $goal->user_id = $model->id;
-                    $goal->category_id = $pid;
-                    $goal->save();
-                }
-            }
-            $model->dont_bother = $post['Users']['dont_bother'] ? $post['Users']['dont_bother'] . ' 23:59:59' : $model->dont_bother;
             $model->allowed_to_download_files = false;
             if (isset($post['Users']['allowed_to_download_files'])) {
                 $model->allowed_to_download_files = $post['Users']['allowed_to_download_files'];
@@ -223,41 +193,23 @@ class UserController extends Controller
             if (isset($post['Users']['about'])) {
                 $model->about = $post['Users']['about'];
             }
-           
-            if (isset($post['StudentSubPlans'])) {
-                $postData = $post['StudentSubPlans'];              
-              
-                if ($studentSubplan) {
-                    $schoolSubplanChanged = $studentSubplan['plan_id'] !== (int) $postData['plan_id'];
 
-                    if($schoolSubplanChanged){
-                        StudentSubPlans::resetActivePlanForUser($model->id);
+            if (isset($post['StudentSubPlans']) && $post['StudentSubPlans']['plan_id']) {
+                $schoolSubplanChanged = $studentSubplan['plan_id'] !== (int) $post['StudentSubPlans']['plan_id'];
+                $resetActivePlan = $studentSubplan['id'] && $schoolSubplanChanged;
+                $createNewPlan = !$studentSubplan['id'];
 
-                        $studentSubplan = new StudentSubPlans;
-                        $studentSubplan->user_id = $model->id;
-                        $studentSubplan->plan_id = $postData["plan_id"];
-                        $studentSubplan->is_active = true;
-                        $studentSubplan->start_date = $postData["start_date"];
-                        $studentSubplan->sent_invoices_count = $postData["sent_invoices_count"] ? $postData["sent_invoices_count"] : 0;
-                        $studentSubplan->times_paid = $postData["times_paid"] ? $postData["times_paid"] : 0;
-                        $studentSubplan->save();
-                    }else{
-                        $studentSubplan->plan_id = $postData["plan_id"];
-                        $studentSubplan->start_date = $postData["start_date"];
-                        $studentSubplan->sent_invoices_count = $postData["sent_invoices_count"] ? $postData["sent_invoices_count"] : 0;
-                        $studentSubplan->times_paid = $postData["times_paid"] ? $postData["times_paid"] : 0;
-                        $studentSubplan->update();
-                    }                    
-                } else {
+                if ($resetActivePlan) {
                     StudentSubPlans::resetActivePlanForUser($model->id);
+                }
 
-                    $studentSubplan = new StudentSubPlans;
-                    $studentSubplan->user_id = $model->id;
-                    $studentSubplan->plan_id = $postData["plan_id"];
-                    $studentSubplan->is_active = true;
-                    $studentSubplan->start_date = $postData["start_date"];
-                    $studentSubplan->times_paid = $postData["times_paid"];
-                    $studentSubplan->save();
+                $studentSubplan->load($post);
+                if ($studentSubplan->validate()) {
+                    $resetActivePlan || $createNewPlan
+                        ? $studentSubplan->save()
+                        : $studentSubplan->update();
+                } else {
+                    Yii::$app->session->setFlash('error', 'Plāns netika saglabāts - nepareiza informācija!');
                 }
             }
             if (isset($post['Users']['payer']) && $post['Users']['payer']) {
@@ -265,7 +217,7 @@ class UserController extends Controller
 
                 $payer = Payer::getForStudent($model->id);
                 $newPayer = false;
-                if(!$payer){
+                if (!$payer) {
                     $payer = new Payer;
                     $newPayer = true;
                 }
@@ -279,13 +231,12 @@ class UserController extends Controller
                 $payer->swift = $postData["swift"];
                 $payer->account_number = $postData["swift"];
 
-                if($newPayer){
+                if ($newPayer) {
                     $payer->save();
                 } else {
                     $payer->update();
+                    Yii::$app->session->setFlash('success', 'Maksātāja informācija saglabāta!');
                 }
-
-                Yii::$app->session->setFlash('success', 'Maksātāja informācija saglabāta!');
             }
 
             $model->update();
@@ -295,9 +246,7 @@ class UserController extends Controller
             return $this->render('update', [
                 'model' => $model,
                 'studentGoals' => $studentGoals,
-                'studentHandGoals' => $studentHandGoals,
                 'difficulties' => $difficulties,
-                'handdifficulties' => $handdifficulties,
                 'schoolSubPlans' => $schoolSubPlans,
                 'studentSubplan' => $studentSubplan,
             ]);
@@ -322,8 +271,9 @@ class UserController extends Controller
 
         return $this->redirect(['index']);
     }
-    
-    public function actionRequestMoreTasks($id){
+
+    public function actionRequestMoreTasks($id)
+    {
         $student = self::findModel($id);
         $student->wants_more_lessons = true;
         $student->update();

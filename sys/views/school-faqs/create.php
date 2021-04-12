@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model app\models\Difficulties */
 
 $this->title = \Yii::t('app', 'Create a FAQ');
- ['label' => \Yii::t('app', 'FAQs'), 'url' => ['index']];
+['label' => \Yii::t('app', 'FAQs'), 'url' => ['index']];
 
 ?>
 <div class="difficulties-create">

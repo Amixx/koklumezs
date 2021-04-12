@@ -18,19 +18,19 @@ class RegistrationLessonsController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::className(),
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
+                        'matchCallback' => function () {
                             return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
                         }
                     ],
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -63,12 +63,12 @@ class RegistrationLessonsController extends Controller
         $model->school_id = $schoolId;
 
         $post = Yii::$app->request->post();
-        if($post){
+        if ($post) {
             $model->lesson_id = (int)$post['RegistrationLesson']['lesson_id'];
             $model->for_students_with_instrument = (bool)$post['RegistrationLesson']['for_students_with_instrument'];
             $model->for_students_with_experience = (bool)$post['RegistrationLesson']['for_students_with_experience'];
 
-            if($model->save()){
+            if ($model->save()) {
                 $model = new RegistrationLesson;
             }
         }
@@ -82,7 +82,7 @@ class RegistrationLessonsController extends Controller
 
     public function actionDelete($id)
     {
-        
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

@@ -1,4 +1,5 @@
 <?php
+
 use app\helpers\ThumbnailHelper;
 
 $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $videoThumb);
@@ -6,7 +7,7 @@ $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $video
 
 <div>
     <div class="text-center">
-        <?php if($model->play_along_file){ ?>
+        <?php if ($model->play_along_file) { ?>
             <h4>Spēlēsim kopā</h4>
             <div>
                 <div class="text-center lecture-wrap lecture-wrap-related">
@@ -19,14 +20,14 @@ $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $video
                 ]) ?>
             </div>
         <?php } ?>
-        
+
     </div>
-     <?php if ($relatedLectures) { ?>
+    <?php if ($relatedLectures) { ?>
         <?= $this->render('related', [
             'relatedLectures' => $relatedLectures,
             'lecturefiles' => $lecturefiles,
             'userEvaluatedLectures' => $userEvaluatedLectures,
             'videoThumb' => $videoThumb
-        ])?>
+        ]) ?>
     <?php } ?>
 </div>

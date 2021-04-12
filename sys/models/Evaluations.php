@@ -2,7 +2,6 @@
 
 namespace app\models;
 
-use Yii;
 use yii\helpers\ArrayHelper;
 
 class Evaluations extends \yii\db\ActiveRecord
@@ -35,17 +34,17 @@ class Evaluations extends \yii\db\ActiveRecord
 
     public function getLecturesevaluations()
     {
-        return $this->hasMany(Lecturesevaluations::className(), ['evaluation_id' => 'id']);
+        return $this->hasMany(Lecturesevaluations::class, ['evaluation_id' => 'id']);
     }
 
     public function getUserlectureevaluations()
     {
-        return $this->hasMany(Userlectureevaluations::className(), ['evaluation_id' => 'id']);
+        return $this->hasMany(Userlectureevaluations::class, ['evaluation_id' => 'id']);
     }
 
     public static function getEvaluations()
     {
-        return self::find()->where(['not like', 'id', [2,3,5]])->asArray()->all();
+        return self::find()->where(['not like', 'id', [2, 3, 5]])->asArray()->all();
     }
 
     public static function getEvaluationsValueTexts()
@@ -67,7 +66,7 @@ class Evaluations extends \yii\db\ActiveRecord
 
     public static function getEvaluationsTitles()
     {
-        return ArrayHelper::map(self::find()->where(['not like', 'id', [2,3,5]])->asArray()->all(), 'id', 'title');
+        return ArrayHelper::map(self::find()->where(['not like', 'id', [2, 3, 5]])->asArray()->all(), 'id', 'title');
     }
 
     public static function getScaleParam()

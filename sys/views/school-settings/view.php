@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Difficulties */
 
 $this->title = $model->name;
- ['label' => \Yii::t('app',  'Section visibility'), 'url' => ['index']];
+['label' => \Yii::t('app',  'Section visibility'), 'url' => ['index']];
 
 \yii\web\YiiAsset::register($this);
 ?>

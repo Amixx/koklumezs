@@ -25,7 +25,7 @@ class Lectures extends \yii\db\ActiveRecord
             [['title', 'description', 'file', 'play_along_file'], 'string'],
             [['created', 'updated'], 'safe'],
             [['author', 'complexity'], 'integer'],
-            [['author'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['author' => 'id']],
+            [['author'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author' => 'id']],
         ];
     }
 
@@ -77,7 +77,7 @@ class Lectures extends \yii\db\ActiveRecord
      */
     public function getAuthor()
     {
-        return $this->hasOne(Users::className(), ['id' => 'author']);
+        return $this->hasOne(Users::class, ['id' => 'author']);
     }
 
     /**
@@ -85,7 +85,7 @@ class Lectures extends \yii\db\ActiveRecord
      */
     public function getUsers()
     {
-        return $this->hasOne(Users::className(), ['id' => 'author'])
+        return $this->hasOne(Users::class, ['id' => 'author'])
             ->from(['u2' => Users::tableName()]);
     }
 
@@ -146,7 +146,8 @@ class Lectures extends \yii\db\ActiveRecord
     }
 
 
-    public static function getLikesCount($lectureId){
+    public static function getLikesCount($lectureId)
+    {
         $favUserLectures = UserLectures::find()->where(['lecture_id' => $lectureId, 'is_favourite' => true])->asArray()->all();
 
         return count($favUserLectures);

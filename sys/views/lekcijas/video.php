@@ -5,31 +5,24 @@
             $isYoutubeVideo = strpos($file['file'], "youtube") !== false;
             $fileUrl = $file['file'];
 
-            $dataSetup = $isYoutubeVideo 
+            $dataSetup = $isYoutubeVideo
                 ? "{
                     \"techOrder\": [\"youtube\"],
                     \"sources\": [{ \"type\": \"video/youtube\",
                     \"src\": \"$fileUrl\"}]
                 }"
-                : "{}"
+                : "{}";
+
+            $poster = isset($thumbnail) && $thumbnail ? $thumbnail : '';
         ?>
-        <div class="col-md-12">         
+            <div class="col-md-12">
                 <h4 class="visible-xs video-title-mobile"><?= $file['title'] ?></h4>
-                <video
-                    id="my-player<?= $idPrefix ?><?= $id ?>"
-                    class="video-js vjs-layout-x-large vjs-big-play-centered"
-                    controls
-                    preload="auto"
-                    poster="<?= isset($thumbnail) && $thumbnail ? $thumbnail : '' ?>"
-                    data-setup='<?= $dataSetup ?>'
-                >
-                    <?php if(!$isYoutubeVideo){ ?>
-                        <source
-                            src="<?=  $fileUrl ?>"
-                            type="video/<?= strtolower($path_info['extension']) ?>"
-                        ></source>
+                <video id="my-player<?= $idPrefix ?><?= $id ?>" class="video-js vjs-layout-x-large vjs-big-play-centered" controls preload="auto" poster="<?= $poster ?>" data-setup='<?= $dataSetup ?>'>
+                    <?php if (!$isYoutubeVideo) { ?>
+                        <source src="<?= $fileUrl ?>" type="video/<?= strtolower($path_info['extension']) ?>">
+                        </source>
                     <?php } ?>
-                    
+
                     <p class="vjs-no-js">
                         To view this video please enable JavaScript, and consider upgrading to a
                         web browser that
@@ -38,14 +31,14 @@
                         </a>
                     </p>
                 </video>
-        </div>
-         <script>
-            var player = videojs('my-player<?= $idPrefix ?><?= $id ?>', {
-                responsive: true,
-                width: 400,
-                playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2]
-            });
-        </script>        
+            </div>
+            <script>
+                var player = videojs('my-player<?= $idPrefix ?><?= $id ?>', {
+                    responsive: true,
+                    width: 400,
+                    playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2]
+                });
+            </script>
         <?php } ?>
     </div>
 <?php } ?>

@@ -18,9 +18,6 @@ $this->title = \Yii::t('app',  'Evaluations');
         <?= Html::a(\Yii::t('app',  'Create evaluation'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); 
-    ?>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -35,7 +32,17 @@ $this->title = \Yii::t('app',  'Evaluations');
                 'value' => function ($dataProvider) {
                     return $dataProvider->type == 'stars' ? \Yii::t('app',  'Stars') : \Yii::t('app',  'Text');
                 },
-                'filter' => Html::dropDownList('EvaluationsSearch[type]', isset($get['EvaluationsSearch']['type']) ? $get['EvaluationsSearch']['type'] : '', ['stars' => \Yii::t('app',  'Stars'), 'text' => \Yii::t('app',  'Text')], ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']),
+                'filter' => Html::dropDownList(
+                    'EvaluationsSearch[type]',
+                    isset($get['EvaluationsSearch']['type'])
+                        ? $get['EvaluationsSearch']['type']
+                        : '',
+                    [
+                        'stars' => \Yii::t('app',  'Stars'),
+                        'text' => \Yii::t('app',  'Text')
+                    ],
+                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                ),
             ],
 
             ['class' => 'yii\grid\ActionColumn'],

@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model app\models\Lecturesfiles */
 
 $this->title = \Yii::t('app',  'Add file');
- ['label' => \Yii::t('app',  'Files'), 'url' => ['index']];
+['label' => \Yii::t('app',  'Files'), 'url' => ['index']];
 
 ?>
 <div class="lecturesfiles-create">

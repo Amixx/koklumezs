@@ -7,7 +7,7 @@
     </div>
     <div class="row">
         <?=
-        $this->render('favouriteANDnew',[
+        $this->render('favouriteANDnew', [
             'Lectures' => $newLessons,
             'divTitle' => 'New lessons',
             'clickableTitle' => 'All new lessons',
@@ -15,15 +15,17 @@
             'emptyText' => 'Congratulations! You\'ve seen all new lessons',
             'videoThumb'=> $videoThumb,
             'nextLessons' => $nextLessons,
+            'renderRequestButton' => $renderRequestButton,
         ])?>
         <?=
-        $this->render('favouriteANDnew',[
+        $this->render('favouriteANDnew', [
             'Lectures' => $favouriteLessons,
             'divTitle' => 'Favourite lessons',
             'clickableTitle' => 'All favourite lessons',
             'type' => 'favourite',
             'emptyText' => 'You have not added any lessons to this section yet. You can do this by marking in any lesson that you want to add it to this section.',
-            'videoThumb'=> $videoThumb,
-        ])?>
+            'videoThumb' => $videoThumb,
+            'renderRequestButton' => false,
+        ]) ?>
     </div>
 </div>
