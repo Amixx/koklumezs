@@ -129,7 +129,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function getActiveStudentEmails()
     {
-        $students = self::getActiveStudentEmails();
+        $students = self::getActiveStudents();
         return ArrayHelper::map($students, 'id', 'email');
     }
 

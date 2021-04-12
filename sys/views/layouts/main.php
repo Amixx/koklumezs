@@ -22,11 +22,11 @@ $this->beginPage() ?>
 
     <div class="background-overlay"></div>
     <div class="wrap" style="background: <?= $layoutHelper->getWrapperBackground() ?>">
+        <?= $layoutHelper->getChatButton() ?>
         <?php ob_start(); ?>
-
         <div id="logo" title="<?= Yii::$app->name ?>" class="<?= $layoutHelper->getLogoClass() ?>" style="background-image: <?= $logo ?>;">
         </div>
-        <?= $layoutHelper->getChatButton() ?>
+
         <?php
         $logo = ob_get_clean();
 
@@ -57,7 +57,6 @@ $this->beginPage() ?>
 
     <?php
     if ($layoutHelper->shouldRenderChat()) {
-
         echo ChatRoom::widget([
             'url' => \yii\helpers\Url::to(['/chat/send-chat']),
             'userModel' =>  \app\models\User::class,
