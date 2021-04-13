@@ -14,7 +14,7 @@ use app\models\UserLectures;
 use app\models\Users;
 use app\models\School;
 use app\models\SectionsVisible;
-use app\models\StudentGoals;
+use app\models\Studentgoals;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\VerbFilter;
