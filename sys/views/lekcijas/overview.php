@@ -13,10 +13,11 @@
             'clickableTitle' => 'All new lessons',
             'type' => 'new',
             'emptyText' => 'Congratulations! You\'ve seen all new lessons',
-            'videoThumb'=> $videoThumb,
+            'videoThumb' => $videoThumb,
             'nextLessons' => $nextLessons,
+            'isNextLesson' => $isNextLesson,
             'renderRequestButton' => $renderRequestButton,
-        ])?>
+        ]) ?>
         <?=
         $this->render('favouriteANDnew', [
             'Lectures' => $favouriteLessons,

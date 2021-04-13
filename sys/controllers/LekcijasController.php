@@ -164,35 +164,8 @@ class LekcijasController extends Controller
                 return $this->redirect(['']);
             }
 
-            $unassignedLectures = UserLectures::getUnassignedLectures($userId);
-            $avg = UserLectures::getLastThreeComplexityAverage($userId);
-            $nextLessons = [null, null, null];
-            $similar = 3;
-            $max = 20;
-            $total = $similar + $max;
-
-            foreach ($unassignedLectures as $lecture) {
-                $complexity = $lecture->complexity;
-                $fitsEasier = $complexity >= $avg - $total && $complexity < $avg - $similar;
-                $fitsSame = $complexity <= $avg + $total && $complexity > $avg + $similar;
-                $fitsHarder = $complexity >= $avg - $similar && $complexity <= $avg + $similar;
-
-                if ($fitsEasier) {
-                    if (isset($nextLessons[0])) {
-                        if ($nextLessons[0]->complexity < $complexity) $nextLessons[0] = $lecture;
-                    } else $nextLessons[0] = $lecture;
-                } else if ($fitsSame) {
-                    if (isset($nextLessons[2])) {
-                        if ($nextLessons[2]->complexity > $complexity) $nextLessons[2] = $lecture;
-                    } else $nextLessons[2] = $lecture;
-                } else if ($fitsHarder) {
-                    if (isset($nextLessons[1])) {
-                        $cdist = abs($avg - $nextLessons[1]->complexity);
-                        $ndist = abs($avg - $complexity);
-                        if ($cdist > $ndist) $nextLessons[1] = $lecture;
-                    } else $nextLessons[1] = $lecture;
-                }
-            }
+            $nextLessons = UserLectures::getNextLessons($userId);
+            $isNextLesson = UserLectures::getIsNextLesson($userId);
 
             return $this->render('overview', [
                 'models' => $models,
@@ -203,6 +176,7 @@ class LekcijasController extends Controller
                 'userLectureEvaluations' => $userLectureEvaluations,
                 'videoThumb' => $videoThumb,
                 'nextLessons' => $nextLessons,
+                'isNextLesson' => $isNextLesson,
                 'renderRequestButton' => !$user->wants_more_lessons,
             ]);
         }
