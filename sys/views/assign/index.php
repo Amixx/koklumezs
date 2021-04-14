@@ -94,6 +94,14 @@ $this->title = \Yii::t('app',  'Lesson assigning');
                     </td>
                     <td class="text-center">
                         <?= Html::a(
+                            '<span class="glyphicon glyphicon-user"> </span>',
+                            ['/lekcijas/preview', 'studentId' => $id],
+                            [
+                                'title' => \Yii::t('app', 'View'),
+                                'target' => '_blank'
+                            ]
+                        ) ?>
+                        <?= Html::a(
                             '<span class="glyphicon glyphicon-eye-open"> </span>',
                             ['/assign/userlectures', 'id' => $id],
                             [

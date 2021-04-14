@@ -132,6 +132,16 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
             </tbody>
         </table>
     </div>
+    <p>
+        <?= Html::a(
+            'Apskatīt lietotāja galveno lapu    <span class="glyphicon glyphicon-user"></span>',
+            ['/lekcijas/preview', 'studentId' => $id],
+            [
+                'title' => \Yii::t('app', 'View'),
+                'target' => '_blank'
+            ]
+        ) ?>
+    </p>
     <?php if (isset($user) && $user->about) { ?>
         <p>Par lietotāju: <strong><?= $user->about ?></strong>.</p>
     <?php } ?>

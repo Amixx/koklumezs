@@ -2,7 +2,6 @@ stats/*
 error/*
 vendor/*
 assets/*
-sys/assets/*
 !assets/.gitignore
 protected/runtime/*
 !protected/runtime/.gitignore

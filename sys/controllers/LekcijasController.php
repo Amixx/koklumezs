@@ -108,47 +108,8 @@ class LekcijasController extends Controller
                 ]);
             }
         } else {
-            $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "new");
-            $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
-
-            $newLessons = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->all();
-            $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->all();
-
-            function sortFunc($a, $b, $lessonIds)
-            {
-                $aId = array_search($a['id'], $lessonIds);
-                $bId = array_search($b['id'], $lessonIds);
-
-                return ($aId < $bId) ? -1 : 1;
-            }
-
-            $newSortFunc = function ($a, $b) use ($latestNewLecturesIds) {
-                return sortFunc($a, $b, $latestNewLecturesIds);
-            };
-            $favSortFunc = function ($a, $b) use ($latestFavouriteLecturesIds) {
-                return sortFunc($a, $b, $latestFavouriteLecturesIds);
-            };
-
-            usort($newLessons, $newSortFunc);
-            usort($favouriteLessons, $favSortFunc);
-
-            $opened = UserLectures::getOpened($user->id);
-            $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
-
-            $title_filter = 1;
-
-            return $this->render('overview', [
-                'models' => $models,
-                'newLessons' => $newLessons,
-                'favouriteLessons' => $favouriteLessons,
-                'opened' => $opened,
-                'pages' => $pages,
-                'userLectureEvaluations' => $userLectureEvaluations,
-                'videoThumb' => $videoThumb,
-                'renderRequestButton' => !$user->wants_more_lessons,
-            ]);
+            return $this->renderOverview($user, $models, $pages, $videoThumb);
         }
-
 
         return $this->render('index', [
             'models' => $models,
@@ -288,6 +249,55 @@ class LekcijasController extends Controller
         $model->is_favourite = !$model->is_favourite;
         $model->update();
         return $this->redirect(Yii::$app->request->referrer);
+    }
+
+    public function actionPreview($studentId){
+        $models = [];
+        $pages = [];
+        $user = Users::findOne($studentId);
+        $videoThumb = School::getCurrentSchool()->video_thumbnail;
+
+        return $this->renderOverview($user, $models, $pages, $videoThumb);
+    }
+
+    private function renderOverview($user, $models, $pages, $videoThumb){
+        $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "new");
+        $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
+
+        $newLessons = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->all();
+        $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->all();
+
+        function sortFunc($a, $b, $lessonIds)
+        {
+            $aId = array_search($a['id'], $lessonIds);
+            $bId = array_search($b['id'], $lessonIds);
+
+            return ($aId < $bId) ? -1 : 1;
+        }
+
+        $newSortFunc = function ($a, $b) use ($latestNewLecturesIds) {
+            return sortFunc($a, $b, $latestNewLecturesIds);
+        };
+        $favSortFunc = function ($a, $b) use ($latestFavouriteLecturesIds) {
+            return sortFunc($a, $b, $latestFavouriteLecturesIds);
+        };
+
+        usort($newLessons, $newSortFunc);
+        usort($favouriteLessons, $favSortFunc);
+
+        $opened = UserLectures::getOpened($user->id);
+        $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
+
+        return $this->render('overview', [
+            'models' => $models,
+            'newLessons' => $newLessons,
+            'favouriteLessons' => $favouriteLessons,
+            'opened' => $opened,
+            'pages' => $pages,
+            'userLectureEvaluations' => $userLectureEvaluations,
+            'videoThumb' => $videoThumb,
+            'renderRequestButton' => !$user->wants_more_lessons,
+        ]);
     }
 
     /**
