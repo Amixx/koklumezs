@@ -166,6 +166,7 @@ class LekcijasController extends Controller
 
             $nextLessons = UserLectures::getNextLessons($userId);
             $isNextLesson = UserLectures::getIsNextLesson($userId);
+            $isActive =  Users::findIdentity($userId)->status;
 
             return $this->render('overview', [
                 'models' => $models,
@@ -178,6 +179,7 @@ class LekcijasController extends Controller
                 'nextLessons' => $nextLessons,
                 'isNextLesson' => $isNextLesson,
                 'renderRequestButton' => !$user->wants_more_lessons,
+                'isActive' => $isActive,
             ]);
         }
 
