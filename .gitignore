@@ -11,3 +11,5 @@ themes/classic/views/
 icon/*
 sys/web/files/global/*
 sys/config/db.php
+sys/web/files/*/invoices/*
+sys/web/sent-emails/*
