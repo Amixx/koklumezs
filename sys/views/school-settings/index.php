@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
 use yii\widgets\ActiveForm;
 
@@ -93,10 +94,10 @@ $this->title = \Yii::t('app',  'School settings');
                         ],
                         'urlCreator' => function ($action, $model) {
                             if ($action === 'update') {
-                                return '/school-faqs/update?id=' . $model->id;
+                                return Url::to('/school-faqs/update?id=' . $model->id);
                             }
                             if ($action === 'delete') {
-                                return '/school-faqs/delete?id=' . $model->id;
+                                return Url::to('/school-faqs/delete?id=' . $model->id);
                             }
                         },
                     ],
