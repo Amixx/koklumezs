@@ -7,6 +7,7 @@ use app\models\StudentSubplanPauses;
 use app\models\SentInvoices;
 use app\models\SchoolSubplanParts;
 use app\models\StudentSubplans;
+use app\models\LectureViews;
 
 $this->title = \Yii::t('app',  'Users');
 
@@ -69,6 +70,14 @@ $planEndMonths = [];
                     app\models\Users::getStatus(),
                     ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
                 ),
+            ],
+            [
+                'attribute' => 'lectureviews',
+                'label' => Yii::t('app', '30 day l. views'),
+                'format' => 'raw',
+                'value' => function ($dataProvider) {
+                    return LectureViews::getDayResult($dataProvider->id, 30);
+                },
             ],
             [
                 'attribute' => 'Plan price',
