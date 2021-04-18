@@ -72,7 +72,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                             ],
                             'urlCreator' => function ($action, $model) {
                                 if ($action === 'delete') {
-                                    return '/sys/plan-files/delete?id=' . $model["id"];
+                                    return Url::base(true) . '/plan-files/delete?id=' . $model["id"];
                                 }
                             }
                         ],

@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use  yii\jui\DatePicker;
+use yii\helpers\Url;
 
 $this->title = \Yii::t('app',  'Student evaluations');
 
@@ -68,7 +69,7 @@ $this->title = \Yii::t('app',  'Student evaluations');
                 ],
                 'urlCreator' => function ($action, $model) {
                     if ($action === 'view') {
-                        return '/sys/lekcijas/lekcija/' . $model['lecture_id'] . '?force=1';
+                        return Url::base(true) . '/lekcijas/lekcija/' . $model['lecture_id'] . '?force=1';
                     }
                 }
             ],

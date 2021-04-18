@@ -1,9 +1,9 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
-use app\models\StudentSubplanPauses;
-use app\models\dataProvider;
+
 use  yii\jui\DatePicker;
 
 $this->title = \Yii::t('app',  'Users');
@@ -58,7 +58,8 @@ $this->title = \Yii::t('app',  'Users');
                 'attribute' => 'invoice_number',
                 'value' => function ($dataProvider) {
                     $number = $dataProvider['invoice_number'];
-                    return "<a target='_blank' href='/sys/sent-invoices/update?invoiceNumber=$number'>$number</a>";
+                    $url = Url::to(['sent-invoices/update', 'invoiceNumber' => $number]);
+                    return "<a target='_blank' href='" . $url . "'>$number</a>";
                 },
                 'format' => 'raw',
             ],
