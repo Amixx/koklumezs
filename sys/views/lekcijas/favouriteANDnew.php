@@ -15,7 +15,7 @@ use yii\helpers\Url;
             <h4 class="LectureOverview__EmptyText">
                 <?= \Yii::t('app', $emptyText) ?>
             </h4>
-            <?php if ($type == 'new' && $isNextLesson) { ?>
+            <?php if ($type == 'new' && $isNextLesson && $isActive) { ?>
                 <div class="row text-center">
                     <button type="button" class="btn btn-orange btn-long" data-toggle="modal" data-target="#moreLessons">
                         <?= \Yii::t('app', 'I want more tasks'); ?>

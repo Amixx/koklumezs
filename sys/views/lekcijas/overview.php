@@ -17,6 +17,7 @@
             'nextLessons' => $nextLessons,
             'isNextLesson' => $isNextLesson,
             'renderRequestButton' => $renderRequestButton,
+            'isActive' => $isActive,
         ]) ?>
         <?=
         $this->render('favouriteANDnew', [
