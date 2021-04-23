@@ -55,9 +55,9 @@ $this->beginPage() ?>
         </div>
     </div>
 
-    <?= $this->render('components/footer') ?>
+    <?= $this->render('components/footer'); ?>
+    <?= $this->render('components/script'); ?>
     <?php $this->endBody() ?>
-    <?php $this->render('components/script'); ?>
 </body>
 
 </html>
