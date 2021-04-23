@@ -219,6 +219,7 @@ class UserController extends Controller
                 $newPayer = false;
                 if (!$payer) {
                     $payer = new Payer;
+                    $payer->user_id = $model->id;
                     $newPayer = true;
                 }
 
@@ -231,12 +232,15 @@ class UserController extends Controller
                 $payer->swift = $postData["swift"];
                 $payer->account_number = $postData["swift"];
 
-                if ($newPayer) {
-                    $payer->save();
-                } else {
-                    $payer->update();
+                if($payer->validate()){
+                    if ($newPayer) {
+                        $payer->save();
+                    } else {
+                        $payer->update();
+                    }
+
                     Yii::$app->session->setFlash('success', 'Maksātāja informācija saglabāta!');
-                }
+                }                
             }
 
             $model->update();

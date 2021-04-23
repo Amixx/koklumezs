@@ -1,13 +1,42 @@
 <div id="install-prompt" class="a2hs"><?= \Yii::t('app',  'Add to home screen') ?></div>
 <script>
+    var localhosts = ["localhost", "127.0.0.1"];
+    var origin = window.location.origin;
+
+    var IS_LOCAL = false;
+    localhosts.forEach(function(host) {
+        if (origin.indexOf(host) !== -1) {
+            IS_LOCAL = true;
+        }
+    });
+
+    var IS_PROD = !IS_LOCAL;
+
+    function getUrl(url) {
+        var prefix = IS_PROD ? '/sys' : '';
+        return prefix + url;
+    }
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(getUrl('/sw.js'), {
+                scope: getUrl('/')
+            })
+            .then(function(registration) {});
+
+        navigator.serviceWorker.ready.then(function(registration) {});
+    }
+
+
     /* When the user scrolls down, hide the navbar. When the user scrolls up, show the navbar */
     var prevScrollpos = window.pageYOffset;
     window.onscroll = function() {
         var currentScrollPos = window.pageYOffset;
         if (prevScrollpos > currentScrollPos) {
             document.getElementById("navbar").style.top = "0";
+            document.getElementById("chat-btn-with-icons").style.top = "20px";
         } else {
             document.getElementById("navbar").style.top = "-90px";
+            document.getElementById("chat-btn-with-icons").style.top = "-110px";
         }
         prevScrollpos = currentScrollPos;
     }

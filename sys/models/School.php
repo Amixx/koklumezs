@@ -88,10 +88,12 @@ class School extends \yii\db\ActiveRecord
     {
         $userId = Yii::$app->user->identity->id;
         $isTeacher = Users::isCurrentUserTeacher();
+        $isStudent = Users::isCurrentUserStudent();
         $school = null;
+
         if ($isTeacher) {
             $school = self::getByTeacher($userId);
-        } else {
+        } else if($isStudent){
             $school = self::getByStudent($userId);
         }
 
@@ -100,11 +102,7 @@ class School extends \yii\db\ActiveRecord
 
     public static function getCurrentSchoolId()
     {
-        $userId = Yii::$app->user->identity->id;
-        if (Users::isCurrentUserTeacher()) {
-            return SchoolTeacher::getSchoolTeacher($userId)->school_id;
-        } else {
-            return SchoolStudent::getSchoolStudent($userId)->school_id;
-        }
+        $currentSchool = self::getCurrentSchool();
+        return $currentSchool ? $currentSchool->id : null;
     }
 }

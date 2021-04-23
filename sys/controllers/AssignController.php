@@ -85,6 +85,7 @@ class AssignController extends Controller
         $options['lectureDifficulties'] = $lectureDifficulties;
         $options['evaluationsTitles'] = $evaluationsTitles;
         $options['evaluationsValues'] = $evaluationsValues;
+        
         return $this->render('index', $options);
     }
 

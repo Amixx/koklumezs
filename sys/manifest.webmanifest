@@ -14,9 +14,9 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "/site/mainpage",
+  "start_url": "/sys/site/mainpage",
   "background_color": "darkgoldenrod",
   "display": "standalone",
-  "scope": "/",
+  "scope": "/sys/",
   "theme_color": "darkgoldenrod"
 }

@@ -1,11 +1,13 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
 use app\models\StudentSubplanPauses;
 use app\models\SentInvoices;
 use app\models\SchoolSubplanParts;
 use app\models\StudentSubplans;
+use app\models\LectureViews;
 
 $this->title = \Yii::t('app',  'Users');
 
@@ -70,6 +72,14 @@ $planEndMonths = [];
                 ),
             ],
             [
+                'attribute' => 'lectureviews',
+                'label' => Yii::t('app', '30 day l. views'),
+                'format' => 'raw',
+                'value' => function ($dataProvider) {
+                    return LectureViews::getDayResult($dataProvider->id, 30);
+                },
+            ],
+            [
                 'attribute' => 'Plan price',
                 'label' => Yii::t('app', 'Payment'),
                 'value' => function ($dataProvider) {
@@ -80,7 +90,8 @@ $planEndMonths = [];
 
                     $planId = $studentSubplan["plan_id"];
                     $totalCost = SchoolSubplanParts::getPlanTotalCost($planId);
-                    return "<a href='/sys/school-sub-plans/view?id=$planId'>$totalCost</a>";
+                    $url = Url::to(['school-sub-plans/view', 'id' => $planId]);
+                    return "<a href='" . $url . "'>$totalCost</a>";
                 },
                 'format' => 'html',
                 'filter' => Html::dropDownList(
@@ -160,9 +171,10 @@ $planEndMonths = [];
                         $timesPaid = $studentSubplan["times_paid"];
                         $sentInvoices = $studentSubplan["sent_invoices_count"];
                         $html .= "<div style='text-align:center;background:" . $color . "'>" . $timesPaid . "/" . $sentInvoices . "</div>";
+                        $url = Url::to(['sent-invoices/register-advance-payment', 'userId' => $studentId]);
                         $addPaymentHtml = "<span title='Reģistrēt maksājumu'>
                             <a
-                                href='/sys/sent-invoices/register-advance-payment?userId=$studentId'
+                                href='" . $url . "'
                                 class='glyphicon glyphicon-plus'
                             ></a></span>";
                     }
@@ -171,19 +183,22 @@ $planEndMonths = [];
                         $html .= "<p>Neapmaksātie rēķini: </p>";
                         foreach ($unpaidInvoiceNumbers as $number) {
                             $value = $number['invoice_number'];
+                            $url = Url::to(['sent-invoices/update', 'invoiceNumber' => $value]);
                             $html .= "
                             <p>
-                                <a target='_blank' href='/sys/sent-invoices/update?invoiceNumber=$value'><strong>$value</strong></a>
+                                <a target='_blank' href='" . $url . "'><strong>$value</strong></a>
                             </p>
                             ";
                         }
                     }
 
+                    $url = Url::to(['cron/remind-to-pay', 'userId' => $studentId]);
+
                     return "
                         <div style='text-align:center;'>
                             $html
                             <span style='margin-right:48px;'><a
-                                href='/sys/cron/remind-to-pay?userId=$studentId'
+                                href='" . $url . "'
                                 class='glyphicon glyphicon-envelope'                                
                                 title='Nosūtīt atgādinājumu, ka jāmaksā'
                             ></a></span>

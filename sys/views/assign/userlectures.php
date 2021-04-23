@@ -103,10 +103,10 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
                             <?= $lecture->lecture->title ?>
                             <?php if ($lecture->is_favourite) { ?>
                                 <span class="glyphicon glyphicon-heart"></span>
-                            <?php } ?> 
-                            <?php if ($lecture->assigned == $lecture->user_id){ ?> 
+                            <?php } ?>
+                            <?php if ($lecture->assigned == $lecture->user_id) { ?>
                                 <span class="glyphicon glyphicon-asterisk"></span>
-                            <?php } ?> 
+                            <?php } ?>
                         </td>
                         <td class="text-center"><?= (int) $lecture->opened ? 'Jā' : 'Nē' ?></td>
                         <td class="text-center"><?= $lecture->open_times ?></td>
@@ -136,10 +136,20 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
         </table>
     </div>
     <?php if (isset($user) && $user->wants_more_lessons) { ?>
-        <h3 style="color: red;"><?= \Yii::t('app', 'User dosen\'t have enough lessons')?>! </h3>
+        <h3 style="color: red;"><?= \Yii::t('app', 'User dosen\'t have enough lessons') ?>! </h3>
     <?php } ?>
+    <p>
+        <?= Html::a(
+            'Apskatīt lietotāja galveno lapu    <span class="glyphicon glyphicon-user"></span>',
+            ['/lekcijas/preview', 'studentId' => $id],
+            [
+                'title' => \Yii::t('app', 'View'),
+                'target' => '_blank'
+            ]
+        ) ?>
+    </p>
     <?php if (isset($user) && $user->about) { ?>
-        <p><?= \Yii::t('app', 'About user')?>: <strong><?= $user->about ?></strong>.</p>
+        <p><?= \Yii::t('app', 'About user') ?>: <strong><?= $user->about ?></strong>.</p>
     <?php } ?>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['seven'], 7]); ?>.</p>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['thirty'], 30]); ?>.</p>

@@ -460,4 +460,5 @@ return [
     'Challenge' => 'Izaicinājums',
     'How difficult lesson you want' => 'Cik sarežģītu nodarbību tu vēlies',
     'User dosen\'t have enough lessons' => 'Lietotājam ir pārāk maz nodarbību',
+    '30 day l. views' => '30 dienu n. sk.',
 ];

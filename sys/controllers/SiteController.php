@@ -315,4 +315,19 @@ class SiteController extends Controller
             'questions' => $schoolSignupQuestions,
         ]);
     }
+
+    public function actionMainpage()
+    {
+        $current = Yii::$app->user->identity;
+
+        if (Yii::$app->user->isGuest) {
+            $url = "site/login";
+        } else if (Users::isAdminOrTeacher($current->email)) {
+            $url = "lectures/index";
+        } else {
+            $url = "lekcijas/index";
+        }
+
+        return $this->redirect([$url]);
+    }
 }

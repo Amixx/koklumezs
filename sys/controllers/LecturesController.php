@@ -253,9 +253,21 @@ class LecturesController extends Controller
      */
     public function actionDelete($id)
     {
+        self::deleteAllRelatedForLecture('lecturesevaluations', $id);
+        self::deleteAllRelatedForLecture('userlectureevaluations', $id);
+        self::deleteAllRelatedForLecture('userlectures', $id);
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    private static function deleteAllRelatedForLecture($tablename, $id){
+        Yii::$app
+            ->db
+            ->createCommand()
+            ->delete($tablename, ['lecture_id' => $id])
+            ->execute();
     }
 
     /**

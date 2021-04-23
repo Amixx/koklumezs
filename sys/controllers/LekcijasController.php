@@ -109,78 +109,8 @@ class LekcijasController extends Controller
                 ]);
             }
         } else {
-            $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "new");
-            $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
-
-            $newLessons = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->all();
-            $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->all();
-
-            function sortFunc($a, $b, $lessonIds)
-            {
-                $aId = array_search($a['id'], $lessonIds);
-                $bId = array_search($b['id'], $lessonIds);
-
-                return ($aId < $bId) ? -1 : 1;
-            }
-
-            $newSortFunc = function ($a, $b) use ($latestNewLecturesIds) {
-                return sortFunc($a, $b, $latestNewLecturesIds);
-            };
-            $favSortFunc = function ($a, $b) use ($latestFavouriteLecturesIds) {
-                return sortFunc($a, $b, $latestFavouriteLecturesIds);
-            };
-
-            usort($newLessons, $newSortFunc);
-            usort($favouriteLessons, $favSortFunc);
-
-            $opened = UserLectures::getOpened($user->id);
-            $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
-
-            $title_filter = 1;
-
-            $userId = Yii::$app->user->identity->id;
-            $user = Users::findOne($userId);
-
-            $post = Yii::$app->request->post();
-            if ($post) {
-                $goals = StudentGoals::getUserGoals($userId);
-                $goalsnow = StudentGoals::NOW;
-                $goalsum = isset($goals[$goalsnow]) ? array_sum($goals[$goalsnow]) : 0;
-
-                $lessonId = Yii::$app->request->post('lessonId', null);
-                $model = new UserLectures();
-                $model->assigned = $userId;
-                $model->created = date('Y-m-d H:i:s', time());
-                $model->lecture_id = $lessonId;
-                $model->user_id = $userId;
-                $model->user_difficulty = $goalsum;
-                $saved = $model->save();
-                if ($saved) {
-                    $user->wants_more_lessons = true;
-                    $user->update();
-                    $model->sent = 1;
-                    $model->update();
-                }
-                return $this->redirect(['']);
-            }
-
-            $nextLessons = UserLectures::getNextLessons($userId);
-            $isNextLesson = UserLectures::getIsNextLesson($userId);
-
-            return $this->render('overview', [
-                'models' => $models,
-                'newLessons' => $newLessons,
-                'favouriteLessons' => $favouriteLessons,
-                'opened' => $opened,
-                'pages' => $pages,
-                'userLectureEvaluations' => $userLectureEvaluations,
-                'videoThumb' => $videoThumb,
-                'nextLessons' => $nextLessons,
-                'isNextLesson' => $isNextLesson,
-                'renderRequestButton' => !$user->wants_more_lessons,
-            ]);
+            return $this->renderOverview($user, $models, $pages, $videoThumb);
         }
-
 
         return $this->render('index', [
             'models' => $models,
@@ -320,6 +250,90 @@ class LekcijasController extends Controller
         $model->is_favourite = !$model->is_favourite;
         $model->update();
         return $this->redirect(Yii::$app->request->referrer);
+    }
+
+    public function actionPreview($studentId)
+    {
+        $models = [];
+        $pages = [];
+        $user = Users::findOne($studentId);
+        $videoThumb = School::getCurrentSchool()->video_thumbnail;
+
+        return $this->renderOverview($user, $models, $pages, $videoThumb);
+    }
+
+    private function renderOverview($user, $models, $pages, $videoThumb)
+    {
+        $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "new");
+        $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
+
+        $newLessons = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->all();
+        $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->all();
+
+        function sortFunc($a, $b, $lessonIds)
+        {
+            $aId = array_search($a['id'], $lessonIds);
+            $bId = array_search($b['id'], $lessonIds);
+
+            return ($aId < $bId) ? -1 : 1;
+        }
+
+        $newSortFunc = function ($a, $b) use ($latestNewLecturesIds) {
+            return sortFunc($a, $b, $latestNewLecturesIds);
+        };
+        $favSortFunc = function ($a, $b) use ($latestFavouriteLecturesIds) {
+            return sortFunc($a, $b, $latestFavouriteLecturesIds);
+        };
+
+        usort($newLessons, $newSortFunc);
+        usort($favouriteLessons, $favSortFunc);
+
+        $opened = UserLectures::getOpened($user->id);
+        $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
+
+        $title_filter = 1;
+
+        $userId = Yii::$app->user->identity->id;
+        $user = Users::findOne($userId);
+
+        $post = Yii::$app->request->post();
+        if ($post) {
+            $goals = StudentGoals::getUserGoals($userId);
+            $goalsnow = StudentGoals::NOW;
+            $goalsum = isset($goals[$goalsnow]) ? array_sum($goals[$goalsnow]) : 0;
+
+            $lessonId = Yii::$app->request->post('lessonId', null);
+            $model = new UserLectures();
+            $model->assigned = $userId;
+            $model->created = date('Y-m-d H:i:s', time());
+            $model->lecture_id = $lessonId;
+            $model->user_id = $userId;
+            $model->user_difficulty = $goalsum;
+            $saved = $model->save();
+            if ($saved) {
+                $user->wants_more_lessons = true;
+                $user->update();
+                $model->sent = 1;
+                $model->update();
+            }
+            return $this->redirect(['']);
+        }
+
+        $nextLessons = UserLectures::getNextLessons($userId);
+        $isNextLesson = UserLectures::getIsNextLesson($userId);
+
+        return $this->render('overview', [
+            'models' => $models,
+            'newLessons' => $newLessons,
+            'favouriteLessons' => $favouriteLessons,
+            'opened' => $opened,
+            'pages' => $pages,
+            'userLectureEvaluations' => $userLectureEvaluations,
+            'videoThumb' => $videoThumb,
+            'nextLessons' => $nextLessons,
+            'isNextLesson' => $isNextLesson,
+            'renderRequestButton' => !$user->wants_more_lessons,
+        ]);
     }
 
     /**

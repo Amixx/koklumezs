@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\DifficultiesSearch */
@@ -50,14 +51,14 @@ $this->title = \Yii::t('app', 'Parameters');
                 ],
                 'urlCreator' => function ($action, $model) {
                     if ($action === 'view') {
-                        return '/sys/difficulties/view/' . $model['id'];
+                        return Url::base(true) . '/difficulties/view/' . $model['id'];
                     }
 
                     if ($action === 'update') {
-                        return '/sys/difficulties/update/' . $model['id'];
+                        return Url::base(true) . '/difficulties/update/' . $model['id'];
                     }
                     if ($action === 'delete') {
-                        return '/sys/difficulties/delete/' . $model['id'];
+                        return Url::base(true) . '/difficulties/delete/' . $model['id'];
                     }
                 }
             ],
