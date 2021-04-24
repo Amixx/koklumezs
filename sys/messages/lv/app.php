@@ -455,5 +455,5 @@ return [
     'Unlimited' => 'Neierobežots',
     'Thank you for your message! Next time we will send more tasks! Have a good day!' => 'Paldies par ziņu! Nākamajā reizē sūtīsim vairāk uzdevumus! Lai mierīga diena!',
     '30 day l. views' => '30 dienu n. sk.',
-    'View rent agreement' => 'Apskatīt īres līgumuuu',
+    'View rent agreement' => 'Apskatīt īres līgumu',
 ];
