@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 
 $this->title = \Yii::t('app',  'Your first kokle');
@@ -44,12 +45,15 @@ $this->title = \Yii::t('app',  'Your first kokle');
 
         <div class="col-sm-12 text-center">
             <div>
-                <?= Html::submitButton(\Yii::t('app', 'Submit'), ['class' => 'btn btn-primary btn-flat', 'name' => 'login-button']) ?>
+                <?= Html::a(Yii::t('app', 'Back'), $backUrl) ?>
+                <?= Html::submitButton(\Yii::t('app', 'Submit'), [
+                    'class' => 'btn btn-primary btn-flat rent-submit-button',
+                    'name' => 'login-button'
+                ]) ?>
+                <?= Html::a(Yii::t('app', 'View rent agreement'), Url::to(["documents/Kokles līgums.docx"])) ?>
             </div>
         </div>
 
         <?php ActiveForm::end(); ?>
-
     </div>
-
 </div>

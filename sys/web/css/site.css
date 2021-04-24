@@ -519,6 +519,10 @@ div.has-experience.active, div.rent.active {
     width: 100%;
 }
 
+.rent-submit-button {
+   margin: 0 32px;
+}
+
 .login-forgot {
     margin-top: 8px;
     text-align: right;

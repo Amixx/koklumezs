@@ -365,7 +365,7 @@ return [
     'no plan assigned to pupil' => 'skolēnam nav piešķirts plāns',
     'Aggree' => 'Piekrīt',
     'First name' => 'Vārds',
-    'If you wish to rent kokle (10 euro/month), after invoice payment we will send kokle to Omniva parcel machine of your choice (shipping 5 euro)' => 'Ja vēlies īrēt kokli (10 eur/mēnesī), tev tiks sagatavots rēķins un pēc rēķina apmaksas koklīti nosūtīsim uz tavu izvēlēto Omniva pakomātu (sūtīšanas izmaksas 5eur)',
+    'If you wish to rent kokle (10 euro/month), after invoice payment we will send kokle to Omniva parcel machine of your choice (shipping 5 euro)' => 'Aizpildi šo pieteikuma formu, ja vēlies īrēt kokli. Īres maksa nodarbību izmēģinājuma periodā - 10eur. Koklītes nosūtīšanu (ar Omniva pakomātu) segsim no savas puses. Ja pēc izmēģinājuma posma beigām nevēlēsies turpināt nodarbības un koklīti nosūtīsi mums atpakaļ 5 dienu laikā - arī atpakaļsūtīšanu apmaksās Kokļu Mežs (sms veidā saņemsi kodu, ar kuru varēsi atgriezt mums koklīti bez maksas).',
     'Last name' => 'Uzvārds',
     'Owns instrument' => 'Ir savs instruments',
     'Please choose.' => 'Lūdzu izvēlieties.',
@@ -395,7 +395,6 @@ return [
     'I would like to receive it via Omniva (5 euros)' => 'vēlos saņemt ar Omnivas starpniecību (5 eiro)',
     'I would like to rent the kokle (10 euros per month)*' => 'Koklīti vēlos īrēt (10 eiro mēnesī)*',
     'Identification number' => 'Identifikācijas numurs',
-    'If you want to rent kokle (10 euro/month), after invoice payment we will send kokle to Omniva parcel machine of your choice (shipping 5 euro)' => 'Ja vēlies īrēt kokli (10 eur/mēnesī), tev tiks sagatavots rēķins un pēc rēķina apmaksas koklīti nosūtīsim uz tavu izvēlēto Omniva pakomātu (sūtīšanas izmaksas 5 eur). Kokles īre pieejama tikai Latvijas teritorijā.',
     'Impossible' => 'Vispār neko nesaprotu',
     'Left hand' => 'Kreisā roka',
     'Lesson ID' => 'Nodarbības ID',
@@ -456,4 +455,5 @@ return [
     'Unlimited' => 'Neierobežots',
     'Thank you for your message! Next time we will send more tasks! Have a good day!' => 'Paldies par ziņu! Nākamajā reizē sūtīsim vairāk uzdevumus! Lai mierīga diena!',
     '30 day l. views' => '30 dienu n. sk.',
+    'View rent agreement' => 'Apskatīt īres līgumuuu',
 ];
