@@ -78,6 +78,10 @@ class SiteController extends Controller
 
     public function actionRequestPasswordReset()
     {
+        $this->layout = '@app/views/layouts/login';
+        $layoutHelper = new GuestLayoutHelper(null);
+        $this->view->params['layoutHelper'] = $layoutHelper;
+
         $model = new PasswordResetRequestForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -96,6 +100,10 @@ class SiteController extends Controller
 
     public function actionResetPassword($token)
     {
+        $this->layout = '@app/views/layouts/login';
+        $layoutHelper = new GuestLayoutHelper(null);
+        $this->view->params['layoutHelper'] = $layoutHelper;
+
         try {
             $model = new ResetPasswordForm($token);
         } catch (\InvalidArgumentException $e) {
