@@ -1,9 +1,9 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
 use yii\widgets\ActiveForm;
-use yii\helpers\Url;
 
 $this->title = \Yii::t('app',  'School settings');
 
