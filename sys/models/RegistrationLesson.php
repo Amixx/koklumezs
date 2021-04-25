@@ -50,15 +50,15 @@ class RegistrationLesson extends \yii\db\ActiveRecord
         return static::find()->where(['school_id' => $schoolId, 'for_students_with_instrument' => $withInstrument, 'for_students_with_experience' => $withExperience])->joinWith('lesson');
     }
 
-    public static function assignToStudent($schoolId, $user)
+    public static function assignToStudent($schoolId, $userId, $model)
     {
         $schoolTeacher = SchoolTeacher::getBySchoolId($schoolId)["user"];
-        $firstLectureIds = RegistrationLesson::getLessonIds($schoolId, $user->ownsInstrument, $user->hasExperience);
+        $firstLectureIds = RegistrationLesson::getLessonIds($schoolId, $model->ownsInstrument, $model->hasExperience);
         $insertDate = date('Y-m-d H:i:s', time());
         $insertColumns = [];
 
         foreach ($firstLectureIds as $lid) {
-            $insertColumns[] = [$schoolTeacher["id"], $user->id, $lid, $insertDate, 0, 0, 1];
+            $insertColumns[] = [$schoolTeacher["id"], $userId, $lid, $insertDate, 0, 0, 1];
         }
 
         Yii::$app->db

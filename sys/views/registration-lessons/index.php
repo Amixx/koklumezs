@@ -11,26 +11,16 @@ $this->title = \Yii::t('app', 'Lessons to assign after registration');
     <h1><?= Html::encode($this->title) ?></h1>
 
     <div class="container">
-        <div class="row">
-            <?= $this->render('_lessons', [
-                'title' => 'Without instrument; without experience',
-                'model' => $registrationLessons['without_instrument']['without_experience'],
-            ]) ?>
-            <?= $this->render('_lessons', [
-                'title' => 'Without instrument; with experience',
-                'model' => $registrationLessons['without_instrument']['with_experience'],
-            ]) ?>
-        </div>
-        <div class="row">
-            <?= $this->render('_lessons', [
-                'title' => 'With instrument; without experience',
-                'model' => $registrationLessons['with_instrument']['without_experience'],
-            ]) ?>
-            <?= $this->render('_lessons', [
-                'title' => 'With instrument; with experience',
-                'model' => $registrationLessons['with_instrument']['with_experience'],
-            ]) ?>
-        </div>
+        <?php for ($i = 0; $i < 2; $i++) { ?>
+            <div class="row">
+                <?php for ($j = 0; $j < 2; $j++) { ?>
+                <?= $this->render('_lessons', [
+                        'item' => $conf[$i][$j],
+                    ]);
+                } ?>
+            </div>
+        <?php } ?>
+
         <hr>
         <div class="row">
             <div class="col-12">

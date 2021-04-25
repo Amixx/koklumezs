@@ -9,7 +9,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\RentForm;
-use app\models\SchoolTeacher;
+use app\models\RegistrationMessage;
 use app\models\SignupQuestions;
 use app\models\SignUpForm;
 use app\models\SchoolStudent;
@@ -211,14 +211,15 @@ class SiteController extends Controller
             if ($user && SchoolStudent::createNew($s, $user->id)) {
                 Yii::$app->user->login($user);
 
-                RegistrationLesson::assignToStudent($s, $user);
+                RegistrationLesson::assignToStudent($s, $user->id, $model);
                 EmailSender::sendNewStudentNotification($user, $school['email']);
 
-                if ($school['registration_message'] != null && $user->ownsInstrument) {
+                $messageBody = RegistrationMessage::getBody($s, $model->ownsInstrument, $model->hasExperience);
+                if ($messageBody) {
                     EmailSender::sendPostSignupMessage($school['registration_message'], $school['email'], $user['email']);
                 }
 
-                if ($user->hasExperience) {
+                if ($model->hasExperience) {
                     $this->redirect(["signup-questions", 'u' => $user['id'], 's' => $s]);
                 } else {
                     Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam spēlēt! Turpmākās 2 nedēļas vari izmēģināt bez maksas!');

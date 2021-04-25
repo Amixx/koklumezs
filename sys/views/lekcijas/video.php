@@ -40,13 +40,6 @@
                     </p>
                 </video>
             </div>
-            <!-- <script>
-                var player_<?= $playerId ?> = videojs('<?= $playerId ?>', {
-                    responsive: true,
-                    width: 400,
-                    playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2]
-                });
-            </script> -->
         <?php } ?>
     </div>
 <?php } ?>
