@@ -29,13 +29,13 @@
         <div style="display: inline-block; width:60%;">
             <div>
                 <div class="lecture-wrap">
-                    <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-mob-<?= $model->id ?>" style="<?= $thumbStyle ?>"></a>
+                    <a class="lecture-thumb" data-toggle="modal" data-target="#lesson_modal_mob_<?= $model->id ?>" style="<?= $thumbStyle ?>"></a>
                     <span class="lecture-title">Spēlēsim kopā</span>
                 </div>
                 <?= $this->render('view-lesson-modal', [
                     'videoThumb' => $videoThumb,
                     'lecturefiles' => [0 => ['title' => $model->title . " izspēle", 'file' => $model->play_along_file]],
-                    'id' => "mob-" . $model->id,
+                    'id' => "mob_" . $model->id,
                 ]) ?>
             </div>
         </div>
@@ -47,7 +47,7 @@
             'lecturefiles' => $lecturefiles,
             'userEvaluatedLectures' => $userEvaluatedLectures,
             'videoThumb' => $videoThumb,
-            'modalIdPrefix' => 'mob-'
+            'modalIdPrefix' => 'mob_'
         ]) ?>
     <?php } ?>
 </div>

@@ -11,12 +11,12 @@ $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $video
             <h4>Spēlēsim kopā</h4>
             <div>
                 <div class="text-center lecture-wrap lecture-wrap-related">
-                    <a class="lecture-thumb" data-toggle="modal" data-target="#lecture-modal-<?= $model->id ?>" style="<?= $thumbStyle ?>"></a>
+                    <a class="lecture-thumb" data-toggle="modal" data-target="#lesson_modal_right_<?= $model->id ?>" style="<?= $thumbStyle ?>"></a>
                 </div>
                 <?= $this->render('view-lesson-modal', [
                     'videoThumb' => $videoThumb,
                     'lecturefiles' => [0 => ['title' => $model->title . " izspēle", 'file' => $model->play_along_file]],
-                    'id' => $model->id,
+                    'id' => 'right_' . $model->id,
                 ]) ?>
             </div>
         <?php } ?>
@@ -27,7 +27,8 @@ $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $video
             'relatedLectures' => $relatedLectures,
             'lecturefiles' => $lecturefiles,
             'userEvaluatedLectures' => $userEvaluatedLectures,
-            'videoThumb' => $videoThumb
+            'videoThumb' => $videoThumb,
+            'modalIdPrefix' => 'desk_',
         ]) ?>
     <?php } ?>
 </div>

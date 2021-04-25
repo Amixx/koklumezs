@@ -568,3 +568,10 @@ function submitLessonEvaluation(){
     $hiddenInput.val(this.dataset.value);
     $(this).closest("form").submit();
 }
+
+$("[id^=lesson_modal]").on("hidden.bs.modal", pausePlayerOnModalClose);
+
+function pausePlayerOnModalClose(){
+    var $pauseBtn = $(this).find(".vjs-play-control.vjs-playing");
+    if($pauseBtn) $pauseBtn.trigger('click');
+}
