@@ -34,7 +34,7 @@ $this->title = \Yii::t('app',  'School settings');
         </li>
         <li class="nav-item">
             <?= Html::a(
-                \Yii::t('app', 'Registration lessons'),
+                \Yii::t('app', 'Registration lessons and messages'),
                 ['/registration-lessons'],
                 ['class' => 'nav-link']
             ) ?>

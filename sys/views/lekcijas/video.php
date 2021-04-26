@@ -4,7 +4,7 @@
             $path_info = pathinfo($file['file']);
             $isYoutubeVideo = strpos($file['file'], "youtube") !== false;
             $fileUrl = $file['file'];
-            $fileExt = !$isYoutubeVideo ? strtolower($path_info['extension']) : null;
+            $fileExt = !$isYoutubeVideo && isset($path_info['extension']) ? strtolower($path_info['extension']) : null;
             $playbackRates = "\"playbackRates\": [0.5, 0.75, 1, 1.25, 1.5, 2]";
 
             $dataSetup = $isYoutubeVideo

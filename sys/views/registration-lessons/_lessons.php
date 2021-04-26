@@ -6,7 +6,7 @@ use yii\helpers\Url;
 
 ?>
 
-<div class="col-sm-6">
+<div class="col-sm-6" style="padding-bottom:32px;">
     <h3><?= Yii::t('app', $item['title']) ?></h3>
 
     <?= GridView::widget([
@@ -21,8 +21,9 @@ use yii\helpers\Url;
         ],
     ]); ?>
 
+    <h3>Ziņa</h3>
     <?php if ($item['message']) { ?>
-        <h3>Ziņa</h3>
+
         <?= Html::a(Yii::t('app', 'Edit'), Url::to(["registration-messages/update", 'id' => $item['message']->id])) ?>
         <?= Html::a(Yii::t('app', 'Delete'), Url::to(["registration-messages/delete", 'id' => $item['message']->id])) ?>
 

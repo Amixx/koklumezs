@@ -24,7 +24,6 @@ class School extends \yii\db\ActiveRecord
                 'email',
                 'registration_title',
                 'login_title',
-                'renter_message',
             ], 'string'],
             [['rent_schoolsubplan_id'], 'number'],
             [['created'], 'safe'],
@@ -42,7 +41,6 @@ class School extends \yii\db\ActiveRecord
             'logo' => \Yii::t('app',  'Logo (preferably in SVG format)'),
             'video_thumbnail' => \Yii::t('app',  'Video thumbnail'),
             'email' => \Yii::t('app',  'E-mail'),
-            'renter_message' => \Yii::t('app',  'Message for students who want to rent an instrument'),
             'rent_schoolsubplan_id' => \Yii::t('app',  'Subscription plan used to generate invoice for renters'),
             'registration_title' => \Yii::t('app', 'Registration title'),
             'login_title' => \Yii::t('app', 'Log in title'),
@@ -76,7 +74,6 @@ class School extends \yii\db\ActiveRecord
             \Yii::t('app', 'E-mail') => $school->email,
             \Yii::t('app', 'Registration title') => $school->registration_title,
             \Yii::t('app', 'Log in title') => $school->login_title,
-            \Yii::t('app', 'Message for students who want to rent an instrument') => $school->renter_message,
             \Yii::t('app', 'Subscription plan used to generate invoice for renters') => $rentSubplanName,
         ];
     }

@@ -216,7 +216,7 @@ class SiteController extends Controller
 
                 $messageBody = RegistrationMessage::getBody($s, $model->ownsInstrument, $model->hasExperience);
                 if ($messageBody) {
-                    EmailSender::sendPostSignupMessage($school['registration_message'], $school['email'], $user['email']);
+                    EmailSender::sendPostSignupMessage($messageBody, $school['email'], $user['email']);
                 }
 
                 if ($model->hasExperience) {
@@ -254,9 +254,9 @@ class SiteController extends Controller
             $user = RentForm::registerUser($signupModel, $model->phone_number);
 
             if ($user && SchoolStudent::createNew($s, $user->id)) {
-                if ($school['renter_message'] != null && $school['rent_schoolsubplan_id'] != null) {
+                if ($school['rent_schoolsubplan_id'] != null) {
                     $studentSubplan = RentForm::registerPlanForUser($user->id, $school['rent_schoolsubplan_id']);
-                    InvoiceManager::sendAdvanceInvoice($user, $studentSubplan, true);
+                    InvoiceManager::sendAdvanceToRenter($user, $studentSubplan, $signupModel);
                 }
 
                 $sent = EmailSender::sendRentNotification($model, $school['email']);

@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-$this->title = \Yii::t('app', 'Lessons to assign after registration');
+$this->title = \Yii::t('app', 'Lessons to assign and messages to send after registration');
 
 ?>
 <div class="difficulties-index">
