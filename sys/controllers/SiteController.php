@@ -23,6 +23,8 @@ use app\models\VerifyEmailForm;
 use app\helpers\EmailSender;
 use app\helpers\GuestLayoutHelper;
 use app\helpers\InvoiceManager;
+use app\models\Chat;
+use app\models\SchoolTeacher;
 use yii\web\BadRequestHttpException;
 
 class SiteController extends Controller
@@ -194,6 +196,7 @@ class SiteController extends Controller
         Yii::$app->language = $l;
 
         $school = School::findOne($s);
+        $schoolTeacher = SchoolTeacher::getBySchoolId($s)["user"];
         $layoutHelper = new GuestLayoutHelper($school);
         $this->view->params['layoutHelper'] = $layoutHelper;
 
@@ -214,9 +217,13 @@ class SiteController extends Controller
                 RegistrationLesson::assignToStudent($s, $user->id, $model);
                 EmailSender::sendNewStudentNotification($user, $school['email']);
 
-                $messageBody = RegistrationMessage::getBody($s, $model->ownsInstrument, $model->hasExperience);
-                if ($messageBody) {
-                    EmailSender::sendPostSignupMessage($messageBody, $school['email'], $user['email']);
+                $chatMessage = RegistrationMessage::getBody($s, $model->ownsInstrument, $model->hasExperience);
+                if ($chatMessage) {
+                    Chat::addNewMessage($chatMessage, $schoolTeacher['id'], $user['id']);
+                }
+
+                if ($school['registration_message'] != null && $model->ownsInstrument) {
+                    EmailSender::sendPostSignupMessage($school['registration_message'], $school['email'], $user['email']);
                 }
 
                 if ($model->hasExperience) {
@@ -241,6 +248,7 @@ class SiteController extends Controller
     public function actionRent($s, $l)
     {
         $school = School::findOne($s);
+        $schoolTeacher = SchoolTeacher::getBySchoolId($s)["user"];
         $layoutHelper = new GuestLayoutHelper($school);
 
         $this->layout = '@app/views/layouts/login';
@@ -254,9 +262,14 @@ class SiteController extends Controller
             $user = RentForm::registerUser($signupModel, $model->phone_number);
 
             if ($user && SchoolStudent::createNew($s, $user->id)) {
-                if ($school['rent_schoolsubplan_id'] != null) {
+                $chatMessage = RegistrationMessage::getBody($s, $signupModel->ownsInstrument, $signupModel->hasExperience);
+                if ($chatMessage) {
+                    Chat::addNewMessage($chatMessage, $schoolTeacher['id'], $user['id']);
+                }
+
+                if ($school['renter_message'] != null && $school['rent_schoolsubplan_id'] != null) {
                     $studentSubplan = RentForm::registerPlanForUser($user->id, $school['rent_schoolsubplan_id']);
-                    InvoiceManager::sendAdvanceToRenter($user, $studentSubplan, $signupModel);
+                    InvoiceManager::sendAdvanceInvoice($user, $studentSubplan, true);
                 }
 
                 $sent = EmailSender::sendRentNotification($model, $school['email']);

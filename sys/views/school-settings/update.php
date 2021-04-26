@@ -53,6 +53,14 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
             'editorOptions' => $ckeditorOptions,
         ]) ?>
 
+        <?= $form->field($model, 'registration_message')->widget(CKEditor::class, [
+            'editorOptions' => $ckeditorOptions,
+        ]) ?>
+
+        <?= $form->field($model, 'renter_message')->widget(CKEditor::class, [
+            'editorOptions' => $ckeditorOptions,
+        ]) ?>
+
         <?= $form->field($model, 'rent_schoolsubplan_id')
             ->dropDownList(
                 $schoolSubPlans,

@@ -39,52 +39,15 @@ class InvoiceManager
 
         InvoicePdfFileGenerator::generate($invoicePath, $invoiceContent, $title);
 
-        $message = isset($schoolSubplan['message']) && $schoolSubplan['message']
-            ? $schoolSubplan['message']
-            : "Nosūtam rēķinu par tekošā mēneša nodarbībām. Lai jauka diena!";
-
-        $sent = EmailSender::sendEmailWithAdvanceInvoice($message, $school['email'], $user['email'], $invoiceNumber, $invoicePath);
-
-        if ($sent) {
-            $studentSubplan->increaseSentInvoicesCount();
-
-            SentInvoices::createAdvance($user['id'], $invoiceNumber, $schoolSubplan, $studentSubplan);
+        if ($sendToRenter) {
+            $sent = EmailSender::sendInvoiceToRenter($school['renter_message'], $school['email'], $user['email'], $invoicePath);
         } else {
-            EmailSender::sendWarningToTeacher($user['email'], $school['email']);
+            $message = isset($schoolSubplan['message']) && $schoolSubplan['message']
+                ? $schoolSubplan['message']
+                : "Nosūtam rēķinu par tekošā mēneša nodarbībām. Lai jauka diena!";
+
+            $sent = EmailSender::sendEmailWithAdvanceInvoice($message, $school['email'], $user['email'], $invoiceNumber, $invoicePath);
         }
-    }
-
-    public static function sendAdvanceToRenter($user, $studentSubplan, $signupModel)
-    {
-        $schoolSubplan = $studentSubplan['plan'];
-        $school = School::getByStudent($user['id']);
-        $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
-        $userFullName = Users::getFullName($user);
-        $invoiceBasePath = self::getInvoiceBasePath($schoolTeacher['user_id'], true);
-        $invoiceNumber = self::generateInvoiceNumber();
-        $title = self::generateInvoiceTitle($invoiceNumber, true);
-        $invoicePath = $invoiceBasePath . $title;
-        $subplanParts = SchoolSubplanParts::getPartsForSubplan($schoolSubplan['id']);
-        $subplanCost = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
-
-        $invoiceContent = Yii::$app->view->render('@app/views/invoice-templates/advance', [
-            'id' => $invoiceNumber,
-            'fullName' => $userFullName,
-            'email' => $user['email'],
-            'subplan' => $schoolSubplan,
-            'subplanCost' => $subplanCost,
-            'subplanParts' => $subplanParts,
-            'payer' => $user['payer'],
-        ]);
-
-        InvoicePdfFileGenerator::generate($invoicePath, $invoiceContent, $title);
-
-        $messageBody = RegistrationMessage::getBody($school['id'], $signupModel->ownsInstrument, $signupModel->hasExperience);
-        if (!$messageBody) {
-            $messageBody = "";
-        }
-
-        $sent = EmailSender::sendInvoiceToRenter($messageBody, $school['email'], $user['email'], $invoicePath);
 
         if ($sent) {
             $studentSubplan->increaseSentInvoicesCount();
