@@ -45,7 +45,9 @@ $this->title = \Yii::t('app',  'Your first kokle');
 
         <div class="col-sm-12 text-center">
             <div>
-                <?= Html::a(Yii::t('app', 'Back'), $backUrl) ?>
+                <?= Html::a(Yii::t('app', 'Back'), $backUrl, [
+                    'class' => 'btn btn-info'
+                ]) ?>
                 <?= Html::submitButton(\Yii::t('app', 'Submit'), [
                     'class' => 'btn btn-primary btn-flat rent-submit-button',
                     'name' => 'login-button'

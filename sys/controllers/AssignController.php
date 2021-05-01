@@ -14,6 +14,7 @@ use app\models\SchoolLecture;
 use app\models\SchoolTeacher;
 use app\models\SchoolStudent;
 use app\models\LectureViews;
+use app\models\RelatedLectures;
 use app\models\StudentSubPlans;
 use Yii;
 use yii\web\Controller;
@@ -85,7 +86,7 @@ class AssignController extends Controller
         $options['lectureDifficulties'] = $lectureDifficulties;
         $options['evaluationsTitles'] = $evaluationsTitles;
         $options['evaluationsValues'] = $evaluationsValues;
-        
+
         return $this->render('index', $options);
     }
 
@@ -161,7 +162,6 @@ class AssignController extends Controller
         $videoParam = Evaluations::getVideoParam();
         $evaluationsTitles = Evaluations::getEvaluationsTitles();
         $evaluationsValues = Evaluations::getEvaluationsValueTexts();
-        // $lastlectures = UserLectures::getLastTenLectures($id); //UserLectures::getLastTenEvaluatedLectures($id);
         $lastlectures = UserLectures::getAllLectures($id);
         $sevenDayResult = UserLectures::getDayResult($id, 7);
         $thirtyDayResult = UserLectures::getDayResult($id, 30);
@@ -192,7 +192,7 @@ class AssignController extends Controller
             $users = array_filter($users, function ($user) use ($schoolStudentIds) {
                 return in_array($user["id"], $schoolStudentIds);
             });
-            $lectures = array_filter($lectures, function ($lecture) use ($schoolLectureIds) {
+            $lectures = array_filter($lectures, function ($lecture) use ($schoolLectureIds, $userLectures) {
                 return in_array($lecture["id"], $schoolLectureIds);
             });
         }
