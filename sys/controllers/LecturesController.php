@@ -193,17 +193,17 @@ class LecturesController extends Controller
         }
         if ($model->load($post) && $model->save()) {
             if (isset($post['difficulties'])) {
-                $sum = 0;
                 LecturesDifficulties::removeLectureDifficulties($model->id);
                 foreach ($post['difficulties'] as $pid => $value) {
-                    $difficulty = new LecturesDifficulties();
-                    $difficulty->diff_id = $pid;
-                    $difficulty->lecture_id = $model->id;
-                    $difficulty->value = $value ?? 0;
-                    if (is_numeric($difficulty->value)) {
-                        $sum += $difficulty->value;
+                    $difficultySelected = isset($post['difficultiesSelected'][$pid]) && $post['difficultiesSelected'][$pid];
+
+                    if ($difficultySelected) {
+                        $difficulty = new LecturesDifficulties();
+                        $difficulty->diff_id = $pid;
+                        $difficulty->lecture_id = $model->id;
+                        $difficulty->value = $value ?? 0;
+                        $difficulty->save();
                     }
-                    $difficulty->save();
                 }
                 $model->updated = date('Y-m-d H:i:s', time());
                 $model->save(false);
@@ -262,7 +262,8 @@ class LecturesController extends Controller
         return $this->redirect(['index']);
     }
 
-    private static function deleteAllRelatedForLecture($tablename, $id){
+    private static function deleteAllRelatedForLecture($tablename, $id)
+    {
         Yii::$app
             ->db
             ->createCommand()
