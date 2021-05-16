@@ -262,6 +262,8 @@ class SiteController extends Controller
             $user = RentForm::registerUser($signupModel, $model->phone_number);
 
             if ($user && SchoolStudent::createNew($s, $user->id)) {
+                RegistrationLesson::assignToStudent($s, $user->id, $signupModel);
+
                 $chatMessage = RegistrationMessage::getBody($s, $signupModel->ownsInstrument, $signupModel->hasExperience);
                 if ($chatMessage) {
                     Chat::addNewMessage($chatMessage, $schoolTeacher['id'], $user['id']);

@@ -14,7 +14,7 @@ $this->title = \Yii::t('app',  'Your first kokle');
         <div class="container">
             <h2><?= Yii::t('app', 'Rent kokle') ?></h2>
             <p style="font-size:16px">
-                <?= Yii::t('app', 'If you wish to rent kokle (10 euro/month), after invoice payment we will send kokle to Omniva parcel machine of your choice (shipping 5 euro)') ?>
+                <?= Yii::t('app', 'Fill in this application form if you want to rent a kokle. Rent 10 eur / month. Shipping with Omniva parcel terminal 5 eur.') ?>
             </p>
             <p style="color:red"> <?= Yii::t('app', 'Please fill every field') ?> </p>
         </div>

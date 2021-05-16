@@ -368,7 +368,7 @@ return [
     'no plan assigned to pupil' => 'skolēnam nav piešķirts plāns',
     'Aggree' => 'Piekrīt',
     'First name' => 'Vārds',
-    'If you wish to rent kokle (10 euro/month), after invoice payment we will send kokle to Omniva parcel machine of your choice (shipping 5 euro)' => 'Aizpildi šo pieteikuma formu, ja vēlies īrēt kokli. Īres maksa nodarbību izmēģinājuma periodā - 10eur. Koklītes nosūtīšanu (ar Omniva pakomātu) segsim no savas puses. Ja pēc izmēģinājuma posma beigām nevēlēsies turpināt nodarbības un koklīti nosūtīsi mums atpakaļ 5 dienu laikā - arī atpakaļsūtīšanu apmaksās Kokļu Mežs (sms veidā saņemsi kodu, ar kuru varēsi atgriezt mums koklīti bez maksas).',
+    'Fill in this application form if you want to rent a kokle. Rent 10 eur / month. Shipping with Omniva parcel terminal 5 eur.' => 'Aizpildi šo pieteikuma formu, ja vēlies īrēt kokli. Īres maksa 10 eur / mēnesī. Nosūtīšana ar Omniva pakomātu 5 eur.',
     'Last name' => 'Uzvārds',
     'Owns instrument' => 'Ir savs instruments',
     'Please choose.' => 'Lūdzu izvēlieties.',
