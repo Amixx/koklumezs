@@ -194,6 +194,10 @@ a.desc:after {
 .nav li>form>button.logout {
     padding: 15px;
     border: none;  
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 190px;
 }
 .video-js {
     width: 636px;
@@ -580,12 +584,12 @@ div.has-experience.active, div.rent.active {
     top: 20px;
     position: absolute;
     display: inline-block;
-    left: calc(50% - 210px);
+    left: calc(50% - 250px);
     z-index: 1050; /* slikti :))) */
 }
 
 #chat-btn-with-icons.teacher {
-    left: calc(50% - 500px);
+    left: calc(50% - 530px);
 }
 
 .teacher-communication-button {
@@ -939,11 +943,11 @@ div.has-experience.active, div.rent.active {
     }
 
     #chat-btn-with-icons {
-        left: calc(50% - 310px);
+        left: calc(50% - 350px);
     }
 
     #chat-btn-with-icons.teacher {
-        left: calc(50% - 580px);
+        left: calc(50% - 630px);
     }
 }
 
@@ -955,7 +959,7 @@ div.has-experience.active, div.rent.active {
     }
 
     #chat-btn-with-icons, #chat-btn-with-icons.teacher {
-        left: calc(50% - 380px);
+        left: calc(50% - 460px);
     }
 }
 
