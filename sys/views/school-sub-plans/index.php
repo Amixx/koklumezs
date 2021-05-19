@@ -24,7 +24,7 @@ $this->title = \Yii::t('app', 'Subscription plans');
             [
                 'attribute' => 'type',
                 'value' => function ($dataProvider) {
-                    return $dataProvider['type'] === 'lesson' ? 'Mācību' : 'Īres';
+                    return $dataProvider->typeText();
                 }
             ],
             'pvn_percent',

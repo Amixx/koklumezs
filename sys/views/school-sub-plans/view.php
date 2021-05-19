@@ -33,7 +33,7 @@ $this->title = $model->name;
             [
                 'attribute' => 'type',
                 'value' => function ($dataProvider) {
-                    return $dataProvider['type'] === 'lesson' ? 'Mācību' : 'Īres';
+                    return $dataProvider->typeText();
                 }
             ],
             'months',

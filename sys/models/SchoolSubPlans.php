@@ -38,6 +38,11 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
         ];
     }
 
+    public function typeText()
+    {
+        return $this->type === 'lesson' ? 'Mācību' : 'Īres';
+    }
+
     public static function getForSchool($schoolId)
     {
         return self::find()->where(['school_id' => $schoolId]);

@@ -124,8 +124,7 @@ $isTeacher = Users::isCurrentUserTeacher();
                             [
                                 'label' => Yii::t('app', 'Type'),
                                 'value' => function ($dataProvider) {
-                                    $t = $dataProvider->plan->type;
-                                    return $t === 'lesson' ? 'Mācību' : 'Īres';
+                                    return $dataProvider->plan->typeText();
                                 }
                             ],
                             [
