@@ -22,9 +22,9 @@ class School extends \yii\db\ActiveRecord
                 'logo',
                 'video_thumbnail',
                 'email',
-                'registration_message',
                 'registration_title',
                 'login_title',
+                'registration_message',
                 'renter_message',
             ], 'string'],
             [['rent_schoolsubplan_id'], 'number'],
@@ -43,11 +43,11 @@ class School extends \yii\db\ActiveRecord
             'logo' => \Yii::t('app',  'Logo (preferably in SVG format)'),
             'video_thumbnail' => \Yii::t('app',  'Video thumbnail'),
             'email' => \Yii::t('app',  'E-mail'),
-            'registration_message' => \Yii::t('app',  'Registration message'),
-            'renter_message' => \Yii::t('app',  'Message for students who want to rent an instrument'),
             'rent_schoolsubplan_id' => \Yii::t('app',  'Subscription plan used to generate invoice for renters'),
             'registration_title' => \Yii::t('app', 'Registration title'),
             'login_title' => \Yii::t('app', 'Log in title'),
+            'registration_message' => \Yii::t('app',  'Registration message'),
+            'renter_message' => \Yii::t('app',  'Message for students who want to rent an instrument'),
         ];
     }
 
@@ -76,11 +76,11 @@ class School extends \yii\db\ActiveRecord
             \Yii::t('app', 'Video thumbnail') => $school->video_thumbnail,
             \Yii::t('app', 'Logo') => $school->logo,
             \Yii::t('app', 'E-mail') => $school->email,
-            \Yii::t('app', 'Registration message') => $school->registration_message,
             \Yii::t('app', 'Registration title') => $school->registration_title,
             \Yii::t('app', 'Log in title') => $school->login_title,
-            \Yii::t('app', 'Message for students who want to rent an instrument') => $school->renter_message,
             \Yii::t('app', 'Subscription plan used to generate invoice for renters') => $rentSubplanName,
+            \Yii::t('app', 'Registration message') => $school->registration_message,
+            \Yii::t('app', 'Message for students who want to rent an instrument') => $school->renter_message,
         ];
     }
 
@@ -93,7 +93,7 @@ class School extends \yii\db\ActiveRecord
 
         if ($isTeacher) {
             $school = self::getByTeacher($userId);
-        } else if($isStudent){
+        } else if ($isStudent) {
             $school = self::getByStudent($userId);
         }
 

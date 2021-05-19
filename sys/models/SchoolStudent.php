@@ -55,4 +55,13 @@ class SchoolStudent extends \yii\db\ActiveRecord
     {
         return self::find()->where(['user_id' => $studentId])->joinWith('school')->joinWith('user')->one();
     }
+
+    public static function createNew($schoolId, $userId)
+    {
+        $schoolStudent = new SchoolStudent;
+        $schoolStudent->school_id = $schoolId;
+        $schoolStudent->user_id = $userId;
+
+        return $schoolStudent->save();
+    }
 }

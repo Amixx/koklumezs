@@ -201,6 +201,12 @@ class UserController extends Controller
 
                 if ($resetActivePlan) {
                     StudentSubPlans::resetActivePlanForUser($model->id);
+                    $studentSubplan = new StudentSubPlans;
+                    $studentSubplan->user_id = $model->id;
+                    $studentSubplan->start_date = date('Y-m-d H:i:s', time());
+                    $studentSubplan->sent_invoices_count = 0;
+                    $studentSubplan->times_paid = 0;
+                    $studentSubplan->is_active = true;
                 }
 
                 $studentSubplan->load($post);
@@ -232,7 +238,7 @@ class UserController extends Controller
                 $payer->swift = $postData["swift"];
                 $payer->account_number = $postData["swift"];
 
-                if($payer->validate()){
+                if ($payer->validate()) {
                     if ($newPayer) {
                         $payer->save();
                     } else {
@@ -240,7 +246,7 @@ class UserController extends Controller
                     }
 
                     Yii::$app->session->setFlash('success', 'Maksātāja informācija saglabāta!');
-                }                
+                }
             }
 
             $model->update();

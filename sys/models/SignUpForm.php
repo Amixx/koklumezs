@@ -89,9 +89,22 @@ class SignUpForm extends Model
             $saved = $user->save();
 
             if ($saved) {
-                return $user->id;
+                return $user;
             }
         }
         return false;
+    }
+
+    public static function fromSession()
+    {
+        $model = new SignUpForm;
+        if (Yii::$app->session['signupModel'] !== null) {
+            $signupModel = Yii::$app->session['signupModel'];
+            $model->first_name = $signupModel['first_name'];
+            $model->last_name = $signupModel['last_name'];
+            $model->email = $signupModel['email'];
+        }
+
+        return $model;
     }
 }

@@ -32,6 +32,7 @@ use app\models\School;
 use app\models\LectureViews;
 use app\models\SchoolStudent;
 use app\models\CommentResponses;
+use app\models\RegistrationMessage;
 use app\models\UserLectures;
 use app\models\Userlectureevaluations;
 use kartik\mpdf\Pdf;
@@ -113,5 +114,7 @@ class TestController extends Controller
         //         $l->save();
         //     }
         // }
+
+        var_dump(RegistrationMessage::getBody(1, false, true));
     }
 }

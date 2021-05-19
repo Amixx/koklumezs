@@ -17,7 +17,10 @@ function getUrls(urlArray) {
     });
 }
 
-var cacheName = "koklumezs";
+var base = "koklumezs-";
+var version = "1.0.4";
+var cacheName = base + version;
+
 var urlsForCachingStrategies = { 
     cacheOnly: getUrls([
         "/js/select2.js",
@@ -36,7 +39,7 @@ var urlsForCachingStrategies = {
       "/icon512.png"
     ],
     staleWhileRevalidate: [
-        "/files/",
+        // "/files/",
     ]
 }
 
@@ -69,6 +72,7 @@ function precache(){
 }
 
 self.addEventListener('activate', function(event) {
+    clearOldCache(event);
     event.waitUntil(self.clients.claim());
 });
 
@@ -124,11 +128,26 @@ function staleWhileRevalidate(request){
                 .then(function(cacheResponse) {
                     fetch(request)
                         .then(function(networkResponse) {
-                            cache.put(request, networkResponse)
+                            cache.put(request, networkResponse);
+                            return networkResponse;
                         })
-                    return cacheResponse || networkResponse
+
+                        if(cacheResponse) return cacheResponse;
                 });
         })
+}
+
+function clearOldCache(event){
+    event.waitUntil(
+        caches.keys().then((keyList) => {
+        return Promise.all(keyList.map((key) => {
+            if (key !== cacheName) {
+                console.log("deleting: ", key, cacheName);
+                return caches.delete(key);
+            }
+        }));
+        })
+    );
 }
 
 function cleanResponse(response) {

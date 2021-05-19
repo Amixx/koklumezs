@@ -4,18 +4,18 @@ namespace app\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\RentForm;
-use app\models\SchoolTeacher;
+use app\models\RegistrationMessage;
 use app\models\SignupQuestions;
 use app\models\SignUpForm;
 use app\models\SchoolStudent;
 use app\models\School;
 use app\models\RegistrationLesson;
 use app\models\Users;
-use app\models\StudentSubPlans;
 use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
 use app\models\ResendVerificationEmailForm;
@@ -23,6 +23,8 @@ use app\models\VerifyEmailForm;
 use app\helpers\EmailSender;
 use app\helpers\GuestLayoutHelper;
 use app\helpers\InvoiceManager;
+use app\models\Chat;
+use app\models\SchoolTeacher;
 use yii\web\BadRequestHttpException;
 
 class SiteController extends Controller
@@ -78,6 +80,10 @@ class SiteController extends Controller
 
     public function actionRequestPasswordReset()
     {
+        $this->layout = '@app/views/layouts/login';
+        $layoutHelper = new GuestLayoutHelper(null);
+        $this->view->params['layoutHelper'] = $layoutHelper;
+
         $model = new PasswordResetRequestForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -96,6 +102,10 @@ class SiteController extends Controller
 
     public function actionResetPassword($token)
     {
+        $this->layout = '@app/views/layouts/login';
+        $layoutHelper = new GuestLayoutHelper(null);
+        $this->view->params['layoutHelper'] = $layoutHelper;
+
         try {
             $model = new ResetPasswordForm($token);
         } catch (\InvalidArgumentException $e) {
@@ -186,60 +196,47 @@ class SiteController extends Controller
         Yii::$app->language = $l;
 
         $school = School::findOne($s);
+        $schoolTeacher = SchoolTeacher::getBySchoolId($s)["user"];
         $layoutHelper = new GuestLayoutHelper($school);
         $this->view->params['layoutHelper'] = $layoutHelper;
 
-        $model = new SignUpForm();
+        $model = SignUpForm::fromSession();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $model['language'] = $l;
-            $userId = $model->signUp();
 
-            if ($userId) {
-                $schoolStudent = new SchoolStudent;
+            if (!$model->ownsInstrument) {
+                Yii::$app->session['signupModel'] = $model;
+                return $this->redirect(Url::to(["site/rent", 's' => $s, 'l' => $l]));
+            }
 
-                $schoolStudent->school_id = $s;
-                $schoolStudent->user_id = $userId;
+            $user = $model->signUp();
+            if ($user && SchoolStudent::createNew($s, $user->id)) {
+                Yii::$app->user->login($user);
 
-                $saved = $schoolStudent->save();
+                RegistrationLesson::assignToStudent($s, $user->id, $model);
+                EmailSender::sendNewStudentNotification($user, $school['email']);
 
-                if ($saved) {
-                    $user = Users::findById($userId);
-                    Yii::$app->user->login($user);
+                $chatMessage = RegistrationMessage::getBody($s, $model->ownsInstrument, $model->hasExperience);
+                if ($chatMessage) {
+                    Chat::addNewMessage($chatMessage, $schoolTeacher['id'], $user['id']);
+                }
 
-                    $schoolTeacher = SchoolTeacher::getBySchoolId($s)["user"];
-                    $firstLectureIds = RegistrationLesson::getLessonIds($school['id'], $model->ownsInstrument, $model->hasExperience);
-                    $insertDate = date('Y-m-d H:i:s', time());
-                    $insertColumns = [];
+                if ($school['registration_message'] != null && $model->ownsInstrument) {
+                    EmailSender::sendPostSignupMessage($school['registration_message'], $school['email'], $user['email']);
+                }
 
-                    foreach ($firstLectureIds as $lid) {
-                        $insertColumns[] = [$schoolTeacher["id"], $userId, $lid, $insertDate, 0, 0, 1];
-                    }
-
-                    Yii::$app->db
-                        ->createCommand()
-                        ->batchInsert('userlectures', ['assigned', 'user_id', 'lecture_id', 'created', 'user_difficulty', 'open_times', 'sent'], $insertColumns)
-                        ->execute();
-
-                    EmailSender::sendNewStudentNotification($user, $school['email']);
-
-                    if ($school['registration_message'] != null && $model->ownsInstrument) {
-                        EmailSender::sendPostSignupMessage($school['registration_message'], $school['email'], $user['email']);
-                    }
-
-                    if (!$model->ownsInstrument) {
-                        $this->redirect(["rent", 'u' => $user['id']]);
-                    } else if ($model->hasExperience) {
-                        $this->redirect(["signup-questions", 'u' => $user['id'], 's' => $s]);
-                    } else {
-                        Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam spēlēt! Turpmākās 2 nedēļas vari izmēģināt bez maksas!');
-                        return $this->redirect(['lekcijas/index']);
-                    }
+                if ($model->hasExperience) {
+                    $this->redirect(["signup-questions", 'u' => $user['id'], 's' => $s]);
+                } else {
+                    Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam spēlēt! Turpmākās 2 nedēļas vari izmēģināt bez maksas!');
+                    return $this->redirect(['lekcijas/index']);
                 }
             }
         }
 
         $model->password = '';
+        $model->passwordRepeat = '';
         $instrument = strtolower($school['instrument']);
         return $this->render('signup', [
             'model' => $model,
@@ -248,50 +245,54 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionRent($u)
+    public function actionRent($s, $l)
     {
-        $school = School::getByStudent($u);
-        $user = Users::findOne($u);
-        $model = new RentForm;
+        $school = School::findOne($s);
+        $schoolTeacher = SchoolTeacher::getBySchoolId($s)["user"];
+        $layoutHelper = new GuestLayoutHelper($school);
 
-        $model->fullname = $user['first_name'] . " " . $user['last_name'];
-        $model->email = $user['email'];
-        $valid = $model->load(Yii::$app->request->post()) && $model->validate();
+        $this->layout = '@app/views/layouts/login';
+        $this->view->params['layoutHelper'] = $layoutHelper;
+        Yii::$app->language = $l;
 
-        if ($valid) {
-            if ($school['renter_message'] != null && $school['rent_schoolsubplan_id'] != null) {
-                $studentSubplan = new StudentSubPlans;
-                $studentSubplan->user_id = $user['id'];
-                $studentSubplan->plan_id = $school['rent_schoolsubplan_id'];
-                $studentSubplan->is_active = false;
-                $studentSubplan->start_date = date('Y-m-d H:i:s', time());
-                $studentSubplan->sent_invoices_count = 0;
-                $studentSubplan->times_paid = 0;
-                $studentSubplan->save();
+        $signupModel = Yii::$app->session['signupModel'];
+        $model = RentForm::createFromSession($signupModel);
 
-                $user->status = 11;
-                $user->phone_number = $model->phone_number;
-                $user->update();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $user = RentForm::registerUser($signupModel, $model->phone_number);
 
-                InvoiceManager::sendAdvanceInvoice($user, $studentSubplan, true);
-            }
+            if ($user && SchoolStudent::createNew($s, $user->id)) {
+                RegistrationLesson::assignToStudent($s, $user->id, $signupModel);
 
-            $sent = EmailSender::sendRentNotification($model, $school['email']);
-            if ($sent) {
-                Yii::$app->session->setFlash('success', 'Paldies par tavu pieteikumu! Tuvākajā laikā sazināsimies ar tevi uz tavu norādīto epastu. Tikmēr vari noskatīties video par to, kā darboties platformā!');
-                return $this->redirect(['lekcijas/index']);
+                $chatMessage = RegistrationMessage::getBody($s, $signupModel->ownsInstrument, $signupModel->hasExperience);
+                if ($chatMessage) {
+                    Chat::addNewMessage($chatMessage, $schoolTeacher['id'], $user['id']);
+                }
+
+                if ($school['renter_message'] != null && $school['rent_schoolsubplan_id'] != null) {
+                    $studentSubplan = RentForm::registerPlanForUser($user->id, $school['rent_schoolsubplan_id']);
+                    InvoiceManager::sendAdvanceInvoice($user, $studentSubplan, true);
+                }
+
+                $sent = EmailSender::sendRentNotification($model, $school['email']);
+
+                if ($sent) {
+                    Yii::$app->session->setFlash('success', 'Paldies par tavu pieteikumu! Tuvākajā laikā sazināsimies ar tevi uz tavu norādīto epastu. Tikmēr vari noskatīties video par to, kā darboties platformā!');
+                    Yii::$app->user->login($user, 3600 * 24 * 30);
+                    return $this->redirect(['lekcijas/index']);
+                }
             }
         }
 
         return $this->render('rent', [
             'model' => $model,
+            'backUrl' => Url::to(['site/sign-up', 's' => $s, 'l' => $l]),
         ]);
     }
 
     public function actionSignupQuestions($u, $s)
     {
         $user = Users::findOne($u);
-
         $schoolSignupQuestions = SignupQuestions::getForSchool($s);
 
         $post = Yii::$app->request->post();

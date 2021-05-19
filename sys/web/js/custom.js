@@ -10,6 +10,11 @@ localhosts.forEach(function(host){
 
 var IS_PROD = !IS_LOCAL;
 
+function getUrl(url) {
+    var prefix = IS_PROD ? '/sys' : '';
+    return prefix + url;
+}
+
 $(document).ready(function() {
     if ($('select').length) {
         $('select').select2();
@@ -26,6 +31,68 @@ $(document).ready(function() {
         $('img[title]').tooltip()
     });
 
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register(getUrl('/sw.js'), {
+            scope: getUrl('/')
+        });
+    }
+
+
+    /* When the user scrolls down, hide the navbar. When the user scrolls up, show the navbar */
+    var prevScrollpos = window.pageYOffset;
+    var $nav = $("#navbar");
+    var $chatBtn = $("#chat-btn-with-icons")
+
+    window.onscroll = function() {
+        var currentScrollPos = window.pageYOffset;
+        if (prevScrollpos > currentScrollPos) {
+            $nav.css("top", 0);
+            if($chatBtn) $chatBtn.css("top", "20px");
+        } else {
+            $nav.css("top", "-90px");
+            if($chatBtn) $chatBtn.css("top", "-110px");
+        }
+        prevScrollpos = currentScrollPos;
+    }
+
+    var deferredPrompt;
+    var $installButton =$("#install-prompt");
+    var $promtModal = $("#a2hs-modal");
+    var $promptClose = $("#a2hs-modal-close");
+    var $promptInstall = $("#a2hs-modal-install");
+
+    $promptClose.on('click', function(){
+        $promtModal.modal('hide');
+    });
+    $promptInstall.on('click', function(){
+        handleDeferredPrompt();
+    });
+
+    window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        deferredPrompt = e;
+
+        if(!$('#myModal').hasClass('in')) $installButton.show();
+        $promtModal.modal('show');
+    });
+
+    $installButton.on('click', function() {
+        $installButton.css("background", "gainsboro");
+        handleDeferredPrompt();
+    });
+
+    function handleDeferredPrompt(){
+        deferredPrompt.prompt();
+
+        deferredPrompt.userChoice.then(function(choiceResult) {
+            if (choiceResult.outcome === 'accepted') {
+                $installButton.hide();
+                $promtModal.modal('hide');
+            } else {
+                $installButton.css("background", "goldenrod");
+            }
+        });
+    }
 
     $(".ReplyButton").on('click', function(){
         var newText = this.innerText === "Atbildēt" ? "Atcelt" : "Atbildēt";
@@ -43,11 +110,7 @@ $(document).ready(function() {
     }    
 
     setupArchiveSearchByCategory();
-
-    // makeNavbarMultilineForStudents();
-
     setupLectureFilterByDifficulty();
-
     setupAssignUserListFilters();
 
     $("select[name='SignUpForm[ownsInstrument]']").on('change', function(){  
@@ -63,27 +126,6 @@ $(document).ready(function() {
         }
     });
 
-    // $('#registration-button').on('click', function(event){
-    //     let select = $("select[name='SignUpForm[ownsInstrument]']").val();
-
-    //     if ((select === '') && (!$("span.select2").hasClass('select-warning-border'))){
-    //         event.preventDefault();
-    //         $("span.select2").addClass("select-warning-border");
-    //         let errorMessage = document.createElement("p");
-    //         let text = document.createTextNode("Lūdzu, izvēlieties vienu no variantiem");
-    //         errorMessage.classList.add('select-warning-message');
-    //         errorMessage.appendChild(text);
-    //         document.getElementById('has-instrument').appendChild(errorMessage);
-    //     }
-
-    //     if ((select !== '') && ($("span.select2").hasClass('select-warning-border'))) {
-    //         $("span.select2").removeClass("select-warning-border");
-    //         let checkbox = document.getElementById('has-instrument');
-    //         checkbox.removeChild(checkbox.lastChild);
-    //     }
-        
-    // })
-    
     addPopoverToElement(
         ".info-school-email",
         "<p>Skolas e-pasts tiek izmantots ziņojumu nosūtīšanai skolēniem, kā arī uz šo e-pastu tiek sūtīti paziņojumi.</p>"
@@ -102,29 +144,6 @@ function addPopoverToElement($selector, html){
         }
     });
 }
-
-// function makeNavbarMultilineForStudents(){
-//     var navbarItemsSelector = ".navbar-nav.for-students li a";
-
-//     $(navbarItemsSelector).each(function (_, item) {
-//         makeItemMultiline(item);       
-//     });
-
-//     function makeItemMultiline(item){
-//         item.innerHTML = textToMultiline(item.innerText.split("/"));;
-//         item.style.lineHeight = "10px";
-//     }
-
-//     function textToMultiline(parts){
-//         var newText = "";
-
-//         parts.forEach(function(part){
-//             newText += "<p>" + part + "</p>";
-//         });
-
-//         return newText;
-//     }
-// }
 
 function setupArchiveSearchByCategory(){
     var selectors = {
@@ -160,11 +179,15 @@ function setupArchiveSearchByCategory(){
     }
 
     function getOtherCheckboxSelector(selector) {
-        return selector === selectors.checkboxes.favourites ? selectors.checkboxes.stillLearning : selectors.checkboxes.favourites;
+        return selector === selectors.checkboxes.favourites
+            ? selectors.checkboxes.stillLearning
+            : selectors.checkboxes.favourites;
     }
 
     function getIconSelector(checkboxSelector) {
-        return checkboxSelector === selectors.checkboxes.favourites ? selectors.icons.favourites : selectors.icons.stillLearning;
+        return checkboxSelector === selectors.checkboxes.favourites
+            ? selectors.icons.favourites
+            : selectors.icons.stillLearning;
     }
 }
 
@@ -361,7 +384,7 @@ function reloadChat(message, clearChat, showSpinner) {
 }
 
 function scrollChatToBottom(){
-    useTimeout = false;
+    var useTimeout = false;
     $("#chat-box-container").scrollTop(function() {
         useTimeout = this.scrollHeight === 0;
         return this.scrollHeight;
@@ -515,8 +538,8 @@ function fiterSentInvoices(){
     if(filterByText || filterByDate){
         $sentInvoicesRows.each(function(i, row){
             var $row = $(row);
-            $rowText = $row.text().toLowerCase();
-            $rowDate = $row.find("td:nth-child(2)").text();
+            var $rowText = $row.text().toLowerCase();
+            var $rowDate = $row.find("td:nth-child(2)").text();
 
             if(filterByText && $rowText.indexOf(searchValue) === -1) $row.hide();
             else if(filterByDate && $rowDate < firstDayDate || $rowDate > lastDayDate){
@@ -544,4 +567,11 @@ function submitLessonEvaluation(){
     var $hiddenInput = $(this.parentElement).siblings("[name=difficulty-evaluation]");
     $hiddenInput.val(this.dataset.value);
     $(this).closest("form").submit();
+}
+
+$("[id^=lesson_modal]").on("hidden.bs.modal", pausePlayerOnModalClose);
+
+function pausePlayerOnModalClose(){
+    var $pauseBtn = $(this).find(".vjs-play-control.vjs-playing");
+    if($pauseBtn) $pauseBtn.trigger('click');
 }

@@ -46,14 +46,14 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
         <?= $form->field($model, 'email')->textInput(['class' => 'form-control form-group has-feedback field-with-info-widget']) ?>
         <span class="glyphicon glyphicon-info-sign info info-school-email" style="margin-top: -50px;"></span>
 
-        <?= $form->field($model, 'registration_message')->widget(CKEditor::class, [
-            'editorOptions' => $ckeditorOptions,
-        ]) ?>
-
         <?= $form->field($model, 'registration_title')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
         <?= $form->field($model, 'login_title')->widget(CKEditor::class, [
+            'editorOptions' => $ckeditorOptions,
+        ]) ?>
+
+        <?= $form->field($model, 'registration_message')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
 

@@ -2,6 +2,7 @@
 
 namespace app\helpers;
 
+use app\models\RegistrationMessage;
 use app\models\School;
 use app\models\SchoolTeacher;
 use app\models\SentInvoices;
@@ -47,8 +48,6 @@ class InvoiceManager
 
             $sent = EmailSender::sendEmailWithAdvanceInvoice($message, $school['email'], $user['email'], $invoiceNumber, $invoicePath);
         }
-
-
 
         if ($sent) {
             $studentSubplan->increaseSentInvoicesCount();

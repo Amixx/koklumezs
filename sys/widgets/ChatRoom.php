@@ -56,15 +56,18 @@ class ChatRoom extends Widget
 
     public static function sendChat($post)
     {
-        if (isset($post['message']))
+        if (isset($post['message'])) {
             $message = $post['message'];
-        if (isset($post['model']))
+        }
+        if (isset($post['model'])) {
             $userModel = $post['model'];
-        else
+        } else {
             $userModel = Yii::$app->getUser()->identityClass;
+        }
 
-        if (isset($post['recipient_id']))
+        if (isset($post['recipient_id'])) {
             $recipient_id = $post['recipient_id'];
+        }
 
         $model = new Chat;
         $model->userModel = $userModel;

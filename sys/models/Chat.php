@@ -52,12 +52,6 @@ class Chat extends \yii\db\ActiveRecord
         ];
     }
 
-    public function beforeSave($insert)
-    {
-        $this->author_id = Yii::$app->user->id;
-        return parent::beforeSave($insert);
-    }
-
     public static function recordsForTwoUsers($authorId, $recipientId)
     {
 
@@ -162,6 +156,17 @@ class Chat extends \yii\db\ActiveRecord
         } else {
             return null;
         }
+    }
+
+    public static function addNewMessage($message, $authorId, $recipientId)
+    {
+        $model = new Chat;
+
+        $model->message = $message;
+        $model->author_id = $authorId;
+        $model->recipient_id = $recipientId;
+
+        return $model->save();
     }
 
     public function data($recipientId, $updateOpentime = true)

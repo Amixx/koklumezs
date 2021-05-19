@@ -107,17 +107,32 @@ class Lectures extends \yii\db\ActiveRecord
         return ArrayHelper::map(self::find()->where(['not in', 'id', $ids])->asArray()->all(), 'id', 'title');
     }
 
-    public static function getLecturesObjectsForUser($ids)
+    public static function getLecturesObjectsForUser($assignedIds)
     {
-        $data = self::find()->where(['not in', 'id', $ids])->asArray()->all();
+        $idsToRemove = $assignedIds;
+        $data = self::find()->asArray()->all();
         $returnArray = [];
+
         foreach ($data as $d) {
-            $returnArray[$d['id']] = [
-                'id' => $d['id'],
-                'title' => $d['title'],
-                'complexity' => $d['complexity']
-            ];
+            if (in_array($d['id'], $assignedIds)) {
+                $relatedLessonIds = RelatedLectures::getRelations($d['id']);
+
+                foreach ($relatedLessonIds as $relId) {
+                    $idsToRemove[] = $relId;
+                }
+            }
         }
+
+        foreach ($data as $d) {
+            if (!in_array($d['id'], $idsToRemove)) {
+                $returnArray[$d['id']] = [
+                    'id' => $d['id'],
+                    'title' => $d['title'],
+                    'complexity' => $d['complexity']
+                ];
+            }
+        }
+
         return $returnArray;
     }
 

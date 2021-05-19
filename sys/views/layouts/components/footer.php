@@ -1,3 +1,4 @@
+<div id="install-prompt" class="a2hs">Pievienot sākuma ekrānam</div>
 <footer class="footer">
     <div class="container">
         <p class="pull-left">&copy; koklumezs.lv <?= date('Y') ?></p>

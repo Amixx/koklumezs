@@ -51,6 +51,7 @@ $fieldOptions2 = [
 
         <?php ActiveForm::end(); ?>
 
-    </div>
+        <?= $this->render('a2hs-modal') ?>
 
+    </div>
 </div>
