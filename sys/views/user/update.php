@@ -22,7 +22,8 @@ $subPlans = isset($schoolSubPlans) ? $schoolSubPlans : null;
         'studentGoals' => $studentGoals,
         'difficulties' => $difficulties,
         'schoolSubPlans' => $subPlans,
-        'studentSubplan' => $studentSubplan,
+        'studentSubplans' => $studentSubplans,
+        'studentSubplanModel' => $studentSubplanModel,
     ]) ?>
 
 </div>

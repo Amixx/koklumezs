@@ -6,7 +6,7 @@ use yii\grid\GridView;
 use app\models\StudentSubplanPauses;
 use app\models\SentInvoices;
 use app\models\SchoolSubplanParts;
-use app\models\StudentSubplans;
+use app\models\StudentSubPlans;
 use app\models\LectureViews;
 
 $this->title = \Yii::t('app',  'Users');
@@ -79,47 +79,53 @@ $planEndMonths = [];
                     return LectureViews::getDayResult($dataProvider->id, 30);
                 },
             ],
-            [
-                'attribute' => 'Plan price',
-                'label' => Yii::t('app', 'Payment'),
-                'value' => function ($dataProvider) {
-                    $studentSubplan = StudentSubplans::getCurrentForStudent($dataProvider['id']);
-                    if (!$studentSubplan || !$studentSubplan["plan"]) {
-                        return;
-                    }
+            // [
+            //     'attribute' => 'Plan price',
+            //     'label' => Yii::t('app', 'Payment'),
+            //     'value' => function ($dataProvider) {
+            //         $studentSubplans = StudentSubPlans::getActivePlansForStudent($dataProvider['id']);
+            //         $planCosts = [];
 
-                    $planId = $studentSubplan["plan_id"];
-                    $totalCost = SchoolSubplanParts::getPlanTotalCost($planId);
-                    $url = Url::to(['school-sub-plans/view', 'id' => $planId]);
-                    return "<a href='" . $url . "'>$totalCost</a>";
-                },
-                'format' => 'html',
-                'filter' => Html::dropDownList(
-                    'TeacherUserSearch[subplan_monthly_cost]',
-                    isset($get['TeacherUserSearch']['subplan_monthly_cost'])
-                        ? $get['TeacherUserSearch']['subplan_monthly_cost']
-                        : '',
-                    $schoolSubPlanPrices,
-                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
-                ),
-            ],
+            //         foreach ($studentSubplans as $studentSubplan) {
+            //             if ($studentSubplan && $studentSubplan["plan"]) {
+            //                 $planCosts[] = SchoolSubplanParts::getPlanTotalCost($studentSubplan["plan_id"]);
+            //             }
+            //         }
+
+            //         if (empty($planCosts)) return;
+
+            //         $totalCostString = join("/", $planCosts);
+            //         return "<span>$totalCostString</span>";
+            //     },
+            //     'format' => 'html',
+            //     'filter' => Html::dropDownList(
+            //         'TeacherUserSearch[subplan_monthly_cost]',
+            //         isset($get['TeacherUserSearch']['subplan_monthly_cost'])
+            //             ? $get['TeacherUserSearch']['subplan_monthly_cost']
+            //             : '',
+            //         $schoolSubPlanPrices,
+            //         ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+            //     ),
+            // ],
             [
-                'attribute' => 'Plan end date',
-                'label' => Yii::t('app', 'Plan end date'),
+                'attribute' => 'Lesson plan end date',
+                'label' => Yii::t('app', 'Lesson plan end date'),
                 'value' => function ($dataProvider) {
-                    $studentSubplan = StudentSubplans::getCurrentForStudent($dataProvider['id']);
-                    if (!$studentSubplan || !$studentSubplan['plan']) {
-                        return;
+                    $latestLessonPlan = StudentSubplans::getLatestActiveLessonPlanForStudent($dataProvider['id']);
+
+                    if (!$latestLessonPlan || !$latestLessonPlan['plan']) {
+                        return "Nav mācību plāna";
                     }
-                    if ($studentSubplan['plan']['months'] == '0') {
+                    if ($latestLessonPlan['plan']['months'] == '0') {
                         return \Yii::t('app',  'Unlimited');
                     }
-                    $planPauses = StudentSubplanPauses::getForStudentSubplan($studentSubplan['id'])->asArray()->all();
-                    $date = date_create($studentSubplan["start_date"]);
-                    $date->modify("+" . $studentSubplan['plan']['months'] . "month");
+                    $planPauses = StudentSubplanPauses::getForStudentSubplan($latestLessonPlan['id'])->asArray()->all();
+                    $date = date_create($latestLessonPlan["start_date"]);
+                    $date->modify("+" . $latestLessonPlan['plan']['months'] . "month");
                     foreach ($planPauses as $pause) {
                         $date->modify("+" . $pause['weeks'] . "week");
                     }
+
                     return date_format($date, 'd-m-Y');
                 },
                 'filter' => Html::dropDownList(
@@ -132,92 +138,92 @@ $planEndMonths = [];
                 ),
                 'format' => 'raw'
             ],
-            [
-                'attribute' => 'Payments',
-                'label' => Yii::t('app', 'Paid/Has to pay'),
-                'value' => function ($dataProvider) {
-                    $studentSubplan = StudentSubplans::getCurrentForStudent($dataProvider['id']);
-                    $unpaidInvoiceNumbers = SentInvoices::getUnpaidForStudent($dataProvider["id"]);
+            // [
+            //     'attribute' => 'Payments',
+            //     'label' => Yii::t('app', 'Paid/Has to pay'),
+            //     'value' => function ($dataProvider) {
+            //         $studentSubplans = StudentSubPlans::getActivePlansForStudent($dataProvider['id']);
+            //         $unpaidInvoiceNumbers = SentInvoices::getUnpaidForStudent($dataProvider["id"]);
 
-                    if (!$studentSubplan && !$unpaidInvoiceNumbers) {
-                        return;
-                    }
+            //         if (!$studentSubplans && !$unpaidInvoiceNumbers) {
+            //             return;
+            //         }
 
-                    $invoice = SentInvoices::getLatestForStudent($dataProvider['id']);
-                    $studentId = $dataProvider['id'];
+            //         $invoice = SentInvoices::getLatestForStudent($dataProvider['id']);
+            //         $studentId = $dataProvider['id'];
 
-                    $html = "";
-                    $addPaymentHtml = "";
+            //         $html = "";
+            //         $addPaymentHtml = "";
 
-                    if ($studentSubplan) {
-                        $color = "#99ff9c";
-                        if ($studentSubplan["times_paid"] < $studentSubplan["sent_invoices_count"]) {
-                            $color = "#ff9a99";
-                        }
-                        if ($studentSubplan["times_paid"] > $studentSubplan["sent_invoices_count"]) {
-                            $color = "#99cfff";
-                        }
+            //         if ($studentSubplans) {
+            //             $color = "#99ff9c";
+            //             if ($studentSubplans["times_paid"] < $studentSubplans["sent_invoices_count"]) {
+            //                 $color = "#ff9a99";
+            //             }
+            //             if ($studentSubplans["times_paid"] > $studentSubplans["sent_invoices_count"]) {
+            //                 $color = "#99cfff";
+            //             }
 
-                        if (isset($invoice)) {
-                            $is_advance = $invoice['is_advance'];
-                            $invoiceSentDate = $invoice['sent_date'];
-                            $today = date('Y-m-d');
-                            $warningDate = date('Y-m-d', strtotime($invoiceSentDate . ' +14 days'));
-                            if ($is_advance && $today <= $warningDate) {
-                                $color = "#cb7119";
-                            }
-                        }
+            //             if (isset($invoice)) {
+            //                 $is_advance = $invoice['is_advance'];
+            //                 $invoiceSentDate = $invoice['sent_date'];
+            //                 $today = date('Y-m-d');
+            //                 $warningDate = date('Y-m-d', strtotime($invoiceSentDate . ' +14 days'));
+            //                 if ($is_advance && $today <= $warningDate) {
+            //                     $color = "#cb7119";
+            //                 }
+            //             }
 
-                        $timesPaid = $studentSubplan["times_paid"];
-                        $sentInvoices = $studentSubplan["sent_invoices_count"];
-                        $html .= "<div style='text-align:center;background:" . $color . "'>" . $timesPaid . "/" . $sentInvoices . "</div>";
-                        $url = Url::to(['sent-invoices/register-advance-payment', 'userId' => $studentId]);
-                        $addPaymentHtml = "<span title='Reģistrēt maksājumu'>
-                            <a
-                                href='" . $url . "'
-                                class='glyphicon glyphicon-plus'
-                            ></a></span>";
-                    }
+            //             $timesPaid = $studentSubplans["times_paid"];
+            //             $sentInvoices = $studentSubplans["sent_invoices_count"];
+            //             $html .= "<div style='text-align:center;background:" . $color . "'>" . $timesPaid . "/" . $sentInvoices . "</div>";
+            //             $url = Url::to(['sent-invoices/register-advance-payment', 'userId' => $studentId]);
+            //             $addPaymentHtml = "<span title='Reģistrēt maksājumu'>
+            //                 <a
+            //                     href='" . $url . "'
+            //                     class='glyphicon glyphicon-plus'
+            //                 ></a></span>";
+            //         }
 
-                    if ($unpaidInvoiceNumbers) {
-                        $html .= "<p>Neapmaksātie rēķini: </p>";
-                        foreach ($unpaidInvoiceNumbers as $number) {
-                            $value = $number['invoice_number'];
-                            $url = Url::to(['sent-invoices/update', 'invoiceNumber' => $value]);
-                            $html .= "
-                            <p>
-                                <a target='_blank' href='" . $url . "'><strong>$value</strong></a>
-                            </p>
-                            ";
-                        }
-                    }
+            //         if ($unpaidInvoiceNumbers) {
+            //             $html .= "<p>Neapmaksātie rēķini: </p>";
+            //             foreach ($unpaidInvoiceNumbers as $number) {
+            //                 $value = $number['invoice_number'];
+            //                 $url = Url::to(['sent-invoices/update', 'invoiceNumber' => $value]);
+            //                 $html .= "
+            //                 <p>
+            //                     <a target='_blank' href='" . $url . "'><strong>$value</strong></a>
+            //                 </p>
+            //                 ";
+            //             }
+            //         }
 
-                    $url = Url::to(['cron/remind-to-pay', 'userId' => $studentId]);
+            //         $url = Url::to(['cron/remind-to-pay', 'userId' => $studentId]);
 
-                    return "
-                        <div style='text-align:center;'>
-                            $html
-                            <span style='margin-right:48px;'><a
-                                href='" . $url . "'
-                                class='glyphicon glyphicon-envelope'                                
-                                title='Nosūtīt atgādinājumu, ka jāmaksā'
-                            ></a></span>
-                            $addPaymentHtml
-                        </div>
-                    ";
-                },
-                'filter' => Html::dropDownList(
-                    'TeacherUserSearch[subplan_paid_type]',
-                    isset($get['TeacherUserSearch']['subplan_paid_type']) ? $get['TeacherUserSearch']['subplan_paid_type'] : '',
-                    [
-                        'late' => Yii::t('app', 'Late'),
-                        'paid' => Yii::t('app', 'All paid'),
-                        'prepaid' => Yii::t('app', 'Prepaid'),
-                    ],
-                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
-                ),
-                'format' => 'html',
-            ],
+            //         return "
+            //             <div style='text-align:center;'>
+            //                 $html
+            //                 <span style='margin-right:48px;'><a
+            //                     href='" . $url . "'
+            //                     class='glyphicon glyphicon-envelope'                                
+            //                     title='Nosūtīt atgādinājumu, ka jāmaksā'
+            //                 ></a></span>
+            //                 $addPaymentHtml
+            //             </div>
+            //         ";
+            //     },
+            //     'filter' => Html::dropDownList(
+            //         'TeacherUserSearch[subplan_paid_type]',
+            //         isset($get['TeacherUserSearch']['subplan_paid_type']) ? $get['TeacherUserSearch']['subplan_paid_type'] : '',
+            //         [
+            //             'late' => Yii::t('app', 'Late'),
+            //             'paid' => Yii::t('app', 'All paid'),
+            //             'prepaid' => Yii::t('app', 'Prepaid'),
+            //         ],
+            //         ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+            //     ),
+            //     'format' => 'html',
+            // ],
             [
                 'attribute' => 'Chat',
                 'label' => Yii::t('app', 'Chat'),

@@ -27,37 +27,32 @@ class StudentSubPlansController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'delete' => ['get'],
+                    'delete' => ['post'],
                 ],
             ],
         ];
     }
 
+    public function actionForUser($studentId)
+    {
+        $studentSubplansADP = StudentSubPlans::getActivePlansForStudentADP($studentId);
+
+        return $this->render('for-user', [
+            'dataProvider' => $studentSubplansADP,
+        ]);
+    }
+
     public function actionView($id)
     {
-        $subplan = StudentSubPlans::getCurrentForStudent($id);
-
-        if (!$subplan) {
-            return $this->render('view', [
-                'subplan' => null,
-                'planFiles' => null,
-                'planPauses' => null,
-                'newPause' => null,
-                'remainingPauseWeeks' => null,
-                'planCurrentlyPaused' => null,
-            ]);
-        }
+        $subplan = StudentSubPlans::findOne($id);
 
         $planFiles = PlanFiles::getFilesForPlan($subplan["plan_id"])->asArray()->all();
-        $planPauses = null;
-        if (StudentSubplanPauses::studentHasAnyPauses($id)) {
-            $planPauses = new ActiveDataProvider([
-                'query' => StudentSubplanPauses::getForStudentSubplan($subplan['id']),
-            ]);
-        }
+        $planPauses = new ActiveDataProvider([
+            'query' => StudentSubplanPauses::getForStudentSubplan($subplan['id']),
+        ]);
         $newPause = new StudentSubplanPauses;
-        $remainingPauseWeeks = StudentSubPlans::getRemainingPauseWeeks($id);
-        $planCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($id);
+        $remainingPauseWeeks = StudentSubPlans::getRemainingPauseWeeks($subplan['id']);
+        $planCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($subplan['id']);
 
         return $this->render('view', [
             'subplan' => $subplan,
@@ -69,10 +64,9 @@ class StudentSubPlansController extends Controller
         ]);
     }
 
-    public function actionDelete($userId)
+    public function actionDelete($id)
     {
-
-        StudentSubplans::resetActivePlanForUser($userId);
+        StudentSubplans::setStudentSubplanInactive($id);
 
         return $this->redirect(Yii::$app->request->referrer);
     }

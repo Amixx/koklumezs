@@ -107,6 +107,9 @@ class SchoolSubPlansController extends Controller
         $newSubplanPart = new SchoolSubplanParts;
         $post = Yii::$app->request->post();
 
+        // var_dump($model['sent_invoices_count']);
+        // die();
+
         $saved = $model->load($post) && $model->save();
         if (isset($post["file-title"]) && isset($post["file"])) {
             $planFile = new PlanFiles();

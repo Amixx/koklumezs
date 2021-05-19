@@ -259,7 +259,6 @@ class CronController extends Controller
             }
         }
 
-        //$model->update();
         $log = ob_get_clean();
         return $this->renderPartial('index', [
             'log' => $log,
@@ -271,12 +270,14 @@ class CronController extends Controller
         $students = Users::getAllStudents();
 
         foreach ($students as $student) {
-            $studentSubplan = StudentSubPlans::getCurrentForStudent($student["id"]);
+            $studentSubplans = StudentSubPlans::getActivePlansForStudent($student["id"]);
 
-            if (StudentSubPlans::shouldSendAdvanceInvoice($studentSubplan)) {
-                InvoiceManager::sendAdvanceInvoice($student, $studentSubplan);
-            } else if (StudentSubPlans::hasPaidInAdvance($studentSubplan)) {
-                $studentSubplan->increaseSentInvoicesCount();
+            foreach ($studentSubplans as $studentSubplan) {
+                if (StudentSubPlans::shouldSendAdvanceInvoice($studentSubplan)) {
+                    InvoiceManager::sendAdvanceInvoice($student, $studentSubplan);
+                } else if (StudentSubPlans::hasPaidInAdvance($studentSubplan)) {
+                    StudentSubPlans::increaseSentInvoicesCount($studentSubplan);
+                }
             }
         }
     }

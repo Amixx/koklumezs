@@ -21,6 +21,12 @@ $this->title = \Yii::t('app', 'Subscription plans');
             ['class' => 'yii\grid\SerialColumn'],
             'name',
             'description:html',
+            [
+                'attribute' => 'type',
+                'value' => function ($dataProvider) {
+                    return $dataProvider['type'] === 'lesson' ? 'Mācību' : 'Īres';
+                }
+            ],
             'pvn_percent',
             [
                 'attribute' => 'Monthly cost',

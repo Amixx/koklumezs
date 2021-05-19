@@ -30,6 +30,12 @@ $this->title = $model->name;
             'id',
             'name',
             'description:html',
+            [
+                'attribute' => 'type',
+                'value' => function ($dataProvider) {
+                    return $dataProvider['type'] === 'lesson' ? 'Mācību' : 'Īres';
+                }
+            ],
             'months',
             'max_pause_weeks',
             'message',

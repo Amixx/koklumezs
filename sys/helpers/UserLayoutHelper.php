@@ -150,7 +150,7 @@ class UserLayoutHelper extends LayoutHelper
                 ['label' => \Yii::t('app',  'Archive'), 'url' => ['/archive'], 'active' =>  in_array(\Yii::$app->controller->id, ['archive'])],
                 // ['label' => \Yii::t('app',  'suggest a song'), 'url' => ['/'], 'active' =>  in_array(\Yii::$app->controller->id, [''])],
                 ['label' => \Yii::t('app',  'FAQs'), 'url' => ['/school-faqs/for-students'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-faqs'])],
-                ['label' => \Yii::t('app',  'Subscription plan'), 'url' => ['/student-sub-plans/view/?id=' . Yii::$app->user->identity->id], 'active' =>  in_array(\Yii::$app->controller->id, ['student-sub-plans'])],
+                ['label' => \Yii::t('app',  'Subscription plan'), 'url' => ['/student-sub-plans/for-user/?studentId=' . Yii::$app->user->identity->id], 'active' =>  in_array(\Yii::$app->controller->id, ['student-sub-plans'])],
             ],
         ];
     }
