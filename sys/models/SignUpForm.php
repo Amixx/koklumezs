@@ -69,7 +69,7 @@ class SignUpForm extends Model
 
     public function checkIfUserExists($attribute, $params)
     {
-        if (!$this->hasErrors() && Users::doesUserExist($this->first_name, $this->last_name, $this->email)) {
+        if (!$this->hasErrors() && Users::doesUserExist($this->first_name, $this->last_name, $this->email, $this->schoolId)) {
             $this->addError($attribute, Yii::t('app', 'A profile has already been registered using this e-mail! Have you forgotten your password?'));
         }
     }

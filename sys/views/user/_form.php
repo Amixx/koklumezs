@@ -6,7 +6,7 @@ use yii\widgets\ActiveForm;
 use app\models\Users;
 use  yii\jui\DatePicker;
 use yii\grid\GridView;
-use app\Models\SchoolSubplanParts;
+use app\models\SchoolSubplanParts;
 
 $isTeacher = Users::isCurrentUserTeacher();
 ?>

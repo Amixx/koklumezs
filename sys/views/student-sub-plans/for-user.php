@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\GridView;
-use app\Models\SchoolSubplanParts;
+use app\models\SchoolSubplanParts;
 
 $this->title = \Yii::t('app', 'Subscription plans');
 

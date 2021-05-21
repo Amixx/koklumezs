@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
 use yii\grid\GridView;
-use app\Models\SchoolSubplanParts;
+use app\models\SchoolSubplanParts;
 
 
 $this->title = $model->id;

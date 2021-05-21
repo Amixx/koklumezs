@@ -115,6 +115,10 @@ class TestController extends Controller
         //     }
         // }
 
-        var_dump(RegistrationMessage::getBody(1, false, true));
+        //var_dump(RegistrationMessage::getBody(1, false, true));
+
+        $exists = Users::doesUserExist("Jānis", "Andersons", "skolens.test.koklumezs@gmail.com", 1);
+
+        var_dump($exists);
     }
 }

@@ -308,7 +308,7 @@ class Users extends ActiveRecord implements IdentityInterface
         return Yii::$app->getSecurity()->validatePassword($password, $this->password);
     }
 
-    public static function doesUserExist($firstName, $lastName, $email)
+    public static function doesUserExist($firstName, $lastName, $email, $schoolId)
     {
         $data = self::find()->where([
             'first_name' => $firstName,
@@ -316,7 +316,13 @@ class Users extends ActiveRecord implements IdentityInterface
             'email' => $email
         ])->one();
 
-        return $data !== null;
+        if ($data) {
+            $schoolStudent = SchoolStudent::findOne(['user_id' => $data['id'], 'school_id' => $schoolId]);
+
+            return $schoolStudent != null;
+        }
+
+        return false;
     }
 
     /**
