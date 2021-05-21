@@ -104,11 +104,11 @@ class StudentSubplanPausesController extends Controller
         return $this->redirect(Url::to(['school-sub-plans/index']));
     }
 
-    public function actionCreate($studentSubplanId)
+    public function actionCreate($id)
     {
         $model = new StudentSubplanPauses();
 
-        $remainingPauseWeeks = StudentSubPlans::getRemainingPauseWeeks($studentSubplanId);
+        $remainingPauseWeeks = StudentSubPlans::getRemainingPauseWeeks($id);
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model["weeks"] > $remainingPauseWeeks) {

@@ -240,6 +240,7 @@ return [
     'Plan price (monthly)' => 'Plāna cena (mēnesī)',
     'Plan start date' => 'Plāna sākuma datums',
     'Plan title' => 'Plāna nosaukums',
+    'Plan type' => 'Plāna tips',
     'Please contact us if you think this is a server error. Thank you.' => 'Sazinieties ar mums, ja jums liekas, ka šī ir servera vaina. Paldies.',
     'Please enter the new password' => 'Lūdzu ievadiet jauno paroli',
     'Please enter you e-mail address' => 'Lūdzu ievadiet savu e-pasta adresi',

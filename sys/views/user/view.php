@@ -80,6 +80,12 @@ $this->title = $model->id;
                             }
                         ],
                         [
+                            'label' => Yii::t('app', 'Plan type'),
+                            'value' => function ($dataProvider) {
+                                return $dataProvider->plan->typeText();
+                            }
+                        ],
+                        [
                             'label' => Yii::t('app', 'Plan monthly cost'),
                             'value' => function ($dataProvider) {
                                 return SchoolSubplanParts::getPlanTotalCost($dataProvider->plan['id']);

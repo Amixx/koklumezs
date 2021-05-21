@@ -26,7 +26,7 @@ if ($subplan) {
                     'attribute' => 'Plan end date',
                     'label' => Yii::t('app', 'Plan end date'),
                     'value' => function ($dataProvider) {
-                        return StudentSubPlans::getEndDateString($dataProvider['user_id']);
+                        return StudentSubPlans::getPlanEndDateString(StudentSubPlans::findOne($dataProvider['id']));
                     },
                     'format' => 'raw'
                 ],
@@ -61,7 +61,7 @@ if ($subplan) {
                     <?= Yii::t('app', 'You have to do monthly payments for the pause weeks too. At the end of subscribtion plan all pauses will be summed up and the plan will be extended with free lessons.') ?>
                 </p>
                 <?php $form = ActiveForm::begin([
-                    'action' => ['student-subplan-pauses/create'],
+                    'action' => ['student-subplan-pauses/create', 'id' => $subplan['id']],
                     'method' => 'post',
                 ]); ?>
 

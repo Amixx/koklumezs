@@ -145,9 +145,14 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $pauseStartDate < $time && $pauseEndDate > $time;
     }
 
-    public static function getEndDateString($studentId)
+    public static function getLearningPlanEndDateString($studentId)
     {
-        $subplan = self::getCurrentForStudent($studentId);
+        $subplan = self::getLatestActiveLessonPlanForStudent($studentId);
+        self::getPlanEndDateString($subplan);
+    }
+
+    public static function getPlanEndDateString($subplan)
+    {
         if ($subplan == null) {
             return null;
         }
