@@ -1,7 +1,8 @@
 {
-  "name": "Koklumezs",
-  "short_name": "Koklumezs",
-  "description": "Kokles speles skola",
+  "version": "1.0.1",
+  "name": "Tutory",
+  "short_name": "Tutory",
+  "description": "Instrumentu speles skolas",
   "icons": [
     {
       "src": "icon192.png",
@@ -15,8 +16,8 @@
     }
   ],
   "start_url": "/site/mainpage",
-  "background_color": "darkgoldenrod",
+  "background_color": "#007D82",
   "display": "standalone",
   "scope": "/",
-  "theme_color": "darkgoldenrod"
+  "theme_color": "#007D82"
 }

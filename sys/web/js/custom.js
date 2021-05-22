@@ -89,7 +89,7 @@ $(document).ready(function() {
                 $installButton.hide();
                 $promtModal.modal('hide');
             } else {
-                $installButton.css("background", "goldenrod");
+                $installButton.css("background", "#007D82");
             }
         });
     }
