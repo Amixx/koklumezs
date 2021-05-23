@@ -77,6 +77,10 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
+    var url = event.request.url;
+    if (url.indexOf("sys/files") !== -1 || url.indexOf("youtube") !== -1) {
+        return;
+    }
     event.respondWith(respond(event.request));
 });
 

@@ -40,7 +40,7 @@
                         <div id="<?= $playerId ?>" data-plyr-provider="youtube" data-plyr-embed-id="<?= $videoId ?>" data-role="player"></div>
                     </div>
                 <?php } else { ?>
-                    <video id="player" playsinline controls data-poster="<?= $posters[$playerId] ?>" data-role="player">
+                    <video id="player" playsinline controls data-role="player">
                         <source src="<?= $fileUrl ?>" type="video/<?= $fileExt ?>" />
                     </video>
                 <?php } ?>

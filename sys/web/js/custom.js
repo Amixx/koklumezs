@@ -606,8 +606,6 @@ function setupVideoPlayers(){
 
     Array.from(document.querySelectorAll("[data-role='player']")).forEach(function(video) {
         players[video.id] = new Plyr(video, options);
-        setTimeout(() => {
-            players[video.id].poster = posters[video.id];
-        }, 500);
+        players[video.id].poster = posters[video.id];
     });
 }
