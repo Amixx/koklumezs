@@ -81,7 +81,6 @@ $this->title = \Yii::t('app',  'Lesson assigning');
                     <td class="text-center"><?= isset($lastlectures[$id]) ? $lastlectures[$id]['open_times'] : $empty ?></td>
                     <td class="text-center"><?= isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->complexity : $empty ?></td>
                     <?= $this->render('evaluation-titles', [
-                        'evaluationsTitles' => $evaluationsTitles,
                         'evaluationsValues' => $evaluationsValues,
                         'evaluations' => $evaluations,
                         'id' => $id,
