@@ -307,6 +307,7 @@ class UserLectures extends \yii\db\ActiveRecord
         $lectureIds = self::getLessonsOfType($studentId, $type);
         $lectures = Lectures::find()->where(['in', 'id', $lectureIds])->orderBy(['title' => SORT_ASC])->asArray()->all();
 
+
         $takeNext = false;
         foreach ($lectures as $lecture) {
             if ($takeNext) {
@@ -315,6 +316,13 @@ class UserLectures extends \yii\db\ActiveRecord
             if ($lecture["id"] === $currentLectureId) {
                 $takeNext = true;
             }
+        }
+
+        if (
+            count($lectures) > 1 && $takeNext
+            || $lectures[0]['id'] !== $currentLectureId
+        ) {
+            return $lectures[0]['id'];
         }
     }
 

@@ -251,7 +251,8 @@ class LekcijasController extends Controller
         return $this->redirect(Yii::$app->request->referrer);
     }
 
-    public function actionPreview($studentId){
+    public function actionPreview($studentId)
+    {
         $models = [];
         $pages = [];
         $user = Users::findOne($studentId);
@@ -260,7 +261,8 @@ class LekcijasController extends Controller
         return $this->renderOverview($user, $models, $pages, $videoThumb);
     }
 
-    private function renderOverview($user, $models, $pages, $videoThumb){
+    private function renderOverview($user, $models, $pages, $videoThumb)
+    {
         $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "new");
         $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
 
