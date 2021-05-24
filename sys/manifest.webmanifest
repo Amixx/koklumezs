@@ -1,7 +1,6 @@
 {
-  "version": "1.0.1",
-  "name": "Tutory",
-  "short_name": "Tutory",
+  "name": "Spēlēsim?",
+  "short_name": "Spēlēsim?",
   "description": "Instrumentu speles skolas",
   "icons": [
     {

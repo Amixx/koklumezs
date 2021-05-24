@@ -574,7 +574,7 @@ function submitLessonEvaluation(){
 $("[id^=lesson_modal]").on("hidden.bs.modal", pausePlayerOnModalClose);
 
 function pausePlayerOnModalClose(){
-    var $pauseBtn = $(this).find(".vjs-play-control.vjs-playing");
+    var $pauseBtn = $(this).find(".plyr__control.plyr__control--overlaid.plyr__control--pressed");
     if($pauseBtn) $pauseBtn.trigger('click');
 }
 
@@ -601,6 +601,7 @@ function setupVideoPlayers(){
             //'download', // Show a download button with a link to either the current source or a custom URL you specify in your options
             'fullscreen', // Toggle fullscreen
         ],
+        autopause: true,
     }
 
 
