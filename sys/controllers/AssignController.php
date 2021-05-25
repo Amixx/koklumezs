@@ -111,7 +111,7 @@ class AssignController extends Controller
         $diff = Studentgoals::getUserDifficulty($id);
         $goalsnow = StudentGoals::NOW;
         $goalsum = isset($goals[$goalsnow]) ? array_sum($goals[$goalsnow]) : 0;
-        $endDate = StudentSubPlans::getEndDateString($id);
+        $endDate = StudentSubPlans::getLearningPlanEndDateString($id);
         if ($post) {
             $model = new UserLectures();
             $model->assigned = Yii::$app->user->identity->id;

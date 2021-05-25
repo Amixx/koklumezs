@@ -318,6 +318,13 @@ class UserLectures extends \yii\db\ActiveRecord
                 $takeNext = true;
             }
         }
+
+        if (
+            count($lectures) > 1 && $takeNext
+            || $lectures[0]['id'] !== $currentLectureId
+        ) {
+            return $lectures[0]['id'];
+        }
     }
 
     public static function sendEmail($id, $subject, $teacherMessage = null)

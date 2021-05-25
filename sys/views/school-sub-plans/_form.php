@@ -46,6 +46,12 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
             <?= $form->field($model, 'description')->widget(CKEditor::class, [
                 'editorOptions' => $ckeditorOptions,
             ]) ?>
+            <?= $form->field($model, 'type')->dropDownList(
+                [
+                    'lesson' => 'Mācību',
+                    'rent' => 'Īres',
+                ]
+            ) ?>
             <?= $form->field($model, 'months')->textInput() ?>
             <?= $form->field($model, 'max_pause_weeks')->textInput() ?>
             <?= $form->field($model, 'message')->textInput() ?>

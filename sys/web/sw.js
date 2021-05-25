@@ -18,7 +18,7 @@ function getUrls(urlArray) {
 }
 
 var base = "koklumezs-";
-var version = "1.0.4";
+var version = "1.0.5";
 var cacheName = base + version;
 
 var urlsForCachingStrategies = { 
@@ -77,6 +77,10 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
+    var url = event.request.url;
+    if (url.indexOf("sys/files") !== -1 || url.indexOf("youtube") !== -1) {
+        return;
+    }
     event.respondWith(respond(event.request));
 });
 

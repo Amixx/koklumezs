@@ -1,15 +1,17 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use app\models\Users;
 use  yii\jui\DatePicker;
+use yii\grid\GridView;
+use app\models\SchoolSubplanParts;
 
 $isTeacher = Users::isCurrentUserTeacher();
 ?>
 
 <div class="user-form">
-
     <?php $form = ActiveForm::begin(['enableClientValidation' => false]); ?>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item active">
@@ -25,7 +27,7 @@ $isTeacher = Users::isCurrentUserTeacher();
         <?php if ($model->id) { ?>
             <li class="nav-item">
                 <a class="nav-link" id="plan-tab" data-toggle="tab" href="#plan" role="tab" aria-controls="plan" aria-selected="false">
-                    <?= \Yii::t('app', 'Student\'s subscription plan') ?>
+                    <?= \Yii::t('app', 'Add subscription plan to student') ?>
                 </a>
             </li>
             <li class="nav-item">
@@ -93,28 +95,75 @@ $isTeacher = Users::isCurrentUserTeacher();
         </div>
         <div class="tab-pane fade" id="plan" role="tabpanel" aria-labelledby="plan-tab">
             <div class="form-group">
+                <?php if (isset($studentSubplans)) { ?>
+                    <?= GridView::widget([
+                        'dataProvider' => $studentSubplans,
+                        'columns' => [
+                            ['class' => 'yii\grid\SerialColumn'],
+                            'start_date',
+                            'sent_invoices_count',
+                            'times_paid',
+                            [
+                                'label' => Yii::t('app', 'Plan name'),
+                                'value' => function ($dataProvider) {
+                                    return $dataProvider->plan->name;
+                                }
+                            ],
+                            [
+                                'label' => Yii::t('app', 'Plan monthly cost'),
+                                'value' => function ($dataProvider) {
+                                    return SchoolSubplanParts::getPlanTotalCost($dataProvider->plan['id']);
+                                }
+                            ],
+                            [
+                                'label' => Yii::t('app', 'Plan months count'),
+                                'value' => function ($dataProvider) {
+                                    return $dataProvider->plan->months;
+                                }
+                            ],
+                            [
+                                'label' => Yii::t('app', 'Type'),
+                                'value' => function ($dataProvider) {
+                                    return $dataProvider->plan->typeText();
+                                }
+                            ],
+                            [
+                                'class' => 'yii\grid\ActionColumn',
+                                'template' => '{delete}',
+                                'urlCreator' => function ($action, $model) {
+                                    if ($action === 'delete') {
+                                        return Url::base(true) . '/student-sub-plans/delete?id=' . $model->id;
+                                    }
+                                },
+                            ],
+                        ],
+                    ]); ?>
+
+                <?php } ?>
+            </div>
+            <div class="form-group">
                 <?php if (isset($schoolSubPlans) && $schoolSubPlans) { ?>
-                    <?= $form->field($studentSubplan, 'plan_id')
+                    <?= $form->field($studentSubplanModel, 'plan_id')
                         ->dropDownList($schoolSubPlans, ['prompt' => ''])
                         ->label(Yii::t('app', 'Subscription plan')) ?>
-                    <?= $form->field($studentSubplan, 'start_date')
+                    <?= $form->field($studentSubplanModel, 'start_date')
                         ->widget(DatePicker::class, ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])
                         ->label(Yii::t('app', 'Start date')) ?>
-                    <?= $form->field($studentSubplan, 'sent_invoices_count')
+                    <?= $form->field($studentSubplanModel, 'sent_invoices_count')
                         ->textInput(['type' => 'number'])
                         ->label(Yii::t('app', 'Sent invoices count')) ?>
-                    <?= $form->field($studentSubplan, 'times_paid')
+                    <?= $form->field($studentSubplanModel, 'times_paid')
                         ->textInput(['type' => 'number'])
                         ->label(Yii::t('app', 'Times paid')) ?>
                 <?php } ?>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <?= Html::a(
-                    \Yii::t('app',  'Remove subscription plan'),
+                    \Yii::t('app', 'Remove subscription plan'),
                     ["/student-sub-plans/delete?userId=" . $model["id"]],
                     ['class' => 'btn btn-danger']
                 ) ?>
-            </div>
+            </div> -->
         </div>
         <div class="tab-pane fade" id="payer" role="tabpanel" aria-labelledby="payer-tab">
             <h4><?= Yii::t('app', 'The payer\'s information will be used if at least the name and address are filled in') ?>.</h4>

@@ -18,7 +18,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
         return [
             [['school_id', 'name', 'months', 'max_pause_weeks'], 'required'],
             [['school_id', 'months', 'max_pause_weeks', 'pvn_percent'], 'number'],
-            [['name', 'description', 'files', 'message'], 'string'],
+            [['name', 'description', 'files', 'message', 'type'], 'string'],
         ];
     }
 
@@ -29,12 +29,18 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
             'school_id' => \Yii::t('app',  'School ID'),
             'name' => \Yii::t('app',  'Title'),
             'description' => \Yii::t('app',  'Description'),
+            'type' => \Yii::t('app',  'Tips'),
             'pvn_percent' => \Yii::t('app',  'PVN (percentage)'),
             'months' => \Yii::t('app',  'Months (0 - unlimited)'),
             'max_pause_weeks' => \Yii::t('app',  'Pause weeks'),
             'files' => \Yii::t('app',  'Files'),
             'message' => \Yii::t('app',  'Message to send with the invoice'),
         ];
+    }
+
+    public function typeText()
+    {
+        return $this->type === 'lesson' ? 'Mācību' : 'Īres';
     }
 
     public static function getForSchool($schoolId)

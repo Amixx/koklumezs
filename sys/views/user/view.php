@@ -1,10 +1,11 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
+use app\models\SchoolSubplanParts;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Users */
 
 $this->title = $model->id;
 ['label' => \Yii::t('app',  'Users'), 'url' => ['index']];
@@ -34,7 +35,7 @@ $this->title = $model->id;
         </li>
         <li class="nav-item">
             <a class="nav-link" id="plan-tab" data-toggle="tab" href="#plan" role="tab" aria-controls="plan" aria-selected="false">
-                <?= \Yii::t('app', 'Student\'s subscription plan') ?>
+                <?= \Yii::t('app', 'Student\'s subscription plans') ?>
             </a>
         </li>
     </ul>
@@ -58,30 +59,52 @@ $this->title = $model->id;
             ]) ?>
         </div>
         <div class="tab-pane fade" id="plan" role="tabpanel" aria-labelledby="plan-tab">
-            <?php if ($studentSubPlan == null) { ?>
-                <h3><?= Yii::t('app', 'User has no subscription plan') ?>!</h3>
+            <?php if ($studentSubPlans == null) { ?>
+                <h3><?= Yii::t('app', 'User has no subscription plans') ?>!</h3>
                 <p><?= Html::a(
                         \Yii::t('app',  'You can give the student a plan in the edit page') . '!',
                         ['update', 'id' => $model->id]
                     ) ?></p>
             <?php } else {
-                echo DetailView::widget([
-                    'model' => $studentSubPlan,
-                    'attributes' => [
+                echo GridView::widget([
+                    'dataProvider' => $studentSubPlans,
+                    'columns' => [
+                        ['class' => 'yii\grid\SerialColumn'],
                         'start_date',
                         'sent_invoices_count',
                         'times_paid',
                         [
                             'label' => Yii::t('app', 'Plan name'),
-                            'value' => $studentSubPlan->plan->name,
+                            'value' => function ($dataProvider) {
+                                return $dataProvider->plan->name;
+                            }
+                        ],
+                        [
+                            'label' => Yii::t('app', 'Plan type'),
+                            'value' => function ($dataProvider) {
+                                return $dataProvider->plan->typeText();
+                            }
                         ],
                         [
                             'label' => Yii::t('app', 'Plan monthly cost'),
-                            'value' => $studentSubPlan->plan->monthly_cost,
+                            'value' => function ($dataProvider) {
+                                return SchoolSubplanParts::getPlanTotalCost($dataProvider->plan['id']);
+                            }
                         ],
                         [
                             'label' => Yii::t('app', 'Plan months count'),
-                            'value' => $studentSubPlan->plan->months,
+                            'value' => function ($dataProvider) {
+                                return $dataProvider->plan->months;
+                            }
+                        ],
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{delete}',
+                            'urlCreator' => function ($action, $model) {
+                                if ($action === 'delete') {
+                                    return Url::base(true) . '/student-sub-plans/delete?id=' . $model->id;
+                                }
+                            },
                         ],
                     ],
                 ]);

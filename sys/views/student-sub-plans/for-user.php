@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\GridView;
+use app\models\SchoolSubplanParts;
 
 $this->title = \Yii::t('app', 'Subscription plans');
 
@@ -27,7 +28,7 @@ $this->title = \Yii::t('app', 'Subscription plans');
             [
                 'label' => Yii::t('app', 'Plan monthly cost'),
                 'value' => function ($dataProvider) {
-                    return $dataProvider->plan->monthly_cost;
+                    return SchoolSubplanParts::getPlanTotalCost($dataProvider->plan['id']);
                 }
             ],
             [

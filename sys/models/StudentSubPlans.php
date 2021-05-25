@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use yii\data\ActiveDataProvider;
+
 class StudentSubPlans extends \yii\db\ActiveRecord
 {
     public static function tableName()
@@ -42,9 +44,23 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $this->hasOne(Users::class, ['id' => 'user_id']);
     }
 
-    public static function getCurrentForStudent($studentId)
+    public static function getActivePlansForStudentADP($studentId)
     {
-        return self::find()->where(['user_id' => $studentId, 'is_active' => true])->orderBy(['studentsubplans.id' => SORT_DESC])->joinWith('plan')->one();
+        $query =  self::find()->where(['user_id' => $studentId, 'is_active' => true])
+            ->orderBy(['studentsubplans.id' => SORT_DESC])
+            ->joinWith('plan');
+
+        return new ActiveDataProvider([
+            'query' => $query,
+        ]);
+    }
+
+    public static function getActivePlansForStudent($studentId)
+    {
+        return self::find()->where(['user_id' => $studentId, 'is_active' => true])
+            ->orderBy(['studentsubplans.id' => SORT_DESC])
+            ->joinWith('plan')
+            ->asArray()->all();
     }
 
     public static function getPlanEndDatesForCurrentSchoolStudents()
@@ -106,12 +122,9 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $endDatesMapped;
     }
 
-    public static function getRemainingPauseWeeks($studentId)
+    public static function getRemainingPauseWeeks($planId)
     {
-        $subplan = self::getCurrentForStudent($studentId);
-        if (!$subplan) {
-            return 0;
-        }
+        $subplan = self::findOne($planId);
 
         $pauses = StudentSubplanPauses::getForStudentSubplan($subplan['id'])->asArray()->all();
         $totalPausedWeeks = 0;
@@ -124,11 +137,8 @@ class StudentSubPlans extends \yii\db\ActiveRecord
 
     public static function isPlanCurrentlyPaused($studentId)
     {
-        if (!StudentSubplanPauses::studentHasAnyPauses($studentId)) {
-            return false;
-        }
-
-        $mostRecentPause = StudentSubplanPauses::getMostRecentPauseForStudent($studentId);
+        $activeLearningPlan = self::getLatestActiveLessonPlanForStudent($studentId);
+        $mostRecentPause = StudentSubplanPauses::getMostRecentPauseForPlan($activeLearningPlan);
         $pauseStartDate = strtotime($mostRecentPause['start_date']);
         $pauseEndDate = strtotime("+" . $mostRecentPause['weeks'] . " weeks", $pauseStartDate);
         $time = time();
@@ -136,9 +146,14 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $pauseStartDate < $time && $pauseEndDate > $time;
     }
 
-    public static function getEndDateString($studentId)
+    public static function getLearningPlanEndDateString($studentId)
     {
-        $subplan = self::getCurrentForStudent($studentId);
+        $subplan = self::getLatestActiveLessonPlanForStudent($studentId);
+        self::getPlanEndDateString($subplan);
+    }
+
+    public static function getPlanEndDateString($subplan)
+    {
         if ($subplan == null) {
             return null;
         }
@@ -166,12 +181,18 @@ class StudentSubPlans extends \yii\db\ActiveRecord
             return false;
         }
 
-        $planMonths = $studentSubplan['plan']['months'];
+
+        $planMonths = (int)$studentSubplan['plan']['months'];
         $planUnlimited = $planMonths === 0;
+
+        if ($planUnlimited) {
+            return true;
+        }
+
         $planEnded = $studentSubplan['sent_invoices_count'] == $planMonths;
         $hasPaidInAdvance = self::hasPaidInAdvance($studentSubplan);
 
-        return ((!$planEnded || $planUnlimited) && !$hasPaidInAdvance);
+        return !$planEnded && !$hasPaidInAdvance;
     }
 
     public static function hasPaidInAdvance($studentSubplan)
@@ -193,19 +214,40 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $today_split[0] === $match_date_split[0];
     }
 
-    public function increaseSentInvoicesCount($count = 1)
+    public static function increaseSentInvoicesCount($studentSubplan, $count = 1)
     {
-        $this->sent_invoices_count += $count;
-        $this->update();
+        $plan = self::findOne($studentSubplan['id']);
+        $plan->sent_invoices_count += $count;
+        $plan->update();
     }
 
-    public static function resetActivePlanForUser($studentId)
+    public static function setStudentSubplanInactive($planId)
     {
-        $activeSubplan = self::getCurrentForStudent($studentId);
-
-        if ($activeSubplan) {
-            $activeSubplan->is_active = false;
-            $activeSubplan->update();
+        $plan = self::findOne($planId);
+        if ($plan) {
+            $plan->is_active = false;
+            return $plan->update();
         }
+
+        return false;
+    }
+
+    public static function getLatestActiveLessonPlanForStudent($studentId)
+    {
+        return self::getLatestOfType($studentId, 'lesson');
+    }
+
+    public static function getLatestActiveRentPlanForStudent($studentId)
+    {
+        return self::getLatestOfType($studentId, 'rent');
+    }
+
+    private static function getLatestOfType($studentId, $type)
+    {
+        return self::find()->where(['user_id' => $studentId, 'is_active' => true])
+            ->joinWith('plan')
+            ->orderBy(['studentsubplans.id' => SORT_DESC])
+            ->andFilterWhere(['schoolsubplans.type' => $type])
+            ->one();
     }
 }

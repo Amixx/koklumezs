@@ -115,6 +115,6 @@ class TestController extends Controller
         //     }
         // }
 
-        var_dump(RegistrationMessage::getBody(1, false, true));
+        //var_dump(RegistrationMessage::getBody(1, false, true));
     }
 }

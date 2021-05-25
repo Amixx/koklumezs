@@ -50,7 +50,7 @@ class InvoiceManager
         }
 
         if ($sent) {
-            $studentSubplan->increaseSentInvoicesCount();
+            StudentSubPlans::increaseSentInvoicesCount($studentSubplan);
 
             SentInvoices::createAdvance($user['id'], $invoiceNumber, $schoolSubplan, $studentSubplan);
         } else {
