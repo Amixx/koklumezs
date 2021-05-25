@@ -100,6 +100,12 @@ class Users extends ActiveRecord implements IdentityInterface
         return static::findOne(['email' => $email]);
     }
 
+    public static function isActive($id)
+    {
+        $status = static::findOne(['id' => $id])->status;
+        return $status != 9;
+    }
+
     public static function findIdentity($id)
     {
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);

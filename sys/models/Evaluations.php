@@ -66,7 +66,7 @@ class Evaluations extends \yii\db\ActiveRecord
 
     public static function getEvaluationsTitles()
     {
-        return ArrayHelper::map(self::find()->where(['not like', 'id', [2, 3, 5]])->asArray()->all(), 'id', 'title');
+        return ArrayHelper::map(self::find()->where(['not like', 'id', [2, 3, 4, 5]])->asArray()->all(), 'id', 'title');
     }
 
     public static function getScaleParam()
