@@ -69,7 +69,7 @@ class SignUpForm extends Model
 
     public function checkIfUserExists($attribute, $params)
     {
-        if (!$this->hasErrors() && Users::doesUserExist($this->first_name, $this->last_name, $this->email)) {
+        if (!$this->hasErrors() && Users::doesUserExist($this->first_name, $this->last_name, $this->email, $this->schoolId)) {
             $this->addError($attribute, Yii::t('app', 'A profile has already been registered using this e-mail! Have you forgotten your password?'));
         }
     }
@@ -89,9 +89,22 @@ class SignUpForm extends Model
             $saved = $user->save();
 
             if ($saved) {
-                return $user->id;
+                return $user;
             }
         }
         return false;
+    }
+
+    public static function fromSession()
+    {
+        $model = new SignUpForm;
+        if (Yii::$app->session['signupModel'] !== null) {
+            $signupModel = Yii::$app->session['signupModel'];
+            $model->first_name = $signupModel['first_name'];
+            $model->last_name = $signupModel['last_name'];
+            $model->email = $signupModel['email'];
+        }
+
+        return $model;
     }
 }

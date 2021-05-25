@@ -5,10 +5,6 @@ use mihaildev\elfinder\ElFinder;
 use mihaildev\elfinder\InputFile;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use app\models\Lectures;
-/* @var $this yii\web\View */
-/* @var $model app\models\Lectures */
-/* @var $form yii\widgets\ActiveForm */
 
 $ckeditorOptions = ElFinder::ckeditorOptions(
     'elfinder',

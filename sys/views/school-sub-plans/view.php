@@ -30,6 +30,12 @@ $this->title = $model->name;
             'id',
             'name',
             'description:html',
+            [
+                'attribute' => 'type',
+                'value' => function ($dataProvider) {
+                    return $dataProvider->typeText();
+                }
+            ],
             'months',
             'max_pause_weeks',
             'message',

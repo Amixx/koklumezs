@@ -83,8 +83,7 @@ class TeacherUserSearch extends Users
 
         if (isset($params["TeacherUserSearch"])) {
             $continue = $params["TeacherUserSearch"]["subplan_monthly_cost"]
-                || $params["TeacherUserSearch"]["subplan_end_date"]
-                || $params["TeacherUserSearch"]["subplan_paid_type"];
+                || $params["TeacherUserSearch"]["subplan_end_date"];
 
             if ($continue) {
                 $studentSubplans = StudentSubPlans::find()->where(['in', 'user_id', $schoolStudentIds])->andWhere(['is_active' => true])->joinWith('plan');
@@ -131,18 +130,18 @@ class TeacherUserSearch extends Users
                     }
                 }
 
-                if ($params["TeacherUserSearch"]["subplan_paid_type"]) {
-                    $type = $params["TeacherUserSearch"]["subplan_paid_type"];
-                    if ($type == "late") {
-                        $sign = '<';
-                    } else if ($type == "paid") {
-                        $sign = '=';
-                    } else if ($type == "prepaid") {
-                        $sign = '>';
-                    }
+                // if ($params["TeacherUserSearch"]["subplan_paid_type"]) {
+                //     $type = $params["TeacherUserSearch"]["subplan_paid_type"];
+                //     if ($type == "late") {
+                //         $sign = '<';
+                //     } else if ($type == "paid") {
+                //         $sign = '=';
+                //     } else if ($type == "prepaid") {
+                //         $sign = '>';
+                //     }
 
-                    $studentSubplans->andFilterWhere([$sign, 'times_paid', 'sent_invoices_count']);
-                }
+                //     $studentSubplans->andFilterWhere([$sign, 'times_paid', 'sent_invoices_count']);
+                // }
 
                 $studentSubplanData = $studentSubplans->asArray()->all();
 

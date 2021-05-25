@@ -7,6 +7,7 @@ use app\models\Users;
 use app\models\RegistrationLesson;
 use app\models\School;
 use app\models\Lectures;
+use app\models\RegistrationMessage;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\data\ActiveDataProvider;
@@ -42,22 +43,24 @@ class RegistrationLessonsController extends Controller
     {
         $schoolId = School::getCurrentSchoolId();
         $lectures = Lectures::getLectures();
+        $conf = [];
 
-        $registrationLessons = [];
+        for ($i = 0; $i < 2; $i++) {
+            for ($j = 0; $j < 2; $j++) {
+                $wi = (bool)$i; // for students with instrument
+                $we = (bool)$j; // for students with experience
 
-        $registrationLessons['without_instrument']['without_experience'] = new ActiveDataProvider([
-            'query' => RegistrationLesson::getLessonsForIndex($schoolId, false, false),
-        ]);
-        $registrationLessons['without_instrument']['with_experience'] = new ActiveDataProvider([
-            'query' => RegistrationLesson::getLessonsForIndex($schoolId, false, true),
-        ]);
-        $registrationLessons['with_instrument']['without_experience'] = new ActiveDataProvider([
-            'query' => RegistrationLesson::getLessonsForIndex($schoolId, true, false),
-        ]);
-        $registrationLessons['with_instrument']['with_experience'] = new ActiveDataProvider([
-            'query' => RegistrationLesson::getLessonsForIndex($schoolId, true, true),
-        ]);
-
+                $conf[$i][$j] = [
+                    'lessons' => new ActiveDataProvider([
+                        'query' => RegistrationLesson::getLessonsForIndex($schoolId, $wi, $we),
+                    ]),
+                    'message' => RegistrationMessage::getForIndex($schoolId, $wi, $we),
+                    'title' => self::getItemTitle($wi, $we),
+                    'wi' => $wi,
+                    'we' => $we,
+                ];
+            }
+        }
 
         $model = new RegistrationLesson;
         $model->school_id = $schoolId;
@@ -74,7 +77,7 @@ class RegistrationLessonsController extends Controller
         }
 
         return $this->render('index', [
-            'registrationLessons' => $registrationLessons,
+            'conf' => $conf,
             'lectures' => $lectures,
             'model' => $model,
         ]);
@@ -95,5 +98,13 @@ class RegistrationLessonsController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    private static function getItemTitle($wi, $we)
+    {
+        $a = $wi ? "With" : "Without";
+        $b = $we ? "with" : "without";
+
+        return "$a instrument; $b experience";
     }
 }

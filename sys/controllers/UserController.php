@@ -76,19 +76,14 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
-        $studentSubPlan = StudentSubPlans::getCurrentForStudent($id);
+        $studentSubPlans = StudentSubPlans::getActivePlansForStudentADP($id);
 
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'studentSubPlan' => $studentSubPlan
+            'studentSubPlans' => $studentSubPlans
         ]);
     }
 
-    /**
-     * Creates a new Users model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate()
     {
         $model = new Users();
@@ -160,16 +155,14 @@ class UserController extends Controller
         $studentGoals = Studentgoals::getUserGoals($id);
         $difficulties = Difficulties::getDifficulties();
         $schoolSubPlans = SchoolSubPlans::getMappedForSelection();
-        $studentSubplan = StudentSubPlans::getCurrentForStudent($model->id);
+        $studentSubplans = StudentSubPlans::getActivePlansForStudentADP($model->id);
 
-        if (!$studentSubplan) {
-            $studentSubplan = new StudentSubPlans;
-            $studentSubplan->user_id = $model->id;
-            $studentSubplan->start_date = date('Y-m-d H:i:s', time());
-            $studentSubplan->sent_invoices_count = 0;
-            $studentSubplan->times_paid = 0;
-            $studentSubplan->is_active = true;
-        }
+        $studentSubplanModel = new StudentSubPlans;
+        $studentSubplanModel->user_id = $model->id;
+        $studentSubplanModel->start_date = date('Y-m-d H:i:s', time());
+        $studentSubplanModel->sent_invoices_count = 0;
+        $studentSubplanModel->times_paid = 0;
+        $studentSubplanModel->is_active = true;
 
         if ($model->load($post)) {
             if (!empty($post['Users']['password'])) {
@@ -195,19 +188,9 @@ class UserController extends Controller
             }
 
             if (isset($post['StudentSubPlans']) && $post['StudentSubPlans']['plan_id']) {
-                $schoolSubplanChanged = $studentSubplan['plan_id'] !== (int) $post['StudentSubPlans']['plan_id'];
-                $resetActivePlan = $studentSubplan['id'] && $schoolSubplanChanged;
-                $createNewPlan = !$studentSubplan['id'];
-
-                if ($resetActivePlan) {
-                    StudentSubPlans::resetActivePlanForUser($model->id);
-                }
-
-                $studentSubplan->load($post);
-                if ($studentSubplan->validate()) {
-                    $resetActivePlan || $createNewPlan
-                        ? $studentSubplan->save()
-                        : $studentSubplan->update();
+                $studentSubplanModel->load($post);
+                if ($studentSubplanModel->validate()) {
+                    $studentSubplanModel->save();
                 } else {
                     Yii::$app->session->setFlash('error', 'Plāns netika saglabāts - nepareiza informācija!');
                 }
@@ -232,7 +215,7 @@ class UserController extends Controller
                 $payer->swift = $postData["swift"];
                 $payer->account_number = $postData["swift"];
 
-                if($payer->validate()){
+                if ($payer->validate()) {
                     if ($newPayer) {
                         $payer->save();
                     } else {
@@ -240,7 +223,7 @@ class UserController extends Controller
                     }
 
                     Yii::$app->session->setFlash('success', 'Maksātāja informācija saglabāta!');
-                }                
+                }
             }
 
             $model->update();
@@ -252,7 +235,8 @@ class UserController extends Controller
                 'studentGoals' => $studentGoals,
                 'difficulties' => $difficulties,
                 'schoolSubPlans' => $schoolSubPlans,
-                'studentSubplan' => $studentSubplan,
+                'studentSubplans' => $studentSubplans,
+                'studentSubplanModel' => $studentSubplanModel,
             ]);
         }
     }

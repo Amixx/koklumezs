@@ -1,7 +1,7 @@
 {
-  "name": "Koklumezs",
-  "short_name": "Koklumezs",
-  "description": "Kokles speles skola",
+  "name": "Spēlēsim?",
+  "short_name": "Spēlēsim?",
+  "description": "Instrumentu speles skolas",
   "icons": [
     {
       "src": "icon192.png",
@@ -15,8 +15,8 @@
     }
   ],
   "start_url": "/sys/site/mainpage",
-  "background_color": "darkgoldenrod",
+  "background_color": "#007D82",
   "display": "standalone",
   "scope": "/sys/",
-  "theme_color": "darkgoldenrod"
+  "theme_color": "#007D82"
 }

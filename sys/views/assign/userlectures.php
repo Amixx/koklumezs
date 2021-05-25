@@ -159,7 +159,7 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
         <p><?= \Yii::t('app', 'User has not opened any lessons yet') ?>!</p>
     <?php } ?>
     <p><?= \Yii::t('app', 'Abilities now') ?>:<?= isset($goals[$goalsnow]) ? '<strong>' . $goalsum . '</strong>' : $empty ?></p>
-    <p><?= \Yii::t('app', 'Plan end date') ?>: <?= $endDate == null ? \Yii::t('app', 'no plan assigned to pupil') : $endDate  ?></p>
+    <p><?= \Yii::t('app', 'Lesson plan end date') ?>: <?= $endDate == null ? \Yii::t('app', 'no plan assigned to pupil') : $endDate  ?></p>
     <?php if ($user->wants_more_lessons) { ?>
         <h4><strong><?= Yii::t('app', 'Student wants more lessons') ?>!</strong></h4>
     <?php } ?>

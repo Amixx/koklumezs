@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 
 $this->title = \Yii::t('app',  'Your first kokle');
@@ -13,7 +14,7 @@ $this->title = \Yii::t('app',  'Your first kokle');
         <div class="container">
             <h2><?= Yii::t('app', 'Rent kokle') ?></h2>
             <p style="font-size:16px">
-                <?= Yii::t('app', 'If you wish to rent kokle (10 euro/month), after invoice payment we will send kokle to Omniva parcel machine of your choice (shipping 5 euro)') ?>
+                <?= Yii::t('app', 'Fill in this application form if you want to rent a kokle. Rent 10 eur / month. Shipping with Omniva parcel terminal 5 eur.') ?>
             </p>
             <p style="color:red"> <?= Yii::t('app', 'Please fill every field') ?> </p>
         </div>
@@ -44,12 +45,17 @@ $this->title = \Yii::t('app',  'Your first kokle');
 
         <div class="col-sm-12 text-center">
             <div>
-                <?= Html::submitButton(\Yii::t('app', 'Submit'), ['class' => 'btn btn-primary btn-flat', 'name' => 'login-button']) ?>
+                <?= Html::a(Yii::t('app', 'Back'), $backUrl, [
+                    'class' => 'btn btn-info'
+                ]) ?>
+                <?= Html::submitButton(\Yii::t('app', 'Submit'), [
+                    'class' => 'btn btn-primary btn-flat rent-submit-button',
+                    'name' => 'login-button'
+                ]) ?>
+                <?= Html::a(Yii::t('app', 'View rent agreement'), Url::to(["documents/Kokles līgums.docx"])) ?>
             </div>
         </div>
 
         <?php ActiveForm::end(); ?>
-
     </div>
-
 </div>

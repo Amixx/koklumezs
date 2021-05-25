@@ -33,16 +33,6 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
         return $this->hasOne(StudentSubPlans::class, ['id' => 'studentsubplan_id'])->joinWith('plan')->joinWith('user');
     }
 
-    public static function getForStudent($studentId)
-    {
-        $subplan = StudentSubPlans::getCurrentForStudent($studentId);
-        if ($subplan == null) {
-            return null;
-        }
-
-        return self::getForStudentSubplan($subplan['id']);
-    }
-
     public static function getForStudentSubplan($subplanId)
     {
         return self::find()->where(['studentsubplan_id' => $subplanId])->joinWith('studentPlan');
@@ -53,24 +43,14 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
         return self::find()->joinWith('studentPlan')->where(['schoolsubplans.school_id' => $schoolId]);
     }
 
-    public static function getMostRecentPauseForStudent($studentId)
+    public static function getMostRecentPauseForPlan($studentSubplanId)
     {
-        $subplan = StudentSubPlans::getCurrentForStudent($studentId);
-        if ($subplan == null) {
-            return null;
-        }
+        $data =  self::find()
+            ->where(['studentsubplan_id' => $studentSubplanId])
+            ->orderBy(['start_date' => SORT_DESC])
+            ->asArray()->all();
 
-        return self::find()->where(['studentsubplan_id' => $subplan['id']])->orderBy(['start_date' => SORT_DESC])->asArray()->all()[0];
-    }
-
-    public static function studentHasAnyPauses($studentId)
-    {
-        $subplan = StudentSubPlans::getCurrentForStudent($studentId);
-        if ($subplan == null) {
-            return null;
-        }
-
-        return self::find()->where(['studentsubplan_id' => $subplan['id']])->count() > 0;
+        return empty($data) ? null : $data[0];
     }
 
     public static function getForCurrentSchool()
@@ -79,16 +59,16 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
         return self::getForSchool($schoolId);
     }
 
-    public static function isStudentCurrentlyPaused($studentId)
+    public static function isStudentCurrentlyPaused($studentSubplanId)
     {
-        $studentPauses = self::getForStudent($studentId);
-        if ($studentPauses == null) {
+        $studentSubplanPauses = self::getForStudentSubplan($studentSubplanId);
+        if ($studentSubplanPauses == null) {
             return false;
         }
         $res = false;
 
         date_default_timezone_set('EET');
-        foreach ($studentPauses->asArray()->all() as $pause) {
+        foreach ($studentSubplanPauses->asArray()->all() as $pause) {
             $weeks = $pause['weeks'];
             if ($weeks == 0) {
                 continue;

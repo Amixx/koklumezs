@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-use yii\helpers\ArrayHelper;
+use Yii;
 
 class RegistrationLesson extends \yii\db\ActiveRecord
 {
@@ -48,5 +48,30 @@ class RegistrationLesson extends \yii\db\ActiveRecord
     public static function getLessonsForIndex($schoolId, $withInstrument, $withExperience)
     {
         return static::find()->where(['school_id' => $schoolId, 'for_students_with_instrument' => $withInstrument, 'for_students_with_experience' => $withExperience])->joinWith('lesson');
+    }
+
+    public static function assignToStudent($schoolId, $userId, $model)
+    {
+        $schoolTeacher = SchoolTeacher::getBySchoolId($schoolId)["user"];
+        $firstLectureIds = RegistrationLesson::getLessonIds($schoolId, $model->ownsInstrument, $model->hasExperience);
+        $insertDate = date('Y-m-d H:i:s', time());
+        $insertColumns = [];
+
+        foreach ($firstLectureIds as $lid) {
+            $insertColumns[] = [$schoolTeacher["id"], $userId, $lid, $insertDate, 0, 0, 1];
+        }
+
+        Yii::$app->db
+            ->createCommand()
+            ->batchInsert('userlectures', [
+                'assigned',
+                'user_id',
+                'lecture_id',
+                'created',
+                'user_difficulty',
+                'open_times',
+                'sent'
+            ], $insertColumns)
+            ->execute();
     }
 }

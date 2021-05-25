@@ -104,15 +104,15 @@ class StudentSubplanPausesController extends Controller
         return $this->redirect(Url::to(['school-sub-plans/index']));
     }
 
-    public function actionCreate()
+    public function actionCreate($id)
     {
         $model = new StudentSubplanPauses();
 
-        $remainingPauseWeeks = StudentSubPlans::getRemainingPauseWeeks(Yii::$app->user->identity->id);
+        $remainingPauseWeeks = StudentSubPlans::getRemainingPauseWeeks($id);
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model["weeks"] > $remainingPauseWeeks) {
-                Yii::$app->session->setFlash('error', 'Neizdevās nosūtīt e-pasta adresi, lai atjaunotu paroli.');
+                Yii::$app->session->setFlash('error', 'Pārsniegts atļauto nedēļu skaits!');
             } else {
                 $model->save();
             }
