@@ -307,7 +307,6 @@ class UserLectures extends \yii\db\ActiveRecord
         $lectureIds = self::getLessonsOfType($studentId, $type);
         $lectures = Lectures::find()->where(['in', 'id', $lectureIds])->orderBy(['title' => SORT_ASC])->asArray()->all();
 
-
         $takeNext = false;
         foreach ($lectures as $lecture) {
             if ($takeNext) {
