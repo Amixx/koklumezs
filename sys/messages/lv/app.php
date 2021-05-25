@@ -467,4 +467,6 @@ return [
     'View rent agreement' => 'Apskatīt īres līgumu',
     'Add subscription plan to student' => 'Piešķirt skolēnam abonēšanas plānu',
     'Lesson plan end date' => 'Mācību plāna beigu datums',
+    'After completing all lesosns, student can assign themself' => 'Skolēns var sev piešķirt',
+    'There is no lesson student can assign themself' => 'Nav nodarbību kuru skolēns var sev piešķirt',
 ];
