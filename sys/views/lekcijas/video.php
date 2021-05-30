@@ -39,6 +39,9 @@
                     <div class="video-container">
                         <div id="<?= $playerId ?>" data-plyr-provider="youtube" data-plyr-embed-id="<?= $videoId ?>" data-role="player"></div>
                     </div>
+                    <p>
+                        Ja rodas problēmas ar video atskaņošanu, spied <a target="_blank" href="<?= $fileUrl ?>">šeit</a> un skaties to Youtube platformā!
+                    </p>
                 <?php } else { ?>
                     <video id="player" playsinline controls data-role="player">
                         <source src="<?= $fileUrl ?>" type="video/<?= $fileExt ?>" />
