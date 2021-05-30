@@ -104,6 +104,9 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
                             <?php if ($lecture->is_favourite) { ?>
                                 <span class="glyphicon glyphicon-heart"></span>
                             <?php } ?>
+                            <?php if ($lecture->assigned == $lecture->user_id) { ?>
+                                <span class="glyphicon glyphicon-asterisk"></span>
+                            <?php } ?>
                         </td>
                         <td class="text-center"><?= (int) $lecture->opened ? 'Jā' : 'Nē' ?></td>
                         <td class="text-center"><?= $lecture->open_times ?></td>
@@ -132,6 +135,9 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
             </tbody>
         </table>
     </div>
+    <?php if (isset($user) && $user->wants_more_lessons) { ?>
+        <h3 style="color: red;"><?= \Yii::t('app', 'User dosen\'t have enough lessons') ?>! </h3>
+    <?php } ?>
     <p>
         <?= Html::a(
             'Apskatīt lietotāja galveno lapu    <span class="glyphicon glyphicon-user"></span>',
@@ -143,7 +149,7 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
         ) ?>
     </p>
     <?php if (isset($user) && $user->about) { ?>
-        <p>Par lietotāju: <strong><?= $user->about ?></strong>.</p>
+        <p><?= \Yii::t('app', 'About user') ?>: <strong><?= $user->about ?></strong>.</p>
     <?php } ?>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['seven'], 7]); ?>.</p>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['thirty'], 30]); ?>.</p>
@@ -154,9 +160,25 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     <?php } ?>
     <p><?= \Yii::t('app', 'Abilities now') ?>:<?= isset($goals[$goalsnow]) ? '<strong>' . $goalsum . '</strong>' : $empty ?></p>
     <p><?= \Yii::t('app', 'Lesson plan end date') ?>: <?= $endDate == null ? \Yii::t('app', 'no plan assigned to pupil') : $endDate  ?></p>
+    <?php if ($isNextLessons) { ?>
+        <p> <?= Yii::t('app', 'After completing all lesosns, student can assign themself') . ' -' ?></p>
+        <?php if (isset($nextLessons['easy'])) { ?>
+            <p><?= Yii::t('app', 'Easier') . ': ' . $nextLessons['easy']->title; ?></p>
+        <?php } ?>
+        <?php if (isset($nextLessons['medium'])) { ?>
+            <p> <?= Yii::t('app', 'Just as complicated') . ': ' . $nextLessons['medium']->title; ?></p>
+        <?php } ?>
+        <?php if (isset($nextLessons['hard'])) { ?>
+            <p> <?= Yii::t('app', 'Challenge') . ': ' . $nextLessons['hard']->title; ?></p>
+        <?php } ?>
+    <?php } else { ?>
+        <p> <?= Yii::t('app', 'There is no lesson student can assign themself') . '.' ?></p>
+    <?php } ?>
+
     <?php if ($user->wants_more_lessons) { ?>
         <h4><strong><?= Yii::t('app', 'Student wants more lessons') ?>!</strong></h4>
     <?php } ?>
+
     <?php if (is_array($PossibleThreeLectures)) {
         $limit = 3;
     ?>

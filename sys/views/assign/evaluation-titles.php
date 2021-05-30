@@ -13,9 +13,3 @@ $getEvaluations = function ($etid) use ($empty, $evaluations, $evaluationsValues
 
     return $empty;
 };
-
-foreach ($evaluationsTitles as $etid => $et) { ?>
-    <td class="text-center">
-        <?= $getEvaluations($etid) ?>
-    </td>
-<?php } ?>

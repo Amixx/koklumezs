@@ -14,6 +14,7 @@ use app\models\UserLectures;
 use app\models\Users;
 use app\models\School;
 use app\models\SectionsVisible;
+use app\models\Studentgoals;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\VerbFilter;
@@ -290,6 +291,38 @@ class LekcijasController extends Controller
         $opened = UserLectures::getOpened($user->id);
         $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
 
+        $title_filter = 1;
+
+        $userId = Yii::$app->user->identity->id;
+        $user = Users::findOne($userId);
+
+        $post = Yii::$app->request->post();
+        if ($post) {
+            $goals = StudentGoals::getUserGoals($userId);
+            $goalsnow = StudentGoals::NOW;
+            $goalsum = isset($goals[$goalsnow]) ? array_sum($goals[$goalsnow]) : 0;
+
+            $lessonId = Yii::$app->request->post('lessonId', null);
+            $model = new UserLectures();
+            $model->assigned = $userId;
+            $model->created = date('Y-m-d H:i:s', time());
+            $model->lecture_id = $lessonId;
+            $model->user_id = $userId;
+            $model->user_difficulty = $goalsum;
+            $saved = $model->save();
+            if ($saved) {
+                $user->wants_more_lessons = true;
+                $user->update();
+                $model->sent = 1;
+                $model->update();
+            }
+            return $this->redirect(['']);
+        }
+
+        $nextLessons = UserLectures::getNextLessons($userId);
+        $isNextLesson = UserLectures::getIsNextLesson($userId);
+        $isActive =  Users::isActive($userId);
+
         return $this->render('overview', [
             'models' => $models,
             'newLessons' => $newLessons,
@@ -298,7 +331,10 @@ class LekcijasController extends Controller
             'pages' => $pages,
             'userLectureEvaluations' => $userLectureEvaluations,
             'videoThumb' => $videoThumb,
+            'nextLessons' => $nextLessons,
+            'isNextLesson' => $isNextLesson,
             'renderRequestButton' => !$user->wants_more_lessons,
+            'isActive' => $isActive,
         ]);
     }
 

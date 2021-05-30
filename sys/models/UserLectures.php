@@ -4,6 +4,8 @@ namespace app\models;
 
 use app\models\Lectures;
 use app\models\Users;
+use app\models\School;
+use app\models\SchoolLecture;
 use Yii;
 use yii\helpers\ArrayHelper;
 use app\helpers\EmailSender;
@@ -307,6 +309,10 @@ class UserLectures extends \yii\db\ActiveRecord
         $lectureIds = self::getLessonsOfType($studentId, $type);
         $lectures = Lectures::find()->where(['in', 'id', $lectureIds])->orderBy(['title' => SORT_ASC])->asArray()->all();
 
+        if (empty($lectures)) {
+            return null;
+        }
+
         $takeNext = false;
         foreach ($lectures as $lecture) {
             if ($takeNext) {
@@ -354,5 +360,80 @@ class UserLectures extends \yii\db\ActiveRecord
         $lecture = Lectures::findOne($lecture_id);
 
         return EmailSender::sendReminderToTeacher($user, $lecture, $x, $school['email']);
+    }
+
+    public static function getUnassignedLectures($id)
+    {
+
+        $school = School::getByStudent($id);
+        $schoolLectures = SchoolLecture::getSchoolLectureIds($school);
+        $userLectures = self::getUserLectures($id);
+        $unassigned = [];
+        foreach ($schoolLectures as $slecture) {
+            $new = true;
+            foreach ($userLectures as $ulecture) {
+                if ($slecture == $ulecture) {
+                    $new = false;
+                    break;
+                }
+            }
+            if ($new) array_push($unassigned, Lectures::findOne($slecture));
+        }
+        return $unassigned;
+    }
+
+    public static function getLastThreeComplexityAverage($id)
+    {
+        $lastLectures = self::getLastLecturesForUser($id, 3);
+        $avg = 0;
+        foreach ($lastLectures as $lectureId) {
+            $lecture = Lectures::findOne($lectureId);
+            $avg = $avg + $lecture->complexity;
+        }
+        $avg = (int)round($avg / 3, 0);
+        return $avg;
+    }
+
+    public static function getNextLessons($userId)
+    {
+        $unassignedLectures = self::getUnassignedLectures($userId);
+        $avg = self::getLastThreeComplexityAverage($userId);
+        $nextLessons = ['easy' => null, 'medium' => null, 'hard' => null];
+
+        $similar = 3;
+        $max = 20;
+        $total = $similar + $max;
+
+        foreach ($unassignedLectures as $lecture) {
+            $complexity = $lecture->complexity;
+            $fitsEasier = $complexity >= $avg - $total && $complexity < $avg - $similar;
+            $fitsSame = $complexity <= $avg + $total && $complexity > $avg + $similar;
+            $fitsHarder = $complexity >= $avg - $similar && $complexity <= $avg + $similar;
+
+            if ($fitsEasier) {
+                if (isset($nextLessons['easy'])) {
+                    if ($nextLessons['easy']->complexity < $complexity) $nextLessons['easy'] = $lecture;
+                } else $nextLessons['easy'] = $lecture;
+            } else if ($fitsSame) {
+                if (isset($nextLessons['medium'])) {
+                    if ($nextLessons['medium']->complexity > $complexity) $nextLessons['medium'] = $lecture;
+                } else $nextLessons['medium'] = $lecture;
+            } else if ($fitsHarder) {
+                if (isset($nextLessons['hard'])) {
+                    $cdist = abs($avg - $nextLessons['hard']->complexity);
+                    $ndist = abs($avg - $complexity);
+                    if ($cdist > $ndist) $nextLessons['hard'] = $lecture;
+                } else $nextLessons['hard'] = $lecture;
+            }
+        }
+        return $nextLessons;
+    }
+
+    public static function getIsNextLesson($userId)
+    {
+        $isNextLesson = False;
+        $nextLessons = self::getNextLessons($userId);
+        if ($nextLessons['easy'] != NULL || $nextLessons['medium'] != NULL || $nextLessons['hard'] != NULL) $isNextLesson = True;
+        return $isNextLesson;
     }
 }

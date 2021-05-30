@@ -212,6 +212,9 @@ class AssignController extends Controller
         $openTimes['seven'] = LectureViews::getDayResult($currentUserId, 7);
         $openTimes['thirty'] = LectureViews::getDayResult($currentUserId, 30);
 
+        $nextLessons = UserLectures::getNextLessons($currentUserId);
+        $isNextLessons = UserLectures::getIsNextLesson($currentUserId);
+
         $options['id'] = $id;
         $options['videoparamtexts'] = $videotexts;
         $options['goalsum'] = $goalsum;
@@ -239,6 +242,8 @@ class AssignController extends Controller
         $options['firstOpenTime'] = $firstOpenTime;
         $options['openTimes'] = $openTimes;
         $options['endDate'] = $endDate;
+        $options['nextLessons'] = $nextLessons;
+        $options['isNextLessons'] = $isNextLessons;
 
         return $this->render('userlectures', $options);
     }

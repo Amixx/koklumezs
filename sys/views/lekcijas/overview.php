@@ -14,7 +14,10 @@
             'type' => 'new',
             'emptyText' => 'Congratulations! You\'ve seen all new lessons',
             'videoThumb' => $videoThumb,
+            'nextLessons' => $nextLessons,
+            'isNextLesson' => $isNextLesson,
             'renderRequestButton' => $renderRequestButton,
+            'isActive' => $isActive,
         ]) ?>
         <?=
         $this->render('favouriteANDnew', [

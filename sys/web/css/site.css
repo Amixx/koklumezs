@@ -582,7 +582,7 @@ div.has-experience.active, div.rent.active {
 
 #chat-btn-with-icons {
     top: 20px;
-    position: absolute;
+    position: fixed;
     display: inline-block;
     left: calc(50% - 250px);
     z-index: 1050; /* slikti :))) */
@@ -1107,7 +1107,6 @@ div.has-experience.active, div.rent.active {
     }
 
     .btn-orange {
-        float: right;
         margin-right: 0;
     }
 
