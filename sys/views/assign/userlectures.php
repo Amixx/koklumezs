@@ -160,9 +160,25 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     <?php } ?>
     <p><?= \Yii::t('app', 'Abilities now') ?>:<?= isset($goals[$goalsnow]) ? '<strong>' . $goalsum . '</strong>' : $empty ?></p>
     <p><?= \Yii::t('app', 'Lesson plan end date') ?>: <?= $endDate == null ? \Yii::t('app', 'no plan assigned to pupil') : $endDate  ?></p>
+    <?php if ($isNextLessons) { ?>
+        <p> <?= Yii::t('app', 'After completing all lesosns, student can assign themself') . ' -' ?></p>
+        <?php if (isset($nextLessons['easy'])) { ?>
+            <p><?= Yii::t('app', 'Easier') . ': ' . $nextLessons['easy']->title; ?></p>
+        <?php } ?>
+        <?php if (isset($nextLessons['medium'])) { ?>
+            <p> <?= Yii::t('app', 'Just as complicated') . ': ' . $nextLessons['medium']->title; ?></p>
+        <?php } ?>
+        <?php if (isset($nextLessons['hard'])) { ?>
+            <p> <?= Yii::t('app', 'Challenge') . ': ' . $nextLessons['hard']->title; ?></p>
+        <?php } ?>
+    <?php } else { ?>
+        <p> <?= Yii::t('app', 'There is no lesson student can assign themself') . '.' ?></p>
+    <?php } ?>
+
     <?php if ($user->wants_more_lessons) { ?>
         <h4><strong><?= Yii::t('app', 'Student wants more lessons') ?>!</strong></h4>
     <?php } ?>
+
     <?php if (is_array($PossibleThreeLectures)) {
         $limit = 3;
     ?>
