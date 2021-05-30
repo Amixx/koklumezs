@@ -139,6 +139,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
     {
         $activeLearningPlan = self::getLatestActiveLessonPlanForStudent($studentId);
         $mostRecentPause = StudentSubplanPauses::getMostRecentPauseForPlan($activeLearningPlan);
+        if (!$mostRecentPause) return false;
         $pauseStartDate = strtotime($mostRecentPause['start_date']);
         $pauseEndDate = strtotime("+" . $mostRecentPause['weeks'] . " weeks", $pauseStartDate);
         $time = time();
