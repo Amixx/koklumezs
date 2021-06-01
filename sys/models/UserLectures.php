@@ -405,7 +405,7 @@ class UserLectures extends \yii\db\ActiveRecord
         $total = $similar + $max;
 
         foreach ($unassignedLectures as $lecture) {
-            $complexity = $lecture->complexity;
+            $complexity = $lecture['complexity'];
             $fitsEasier = $complexity >= $avg - $total && $complexity < $avg - $similar;
             $fitsSame = $complexity <= $avg + $total && $complexity > $avg + $similar;
             $fitsHarder = $complexity >= $avg - $similar && $complexity <= $avg + $similar;

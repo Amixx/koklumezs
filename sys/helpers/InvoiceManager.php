@@ -101,15 +101,16 @@ class InvoiceManager
         $studentSubplan->save();
     }
 
-    public static function createRealInvoiceForMultipleMonths($userId, $paidMonths, $paidDate)
+    public static function createRealInvoiceForMultipleMonths($formModel)
     {
-        $months = intval($paidMonths, 10);
-        $studentSubplan = StudentSubPlans::getCurrentForStudent($userId);
+        $months = intval($formModel['paid_months_count'], 10);
+        $studentSubplan = StudentSubPlans::findOne($formModel['plan_id']);
+        $userId = $studentSubplan['user_id'];
         $schoolSubplan = $studentSubplan["plan"];
         $user = Users::find()->where(['users.id' => $userId])->joinWith('payer')->one();
         $school = School::getByStudent($userId);
         $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
-        $invoiceBasePath = self::getInvoiceBasePath($schoolTeacher['user_id'], false, strtotime($paidDate));
+        $invoiceBasePath = self::getInvoiceBasePath($schoolTeacher['user_id'], false, strtotime($formModel['paid_date']));
         $invoiceNumber = self::generateInvoiceNumber();
         $title = self::generateInvoiceTitle($invoiceNumber, false);
         $invoicePath = $invoiceBasePath . $title;
@@ -124,14 +125,14 @@ class InvoiceManager
             'subplan' => $schoolSubplan,
             'subplanCost' => $subplanCost,
             'subplanParts' => $subplanParts,
-            'datePaid' => $paidDate,
+            'datePaid' => $formModel['paid_date'],
             'months' => $months,
             'payer' => $user['payer'],
         ]);
 
         InvoicePdfFileGenerator::generate($invoicePath, $invoiceContent, $title);
 
-        SentInvoices::createReal($user['id'], $invoiceNumber, $schoolSubplan, $studentSubplan, $paidDate);
+        SentInvoices::createReal($user['id'], $invoiceNumber, $schoolSubplan, $studentSubplan, $formModel['paid_date']);
 
         $studentSubplan->times_paid += $months;
         $studentSubplan->save();

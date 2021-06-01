@@ -116,5 +116,12 @@ class TestController extends Controller
         // }
 
         //var_dump(RegistrationMessage::getBody(1, false, true));
+
+        $userId = Yii::$app->user->identity->id;
+        $unassignedLectures = UserLectures::getUnassignedLectures($userId);
+
+        foreach ($unassignedLectures as $lecture) {
+            var_dump($lecture['complexity']);
+        }
     }
 }

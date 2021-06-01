@@ -6,6 +6,8 @@ use Yii;
 use app\models\Users;
 use app\models\SentInvoices;
 use app\models\SentInvoicesSearch;
+use app\models\StudentSubPlans;
+use app\models\RegisterPaymentForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -71,19 +73,24 @@ class SentInvoicesController extends Controller
     public function actionRegisterAdvancePayment($userId)
     {
         $post = Yii::$app->request->post();
-        $processRequest = $post && isset($post["SentInvoices"]['paid_months']) && isset($post["SentInvoices"]['paid_date']) && $post["SentInvoices"]['paid_months'] && $post["SentInvoices"]['paid_date'];
+        $model = new RegisterPaymentForm();
 
-        if ($processRequest) {
-            InvoiceManager::createRealInvoiceForMultipleMonths($userId, $post["SentInvoices"]['paid_months'],  $post["SentInvoices"]['paid_date']);
-
+        if ($post && $model->load($post) && $model->validate()) {
+            InvoiceManager::createRealInvoiceForMultipleMonths($model);
             Yii::$app->session->setFlash('success', 'Maksājums tika reģistrēts!');
             return $this->redirect(["user/index"]);
         }
 
-        $model = new SentInvoices();
+        $studentSubPlans = StudentSubPlans::getActivePlansForStudent($userId);
+        $plansForDropdown =  [];
+        foreach ($studentSubPlans as $plan) {
+            $plansForDropdown[$plan['id']] = $plan['plan']['name'];
+        }
+
 
         return $this->render("advance-payment", [
             'model' => $model,
+            'studentSubPlans' => $plansForDropdown,
         ]);
     }
 
