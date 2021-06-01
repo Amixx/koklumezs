@@ -12,8 +12,6 @@ $this->title = \Yii::t('app', 'Create plan pause');
 
     <?= $this->render('_form', [
         'model' => $model,
-        'users' => $users,
-        'userId' => null,
+        'studentSubPlans' => $studentSubPlans,
     ]) ?>
-
 </div>

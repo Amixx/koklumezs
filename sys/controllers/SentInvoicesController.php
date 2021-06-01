@@ -81,16 +81,11 @@ class SentInvoicesController extends Controller
             return $this->redirect(["user/index"]);
         }
 
-        $studentSubPlans = StudentSubPlans::getActivePlansForStudent($userId);
-        $plansForDropdown =  [];
-        foreach ($studentSubPlans as $plan) {
-            $plansForDropdown[$plan['id']] = $plan['plan']['name'];
-        }
-
+        $studentSubPlans = StudentSubPlans::getForStudentMapped($userId);
 
         return $this->render("advance-payment", [
             'model' => $model,
-            'studentSubPlans' => $plansForDropdown,
+            'studentSubPlans' => $studentSubPlans,
         ]);
     }
 

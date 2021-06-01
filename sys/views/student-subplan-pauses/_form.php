@@ -9,12 +9,17 @@ use  yii\jui\DatePicker;
 <div>
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= Html::dropDownList('user_id', $userId ? $userId : null, $users, [
-        'prompt' => Yii::t('app', 'Choose a student'),
-        'options' => [$userId => ['selected' => 'selected']]
-    ]) ?>
+    <div class="form-group">
+        <?= $form->field($model, 'plan_id')
+            ->dropDownList(
+                $studentSubPlans,
+                ['prompt' => ''] // options
+            ); ?>
+    </div>
 
     <?= $form->field($model, 'weeks')->textInput() ?>
+
+
 
     <?= $form->field($model, 'start_date')->textInput()
         ->widget(DatePicker::class, ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv']) ?>

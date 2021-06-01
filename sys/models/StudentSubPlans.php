@@ -44,6 +44,17 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $this->hasOne(Users::class, ['id' => 'user_id']);
     }
 
+    public static function getForStudentMapped($studentId)
+    {
+        $studentSubPlans = StudentSubPlans::getActivePlansForStudent($studentId);
+        $plansMapped =  [];
+        foreach ($studentSubPlans as $plan) {
+            $plansMapped[$plan['id']] = $plan['plan']['name'];
+        }
+
+        return $plansMapped;
+    }
+
     public static function getActivePlansForStudentADP($studentId)
     {
         $query =  self::find()->where(['user_id' => $studentId, 'is_active' => true])

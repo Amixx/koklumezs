@@ -82,4 +82,14 @@ class StudentSubplanPauses extends \yii\db\ActiveRecord
 
         return $res;
     }
+
+    public static function createFromTeacherForm($formModel)
+    {
+        $model = new StudentSubplanPauses();
+        $model->studentsubplan_id = $formModel->plan_id;
+        $model->weeks = $formModel->weeks;
+        $model->start_date = $formModel->start_date;
+
+        return $model;
+    }
 }

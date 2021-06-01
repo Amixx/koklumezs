@@ -6,6 +6,7 @@ use Yii;
 use app\models\StudentSubPlans;
 use app\models\Users;
 use app\models\StudentSubplanPauses;
+use app\models\TeacherCreatePauseForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -50,18 +51,29 @@ class StudentSubplanPausesController extends Controller
         ]);
     }
 
-    public function actionTeacherCreate()
+    public function actionPickStudent()
     {
-        $model = new StudentSubplanPauses();
-        $users = Users::getStudentNamesForSchool();
+        $students = Users::getStudentNamesForSchool();
+        return $this->render('pick-student', [
+            'students' => $students,
+        ]);
+    }
 
-        if ($model->load(Yii::$app->request->post())) {
-            if (isset($_POST['user_id'])) {
-                $userId = $_POST['user_id'];
-            }
-            $studentSubplan = StudentSubPlans::getCurrentForStudent($userId);
+    public function actionTeacherCreate($userId)
+    {
+        if (!$userId) {
+            return $this->redirect(Yii::$app->request->referrer);
+        }
+
+        $formModel = new TeacherCreatePauseForm();
+        $post = Yii::$app->request->post();
+
+        if ($post && $formModel->load($post) && $formModel->validate()) {
+            $studentSubplan = StudentSubPlans::findOne($formModel['plan_id']);
             if ($studentSubplan) {
-                $model->studentsubplan_id = $studentSubplan['id'];
+
+                $model = StudentSubplanPauses::createFromTeacherForm($formModel, $userId);
+
                 if ($model->save()) {
                     Yii::$app->session->setFlash('success', 'Plāna pauze izveidota!');
                 }
@@ -72,9 +84,11 @@ class StudentSubplanPausesController extends Controller
             return $this->redirect(Url::to(['school-sub-plans/index']));
         }
 
+        $studentSubPlans = StudentSubPlans::getForStudentMapped($userId);
+
         return $this->render('create', [
-            'model' => $model,
-            'users' => $users,
+            'model' => $formModel,
+            'studentSubPlans' => $studentSubPlans,
         ]);
     }
 

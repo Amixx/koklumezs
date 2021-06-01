@@ -12,7 +12,7 @@ $this->title = \Yii::t('app', 'Plan pauses');
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(\Yii::t('app', 'Create plan pause'), ['teacher-create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(\Yii::t('app', 'Create plan pause'), ['pick-student'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
