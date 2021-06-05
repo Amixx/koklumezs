@@ -12,13 +12,13 @@
         $btnClass .= " btn-narrow";
     }
     ?>
-    <div style="display: inline-block; width:<?= $width ?>; vertical-align: top; margin-top:8px">
-        <?php if ($lecturefiles) { ?>
+    <div style="display: inline-block; width:<?= $width ?>; vertical-align:top; margin-top:8px; position:relative">
+        <?php if (isset($lecturefiles['docs'])) { ?>
             <button type="button" class="<?= $btnClass ?>" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
                 <?= \Yii::t('app', 'Lyrics and notes'); ?>
             </button>
-            <div class="dropdown-menu dropdown-menu-lg-left">
-                <?= $files = $this->render('docs', ['lecturefiles' => $lecturefiles]); ?>
+            <div class="dropdown-menu dropdown-menu-lg-left" style="top:unset;">
+                <?= $files = $this->render('docs', ['lecturefiles' => $lecturefiles['docs']]); ?>
             </div>
         <?php } ?>
         <p style="color:black; margin: <?= $marginTop ?> 0 0 6px"><?= Yii::t('app', 'Previous assignments in this lesson') ?></p>
@@ -44,7 +44,7 @@
     <?php if ($relatedLectures) { ?>
         <?= $this->render('related', [
             'relatedLectures' => $relatedLectures,
-            'lecturefiles' => $lecturefiles,
+            'lecturefiles' => $lecturefiles['video'],
             'userEvaluatedLectures' => $userEvaluatedLectures,
             'videoThumb' => $videoThumb,
             'modalIdPrefix' => 'mob_'

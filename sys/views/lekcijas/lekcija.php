@@ -77,7 +77,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                     echo $this->render('mob-related-section', [
                         'model' => $model,
                         'relatedLectures' => $relatedLectures,
-                        'lecturefiles' => $lecturefiles['video'],
+                        'lecturefiles' => $lecturefiles,
                         'userEvaluatedLectures' => $userEvaluatedLectures,
                         'videoThumb' => $videoThumb,
                     ]);
