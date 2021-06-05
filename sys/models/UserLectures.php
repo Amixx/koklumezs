@@ -396,12 +396,18 @@ class UserLectures extends \yii\db\ActiveRecord
 
     public static function getNextLessons($userId)
     {
+        $allowedToAssign = self::allowedToAssignLessonsToSelf($userId);
+        $user = User::findIdentity($userId);
+        if (!$user || $user['status'] !== 10 || !$allowedToAssign) {
+            return null;
+        }
+
         $unassignedLectures = self::getUnassignedLectures($userId);
         $avg = self::getLastThreeComplexityAverage($userId);
         $nextLessons = ['easy' => null, 'medium' => null, 'hard' => null];
 
         $similar = 3;
-        $max = 20;
+        $max = 5;
         $total = $similar + $max;
 
         foreach ($unassignedLectures as $lecture) {
@@ -431,9 +437,24 @@ class UserLectures extends \yii\db\ActiveRecord
 
     public static function getIsNextLesson($userId)
     {
-        $isNextLesson = False;
+        $allowedToAssign = self::allowedToAssignLessonsToSelf($userId);
+        if (!$allowedToAssign) return false;
+
         $nextLessons = self::getNextLessons($userId);
-        if ($nextLessons['easy'] != NULL || $nextLessons['medium'] != NULL || $nextLessons['hard'] != NULL) $isNextLesson = True;
-        return $isNextLesson;
+        return $nextLessons && ($nextLessons['easy'] != NULL
+            || $nextLessons['medium'] != NULL
+            || $nextLessons['hard'] != NULL);
+    }
+
+    public static function allowedToAssignLessonsToSelf($userId)
+    {
+        $lastAssignedLessons = UserLectures::find()->where(['user_id' => $userId])->orderBy(['id' => SORT_DESC])->limit(3)->all();
+        foreach ($lastAssignedLessons as $lesson) {
+            if ($lesson['assigned'] != $userId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

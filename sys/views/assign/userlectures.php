@@ -172,7 +172,7 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
             <p> <?= Yii::t('app', 'Challenge') . ': ' . $nextLessons['hard']->title; ?></p>
         <?php } ?>
     <?php } else { ?>
-        <p> <?= Yii::t('app', 'There is no lesson student can assign themself') . '.' ?></p>
+        <p> <?= Yii::t('app', 'The student is not active or there is no lesson student can assign themself') ?>.</p>
     <?php } ?>
 
     <?php if ($user->wants_more_lessons) { ?>
