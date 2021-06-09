@@ -473,4 +473,5 @@ return [
     'Continue' => 'Turpināt',
     'For which plan?' => 'Kuram plānam?',
     'Student\'s trial has ended' => 'Skolēna izmēģinājuma laiks ir beidzies',
+    'Message to send after trial period has ended' => 'Ziņa, ko sūtīt, kad beidzies izmēģinājuma laiks'
 ];

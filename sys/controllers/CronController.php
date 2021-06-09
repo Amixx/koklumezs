@@ -15,6 +15,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use app\helpers\InvoiceManager;
 use app\helpers\EmailSender;
+use app\models\Trials;
 
 class CronController extends Controller
 {
@@ -265,7 +266,7 @@ class CronController extends Controller
         ]);
     }
 
-    public function actionTest()
+    public function actionForEachStudent()
     {
         $students = Users::getAllStudents();
 
@@ -277,6 +278,13 @@ class CronController extends Controller
                     InvoiceManager::sendAdvanceInvoice($student, $studentSubplan);
                 } else if (StudentSubPlans::hasPaidInAdvance($studentSubplan)) {
                     StudentSubPlans::increaseSentInvoicesCount($studentSubplan);
+                }
+            }
+
+            if (Trials::shouldSendTrialEndedEmail($student["id"])) {
+                $sent = EmailSender::sendTrialEndMessage($student);
+                if ($sent) {
+                    Trials::markEndMessageSent($student["id"]);
                 }
             }
         }

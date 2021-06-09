@@ -58,19 +58,42 @@ class Trials extends \yii\db\ActiveRecord
         return ArrayHelper::map(self::find()->where(['school_id' => $schoolId])->asArray()->all(), 'id', 'name');
     }
 
-    public static function displayTrialEndedMessage($userId)
+    public static function displayTrialEndedMessage($studentId)
     {
-        $student = Users::findOne(['id' => $userId]);
-        $studentSubplans = StudentSubPlans::getActivePlansForStudent($student['id']);
-        $trial = self::find()->where(['user_id' => $userId])->one();
+        $studentSubplans = StudentSubPlans::getActivePlansForStudent($studentId);
 
-        if (!empty($studentSubplans) || !$trial) {
+        return empty($studentSubplans) && self::trialEnded($studentId);
+    }
+
+    public static function shouldSendTrialEndedEmail($studentId)
+    {
+        if (self::trialEnded($studentId)) {
+            $trial = self::getByUserId($studentId);
+            return !(bool)$trial['end_email_sent'];
+        }
+    }
+
+    public static function markEndMessageSent($studentId)
+    {
+        $trial = self::getByUserId($studentId);
+        $trial->end_email_sent = true;
+        return $trial->save();
+    }
+
+    private static function trialEnded($studentId)
+    {
+        $trial = self::getByUserId($studentId);
+        if (!$trial) {
             return false;
         }
-
         $trialEndDate = strtotime("+2 weeks", strtotime($trial['start_date']));
         $time = time();
 
         return $time > $trialEndDate;
+    }
+
+    private static function getByUserId($userId)
+    {
+        return self::find()->where(['user_id' => $userId])->one();
     }
 }

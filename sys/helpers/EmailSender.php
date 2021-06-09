@@ -2,6 +2,7 @@
 
 namespace app\helpers;
 
+use app\models\School;
 use Yii;
 
 
@@ -159,5 +160,23 @@ class EmailSender
             ->setTo($schoolEmail)
             ->setSubject('Jāpiešķir nodarbība - ' . Yii::$app->name)
             ->send();
+    }
+
+    public static function sendTrialEndMessage($student)
+    {
+        $school = School::getByStudent($student['id']);
+        if ($school['trial_ended_message'] != null) {
+            return Yii::$app
+                ->mailer
+                ->compose(['html' => 'blank-message-html', 'text' => 'blank-message-text'], [
+                    'message' => $school['trial_ended_message'],
+                ])
+                ->setFrom([$school['email'] => Yii::$app->name])
+                ->setTo($student['email'])
+                ->setSubject("Bedzies izmēģinājuma periods - " . Yii::$app->name)
+                ->send();
+        }
+
+        return false;
     }
 }

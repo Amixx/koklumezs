@@ -26,6 +26,7 @@ class School extends \yii\db\ActiveRecord
                 'login_title',
                 'registration_message',
                 'renter_message',
+                'trial_ended_message',
             ], 'string'],
             [['rent_schoolsubplan_id'], 'number'],
             [['created'], 'safe'],
@@ -48,6 +49,7 @@ class School extends \yii\db\ActiveRecord
             'login_title' => \Yii::t('app', 'Log in title'),
             'registration_message' => \Yii::t('app',  'Registration message'),
             'renter_message' => \Yii::t('app',  'Message for students who want to rent an instrument'),
+            'trial_ended_message' => \Yii::t('app',  'Message to send after trial period has ended'),
         ];
     }
 
@@ -81,6 +83,7 @@ class School extends \yii\db\ActiveRecord
             \Yii::t('app', 'Subscription plan used to generate invoice for renters') => $rentSubplanName,
             \Yii::t('app', 'Registration message') => $school->registration_message,
             \Yii::t('app', 'Message for students who want to rent an instrument') => $school->renter_message,
+            \Yii::t('app', 'Message to send after trial period has ended') => $school->trial_ended_message,
         ];
     }
 
