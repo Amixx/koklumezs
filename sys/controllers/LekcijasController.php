@@ -15,6 +15,7 @@ use app\models\Users;
 use app\models\School;
 use app\models\SectionsVisible;
 use app\models\Studentgoals;
+use app\models\Trials;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\VerbFilter;
@@ -122,6 +123,7 @@ class LekcijasController extends Controller
     {
         $model = $this->findModel($id);
         $user = Yii::$app->user->identity;
+        $dbUser = Users::findOne([$id => $user->id]);
 
         $videoThumb = School::getCurrentSchool()->video_thumbnail;
 
@@ -158,6 +160,20 @@ class LekcijasController extends Controller
                     $difficultyEvaluation->evaluation = $post["difficulty-evaluation"];
                     $difficultyEvaluation->update();
                 } else {
+                    if ($model->complexity > 1) {
+                        $trial = Trials::find()->where(['user_id' => $user->id])->one();
+
+                        if (!$trial) {
+                            $trial = new Trials;
+                            $trial->user_id = $user->id;
+                            $trial->save();
+
+                            $dbUser->status = 10;
+                            $dbUser->save();
+                        }
+                    }
+
+
                     $difficultyEvaluation = new Userlectureevaluations();
                     $difficultyEvaluation->evaluation_id = 1;
                     $difficultyEvaluation->lecture_id = $model->id;
@@ -190,7 +206,7 @@ class LekcijasController extends Controller
             $lecturefiles = Lecturesfiles::getLectureFiles($id);
             $hasEvaluatedLesson = $difficultyEvaluation !== null;
             $relatedLessonIds = RelatedLectures::getRelations($id);
-            $dbUser = Users::findOne([$id => $user->id]);
+
             $userCanDownloadFiles = $dbUser->allowed_to_download_files;
             $relatedLectures = Lectures::getLecturesByIds($relatedLessonIds);
             $difficultiesVisible = SectionsVisible::isVisible("Nodarbības sarežģītība");

@@ -337,6 +337,7 @@ return [
     'Update sent lessons' => 'Atjaunot nosūtītās nodarbības',
     'Updated' => 'Atjaunots',
     'User' => 'Lietotājs',
+    'User ID' => 'Lietotāja ID',
     'User data' => 'Lietotāja dati',
     'User has no subscription plans' => 'Skolēnam nav neviena abonēšanas plāna',
     'User has not opened any lessons yet' => 'Lietotājs vēl nav atvēris nevienu nodarbību',
@@ -470,5 +471,6 @@ return [
     'After completing all lesosns, student can assign themself' => 'Skolēns var sev piešķirt',
     'The student is not active or there is no lesson student can assign themself' => 'Skolēns nav aktīvs vai arī nav nodarbību kuras skolēns varētu sev piešķirt',
     'Continue' => 'Turpināt',
-    'For which plan?' => 'Kuram plānam?'
+    'For which plan?' => 'Kuram plānam?',
+    'Student\'s trial has ended' => 'Skolēna izmēģinājuma laiks ir beidzies',
 ];

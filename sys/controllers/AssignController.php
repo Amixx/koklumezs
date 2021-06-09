@@ -16,6 +16,7 @@ use app\models\SchoolStudent;
 use app\models\LectureViews;
 use app\models\RelatedLectures;
 use app\models\StudentSubPlans;
+use app\models\Trials;
 use Yii;
 use yii\web\Controller;
 
@@ -215,6 +216,8 @@ class AssignController extends Controller
         $nextLessons = UserLectures::getNextLessons($currentUserId);
         $isNextLessons = UserLectures::getIsNextLesson($currentUserId);
 
+        $trialEnded = Trials::displayTrialEndedMessage($currentUserId);
+
         $options['id'] = $id;
         $options['videoparamtexts'] = $videotexts;
         $options['goalsum'] = $goalsum;
@@ -244,6 +247,7 @@ class AssignController extends Controller
         $options['endDate'] = $endDate;
         $options['nextLessons'] = $nextLessons;
         $options['isNextLessons'] = $isNextLessons;
+        $options['trialEnded'] = $trialEnded;
 
         return $this->render('userlectures', $options);
     }
