@@ -48,8 +48,8 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
             ]) ?>
             <?= $form->field($model, 'type')->dropDownList(
                 [
-                    'lesson' => 'Mācību',
-                    'rent' => 'Īres',
+                    'lesson' => \Yii::t('app', 'subscription'),
+                    'rent' => \Yii::t('app', 'rent'),
                 ]
             ) ?>
             <?= $form->field($model, 'months')->textInput() ?>

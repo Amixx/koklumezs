@@ -2,7 +2,7 @@
 <div class="lectures-index">
     <div class="row">
         <div class="col-12">
-            <h4 class="LectureOverview__Title">Prieks tevi redzēt! Lai veicas! Ja nepieciešama palīdzība - droši raksti!</h4>
+            <h4 class="LectureOverview__Title"> <?= \Yii::t('app',  'Welcome back! If you encounter any problems contact us! Good luck!') ?> </h4>
         </div>
     </div>
     <div class="row">

@@ -45,7 +45,7 @@ $planEndMonths = [];
                 'filter' => Html::dropDownList(
                     'TeacherUserSearch[subscription_type]',
                     isset($get['TeacherUserSearch']['subscription_type'])
-                        ? $get['TeacherUserSearch']['subscription_type']
+                        ? \Yii::t('app', $get['TeacherUserSearch']['subscription_type'])
                         : '',
                     app\models\Users::getSubscriptionTypes(),
                     ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
@@ -108,7 +108,7 @@ $planEndMonths = [];
                     $latestLessonPlan = StudentSubplans::getLatestActiveLessonPlanForStudent($dataProvider['id']);
 
                     if (!$latestLessonPlan || !$latestLessonPlan['plan']) {
-                        return "Nav mācību plāna";
+                        return \Yii::t('app', 'No lesson plan');
                     }
                     if ($latestLessonPlan['plan']['months'] == '0') {
                         return \Yii::t('app',  'Unlimited');
@@ -175,7 +175,7 @@ $planEndMonths = [];
                             $html .= "<div style='text-align:center;background:$color'>$planType: $timesPaid/$sentInvoices</div>";
 
                             $url = Url::to(['sent-invoices/register-advance-payment', 'userId' => $studentId]);
-                            $addPaymentHtml = "<span title='Reģistrēt maksājumu'>
+                            $addPaymentHtml = "<span title='" . \Yii::t('app', 'Register payment') . "'>
                             <a
                                 href='" . $url . "'
                                 class='glyphicon glyphicon-plus'
@@ -184,7 +184,7 @@ $planEndMonths = [];
                     }
 
                     if ($unpaidInvoiceNumbers) {
-                        $html .= "<p>Neapmaksātie rēķini: </p>";
+                        $html .= "<p>" . 'Unpaid invoices' . ": </p>";
                         foreach ($unpaidInvoiceNumbers as $number) {
                             $value = $number['invoice_number'];
                             $url = Url::to(['sent-invoices/update', 'invoiceNumber' => $value]);
@@ -204,7 +204,7 @@ $planEndMonths = [];
                             <span style='margin-right:48px;'><a
                                 href='" . $url . "'
                                 class='glyphicon glyphicon-envelope'                                
-                                title='Nosūtīt atgādinājumu, ka jāmaksā'
+                                title='" . \Yii::t('app', 'Send invoice reminder') . "'
                             ></a></span>
                             $addPaymentHtml
                         </div>

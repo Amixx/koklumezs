@@ -452,9 +452,9 @@ class Users extends ActiveRecord implements IdentityInterface
     public static function getStatus()
     {
         return [
-            self::STATUS_INACTIVE => 'Nav aktīvs',
-            self::STATUS_ACTIVE => 'Aktīvs',
-            self::STATUS_PASSIVE => 'Pasīvs',
+            self::STATUS_INACTIVE => \Yii::t('app',  'Inactive'),
+            self::STATUS_ACTIVE => \Yii::t('app',  'Active'),
+            self::STATUS_PASSIVE => \Yii::t('app',  'Passive'),
         ];
     }
 
@@ -462,7 +462,7 @@ class Users extends ActiveRecord implements IdentityInterface
     {
         return [
             self::ROLE_USER => \Yii::t('app',  'Student'),
-            self::ROLE_ADMIN => 'Administrators',
+            self::ROLE_ADMIN => \Yii::t('app',  'Administrator'),
             self::ROLE_TEACHER => \Yii::t('app',  'Teacher'),
         ];
     }
@@ -470,17 +470,17 @@ class Users extends ActiveRecord implements IdentityInterface
     public static function getLanguages()
     {
         return [
-            self::LANG_LV => 'Latviešu',
-            self::LANG_ENG => 'Angļu',
+            self::LANG_LV => \Yii::t('app', 'Latvian'),
+            self::LANG_ENG => \Yii::t('app', 'English'),
         ];
     }
 
     public static function getSubscriptionTypes()
     {
         return [
-            self::SUBTYPE_FREE => 'Par brīvu',
-            self::SUBTYPE_PAID => 'Par maksu',
-            self::SUBTYPE_LEAD => 'Izmēģina',
+            self::SUBTYPE_FREE => \Yii::t('app', 'For free'),
+            self::SUBTYPE_PAID => \Yii::t('app', 'Paid'),
+            self::SUBTYPE_LEAD => \Yii::t('app', 'Lead'),
         ];
     }
 

@@ -40,7 +40,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
 
     public function typeText()
     {
-        return $this->type === 'lesson' ? 'Mācību' : 'Īres';
+        return $this->type === 'lesson' ? \Yii::t('app', 'subscription') : \Yii::t('app', 'rent');
     }
 
     public static function getForSchool($schoolId)

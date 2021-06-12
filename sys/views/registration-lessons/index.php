@@ -33,25 +33,25 @@ $this->title = \Yii::t('app', 'Lessons to assign and messages to send after regi
                     'for_students_with_instrument'
                 )->dropDownList(
                     [
-                        0 => 'nav instrumenta',
-                        1 => 'ir instrumentu'
+                        0 => \Yii::t('app', 'Does not have instrument'),
+                        1 => \Yii::t('app', 'Has instrument')
                     ],
                     [
-                        'prompt' => '-- instruments --',
+                        'prompt' => '-- ' . \Yii::t('app', 'Instrument') . ' --',
                         'type' => 'number'
                     ]
-                )->label('Kuriem skolēniem piešķirt nodarbību') ?>
+                )->label(\Yii::t('app', 'Assign to students')) ?>
 
                 <?= $form->field(
                     $model,
                     'for_students_with_experience'
                 )->dropDownList(
                     [
-                        0 => 'bez pieredzes',
-                        1 => 'ar pieredzi'
+                        0 => \Yii::t('app', 'Does not have experience'),
+                        1 => \Yii::t('app', 'Has experience')
                     ],
                     [
-                        'prompt' => '-- pieredze --',
+                        'prompt' => '-- ' . \Yii::t('app', 'Experience') . ' --',
                         'type' => 'number'
                     ]
                 )->label(false) ?>

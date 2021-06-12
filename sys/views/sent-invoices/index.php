@@ -14,7 +14,7 @@ $this->title = \Yii::t('app',  'Users');
     <label for="sent-invoices-filter"><?= Yii::t("app", "Search") ?>&nbsp;(<?= Yii::t("app", "enter at least 4 symbols") ?>):
         <input type="text" name="sent-invoices-filter" class="form-control">
     </label>
-    <label for="invoices-year-selector">Meklēt pēc datuma. Jāizvēlās gan gadu, gan mēnesi:
+    <label for="invoices-year-selector"><?= \Yii::t('app', 'Searchy by date. Choose year and month') ?>:
     </label>
     <?= Html::dropDownList('year', null, [
         2020 => "2020",
@@ -23,20 +23,20 @@ $this->title = \Yii::t('app',  'Users');
         2023 => "2023",
     ], ['prompt' => Yii::t('app', 'Choose year'), 'id' => 'invoices-year-selector']) ?>
     <?= Html::dropDownList('month', null, [
-        "Janvāris",
-        "Februāris",
-        "Marts",
-        "Aprīlis",
-        "Maijs",
-        "Jūnijs",
-        "Jūlijs",
-        "Augusts",
-        "Septembris",
-        "Oktobris",
-        "Novembris",
-        "Decembris"
+        \Yii::t('app', 'January'),
+        \Yii::t('app', 'February'),
+        \Yii::t('app', 'March'),
+        \Yii::t('app', 'April'),
+        \Yii::t('app', 'May'),
+        \Yii::t('app', 'June'),
+        \Yii::t('app', 'July'),
+        \Yii::t('app', 'August'),
+        \Yii::t('app', 'September'),
+        \Yii::t('app', 'October'),
+        \Yii::t('app', 'November'),
+        \Yii::t('app', 'December'),
     ], ['prompt' => Yii::t('app', 'Choose month'), 'id' => 'invoices-month-selector']) ?>
-    <button class="btn btn-primary pull-right" id="export-sent-invoices">Eksportēt uz CSV (eksportētas tiks visas <strong>redzamās</strong> rindas)</button>
+    <button class="btn btn-primary pull-right" id="export-sent-invoices"><?= \Yii::t('app', 'Export CSV (exports <strong>only visible</strong> rows)') ?></button>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
