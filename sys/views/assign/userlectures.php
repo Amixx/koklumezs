@@ -84,6 +84,7 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col"><?= \Yii::t('app', 'Last lesson') ?></th>
+                    <th scope="col"><?= \Yii::t('app', 'Date of assignment') ?></th>
                     <th scope="col"><?= \Yii::t('app', 'Opened') ?></th>
                     <th scope="col"><?= \Yii::t('app', 'Times played') ?></th>
                     <th scope="col"><?= \Yii::t('app', 'Difficulty') ?></th>
@@ -108,6 +109,7 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
                                 <span class="glyphicon glyphicon-asterisk"></span>
                             <?php } ?>
                         </td>
+                        <td class="text-center"><?= $lecture->created ?></td>
                         <td class="text-center"><?= (int) $lecture->opened ? 'Jā' : 'Nē' ?></td>
                         <td class="text-center"><?= $lecture->open_times ?></td>
                         <td class="text-center"><?= $lecture->lecture->complexity ? $lecture->lecture->complexity : $empty ?></td>
