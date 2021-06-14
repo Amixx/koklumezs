@@ -13,7 +13,8 @@ $this->title = $model->id;
 ?>
 <div class="lecturesfiles-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1><?= Html::encode($model->title) ?></h1>
+
 
     <p>
         <?= Html::a(\Yii::t('app',  'Edit'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -29,7 +30,6 @@ $this->title = $model->id;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'title',
             'file:ntext',
             'thumb:ntext',
