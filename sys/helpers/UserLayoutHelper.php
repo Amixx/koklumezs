@@ -91,7 +91,7 @@ class UserLayoutHelper extends LayoutHelper
 
     private function getUserTypeNavItems()
     {
-        $hasStudents = count(Users::getStudentsWithoutPausesForSchool()) > 0;
+        $hasStudents = Users::isCurrentUserTeacher() == 'Teacher' ? count(Users::getStudentsWithoutPausesForSchool()) > 0 : 0;
 
         $array = [
             'admin' => [
