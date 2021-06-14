@@ -271,6 +271,8 @@ class CronController extends Controller
         $students = Users::getAllStudents();
 
         foreach ($students as $student) {
+            Yii::$app->language = $student['language'];
+
             $studentSubplans = StudentSubPlans::getActivePlansForStudent($student["id"]);
 
             foreach ($studentSubplans as $studentSubplan) {

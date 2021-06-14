@@ -184,7 +184,7 @@ $planEndMonths = [];
                     }
 
                     if ($unpaidInvoiceNumbers) {
-                        $html .= "<p>" . 'Unpaid invoices' . ": </p>";
+                        $html .= "<p>" . \Yii::t('app', 'Unpaid invoices') . ": </p>";
                         foreach ($unpaidInvoiceNumbers as $number) {
                             $value = $number['invoice_number'];
                             $url = Url::to(['sent-invoices/update', 'invoiceNumber' => $value]);

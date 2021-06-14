@@ -31,7 +31,7 @@ $this->title = $model->title;
         'attributes' => [
             'id',
             'title',
-            'description:ntext',
+            'description:html',
             'created',
             'updated',
             'author',
