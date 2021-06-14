@@ -33,6 +33,7 @@ use app\models\LectureViews;
 use app\models\SchoolStudent;
 use app\models\CommentResponses;
 use app\models\RegistrationMessage;
+use app\models\Trials;
 use app\models\UserLectures;
 use app\models\Userlectureevaluations;
 use kartik\mpdf\Pdf;
@@ -117,11 +118,49 @@ class TestController extends Controller
 
         //var_dump(RegistrationMessage::getBody(1, false, true));
 
-        $userId = Yii::$app->user->identity->id;
-        $unassignedLectures = UserLectures::getUnassignedLectures($userId);
+        // $evals = Userlectureevaluations::find()->joinWith('lecture')->joinWith('user')
+        //     ->where(['evaluation_id' => 1])
+        //     ->andWhere(['>', 'complexity', 1])
+        //     //->andWhere(['>', 'userlectureevaluations.created', '2021-04-01 00:00:00'])
+        //     ->orderBy('userlectureevaluations.created asc')
+        //     ->asArray()->all();
 
-        foreach ($unassignedLectures as $lecture) {
-            var_dump($lecture['complexity']);
-        }
+        // $transformed = [];
+
+        // foreach ($evals as $e) {
+        //     if (!array_key_exists($e['user_id'], $transformed)) {
+        //         $trial = Trials::find()->where(['user_id' => $e['user_id']])->one();
+        //         if (!$trial) $transformed[$e['user_id']] = $e['created'];
+        //     }
+        // }
+
+
+        // foreach ($transformed as $id => $t) {
+        //     $firstEval = Userlectureevaluations::find()->joinWith('lecture')
+        //         ->where(['user_id' => $id, 'evaluation_id' => 1])
+        //         ->andWhere(['>', 'complexity', 1])
+        //         ->orderBy('created asc')
+        //         ->limit(1)
+        //         ->asArray()->all()[0];
+
+        //     //var_dump($firstEval);
+        //     if ($firstEval['created'] > '2021-05-30 00:00:00') {
+        //         echo $firstEval['created'] . "<br>";
+        //         echo $firstEval['created'] > '2021-05-30 00:00:00';
+
+        //         $trial = new Trials;
+        //         $trial->user_id = $id;
+        //         $trial->start_date = $firstEval['created'];
+        //         $trial->end_email_sent = 0;
+        //         $trial->save();
+        //     }
+
+
+        //     echo "<hr>";
+        // }
+
+        // die();
+
+        //var_dump($transformed);
     }
 }

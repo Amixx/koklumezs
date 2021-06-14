@@ -160,7 +160,9 @@ class LekcijasController extends Controller
                     $difficultyEvaluation->evaluation = $post["difficulty-evaluation"];
                     $difficultyEvaluation->update();
                 } else {
-                    if ($model->complexity > 1) {
+                    $shouldStartTrial = $model->complexity > 1 && !Userlectureevaluations::hasAnyLegitEvaluations($user->id);
+
+                    if ($shouldStartTrial) {
                         $trial = Trials::find()->where(['user_id' => $user->id])->one();
 
                         if (!$trial) {

@@ -54,6 +54,7 @@ return [
     'Assign' => 'Piešķirt',
     'Assign lesson' => 'Piešķirt nodarbību',
     'Assigned lessons' => 'Piešķirtās nodarbības',
+    'Date of assignment' => 'Piešķiršanas datums',
     'Author' => 'Autors',
     'Author ID' => 'Autora ID',
     'Automatic assignment' => 'Automātiska piešķiršana',

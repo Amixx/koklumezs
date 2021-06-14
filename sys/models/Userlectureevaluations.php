@@ -156,4 +156,14 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
             'user_id' => $userId,
         ])->one();
     }
+
+    public static function hasAnyLegitEvaluations($userId)
+    {
+        $legitEvaluations = self::find()->joinWith('lecture')
+            ->where(['user_id' => $userId, 'evaluation_id' => 1])
+            ->andWhere(['>', 'complexity', 1])
+            ->asArray()->all();
+
+        return empty($legitEvaluations);
+    }
 }
