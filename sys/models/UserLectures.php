@@ -366,10 +366,10 @@ class UserLectures extends \yii\db\ActiveRecord
     {
 
         $school = School::getByStudent($id);
-        $schoolLectures = SchoolLecture::getSchoolLectureIds($school);
+        $assignableSchoolLectures = SchoolLecture::getAssignableSchoolLectureIds($school->id);
         $userLectures = self::getUserLectures($id);
         $unassigned = [];
-        foreach ($schoolLectures as $slecture) {
+        foreach ($assignableSchoolLectures as $slecture) {
             $new = true;
             foreach ($userLectures as $ulecture) {
                 if ($slecture == $ulecture) {

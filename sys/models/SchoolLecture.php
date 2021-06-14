@@ -39,9 +39,9 @@ class SchoolLecture extends \yii\db\ActiveRecord
         return $this->hasOne(School::class, ['id' => 'school_id']);
     }
 
-    public function getLessons()
+    public function getLecture()
     {
-        return $this->hasMany(Users::class, ['id' => 'lecture_id']);
+        return $this->hasOne(Lectures::class, ['id' => 'lecture_id']);
     }
 
     public static function getForSchool($schoolId)
@@ -52,6 +52,11 @@ class SchoolLecture extends \yii\db\ActiveRecord
     public static function getSchoolLectureIds($schoolId)
     {
         $schoolLectures = self::getForSchool($schoolId);
+        return ArrayHelper::map($schoolLectures, 'id', 'lecture_id');
+    }
+    public static function getAssignableSchoolLectureIds($schoolId)
+    {
+        $schoolLectures = self::find()->joinWith('lecture')->andWhere(['>', 'complexity', '1'])->where(['school_id' => $schoolId])->asArray()->all();
         return ArrayHelper::map($schoolLectures, 'id', 'lecture_id');
     }
 
