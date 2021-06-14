@@ -277,7 +277,7 @@ class SiteController extends Controller
                 $sent = EmailSender::sendRentNotification($model, $school['email']);
 
                 if ($sent) {
-                    Yii::$app->session->setFlash('success', 'Paldies par tavu pieteikumu! Tuvākajā laikā sazināsimies ar tevi uz tavu norādīto epastu. Tikmēr vari noskatīties video par to, kā darboties platformā!');
+                    Yii::$app->session->setFlash('success', \Yii::t('app', 'Thank you for applying! Soon we will contact you by email. Until then you can watch our video tutorial about this platform') . '!');
                     Yii::$app->user->login($user, 3600 * 24 * 30);
                     return $this->redirect(['lekcijas/index']);
                 }

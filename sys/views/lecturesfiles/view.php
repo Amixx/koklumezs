@@ -30,6 +30,7 @@ $this->title = $model->id;
         'model' => $model,
         'attributes' => [
             'id',
+            'title',
             'file:ntext',
             'thumb:ntext',
             'lecture_id',

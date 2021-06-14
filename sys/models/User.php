@@ -191,8 +191,8 @@ class User extends ActiveRecord implements IdentityInterface
     public static function getStatus()
     {
         return [
-            self::STATUS_INACTIVE => 'Nav aktīvs',
-            self::STATUS_ACTIVE => 'Aktīvs',
+            self::STATUS_INACTIVE => \Yii::t('app',  'Inactive'),
+            self::STATUS_ACTIVE => \Yii::t('app',  'Active'),
         ];
     }
 

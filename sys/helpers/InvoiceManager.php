@@ -96,7 +96,7 @@ class InvoiceManager
 
         SentInvoices::createReal($model['student']['id'], $invoiceNumber, $schoolSubplan, $studentSubplan, $paidDate);
 
-        Yii::$app->session->setFlash('success', 'Rēķina apmaksa reģistrēta!');
+        Yii::$app->session->setFlash('success', \Yii::t('app', 'Invoice payment registered') . '!');
 
         $studentSubplan->save();
     }

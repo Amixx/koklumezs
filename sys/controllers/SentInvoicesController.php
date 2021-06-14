@@ -77,7 +77,7 @@ class SentInvoicesController extends Controller
 
         if ($post && $model->load($post) && $model->validate()) {
             InvoiceManager::createRealInvoiceForMultipleMonths($model);
-            Yii::$app->session->setFlash('success', 'Maksājums tika reģistrēts!');
+            Yii::$app->session->setFlash('success', \Yii::t('app', 'Paymant registered') . '!');
             return $this->redirect(["user/index"]);
         }
 

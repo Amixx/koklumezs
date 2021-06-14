@@ -91,7 +91,9 @@ class UserLayoutHelper extends LayoutHelper
 
     private function getUserTypeNavItems()
     {
-        return [
+        $hasStudents = count(Users::getStudentsWithoutPausesForSchool()) > 0;
+
+        $array = [
             'admin' => [
                 ['label' => 'Piešķiršana', 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),],
                 ['label' => 'Piešķirts', 'url' => ['/user-lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lectures']),],
@@ -106,7 +108,7 @@ class UserLayoutHelper extends LayoutHelper
             ],
             'teacher' => [
                 ['label' => \Yii::t('app',  'School'), 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),],
-                ['label' => '+', 'url' => ['/assign/userlectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),],
+                $hasStudents ? ['label' => '+', 'url' => ['/assign/userlectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign'])] : ['label' => '', 'url' => ['/assign']],
                 ['label' => \Yii::t('app',  'Students'), 'url' => ['/user'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])],
                 ['label' => '+', 'url' => ['/user/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])],
                 ['label' => \Yii::t('app',  'Lessons'), 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),],
@@ -153,6 +155,8 @@ class UserLayoutHelper extends LayoutHelper
                 ['label' => \Yii::t('app',  'Subscription plan'), 'url' => ['/student-sub-plans/for-user/?studentId=' . Yii::$app->user->identity->id], 'active' =>  in_array(\Yii::$app->controller->id, ['student-sub-plans'])],
             ],
         ];
+
+        return $array;
     }
 
     public function getChatButton()

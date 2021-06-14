@@ -384,11 +384,10 @@ class UserLectures extends \yii\db\ActiveRecord
 
     public static function getLastThreeComplexityAverage($id)
     {
-        $lastLectures = self::getLastLecturesForUser($id, 3);
+        $lastLectureQuery = self::find()->where(['user_id' => $id])->joinWith('lecture')->andWhere(['>', 'complexity', '1'])->limit(3)->all();
         $avg = 0;
-        foreach ($lastLectures as $lectureId) {
-            $lecture = Lectures::findOne($lectureId);
-            $avg = $avg + $lecture->complexity;
+        foreach ($lastLectureQuery as $lectureQuery) {
+            $avg = $avg + $lectureQuery['lecture']->complexity;
         }
         $avg = (int)round($avg / 3, 0);
         return $avg;

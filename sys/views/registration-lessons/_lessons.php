@@ -21,7 +21,7 @@ use yii\helpers\Url;
         ],
     ]); ?>
 
-    <h3>Ziņa čatā</h3>
+    <h3><?= \Yii::t('app', 'Message in chat') ?></h3>
     <?php if ($item['message']) { ?>
 
         <?= Html::a(Yii::t('app', 'Edit'), Url::to(["registration-messages/update", 'id' => $item['message']->id])) ?>

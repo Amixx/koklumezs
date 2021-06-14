@@ -28,7 +28,7 @@
                 <th scope="row" colspan="2" class="text-center"><?= $typeText ?></th>
             </tr>
             <?php foreach ($fileGroup as $id => $file) {
-                $view = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/create', 'id' => $file['id']]);
+                $view = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/' . $file['id']]);
                 $up = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/update', 'id' => $file['id']]);
                 $del = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/delete', 'id' => $file['id']]);
             ?>
@@ -41,7 +41,7 @@
                         <a target="_blank" href="<?= $up ?>" title=<?= \Yii::t('app',  'Edit') ?> aria-label=<?= \Yii::t('app',  'Edit') ?> data-pjax="0">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
-                        <a href="<?= $del ?>" title=<?= \Yii::t('app',  'Delete') ?> aria-label=<?= \Yii::t('app',  'Delete') ?> data-pjax="0" data-confirm=<?= \Yii::t('app',  'Do you really want to delete this file?') ?> data-method="post">
+                        <a href="<?= $del ?>" title=<?= \Yii::t('app',  'Delete') ?> aria-label=<?= \Yii::t('app',  'Delete') ?> data-pjax="0" data-confirm="<?= \Yii::t('app',  'Do you really want to delete this file?') ?>" data-method=" post">
                             <span class="glyphicon glyphicon-trash"></span>
                         </a>
                     </td>

@@ -142,7 +142,7 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     <?php } ?>
     <p>
         <?= Html::a(
-            'Apskatīt lietotāja galveno lapu    <span class="glyphicon glyphicon-user"></span>',
+            \Yii::t('app', 'View students lesson view') . ' <span class="glyphicon glyphicon-user"></span>',
             ['/lekcijas/preview', 'studentId' => $id],
             [
                 'title' => \Yii::t('app', 'View'),
