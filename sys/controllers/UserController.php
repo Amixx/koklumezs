@@ -97,7 +97,7 @@ class UserController extends Controller
         if ($model->load($post)) {
             $isNewUserTeacher = isset($post['Users']['user_level']) && $post['Users']['user_level'] == 'Teacher';
             if ($isNewUserTeacher && !$post['teacher_instrument']) {
-                Yii::$app->session->setFlash('error', "Norādiet skolotāja instrumentu!");
+                Yii::$app->session->setFlash('error', Yii::t('app', 'Select teacher instrument') . '!');
                 return $this->redirect(['create']);
             }
             if ($isCurrentUserTeacher) {
@@ -132,9 +132,9 @@ class UserController extends Controller
                 $newSchoolStudent->save();
             }
             if ($created) {
-                Yii::$app->session->setFlash('success', "User created successfully!");
+                Yii::$app->session->setFlash('success', Yii::t('app', 'User created successfully') . '!');
             } else {
-                Yii::$app->session->setFlash('error', "User not created!");
+                Yii::$app->session->setFlash('error', Yii::t('app', 'User not created') . '!');
                 return $this->redirect(['index']);
             }
 
@@ -192,7 +192,7 @@ class UserController extends Controller
                 if ($studentSubplanModel->validate()) {
                     $studentSubplanModel->save();
                 } else {
-                    Yii::$app->session->setFlash('error', 'Plāns netika saglabāts - nepareiza informācija!');
+                    Yii::$app->session->setFlash('error', Yii::t('app', 'Couldn\'t save plan - incorrect data given') . '!');
                 }
             }
             if (isset($post['Users']['payer']) && $post['Users']['payer']) {
@@ -222,7 +222,7 @@ class UserController extends Controller
                         $payer->update();
                     }
 
-                    Yii::$app->session->setFlash('success', 'Maksātāja informācija saglabāta!');
+                    Yii::$app->session->setFlash('success', Yii::t('app', 'The payer\'s information saved') . '!');
                 }
             }
 

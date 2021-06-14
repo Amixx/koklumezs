@@ -123,7 +123,7 @@ class SchoolSubPlansController extends Controller
             $newSubplanPart->planpart_id = (int) $post['SchoolSubplanParts']['planpart_id'];
 
             if ($newSubplanPart->save()) {
-                Yii::$app->session->setFlash('success', 'Plāna daļa pievienta!');
+                Yii::$app->session->setFlash('success',  Yii::t('app', 'Plan part addded') . '!');
                 $newSubplanPart = new SchoolSubplanParts;
             }
         }

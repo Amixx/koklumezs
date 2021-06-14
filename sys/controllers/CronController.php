@@ -300,9 +300,9 @@ class CronController extends Controller
         }
 
         if ($sent) {
-            Yii::$app->session->setFlash('success', 'Atgādinājums nosūtīts!');
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Reminder sent') . '!');
         } else {
-            Yii::$app->session->setFlash('error', 'Atgādinājums netika nosūtīts!');
+            Yii::$app->session->setFlash('error', Yii::t('app', 'Could not send reminder') . '!');
         }
 
         return $this->redirect(Yii::$app->request->referrer);

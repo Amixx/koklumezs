@@ -68,9 +68,9 @@ class SignupQuestionsController extends Controller
         $model['text'] = Yii::$app->request->post()['new-question-text'];
 
         if ($model->save()) {
-            Yii::$app->session->setFlash('success', 'Jautājums pievienots!');
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Question added') . '!');
         } else {
-            Yii::$app->session->setFlash('error', 'Notikusi kļūda! Jautājums netika pievienots!');
+            Yii::$app->session->setFlash('error', Yii::t('app', 'Problem encountered! Couldn\'t add question') . '!');
         }
 
         return $this->redirect(Yii::$app->request->referrer);

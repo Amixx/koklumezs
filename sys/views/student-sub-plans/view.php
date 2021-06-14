@@ -92,6 +92,6 @@ if ($subplan) {
         <?php } ?>
 
     <?php } else { ?>
-        <h3>Tev šobrīd nav piešķirts abonēšanas plāns!</h3>
+        <h3><?= Yii::t('app', 'You currently don\'t have a subscription plan') ?>!</h3>
     <?php } ?>
 </div>

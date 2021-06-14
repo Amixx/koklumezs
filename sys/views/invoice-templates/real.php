@@ -22,15 +22,15 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
 <body>
     <div>
         <div>
-            <h3 class="align-center font-l"><strong>Rēķins Nr. <?= $number ?></strong></h3>
+            <h3 class="align-center font-l"><strong><?= Yii::t('app', 'Invoice Nr.') . ' ' .  $number ?></strong></h3>
             <div class="font-xs align-right lh-2">
-                <div>Rēķina datums: <span class="font-m"><?= $datePaid ?></span></div>
+                <div><?= Yii::t('app', 'Invoice date') ?>: <span class="font-m"><?= $datePaid ?></span></div>
             </div>
             <hr>
             <table class="lh-2">
                 <tr>
                     <td class="leftcol">
-                        Piegādātājs:
+                        <?= Yii::t('app', 'Supplier') ?>:
                     </td>
                     <td>
                         <strong>
@@ -40,7 +40,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                 </tr>
                 <tr>
                     <td class="leftcol">
-                        Reģistrācijas Nr.:
+                        <?= Yii::t('app', 'Registration Nr.') ?>:
                     </td>
                     <td>
                         44103120159
@@ -48,7 +48,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                 </tr>
                 <tr>
                     <td class="leftcol">
-                        PVN reģistrācijas Nr.:
+                        <?= Yii::t('app', 'PVN registration Nr.') ?>:
                     </td>
                     <td>
                         LV44103120159
@@ -56,7 +56,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                 </tr>
                 <tr>
                     <td class="leftcol">
-                        Juridiskā adrese:
+                        <?= Yii::t('app', 'Legal address') ?>:
                     </td>
                     <td>
                         Jūras iela 21 - 11, Limbaži LV 4001
@@ -64,7 +64,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                 </tr>
                 <tr>
                     <td class="leftcol">
-                        Banka:
+                        <?= Yii::t('app', 'Bank') ?>:
                     </td>
                     <td>
                         A/S Swedbank
@@ -72,7 +72,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                 </tr>
                 <tr>
                     <td class="leftcol">
-                        Konta Nr.:
+                        <?= Yii::t('app', 'Account Nr.') ?>:
                     </td>
                     <td>
                         <strong>
@@ -85,7 +85,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
             <table class="lh-2">
                 <tr>
                     <td class="leftcol">
-                        Saņēmējs:
+                        <?= Yii::t('app', 'Recipient') ?>:
                     </td>
                     <td>
                         <strong><?= $usePayer ? $payer['name'] : $fullName ?></strong>
@@ -95,7 +95,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                     <?php if ($payer['personal_code']) { ?>
                         <tr>
                             <td class="leftcol">
-                                Personas kods:
+                                <?= Yii::t('app', 'Personal code') ?>:
                             </td>
                             <td>
                                 <?= $payer['personal_code'] ?>
@@ -105,7 +105,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                     <?php if ($payer['registration_number']) { ?>
                         <tr>
                             <td class="leftcol">
-                                Reģistrācijas Nr.:
+                                <?= Yii::t('app', 'Registration number') ?>:
                             </td>
                             <td>
                                 <?= $payer['registration_number'] ?>
@@ -115,7 +115,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                     <?php if ($payer['pvn_registration_number']) { ?>
                         <tr>
                             <td class="leftcol">
-                                PVN reģistrācijas Nr.:
+                                <?= Yii::t('app', 'PVN registration number') ?>:
                             </td>
                             <td>
                                 <?= $payer['pvn_registration_number'] ?>
@@ -125,7 +125,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                     <?php if ($payer['address']) { ?>
                         <tr>
                             <td class="leftcol">
-                                Adrese:
+                                <?= Yii::t('app', 'Address') ?>:
                             </td>
                             <td>
                                 <?= $payer['address'] ?>
@@ -135,7 +135,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                     <?php if ($payer['bank']) { ?>
                         <tr>
                             <td class="leftcol">
-                                Banka:
+                                <?= Yii::t('app', 'Bank') ?>:
                             </td>
                             <td>
                                 <?= $payer['bank'] ?>
@@ -155,7 +155,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                     <?php if ($payer['account_number']) { ?>
                         <tr>
                             <td class="leftcol">
-                                Konta Nr.:
+                                <?= Yii::t('app', 'Account number') ?>:
                             </td>
                             <td>
                                 <strong><?= $payer['account_number'] ?></strong>
@@ -165,7 +165,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                 <?php } else { ?>
                     <tr>
                         <td class="leftcol">
-                            Kontakti:
+                            <?= Yii::t('app', 'Contacts') ?>:
                         </td>
                         <td>
                             <?= $email ?>
@@ -175,10 +175,10 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
             </table>
             <table class="bordered-table">
                 <tr>
-                    <th scope="col">Nosaukums</th>
-                    <th scope="col">Cena bez PVN (Eur)</th>
+                    <th scope="col"><?= Yii::t('app', 'Product title') ?></th>
+                    <th scope="col"><?= Yii::t('app', 'Subtotal') . ' ' ?> (Eur)</th>
                     <th scope="col">PVN (<?= $subplan["pvn_percent"] ?>%)</th>
-                    <th scope="col">Summa (Eur)</th>
+                    <th scope="col"><?= Yii::t('app', 'Total') . ' ' ?> (Eur)</th>
                 </tr>
                 <?php foreach ($subplanParts as $part) { ?>
                     <tr>
@@ -190,15 +190,15 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                 <?php } ?>
             </table>
             <div class="lh-2 align-right">
-                <div class="font-s">Summa bez PVN (Eur) <?= $priceWithoutPvn ?></div>
-                <div class="font-xs">PVN (Eur) <?= $pvnAmount ?></div>
-                <div class="font-s"><strong>Summa apmaksai (Eur) <?= $payAmount ?></strong></div>
+                <div class="font-s"><?= Yii::t('app', 'Subtotal') . ' ' . $priceWithoutPvn ?></div>
+                <div class="font-xs">PVN (Eur) <?= Yii::t('app', '') . ' ' . $pvnAmount ?></div>
+                <div class="font-s"><strong><?= Yii::t('app', 'Total price') . ' (Eur) ' . $payAmount ?></strong></div>
             </div>
             <div class="lh-2">
-                <div>Sastādīja: <u>Laura Laugale (vārds, uzvārds)</u>
+                <div><?= Yii::t('app', 'Written by') ?>: <u>Laura Laugale (<?= Yii::t('app', 'Name') ?>, <?= ' ' . Yii::t('app', 'Surname') ?>)</u>
                 </div>
                 <div><u><?= $datePaid ?></u></div>
-                <div class="font-xs">Rēķins sagatavots elektroniski un ir derīgs bez paraksta.</div>
+                <div class="font-xs"><?= Yii::t('app', 'Invoiced electronically and valid without signature') . '.' ?></div>
             </div>
         </div>
 </body>

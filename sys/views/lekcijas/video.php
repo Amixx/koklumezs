@@ -40,7 +40,7 @@
                         <div id="<?= $playerId ?>" data-plyr-provider="youtube" data-plyr-embed-id="<?= $videoId ?>" data-role="player"></div>
                     </div>
                     <p>
-                        Ja rodas problēmas ar video atskaņošanu, spied <a target="_blank" href="<?= $fileUrl ?>">šeit</a> un skaties to Youtube platformā!
+                        <?= Yii::t('app', 'If you have any problems playing video, you can watch it on Youtube') . ' ' ?><a target="_blank" href="<?= $fileUrl ?>"><?= Yii::t('app', 'here') . '!' ?></a>
                     </p>
                 <?php } else { ?>
                     <video id="player" playsinline controls data-role="player">

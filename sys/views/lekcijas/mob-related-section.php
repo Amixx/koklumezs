@@ -30,7 +30,7 @@
             <div>
                 <div class="lecture-wrap">
                     <a class="lecture-thumb" data-toggle="modal" data-target="#lesson_modal_mob_<?= $model->id ?>" style="<?= $thumbStyle ?>"></a>
-                    <span class="lecture-title">Spēlēsim kopā</span>
+                    <span class="lecture-title"><?= Yii::t('app', 'Let\'s play together'); ?></span>
                 </div>
                 <?= $this->render('view-lesson-modal', [
                     'videoThumb' => $videoThumb,

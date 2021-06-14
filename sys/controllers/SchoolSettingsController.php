@@ -81,7 +81,7 @@ class SchoolSettingsController extends Controller
 
             $saved = $model->save();
             if ($saved) {
-                Yii::$app->session->setFlash('success', 'Izmaiņas saglabātas!');
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Changes saved') . '!');
                 return $this->redirect(['index']);
             }
         }

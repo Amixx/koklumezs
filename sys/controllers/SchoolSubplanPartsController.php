@@ -39,7 +39,7 @@ class SchoolSubplanPartsController extends Controller
     {
         $this->findModel($id)->delete();
 
-        Yii::$app->session->setFlash('success', 'Plāna daļa noņemta!');
+        Yii::$app->session->setFlash('success',  Yii::t('app', 'Plan part removed') . '!');
 
         return $this->redirect(Yii::$app->request->referrer);
     }

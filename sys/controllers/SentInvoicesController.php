@@ -94,9 +94,9 @@ class SentInvoicesController extends Controller
         $deleted = $this->findById($id)->delete();
 
         if ($deleted) {
-            Yii::$app->session->setFlash('success', 'Rēķins izdzēsts!');
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Invoice deleted') . '!');
         } else {
-            Yii::$app->session->setFlash('error', 'Notikusi kļūda! Rēķins netika izdzēsts!');
+            Yii::$app->session->setFlash('error', Yii::t('app', 'Problem encountered! Couldn\'t delete an invoice') . '!');
         }
 
         return $this->redirect(Yii::$app->request->referrer);

@@ -88,10 +88,10 @@ class SiteController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Pārbaudiet savu e-pastu, lai turpinātu paroles atjaunošanas procesu.');
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Check your email to continue the recovery process') . '!');
                 return $this->goHome();
             } else {
-                Yii::$app->session->setFlash('error', 'Neizdevās nosūtīt e-pastu, lai atjaunotu paroli.');
+                Yii::$app->session->setFlash('error', Yii::t('app', 'Couldn\'t send email to recover password') . '.');
             }
         }
 
@@ -112,7 +112,7 @@ class SiteController extends Controller
             throw new BadRequestHttpException($e->getMessage());
         }
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->session->setFlash('success', 'Jaunā parole saglabāta.');
+            Yii::$app->session->setFlash('success', Yii::t('app', 'New password saved') . '.');
             return $this->goHome();
         }
         return $this->render('resetPassword', [
@@ -129,11 +129,11 @@ class SiteController extends Controller
         }
 
         if ($user = $model->verifyEmail() && Yii::$app->user->login($user)) {
-            Yii::$app->session->setFlash('success', 'Your email has been confirmed!');
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Your email has been confirmed') . '!');
             return $this->goHome();
         }
 
-        Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with provided token.');
+        Yii::$app->session->setFlash('error', Yii::t('app', 'Sorry, we are unable to verify your account with provided token.') . '.');
         return $this->goHome();
     }
 
@@ -142,10 +142,10 @@ class SiteController extends Controller
         $model = new ResendVerificationEmailForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Check your email for further instructions') . '.');
                 return $this->goHome();
             }
-            Yii::$app->session->setFlash('error', 'Sorry, we are unable to resend verification email for the provided email address.');
+            Yii::$app->session->setFlash('error', Yii::t('app', 'Sorry, we are unable to resend verification email for the provided email address') . '.');
         }
         return $this->render('resendVerificationEmail', [
             'model' => $model
@@ -229,7 +229,7 @@ class SiteController extends Controller
                 if ($model->hasExperience) {
                     $this->redirect(["signup-questions", 'u' => $user['id'], 's' => $s]);
                 } else {
-                    Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam spēlēt! Turpmākās 2 nedēļas vari izmēģināt bez maksas!');
+                    Yii::$app->session->setFlash('success', Yii::t('app', 'Hello! You\'ve registered successfully. Watch the introduction video and let\'s start playing! You have a free trial period for 2 weeks') . '!');
                     return $this->redirect(['lekcijas/index']);
                 }
             }
@@ -307,7 +307,7 @@ class SiteController extends Controller
             $user['about'] = $aboutUser;
             $saved = $user->save();
             if ($saved) {
-                Yii::$app->session->setFlash('success', 'Hei! Esi veiksmīgi piereģistrējies. Noskaties iepazīšanās video ar platformu un sākam spēlēt! Turpmākās 2 nedēļas vari izmēģināt bez maksas!');
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Hello! You\'ve registered successfully. Watch the introduction video and let\'s start playing! You have a free trial period for 2 weeks') . '!');
                 return $this->redirect(['lekcijas/index']);
             }
         }

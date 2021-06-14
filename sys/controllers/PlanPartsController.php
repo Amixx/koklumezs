@@ -51,7 +51,7 @@ class PlanPartsController extends Controller
             $model->school_id = $schoolId;
 
             if ($model->validate() && $model->save()) {
-                Yii::$app->session->setFlash('success', 'Plāna daļa izveidota!');
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Plan part created') . '!');
                 $model = new PlanParts;
             }
         }

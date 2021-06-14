@@ -75,10 +75,10 @@ class StudentSubplanPausesController extends Controller
                 $model = StudentSubplanPauses::createFromTeacherForm($formModel, $userId);
 
                 if ($model->save()) {
-                    Yii::$app->session->setFlash('success', 'Plāna pauze izveidota!');
+                    Yii::$app->session->setFlash('success', Yii::t('app', 'Plan pause created') . '!');
                 }
             } else {
-                Yii::$app->session->setFlash('error', 'Izvēlētajam skolēnam nav piešķirts plāns!');
+                Yii::$app->session->setFlash('error', Yii::t('app', 'The student does not have assigned subscription plan') . '!');
             }
 
             return $this->redirect(Url::to(['school-sub-plans/index']));
@@ -98,7 +98,7 @@ class StudentSubplanPausesController extends Controller
         $users = Users::getStudentNamesForSchool();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Plāna pauzes labojumi saglabāti!');
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Plan pause changes saved') . '!');
             return $this->redirect(Url::to(['school-sub-plans/index']));
         }
 
@@ -112,7 +112,7 @@ class StudentSubplanPausesController extends Controller
     public function actionDelete($id)
     {
         if ($this->findModel($id)->delete()) {
-            Yii::$app->session->setFlash('success', 'Plāna pauze dzēsta!');
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Plan pause deleted') . '!');
         }
 
         return $this->redirect(Url::to(['school-sub-plans/index']));
@@ -126,7 +126,7 @@ class StudentSubplanPausesController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model["weeks"] > $remainingPauseWeeks) {
-                Yii::$app->session->setFlash('error', 'Pārsniegts atļauto nedēļu skaits!');
+                Yii::$app->session->setFlash('error', Yii::t('app', 'Allowed weeks exceeded') . '!');
             } else {
                 $model->save();
             }
