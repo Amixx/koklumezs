@@ -28,7 +28,7 @@
                 <th scope="row" colspan="2" class="text-center"><?= $typeText ?></th>
             </tr>
             <?php foreach ($fileGroup as $id => $file) {
-                $view = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/create', 'id' => $file['id']]);
+                $view = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/' . $file['id']]);
                 $up = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/update', 'id' => $file['id']]);
                 $del = Yii::$app->urlManager->createAbsoluteUrl(['lecturesfiles/delete', 'id' => $file['id']]);
             ?>
