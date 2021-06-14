@@ -41,7 +41,7 @@
                         <a target="_blank" href="<?= $up ?>" title=<?= \Yii::t('app',  'Edit') ?> aria-label=<?= \Yii::t('app',  'Edit') ?> data-pjax="0">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
-                        <a href="<?= $del ?>" title=<?= \Yii::t('app',  'Delete') ?> aria-label=<?= \Yii::t('app',  'Delete') ?> data-pjax="0" data-confirm=<?= \Yii::t('app',  'Do you really want to delete this file?') ?> data-method="post">
+                        <a href="<?= $del ?>" title=<?= \Yii::t('app',  'Delete') ?> aria-label=<?= \Yii::t('app',  'Delete') ?> data-pjax="0" data-confirm="<?= \Yii::t('app',  'Do you really want to delete this file?') ?>" data-method=" post">
                             <span class="glyphicon glyphicon-trash"></span>
                         </a>
                     </td>
