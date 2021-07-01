@@ -48,8 +48,7 @@ class RentForm extends Model
         $user->last_name = $signupModel['last_name'];
         $user->email = $signupModel['email'];
         $user->language = $signupModel['language'];
-        $user->status = Users::STATUS_ACTIVE;
-        $user->status = 11;
+        $user->status = Users::STATUS_PASSIVE;
         $user->phone_number = $phoneNumber;
         $saved = $user->save();
         Yii::$app->session['signupModel'] = null;

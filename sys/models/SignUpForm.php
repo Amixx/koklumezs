@@ -84,7 +84,7 @@ class SignUpForm extends Model
             $user->email = $this->email;
             $user->language = $this->language;
 
-            $user->status = Users::STATUS_ACTIVE;
+            $user->status = Users::STATUS_PASSIVE;
 
             $saved = $user->save();
 

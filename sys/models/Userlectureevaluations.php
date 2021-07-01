@@ -164,6 +164,6 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
             ->andWhere(['>', 'complexity', 1])
             ->asArray()->all();
 
-        return empty($legitEvaluations);
+        return !empty($legitEvaluations);
     }
 }

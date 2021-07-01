@@ -164,7 +164,7 @@ $planEndMonths = [];
                                 $invoiceSentDate = $invoice['sent_date'];
                                 $today = date('Y-m-d');
                                 $warningDate = date('Y-m-d', strtotime($invoiceSentDate . ' +14 days'));
-                                if ($is_advance && $today <= $warningDate) {
+                                if ($is_advance && $studentSubplan["times_paid"] != $studentSubplan["sent_invoices_count"] && $today <= $warningDate) {
                                     $color = "#cb7119";
                                 }
                             }

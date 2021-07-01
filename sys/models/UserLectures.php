@@ -405,15 +405,25 @@ class UserLectures extends \yii\db\ActiveRecord
         $avg = self::getLastThreeComplexityAverage($userId);
         $nextLessons = ['easy' => null, 'medium' => null, 'hard' => null];
 
-        $similar = 3;
-        $max = 5;
-        $total = $similar + $max;
+        $similar = 1;
+        $challange = 2;
+        $rest = 4;
 
         foreach ($unassignedLectures as $lecture) {
             $complexity = $lecture['complexity'];
-            $fitsEasier = $complexity >= $avg - $total && $complexity < $avg - $similar;
-            $fitsSame = $complexity <= $avg + $total && $complexity > $avg + $similar;
-            $fitsHarder = $complexity >= $avg - $similar && $complexity <= $avg + $similar;
+
+            $harderThanEasiest = $complexity >= $avg - $similar - $rest;
+            $easierThanHardest = $complexity <= $avg + $similar + $challange;
+            $easierThanSimiliar = $complexity <= $avg - $similar;
+            $harderThanSimilar = $complexity >= $avg + $similar;
+
+            if (!$easierThanHardest && !$harderThanEasiest) {
+                break;
+            }
+
+            $fitsEasier = $easierThanSimiliar && $harderThanEasiest;
+            $fitsSame = !$harderThanSimilar && !$easierThanSimiliar;
+            $fitsHarder = $harderThanSimilar && $easierThanHardest;
 
             if ($fitsEasier) {
                 if (isset($nextLessons['easy'])) {
@@ -425,12 +435,11 @@ class UserLectures extends \yii\db\ActiveRecord
                 } else $nextLessons['medium'] = $lecture;
             } else if ($fitsHarder) {
                 if (isset($nextLessons['hard'])) {
-                    $cdist = abs($avg - $nextLessons['hard']->complexity);
-                    $ndist = abs($avg - $complexity);
-                    if ($cdist > $ndist) $nextLessons['hard'] = $lecture;
+                    if ($nextLessons['hard']->complexity > $complexity) $nextLessons['hard'] = $lecture;
                 } else $nextLessons['hard'] = $lecture;
             }
         }
+
         return $nextLessons;
     }
 
