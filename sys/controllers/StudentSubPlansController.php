@@ -64,6 +64,23 @@ class StudentSubPlansController extends Controller
         ]);
     }
 
+    public function actionUpdate($id)
+    {
+        $model = StudentSubPlans::findOne($id);
+        $post = Yii::$app->request->post();
+
+        if ($post && $model->load($post) && $model->validate()) {
+            $saved = $model->save();
+            if ($saved) {
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Changes saved') . '!');
+            }
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
     public function actionDelete($id)
     {
         StudentSubplans::setStudentSubplanInactive($id);

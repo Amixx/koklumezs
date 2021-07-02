@@ -172,7 +172,8 @@ $planEndMonths = [];
                             $timesPaid = $studentSubplan["times_paid"];
                             $sentInvoices = $studentSubplan["sent_invoices_count"];
                             $planType = SchoolSubPlans::findOne($studentSubplan['plan']['id'])->typeText();
-                            $html .= "<div style='text-align:center;background:$color'>$planType: $timesPaid/$sentInvoices</div>";
+                            $urlToEditPlan = Url::to(['student-sub-plans/update', 'id' => $studentSubplan['id']]);
+                            $html .= "<div style='text-align:center;background:$color'><span>$planType: $timesPaid/$sentInvoices</span> <a href='$urlToEditPlan'><span class='glyphicon glyphicon-pencil'></span></a></div>";
 
                             $url = Url::to(['sent-invoices/register-advance-payment', 'userId' => $studentId]);
                             $addPaymentHtml = "<span title='" . \Yii::t('app', 'Register payment') . "'>

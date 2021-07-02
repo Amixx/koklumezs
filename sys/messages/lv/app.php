@@ -566,4 +566,5 @@ return [
     'Edit school requisites' => 'Rediģēt skolas rekvizītus',
     //  Yii::t('app', '') . '!'
     //  Yii::t('app', '') . '.'
+    'Edit student subscription plan' => 'Rediģēt skolēna abonēšanas plānu'
 ];

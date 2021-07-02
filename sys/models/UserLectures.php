@@ -384,7 +384,13 @@ class UserLectures extends \yii\db\ActiveRecord
 
     public static function getLastThreeComplexityAverage($id)
     {
-        $lastLectureQuery = self::find()->where(['user_id' => $id])->joinWith('lecture')->andWhere(['>', 'complexity', '1'])->limit(3)->all();
+        $lastLectureQuery = self::find()
+            ->where(['user_id' => $id])
+            ->joinWith('lecture')
+            ->andWhere(['>', 'complexity', '1'])
+            ->orderBy(['id' => SORT_DESC])
+            ->limit(3)->all();
+
         $avg = 0;
         foreach ($lastLectureQuery as $lectureQuery) {
             $avg = $avg + $lectureQuery['lecture']->complexity;
@@ -409,20 +415,30 @@ class UserLectures extends \yii\db\ActiveRecord
         $challange = 2;
         $rest = 4;
 
+        $easiestMin = $avg - $similar - $rest;
+        $hardestMax = $avg + $similar + $challange;
+        $avgMin = $avg - $similar;
+        $avgMax = $avg + $similar;
+
         foreach ($unassignedLectures as $lecture) {
             $complexity = $lecture['complexity'];
+            if ($complexity === NULL) continue;
 
-            $harderThanEasiest = $complexity >= $avg - $similar - $rest;
-            $easierThanHardest = $complexity <= $avg + $similar + $challange;
-            $easierThanSimiliar = $complexity <= $avg - $similar;
-            $harderThanSimilar = $complexity >= $avg + $similar;
+            $harderThanEasiest = $complexity > $easiestMin;
+            $easierThanSimilar = $complexity < $avgMin;
+
+            $easiestSimilar = $complexity >= $avgMin;
+            $hardestSimilar = $complexity <= $avgMax;
+
+            $harderThanSimilar = $complexity > $avgMax;
+            $easierThanHardest = $complexity < $hardestMax;
 
             if (!$easierThanHardest && !$harderThanEasiest) {
-                break;
+                continue;
             }
 
-            $fitsEasier = $easierThanSimiliar && $harderThanEasiest;
-            $fitsSame = !$harderThanSimilar && !$easierThanSimiliar;
+            $fitsEasier = $harderThanEasiest && $easierThanSimilar;
+            $fitsSame = $easiestSimilar && $hardestSimilar;
             $fitsHarder = $harderThanSimilar && $easierThanHardest;
 
             if ($fitsEasier) {
@@ -431,7 +447,7 @@ class UserLectures extends \yii\db\ActiveRecord
                 } else $nextLessons['easy'] = $lecture;
             } else if ($fitsSame) {
                 if (isset($nextLessons['medium'])) {
-                    if ($nextLessons['medium']->complexity > $complexity) $nextLessons['medium'] = $lecture;
+                    if ($complexity == $avg) $nextLessons['medium'] = $lecture;
                 } else $nextLessons['medium'] = $lecture;
             } else if ($fitsHarder) {
                 if (isset($nextLessons['hard'])) {
