@@ -563,4 +563,5 @@ return [
     'Invoiced electronically and valid without signature' => 'Rēķins sagatavots elektroniski un ir derīgs bez paraksta',
     //  Yii::t('app', '') . '!'
     //  Yii::t('app', '') . '.'
+    'Edit student subscription plan' => 'Rediģēt skolēna abonēšanas plānu'
 ];

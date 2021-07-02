@@ -129,8 +129,11 @@ $isTeacher = Users::isCurrentUserTeacher();
                             ],
                             [
                                 'class' => 'yii\grid\ActionColumn',
-                                'template' => '{delete}',
+                                'template' => '{update} {delete}',
                                 'urlCreator' => function ($action, $model) {
+                                    if ($action === 'update') {
+                                        return Url::base(true) . '/student-sub-plans/update?id=' . $model->id;
+                                    }
                                     if ($action === 'delete') {
                                         return Url::base(true) . '/student-sub-plans/delete?id=' . $model->id;
                                     }
