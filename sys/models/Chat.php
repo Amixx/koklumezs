@@ -199,6 +199,10 @@ class Chat extends \yii\db\ActiveRecord
 
         if ($usersWithConversations) {
             foreach ($usersWithConversations as $user) {
+                if ($user == NULL) {
+                    continue;
+                }
+
                 $isActive = $user['id'] == $recipientId;
                 $style = $isActive ? "background-color:#b0f3fc;" : "";
                 $hasNewChats = Chat::hasNewChats($user['id']);

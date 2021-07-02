@@ -26,8 +26,10 @@ class InvoiceManager
         $invoicePath = $invoiceBasePath . $title;
         $subplanParts = SchoolSubplanParts::getPartsForSubplan($schoolSubplan['id']);
         $subplanCost = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
+        $bankAccount = School::getBankAccount($school->id);
 
         $invoiceContent = Yii::$app->view->render('@app/views/invoice-templates/advance', [
+            'bankAccount' => $bankAccount,
             'id' => $invoiceNumber,
             'fullName' => $userFullName,
             'email' => $user['email'],
@@ -79,8 +81,10 @@ class InvoiceManager
         $invoicePath = $invoiceBasePath . $title;
         $subplanParts = SchoolSubplanParts::getPartsForSubplan($schoolSubplan['id']);
         $subplanCost = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
+        $bankAccount = School::getBankAccount($school->id);
 
         $invoiceContent = Yii::$app->view->render('@app/views/invoice-templates/real', [
+            'bankAccount' => $bankAccount,
             'number' => $invoiceNumber,
             'fullName' => $userFullName,
             'email' => $model['student']['email'],
@@ -117,8 +121,10 @@ class InvoiceManager
         $userFullName = Users::getFullName($user);
         $subplanParts = SchoolSubplanParts::getPartsForSubplan($schoolSubplan['id']);
         $subplanCost = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
+        $bankAccount = School::getBankAccount($school->id);
 
         $invoiceContent = Yii::$app->view->render('@app/views/invoice-templates/real', [
+            'bankAccount' => $bankAccount,
             'number' => $invoiceNumber,
             'fullName' => $userFullName,
             'email' => $user['email'],

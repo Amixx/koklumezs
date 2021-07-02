@@ -561,6 +561,9 @@ return [
     'Please specify the invoice number when making the payment' => 'Veicot maksājumu, lūdzu, norādīt rēķina numuru',
     'Written by' => 'Sastādīja',
     'Invoiced electronically and valid without signature' => 'Rēķins sagatavots elektroniski un ir derīgs bez paraksta',
+    'Bank requisites' => 'Bankas rekvizīti',
+    'School requisites' => 'Skolas rekvizīti',
+    'Edit school requisites' => 'Rediģēt skolas rekvizītus',
     //  Yii::t('app', '') . '!'
     //  Yii::t('app', '') . '.'
 ];

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\BankAccounts;
 use Yii;
 use yii\helpers\Url;
 use app\models\Users;
@@ -58,11 +59,13 @@ class SchoolSettingsController extends Controller
         $signupQuestionsDataProvider = new ActiveDataProvider([
             'query' => SignupQuestions::find()->where(['school_id' => $schoolId]),
         ]);
+        $bankAccount = School::getBankAccount($schoolId);
 
         return $this->render('index', [
             'settings' => $settings,
             'difficultiesDataProvider' => $difficultiesDataProvider,
             'faqsDataProvider' => $faqsDataProvider,
+            'bankAccount' => $bankAccount,
             'schoolId' => $schoolId,
             'signupQuestionsDataProvider' => $signupQuestionsDataProvider,
             'signupUrl' => $signupUrl,
@@ -89,6 +92,29 @@ class SchoolSettingsController extends Controller
         return $this->render('update', [
             'model' => $model,
             'schoolSubPlans' => $schoolSubPlans,
+        ]);
+    }
+
+    public function actionBankUpdate()
+    {
+
+        $post = Yii::$app->request->post();
+        $schoolId = School::getCurrentSchoolId();
+        $model = BankAccounts::getCurrentSchoolsBankAccount($schoolId);
+        $bankAccount = School::getBankAccount($schoolId);
+
+        if (count($post) > 0) {
+            $model->load($post);
+            $saved = $model->save();
+            if ($saved) {
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Changes saved') . '!');
+                return $this->redirect(['index']);
+            }
+        }
+
+        return $this->render('bank-update', [
+            'model' => $model,
+            'bankAccount' => $bankAccount
         ]);
     }
 

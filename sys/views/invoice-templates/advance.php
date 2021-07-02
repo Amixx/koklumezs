@@ -40,7 +40,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                     </td>
                     <td>
                         <strong>
-                            SIA Kokļu Mežs
+                            <?= $bankAccount['Piegādātājs'] ?>
                         </strong>
                     </td>
                 </tr>
@@ -49,7 +49,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                         <?= Yii::t('app', 'Registration Nr.') ?>:
                     </td>
                     <td>
-                        44103120159
+                        <?= $bankAccount['Reģistrācijas numurs'] ?>
                     </td>
                 </tr>
                 <tr>
@@ -57,7 +57,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                         <?= Yii::t('app', 'PVN registration Nr.') ?>:
                     </td>
                     <td>
-                        LV44103120159
+                        <?= $bankAccount['PVN reģistrācijas numurs'] ?>
                     </td>
                 </tr>
                 <tr>
@@ -65,7 +65,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                         <?= Yii::t('app', 'Legal address') ?>:
                     </td>
                     <td>
-                        Jūras iela 21 - 11, Limbaži LV 4001
+                        <?= $bankAccount['Juridiskā adrese'] ?>
                     </td>
                 </tr>
                 <tr>
@@ -73,7 +73,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                         <?= Yii::t('app', 'Bank') ?>:
                     </td>
                     <td>
-                        A/S Swedbank
+                        <?= $bankAccount['Banka'] ?>
                     </td>
                 </tr>
                 <tr>
@@ -82,9 +82,8 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                     </td>
                     <td>
                         <strong>
-                            LV32HABA0551046058921
+                            <?= $bankAccount['Konta numurs'] ?>
                         </strong>
-
                     </td>
                 </tr>
             </table>

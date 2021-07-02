@@ -87,6 +87,23 @@ class School extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function getBankAccount($schoolId)
+    {
+        $schoolReqs = BankAccounts::find()->where(['school_id' => $schoolId])->one();
+        if (!empty($schoolReqs)) {
+            return [
+                \Yii::t('app', 'Supplier') => $schoolReqs->supplier,
+                \Yii::t('app', 'Registration number') => $schoolReqs->registration_number,
+                \Yii::t('app', 'PVN registration number') => $schoolReqs->pvn_registration_number,
+                \Yii::t('app', 'Legal address') => $schoolReqs->legal_address,
+                \Yii::t('app', 'Bank') => $schoolReqs->bank,
+                \Yii::t('app', 'Account number') => $schoolReqs->account_number
+            ];
+        } else {
+            return NULL;
+        }
+    }
+
     public static function getCurrentSchool()
     {
         $userId = Yii::$app->user->identity->id;
