@@ -168,13 +168,13 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     <?php if ($isNextLessons) { ?>
         <p> <?= Yii::t('app', 'After completing all lesosns, student can assign themself') . ' -' ?></p>
         <?php if (isset($nextLessons['easy'])) { ?>
-            <p><?= Yii::t('app', 'Easier') . ': ' . $nextLessons['easy']->title; ?></p>
+            <p><?= Yii::t('app', 'Easier') . ': ' . $nextLessons['easy']->title; ?> (<?= $nextLessons['easy']->complexity; ?>)</p>
         <?php } ?>
         <?php if (isset($nextLessons['medium'])) { ?>
-            <p> <?= Yii::t('app', 'Just as complicated') . ': ' . $nextLessons['medium']->title; ?></p>
+            <p> <?= Yii::t('app', 'Just as complicated') . ': ' . $nextLessons['medium']->title; ?> (<?= $nextLessons['medium']->complexity; ?>)</p>
         <?php } ?>
         <?php if (isset($nextLessons['hard'])) { ?>
-            <p> <?= Yii::t('app', 'Challenge') . ': ' . $nextLessons['hard']->title; ?></p>
+            <p> <?= Yii::t('app', 'Challenge') . ': ' . $nextLessons['hard']->title; ?> (<?= $nextLessons['hard']->complexity; ?>)</p>
         <?php } ?>
     <?php } else { ?>
         <p> <?= Yii::t('app', 'The student is not active or there is no lesson student can assign themself') ?>.</p>
