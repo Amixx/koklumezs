@@ -26,7 +26,7 @@ class BankAccounts extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['school_id', 'id', 'supplier', 'registration_number', 'pvn_registration_number', 'legal_address', 'bank', 'account_number'], 'required'],
+            [['school_id'], 'required'],
             [['school_id', 'id', 'registration_number'], 'number'],
             [['supplier', 'pvn_registration_number', 'legal_address', 'bank', 'account_number'], 'string'],
         ];

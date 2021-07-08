@@ -29,7 +29,7 @@ use app\models\CommentresponsesSearch;
 use yii\base\Event;
 use yii\web\View;
 use app\models\School;
-use app\models\LectureViews;
+use app\models\BankAccounts;
 use app\models\SchoolStudent;
 use app\models\CommentResponses;
 use app\models\RegistrationMessage;
@@ -162,5 +162,14 @@ class TestController extends Controller
         // die();
 
         //var_dump($transformed);
+
+        // $schools = School::find()->asArray()->all();
+        // foreach ($schools as $school) {
+        //     var_dump($school['id']);
+        //     $bankAccount  = new BankAccounts;
+        //     $bankAccount->school_id = $school['id'];
+        //     echo $bankAccount->save() ? "saved" : "not saved";
+        //     echo "<hr>";
+        // }
     }
 }
