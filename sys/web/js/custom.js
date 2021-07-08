@@ -618,29 +618,37 @@ function setupVideoPlayers(){
 
 
 function setupNeedHelpButton(){
+    var $message = $("#need-help-message");
     var $error = $("#need-help-error");
+    var $submitButton = $("#submit-need-help-message");
+    var endpointUrl = getUrl("/need-help-message/create");
+
     $error.hide();
 
-    $("#need-help-message").on('input', function(){
+    $message.on('input', function(){
         if($error.is(":visible")){
             $error.hide();
         }
-    })
-    $("#submit-need-help-message").on('click', function(){
-        var message = $("#need-help-message")[0].value;
+    });
+
+    
+    $submitButton.on('click', function(){
+        var message = $message[0].value;
         if(!message) {
             $error.show();
         }
 
-        var endpointUrl = getUrl("/need-help-message/create");
         var lessonId = $(this).data("lessonid");
 
+        $submitButton.button('loading');
         $.ajax({
             url: endpointUrl,
             type: "POST",
             data: { message: message, lessonId: lessonId },
             success: function (res) {
-               console.log(res);
+                $submitButton.button('reset');
+                $("#need-help-modal").modal('hide');
+                $message[0].value = "";
             }
         });
     })

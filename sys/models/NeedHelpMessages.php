@@ -66,7 +66,7 @@ class NeedHelpMessages extends \yii\db\ActiveRecord
                 'message' => $message->message,
                 'author' => $message->author,
                 'lesson' => $message->lesson,
-                'update_date' => $message->updated_at,
+                'update_date' => $message->created_at,
                 'is_need_help_message' => true,
             ];
         }
