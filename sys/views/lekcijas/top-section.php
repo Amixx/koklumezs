@@ -8,6 +8,22 @@ $heartClasses = $uLecture && $uLecture->is_favourite
 
 $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
 
+$helpModalBody = <<<EOD
+<div class='form-group'>
+    <label for='need-help-message'>Ar ko tev vajadzīga palīdzība?</label>
+    <textarea
+        class='form-control rounded-0'
+        rows="5"
+        name='need-help-message'
+        id='need-help-message'
+    ></textarea>
+</div>
+<p class='alert alert-danger' id='need-help-error'>Ievadiet ziņu!</p>
+<div style='text-align:right'>
+    <button class='btn btn-orange' id='submit-need-help-message'>Nosūtīt ziņu</button>
+</div>
+EOD;
+
 ?>
 
 <h3 class="text-center hidden-xs">
@@ -44,6 +60,15 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
             <?php } ?>
         </div>
         <div class="next-lesson">
+            <button type="button" class="btn btn-blue" data-toggle="modal" data-target="#need-help-modal">
+                <?= \Yii::t('app',  'I need help'); ?>
+            </button>
+
+            <?= $this->render("@app/views/shared/modal", [
+                'id' => 'need-help-modal',
+                'title' => \Yii::t('app', 'I need help'),
+                'body' => $helpModalBody
+            ]); ?>
             <?php if (!$hasEvaluatedLesson) {
                 $modalType = "next-lesson";
                 echo $this->render('alertEvaluation', [

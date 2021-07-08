@@ -357,6 +357,8 @@ function setupAssignUserListFilters(){
     setupAssignFilterBySubscriptionType();
 
     loadUnreadMessagesCount();
+
+    setupNeedHelpButton();
 }
 
 function reloadChat(message, clearChat, showSpinner) {
@@ -451,7 +453,7 @@ $(document).on('click', ".chat-user-item", function(){
     $(".btn-send-comment").data("recipient_id", newRecipientId);
 
     reloadChat("", true, true);
-})
+});
 
 $(document).on('click', ".chat-with-student", function(){
     var newRecipientId = $(this).data("userid");
@@ -459,7 +461,7 @@ $(document).on('click', ".chat-with-student", function(){
 
     reloadChat("", true, true);
     $("#chatModal").modal('show');
-})
+});
 
 var $chatSpinner = $("#chat-spinner");
 var $chatContent = $("#chat-content-container");
@@ -609,4 +611,35 @@ function setupVideoPlayers(){
         players[video.id] = new Plyr(video, options);
         players[video.id].poster = posters[video.id];
     });
+}
+
+
+
+
+
+function setupNeedHelpButton(){
+    var $error = $("#need-help-error");
+    $error.hide();
+
+    $("#need-help-message").on('input', function(){
+        if($error.is(":visible")){
+            $error.hide();
+        }
+    })
+    $("#submit-need-help-message").on('click', function(){
+        var messageText = $("#need-help-message")[0].value;
+        if(!messageText) {
+            $error.show();
+        }
+        var endpointUrl = getUrl("/need-help-message/create");
+
+        $.ajax({
+            url: endpointUrl,
+            type: "POST",
+            data: { messageText: messageText },
+            success: function (res) {
+               console.log(res);
+            }
+        });
+    })
 }

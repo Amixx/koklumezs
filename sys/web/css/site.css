@@ -793,6 +793,21 @@ div.has-experience.active, div.rent.active {
     font-size: 13px;
 }
 
+.btn-blue {
+    background: rgba(67, 118, 247, .8);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    border: none;
+    border: 1px solid rgba(255,255,255,0);
+    padding: 6px 20px;
+    margin: 4px 4px;
+    color: white;
+    font-size: 13px;
+}
+
+.btn-blue:hover {
+    color: white;
+}
+
 .btn-gray {
     background: #c4c4c4;
     border: 1px solid rgba(255,255,255,0);

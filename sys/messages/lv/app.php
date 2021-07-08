@@ -564,7 +564,6 @@ return [
     'Bank requisites' => 'Bankas rekvizīti',
     'School requisites' => 'Skolas rekvizīti',
     'Edit school requisites' => 'Rediģēt skolas rekvizītus',
-    //  Yii::t('app', '') . '!'
-    //  Yii::t('app', '') . '.'
-    'Edit student subscription plan' => 'Rediģēt skolēna abonēšanas plānu'
+    'Edit student subscription plan' => 'Rediģēt skolēna abonēšanas plānu',
+    'I need help' => 'Man vajag palīdzību'
 ];
