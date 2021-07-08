@@ -52,14 +52,25 @@ class Chat extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function recordsForTwoUsers($authorId, $recipientId)
+    public static function recordsForTwoUsers($authorId, $recipientId, $isTeacher)
     {
 
-        return static::find()->andWhere([
+        $chatMessages = static::find()->andWhere([
             'or',
             ['author_id' => $authorId, 'recipient_id' => $recipientId],
             ['author_id' => $recipientId, 'recipient_id' => $authorId],
         ])->orderBy('id asc')->all();
+
+        $needHelpMessagesAuthorId = $isTeacher ? $recipientId : $authorId;
+        $needHelpMessages = NeedHelpMessages::getFormattedForChat($needHelpMessagesAuthorId);
+
+        $allMessages = array_merge($chatMessages, $needHelpMessages);
+
+        usort($allMessages, function ($a, $b) {
+            return strtotime($a->update_date) - strtotime($b->update_date);
+        });
+
+        return $allMessages;
     }
 
     public static function getUnreadCountInCorrespondence($authorId, $recipientId)
@@ -175,7 +186,7 @@ class Chat extends \yii\db\ActiveRecord
         $userList = null;
         $currentUserId = Yii::$app->user->identity->id;
         $isTeacher = Users::isCurrentUserTeacher();
-        $messages = Chat::recordsForTwoUsers($currentUserId, $recipientId);
+        $messages = Chat::recordsForTwoUsers($currentUserId, $recipientId, $isTeacher);
         $usersWithConversations = $isTeacher ? Chat::getUsersWithConversations($currentUserId) : null;
 
         if ($updateOpentime) {
@@ -184,15 +195,27 @@ class Chat extends \yii\db\ActiveRecord
 
         if ($messages) {
             foreach ($messages as $message) {
-                $output .= '<div class="item">
-                <p class="message">   
-                    <a class="name" href="#">
-                        <small class="text-muted pull-right" style="color:green"><i class="fa fa-clock-o"></i> ' . $message->update_date . '</small>
-                         ' . $message->author->first_name . ' ' . $message->author->last_name . '                        
-                    </a>
-                   ' . $message->message . '
-                </p>
-            </div>';
+                $isNeedHelpMessage = property_exists($message, 'is_need_help_message');
+                $outerClass = "chat-message";
+                $needHelpPrefix = "";
+
+                if ($isNeedHelpMessage) {
+                    $outerClass .= " $outerClass--need-help";
+                    $lessonTitle = $message->lesson->title;
+                    $needHelpPrefix = "<p class='chat-message-help-prefix'>Vajadzīga palīdzība ar nodarbību <u>$lessonTitle</u>...</p>";
+                }
+
+
+                $output .= '<div class="' . $outerClass . '">
+                    ' . $needHelpPrefix . ' 
+                    <p class="message">
+                        <a class="name" href="#">
+                            <small class="text-muted pull-right" style="color:green"><i class="fa fa-clock-o"></i> ' . $message->update_date . '</small>
+                            ' . $message->author->first_name . ' ' . $message->author->last_name . '                        
+                        </a>
+                    ' . $message->message . '
+                    </p>
+                </div>';
             }
         }
 

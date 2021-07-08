@@ -627,16 +627,18 @@ function setupNeedHelpButton(){
         }
     })
     $("#submit-need-help-message").on('click', function(){
-        var messageText = $("#need-help-message")[0].value;
-        if(!messageText) {
+        var message = $("#need-help-message")[0].value;
+        if(!message) {
             $error.show();
         }
+
         var endpointUrl = getUrl("/need-help-message/create");
+        var lessonId = $(this).data("lessonid");
 
         $.ajax({
             url: endpointUrl,
             type: "POST",
-            data: { messageText: messageText },
+            data: { message: message, lessonId: lessonId },
             success: function (res) {
                console.log(res);
             }

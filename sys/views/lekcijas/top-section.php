@@ -20,7 +20,11 @@ $helpModalBody = <<<EOD
 </div>
 <p class='alert alert-danger' id='need-help-error'>Ievadiet ziņu!</p>
 <div style='text-align:right'>
-    <button class='btn btn-orange' id='submit-need-help-message'>Nosūtīt ziņu</button>
+    <button
+        class='btn btn-orange'
+        id='submit-need-help-message'
+        data-lessonid='$uLecture->lecture_id'
+    >Nosūtīt ziņu</button>
 </div>
 EOD;
 
