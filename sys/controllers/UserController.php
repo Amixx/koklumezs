@@ -77,10 +77,19 @@ class UserController extends Controller
     public function actionView($id)
     {
         $studentSubPlans = StudentSubPlans::getActivePlansForStudentADP($id);
+        $subPlans = $studentSubPlans->query->all();
+        $planEndDates = [];
+        foreach ($subPlans as $subPlan) {
+            $planId = $subPlan->id;
+            $plan = StudentSubPlans::getSubPlanById($planId);
+            $planEndDate = StudentSubPlans::getPlanEndDateString($plan);
+            array_push($planEndDates, ['planId' => $planId, 'endDate' => $planEndDate]);
+        }
 
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'studentSubPlans' => $studentSubPlans
+            'studentSubPlans' => $studentSubPlans,
+            'planEndDates' => $planEndDates
         ]);
     }
 

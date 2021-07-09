@@ -39,6 +39,12 @@ class StudentSubPlans extends \yii\db\ActiveRecord
         return $this->hasOne(SchoolSubPlans::class, ['id' => 'plan_id']);
     }
 
+    public static function getSubPlanById($subPlanId)
+    {
+        $subPlan = self ::find()->where(["in", "id", $subPlanId])->one();
+        return $subPlan;
+    }
+
     public function getUser()
     {
         return $this->hasOne(Users::class, ['id' => 'user_id']);

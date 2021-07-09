@@ -9,7 +9,6 @@ use app\models\SchoolSubplanParts;
 
 $this->title = $model->id;
 ['label' => \Yii::t('app',  'Users'), 'url' => ['index']];
-
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="user-view">
@@ -92,9 +91,14 @@ $this->title = $model->id;
                             }
                         ],
                         [
-                            'label' => Yii::t('app', 'Plan months count'),
-                            'value' => function ($dataProvider) {
-                                return $dataProvider->plan->months;
+                            'label' => Yii::t('app', 'Plan end date'),
+                            'value' => function ($dataProvider) use ($planEndDates) {
+                                foreach ($planEndDates as $planEndDate) {
+                                    if ($planEndDate['planId'] == $dataProvider->id) {
+                                        return $planEndDate['endDate'];
+                                    }
+                                }
+                                return NULL;
                             }
                         ],
                         [
