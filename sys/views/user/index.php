@@ -152,10 +152,13 @@ $planEndMonths = [];
                     foreach ($studentSubplans as $studentSubplan) {
                         if ($studentSubplan) {
                             $color = "#99ff9c";
-                            if ($studentSubplan["times_paid"] < $studentSubplan["sent_invoices_count"]) {
+                            $isLate = $studentSubplan["times_paid"] < $studentSubplan["sent_invoices_count"];
+                            $hasPaidInAdvance = $studentSubplan["times_paid"] > $studentSubplan["sent_invoices_count"];
+
+                            if ($isLate) {
                                 $color = "#ff9a99";
                             }
-                            if ($studentSubplan["times_paid"] > $studentSubplan["sent_invoices_count"]) {
+                            if ($hasPaidInAdvance) {
                                 $color = "#99cfff";
                             }
 
@@ -173,7 +176,22 @@ $planEndMonths = [];
                             $sentInvoices = $studentSubplan["sent_invoices_count"];
                             $planType = SchoolSubPlans::findOne($studentSubplan['plan']['id'])->typeText();
                             $urlToEditPlan = Url::to(['student-sub-plans/update', 'id' => $studentSubplan['id']]);
-                            $html .= "<div style='text-align:center;background:$color'><span>$planType: $timesPaid/$sentInvoices</span> <a href='$urlToEditPlan'><span class='glyphicon glyphicon-pencil'></span></a></div>";
+                            $urlToSendReminder = Url::to(['cron/remind-to-pay', 'studentSubplanId' => $studentSubplan['id']]);
+                            $remindToPayHtml = $isLate
+                                ? "<span style='margin-left:16px;'>
+                                    <a
+                                        href='" . $urlToSendReminder . "'
+                                        class='glyphicon glyphicon-envelope'                                
+                                        title='" . \Yii::t('app', 'Send invoice reminder') . "'
+                                    ></a>
+                                </span>"
+                                : "";
+
+                            $html .= "<div style='text-align:center;background:$color'>
+                                <span>$planType: $timesPaid/$sentInvoices</span> 
+                                <a href='$urlToEditPlan'><span class='glyphicon glyphicon-pencil'></span></a>
+                                $remindToPayHtml
+                            </div>";
 
                             $url = Url::to(['sent-invoices/register-advance-payment', 'userId' => $studentId]);
                             $addPaymentHtml = "<span title='" . \Yii::t('app', 'Register payment') . "'>
@@ -197,16 +215,9 @@ $planEndMonths = [];
                         }
                     }
 
-                    $url = Url::to(['cron/remind-to-pay', 'userId' => $studentId]);
-
                     return "
                         <div style='text-align:center;'>
-                            $html
-                            <span style='margin-right:48px;'><a
-                                href='" . $url . "'
-                                class='glyphicon glyphicon-envelope'                                
-                                title='" . \Yii::t('app', 'Send invoice reminder') . "'
-                            ></a></span>
+                            $html                            
                             $addPaymentHtml
                         </div>
                     ";

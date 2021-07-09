@@ -23,11 +23,14 @@ class EmailSender
             ->send();
     }
 
-    public static function sendReminderToPay($schoolEmail, $userEmail)
+    public static function sendReminderToPay($schoolEmail, $userEmail, $lateMonthsCount, $planName)
     {
         return Yii::$app
             ->mailer
-            ->compose(['html' => 'reminder-to-pay-html', 'text' => 'reminder-to-pay-text'])
+            ->compose(
+                ['html' => 'reminder-to-pay-html', 'text' => 'reminder-to-pay-text'],
+                ['lateMonthsCount' => $lateMonthsCount, 'planName' => $planName]
+            )
             ->setFrom([$schoolEmail => Yii::$app->name])
             ->setTo($userEmail)
             ->setSubject("Atgādinājums par rēķina apmaksu")

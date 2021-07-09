@@ -292,13 +292,21 @@ class CronController extends Controller
         }
     }
 
-    public function actionRemindToPay($userId)
+    public function actionRemindToPay($studentSubplanId)
     {
-        $user = Users::findOne($userId);
-        $school = School::getByStudent($userId);
+        $studentSubplan = StudentSubPlans::find()->where(['studentsubplans.id' => $studentSubplanId])->joinWith('plan')->joinWith('user')->asArray()->one();
+        $school = School::getByStudent($studentSubplan['user_id']);
 
-        if ($user) {
-            $sent = EmailSender::sendReminderToPay($school['email'], $user['email']);
+        $lateMonthsCount = $studentSubplan['sent_invoices_count'] - $studentSubplan['times_paid'];
+
+        $sent = false;
+        if ($studentSubplan['user']) {
+            $sent = EmailSender::sendReminderToPay(
+                $school['email'],
+                $studentSubplan['user']['email'],
+                $lateMonthsCount,
+                $studentSubplan['plan']['name']
+            );
         }
 
         if ($sent) {

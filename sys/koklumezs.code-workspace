@@ -3,42 +3,6 @@
 		{
 			"path": "."
 		},
-		{
-			"name": "20210519-140903-9168-5381.eml",
-			"uri": "eml:/?file:///c:/Users/liepi/Desktop/dev/koklumezs/sys/web/sent-emails/20210519-140903-9168-5381.eml"
-		},
-		{
-			"name": "20210519-140905-3220-7239.eml",
-			"uri": "eml:/?file:///c:/Users/liepi/Desktop/dev/koklumezs/sys/web/sent-emails/20210519-140905-3220-7239.eml"
-		},
-		{
-			"name": "20210519-140906-0447-5257.eml",
-			"uri": "eml:/?file:///c:/Users/liepi/Desktop/dev/koklumezs/sys/web/sent-emails/20210519-140906-0447-5257.eml"
-		},
-		{
-			"name": "20210519-140906-9749-1736.eml",
-			"uri": "eml:/?file:///c:/Users/liepi/Desktop/dev/koklumezs/sys/web/sent-emails/20210519-140906-9749-1736.eml"
-		},
-		{
-			"name": "20210519-143211-4551-9632.eml",
-			"uri": "eml:/?file:///c:/Users/liepi/Desktop/dev/koklumezs/sys/web/sent-emails/20210519-143211-4551-9632.eml"
-		},
-		{
-			"name": "20210519-143212-1972-1332.eml",
-			"uri": "eml:/?file:///c:/Users/liepi/Desktop/dev/koklumezs/sys/web/sent-emails/20210519-143212-1972-1332.eml"
-		},
-		{
-			"name": "20210519-143504-9675-5413.eml",
-			"uri": "eml:/?file:///c:/Users/liepi/Desktop/dev/koklumezs/sys/web/sent-emails/20210519-143504-9675-5413.eml"
-		},
-		{
-			"name": "20210608-205726-2333-7365.eml",
-			"uri": "eml:/?file:///c:/Users/liepi/Desktop/dev/koklumezs/sys/web/sent-emails/20210608-205726-2333-7365.eml"
-		},
-		{
-			"name": "20210609-091325-7189-7458.eml",
-			"uri": "eml:/?file:///c:/Users/liepi/Desktop/dev/koklumezs/sys/web/sent-emails/20210609-091325-7189-7458.eml"
-		}
 	],
 	"settings": {
 		"[php]": {
