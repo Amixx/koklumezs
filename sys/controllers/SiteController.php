@@ -277,7 +277,7 @@ class SiteController extends Controller
                 $sent = EmailSender::sendRentNotification($model, $school['email']);
 
                 if ($sent) {
-                    Yii::$app->session->setFlash('success', \Yii::t('app', 'Thank you for applying! Soon we will contact you by email. Until then you can watch our video tutorial about this platform') . '!');
+                    Yii::$app->session->setFlash('success', \Yii::t('app', 'Hey! You\'ve registered successfully. Your 2 week trial period will start after you play and evaluate currently assigned lessons. After that, we will see that you are ready to learn') . '!');
                     Yii::$app->user->login($user, 3600 * 24 * 30);
                     return $this->redirect(['lekcijas/index']);
                 }

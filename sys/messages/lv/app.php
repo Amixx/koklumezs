@@ -513,7 +513,7 @@ return [
     'Experience' => 'Pieredze',
     'Has experience' => 'Ir pieredze',
     'Does not have experience' => 'Nav pieredze',
-    'Thank you for applying! Soon we will contact you by email. Until then you can watch our video tutorial about this platform' => 'Paldies par tavu pieteikumu! Tuvākajā laikā sazināsimies ar tevi uz tavu norādīto epastu. Tikmēr vari noskatīties video par to, kā darboties platformā',
+    'Hey! You\'ve registered successfully. Your 2 week trial period will start after you play and evaluate currently assigned lessons. After that, we will see that you are ready to learn' => 'Hei! Esi veiksmīgi piereģistrējies. Tavs 2 nedēļu bezmaksas izmēģinājums sāksies pēc tam, kad būs izspēlētas un  NOVĒRTĒTAS pirmās saņemtās nodarbības - tad arī skolotājs redzēs, ka esi gatavs sākt darboties',
     'Let\'s play together' => 'Spēlēsim kopā',
     'If you have any problems playing video, you can watch it on Youtube' => 'Ja rodas problēmas ar video atskaņošanu, vari to skatīties Youtube platformā spiežot',
     'here' => 'seit',
