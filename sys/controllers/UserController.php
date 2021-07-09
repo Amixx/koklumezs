@@ -13,6 +13,7 @@ use app\models\SchoolSubPlans;
 use app\models\School;
 use app\models\SchoolTeacher;
 use app\models\Payer;
+use app\models\PostRegistrationForm;
 use app\models\SchoolStudent;
 use app\models\StudentSubPlans;
 use yii\web\Controller;
@@ -277,6 +278,17 @@ class UserController extends Controller
 
         Yii::$app->session->setFlash('success', Yii::t('app', 'Thank you for your message! Next time we will send more tasks! Have a good day!'));
         return $this->redirect(Yii::$app->request->referrer);
+    }
+
+    public function actionStartLater()
+    {
+        $post = Yii::$app->request->post();
+        $model = new PostRegistrationForm();
+        $model->load($post);
+        $model->userId = Yii::$app->user->identity->id;
+        if ($model->validate()) {
+            var_dump($model);
+        }
     }
 
     protected function findModel($id)

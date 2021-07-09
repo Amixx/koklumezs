@@ -30,4 +30,6 @@
             'renderRequestButton' => false,
         ]) ?>
     </div>
+
+    <?= $this->render('post-registration-modal') ?>
 </div>

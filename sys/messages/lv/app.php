@@ -565,5 +565,9 @@ return [
     'School requisites' => 'Skolas rekvizīti',
     'Edit school requisites' => 'Rediģēt skolas rekvizītus',
     'Edit student subscription plan' => 'Rediģēt skolēna abonēšanas plānu',
-    'I need help' => 'Man vajag palīdzību'
+    'I need help' => 'Man vajag palīdzību',
+    'In the morning' => 'Rīta pusē',
+    'In the afternoon' => 'Pēcpusdienā',
+    'In the evening' => 'Vakarpusē',
+    'I\'ll start on this date' => 'Sākšu šajā datumā'
 ];

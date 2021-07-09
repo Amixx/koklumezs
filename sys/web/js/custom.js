@@ -134,6 +134,7 @@ $(document).ready(function() {
     $("#sentinvoices-paid_date").attr("autocomplete", "off");
 
     setupVideoPlayers();
+    setupPostRegistrationModal();
 });
 
 function addPopoverToElement($selector, html){
@@ -652,4 +653,26 @@ function setupNeedHelpButton(){
             }
         });
     })
+}
+
+function setupPostRegistrationModal(){
+    var $modal = $("#post-registration-modal");
+    if($modal){
+        $modal.modal('show');
+        var $btnContainer = $("#post-registration-modal-buttons")
+        var $startInstantlyBtn = $("#btn-start-instantly");
+        var $startLaterBtn = $("#btn-start-later");
+        var $startLaterForm = $("#start-later-form");
+        $startLaterForm.hide();
+
+        $startInstantlyBtn.on('click', function(){
+            // load rest of lessons
+            $modal.modal('hide');
+        });
+
+        $startLaterBtn.on('click', function(){
+            $startLaterForm.show();
+            $btnContainer.hide();
+        });
+    }
 }
