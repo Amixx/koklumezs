@@ -40,7 +40,8 @@ $this->title = \Yii::t('app', 'Subscription plans');
                         }
                     }
                     return NULL;
-                }
+                },
+                'format' => 'html'
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
