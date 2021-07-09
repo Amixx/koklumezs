@@ -32,9 +32,14 @@ $this->title = \Yii::t('app', 'Subscription plans');
                 }
             ],
             [
-                'label' => Yii::t('app', 'Plan months count'),
-                'value' => function ($dataProvider) {
-                    return $dataProvider->plan->months;
+                'label' => Yii::t('app', 'Plan end date'),
+                'value' => function ($dataProvider) use ($planEndDates) {
+                    foreach ($planEndDates as $planEndDate) {
+                        if ($planEndDate['planId'] == $dataProvider->id) {
+                            return $planEndDate['endDate'];
+                        }
+                    }
+                    return NULL;
                 }
             ],
             [

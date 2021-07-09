@@ -36,9 +36,18 @@ class StudentSubPlansController extends Controller
     public function actionForUser($studentId)
     {
         $studentSubplansADP = StudentSubPlans::getActivePlansForStudentADP($studentId);
+        $subPlans = $studentSubplansADP->query->all();
+        $planEndDates = [];
+        foreach ($subPlans as $subPlan) {
+            $planId = $subPlan->id;
+            $plan = StudentSubPlans::getSubPlanById($planId);
+            $planEndDate = StudentSubPlans::getPlanEndDateString($plan);
+            array_push($planEndDates, ['planId' => $planId, 'endDate' => $planEndDate]);
+        }
 
         return $this->render('for-user', [
             'dataProvider' => $studentSubplansADP,
+            'planEndDates' => $planEndDates
         ]);
     }
 
