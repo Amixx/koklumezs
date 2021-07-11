@@ -90,6 +90,12 @@ class Users extends ActiveRecord implements IdentityInterface
         return $this->hasOne(Payer::class, ['user_id' => 'id']);
     }
 
+    public function updateLoginTime()
+    {
+        $this->last_login = date('Y-m-d H:i:s', time());
+        return $this->update();
+    }
+
     public static function getFullName($user)
     {
         return $user['first_name'] . " " . $user['last_name'];

@@ -569,5 +569,7 @@ return [
     'In the morning' => 'Rīta pusē',
     'In the afternoon' => 'Pēcpusdienā',
     'In the evening' => 'Vakarpusē',
-    'I\'ll start on this date' => 'Sākšu šajā datumā'
+    'I\'ll start on this date' => 'Sākšu šajā datumā',
+    'The chosen period of time has started' => 'Izvēlētais laika periods ir sācies',
+    'Commitment fulfilled' => 'Apņemšanās izpildīta',
 ];

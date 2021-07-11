@@ -341,6 +341,7 @@ class LekcijasController extends Controller
         $isNextLesson = UserLectures::getIsNextLesson($userId);
         $isActive =  Users::isActive($userId);
 
+
         return $this->render('overview', [
             'models' => $models,
             'newLessons' => $newLessons,

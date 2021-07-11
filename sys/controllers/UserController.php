@@ -13,7 +13,7 @@ use app\models\SchoolSubPlans;
 use app\models\School;
 use app\models\SchoolTeacher;
 use app\models\Payer;
-use app\models\PostRegistrationForm;
+use app\models\StartLaterCommitments;
 use app\models\SchoolStudent;
 use app\models\StudentSubPlans;
 use yii\web\Controller;
@@ -283,12 +283,13 @@ class UserController extends Controller
     public function actionStartLater()
     {
         $post = Yii::$app->request->post();
-        $model = new PostRegistrationForm();
+        $model = new StartLaterCommitments();
         $model->load($post);
-        $model->userId = Yii::$app->user->identity->id;
-        if ($model->validate()) {
-            var_dump($model);
-        }
+        $model->user_id = Yii::$app->user->identity->id;
+
+        $model->validate() && $model->save();
+
+        return $this->redirect(Yii::$app->request->referrer);
     }
 
     protected function findModel($id)

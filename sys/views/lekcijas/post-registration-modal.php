@@ -1,8 +1,10 @@
 <?php
 
-use app\models\PostRegistrationForm;
+use app\models\StartLaterCommitments;
 
-$model = new PostRegistrationForm();
+$model = new StartLaterCommitments();
+$model->start_time_of_day = 'morning';
+
 $body = $this->render('post-registration-modal-body', [
     'model' => $model
 ]);

@@ -18,21 +18,21 @@ use yii\helpers\Html;
             'id' => 'start-later-form'
         ]
     ]); ?>
-    <?= $form->field($model, 'startDate')
+    <?= $form->field($model, 'start_date')
         ->widget(DatePicker::class, ['dateFormat' => 'yyyy-MM-dd', 'language' => 'lv'])
         ->label(Yii::t('app', 'I\'ll start on this date') . ': ') ?>
 
-    <?= $form->field($model, 'startTimeOfDay')->radio([
+    <?= $form->field($model, 'start_time_of_day')->radio([
         'label' => Yii::t('app', 'In the morning') . ' (8:00 - 13:00)',
         'value' => 'morning',
         'uncheck' => null
     ]) ?>
-    <?= $form->field($model, 'startTimeOfDay')->radio([
+    <?= $form->field($model, 'start_time_of_day')->radio([
         'label' => Yii::t('app', 'In the afternoon') . ' (13:00 - 17:00)',
         'value' => 'afternoon',
         'uncheck' => null
     ]) ?>
-    <?= $form->field($model, 'startTimeOfDay')->radio([
+    <?= $form->field($model, 'start_time_of_day')->radio([
         'label' => Yii::t('app', 'In the evening') . ' (17:00 - 23:00)',
         'value' => 'evening',
         'uncheck' => null

@@ -31,5 +31,11 @@
         ]) ?>
     </div>
 
-    <?= $this->render('post-registration-modal') ?>
+    <?php
+    $session = Yii::$app->session;
+
+    if ($session->has("renderPostRegistrationModal") && $session->get("renderPostRegistrationModal")) {
+        echo $this->render('post-registration-modal');
+        $session->remove('renderPostRegistrationModal');
+    } ?>
 </div>

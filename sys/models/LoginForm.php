@@ -45,6 +45,8 @@ class LoginForm extends Model
             if ($logged) {
                 $model = Users::findOne($this->_user->id);
                 if ($model) {
+                    Yii::$app->session->set("renderPostRegistrationModal", $model['last_login'] == NULL);
+
                     $model->last_login = date('Y-m-d H:i:s', time());
                     $model->update();
                 }

@@ -3,14 +3,9 @@
 namespace app\models;
 
 use Yii;
-use yii\base\Model;
 
-class PostRegistrationForm extends Model
+class StartLaterCommitments extends \yii\db\ActiveRecord
 {
-    public $userId;
-    public $startDate;
-    public $startTimeOfDay;
-
     const TIMES_OF_DAY = [
         'morning' => [
             'start' => '8:00',
@@ -26,21 +21,34 @@ class PostRegistrationForm extends Model
         ],
     ];
 
+    public static function tableName()
+    {
+        return 'start_later_commitments';
+    }
+
     public function rules()
     {
         return [
-            [['startDate', 'startTimeOfDay'], 'required'],
-            [['startDate', 'startTimeOfDay'], 'string'],
+            [['user_id', 'start_date'], 'required'],
+            [['user_id'], 'integer'],
+            [['start_date', 'start_time_of_day'], 'string'],
+            [['chosen_period_started', 'commitment_fulfilled'], 'string'],
         ];
     }
 
-    // public function attributeLabels()
-    // {
-    //     return [
-    //         'startDate' => Yii::t('app', 'Date'),
-    //         'startTimeOfDay' => Yii::t('app', ''),
-    //     ];
-    // }
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'user_id' => Yii::t('app', 'User ID'),
+            'start_date' => Yii::t('app', 'Start date'),
+            'start_time_of_day' => Yii::t('app', 'Start time of day'),
+            'chosen_period_started' => Yii::t('app', 'The chosen period of time has started'),
+            'commitment_fulfilled' => Yii::t('app', 'Commitment fulfilled'),
+            'created_at' => Yii::t('app', 'Date of creation'),
+        ];
+    }
+
 
     // public function validatePassword($attribute, $params)
     // {
