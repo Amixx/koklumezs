@@ -572,4 +572,5 @@ return [
     'I\'ll start on this date' => 'Sākšu šajā datumā',
     'The chosen period of time has started' => 'Izvēlētais laika periods ir sācies',
     'Commitment fulfilled' => 'Apņemšanās izpildīta',
+    'Does the user see lessons with difficulty larger than 1' => 'Vai skolēns redz nodarbības, kurām sarežģītība ir lielāka kā 1'
 ];

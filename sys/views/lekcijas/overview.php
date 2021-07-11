@@ -38,4 +38,6 @@
         echo $this->render('post-registration-modal');
         $session->remove('renderPostRegistrationModal');
     } ?>
+
+    <!-- <?= $this->render('post-registration-modal'); ?> -->
 </div>

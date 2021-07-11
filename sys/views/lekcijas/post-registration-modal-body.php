@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use  yii\jui\DatePicker;
 use yii\helpers\Html;
@@ -8,7 +9,7 @@ use yii\helpers\Html;
 
 <div>
     <div id="post-registration-modal-buttons">
-        <button class="btn btn-orange" id="btn-start-instantly">Esmu gatavs spēlēt jau tagad, dodiet tik uzdevumus!</button>
+        <a class="btn btn-orange" id="btn-start-instantly" href="<?= Url::to(['user/start-now']) ?>">Esmu gatavs spēlēt jau tagad, dodiet tik uzdevumus!</a>
         <button class="btn btn-blue" id="btn-start-later">Vēlēšos sākt nedaudz vēlāk</button>
     </div>
 

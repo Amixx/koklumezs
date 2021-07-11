@@ -280,6 +280,15 @@ class UserController extends Controller
         return $this->redirect(Yii::$app->request->referrer);
     }
 
+    public function actionStartNow()
+    {
+        $schoolStudent = SchoolStudent::findOne(['user_id' => Yii::$app->user->identity->id]);
+        $schoolStudent->show_real_lessons = true;
+        $schoolStudent->update();
+
+        return $this->redirect(Yii::$app->request->referrer);
+    }
+
     public function actionStartLater()
     {
         $post = Yii::$app->request->post();

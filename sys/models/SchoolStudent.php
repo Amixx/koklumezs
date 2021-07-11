@@ -16,6 +16,8 @@ class SchoolStudent extends \yii\db\ActiveRecord
         return [
             [['school_id', 'user_id'], 'required'],
             [['school_id', 'user_id'], 'integer'],
+            [['show_real_lessons'], 'boolean'],
+            ['show_real_lessons', 'default', 'value' => false],
             [['school_id'], 'exist', 'skipOnError' => true, 'targetClass' => School::class, 'targetAttribute' => ['school_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -27,6 +29,7 @@ class SchoolStudent extends \yii\db\ActiveRecord
             'id' => 'ID',
             'school_id' => \Yii::t('app',  'School'),
             'user_id' => \Yii::t('app',  'Student'),
+            'show_real_lessons' => \Yii::t('app',  'Does the user see lessons with difficulty larger than 1'),
         ];
     }
 
