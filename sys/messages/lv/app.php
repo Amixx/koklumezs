@@ -572,5 +572,11 @@ return [
     'I\'ll start on this date' => 'Sākšu šajā datumā',
     'The chosen period of time has started' => 'Izvēlētais laika periods ir sācies',
     'Commitment fulfilled' => 'Apņemšanās izpildīta',
-    'Does the user see lessons with difficulty larger than 1' => 'Vai skolēns redz nodarbības, kurām sarežģītība ir lielāka kā 1'
+    'Does the user see lessons with difficulty larger than 1' => 'Vai skolēns redz nodarbības, kurām sarežģītība ir lielāka kā 1',
+    'E-mail that is sent after the student has scheduled a time to start playing' => 'E-pasts, kas nosūtās pēc tam kad skolēns ieplānojis laiku, kad sāks spēlēt',
+    'E-mail sent when there is one day left until the scheduled time to start playing' => 'E-pasts, kas tiek nosūtīts tad, kad līdz plānotajam laikam, kad jāsāk spēlēt, palikusi viena diena',
+    'E-mail sent half an hour before the scheduled start time' => 'E-pasts, kas tiek nosūtīts tad, kad līdz plānotajam laikam, kad jāsāk spēlēt, palikusi pus stunda',
+    'E-mail sent to a student if he or she has not completed any tasks at the scheduled time' => 'E-pasts, kas tiek nosūtīts skolēnam tad, ja viņš nav spelējis nevienu uzdevumu sev ieplānotajā laikā',
+    'E-mail sent to a student after a week if he did not complete any tasks at the scheduled time' => 'E-pasts, kas tiek nosūtīts skolēnam pēc nedēļas, ja viņš sev ieplānotajā laikā neizspēlēja nevienu uzdevumu',
+    'E-mail sent to those who have not started playing, on a quarterly basis' => 'E-pasts, kas tiek nosūtīts tiem, kuri nav sākuši spēlēt, reizi ceturksnī'
 ];
