@@ -165,8 +165,8 @@ class Users extends ActiveRecord implements IdentityInterface
     {
         $students = self::getStudentsForSchool();
         foreach ($students as $key => $student) {
-            $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($student['id']);
-            if ($isPlanCurrentlyPaused) {
+            $isCurrentLearningPlanPaused = StudentSubPlans::isCurrentLearningPlanPaused($student['id']);
+            if ($isCurrentLearningPlanPaused) {
                 unset($students[$key]);
             }
         }
@@ -223,8 +223,8 @@ class Users extends ActiveRecord implements IdentityInterface
 
         $result = [];
         foreach ($users as $u) {
-            $isPlanCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($u['id']);
-            if (!$isPlanCurrentlyPaused) {
+            $isCurrentLearningPlanPaused = StudentSubPlans::isCurrentLearningPlanPaused($u['id']);
+            if (!$isCurrentLearningPlanPaused) {
                 $result[$u['id']] = $u;
             }
         }

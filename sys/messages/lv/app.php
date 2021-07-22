@@ -565,5 +565,6 @@ return [
     'School requisites' => 'Skolas rekvizīti',
     'Edit school requisites' => 'Rediģēt skolas rekvizītus',
     'Edit student subscription plan' => 'Rediģēt skolēna abonēšanas plānu',
-    'I need help' => 'Man vajag palīdzību'
+    'I need help with this task' => 'Man nepieciešama palīdzība ar šo uzdevumu',
+    'This plan has no files' => 'Šim plānam nav pievienots neviens fails'
 ];

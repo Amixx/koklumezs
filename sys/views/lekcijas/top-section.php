@@ -65,12 +65,12 @@ EOD;
         </div>
         <div class="next-lesson">
             <button type="button" class="btn btn-blue" data-toggle="modal" data-target="#need-help-modal">
-                <?= \Yii::t('app',  'I need help'); ?>
+                <?= \Yii::t('app',  'I need help with this task'); ?>
             </button>
 
             <?= $this->render("@app/views/shared/modal", [
                 'id' => 'need-help-modal',
-                'title' => \Yii::t('app', 'I need help'),
+                'title' => \Yii::t('app', 'I need help with this task'),
                 'body' => $helpModalBody
             ]); ?>
             <?php if (!$hasEvaluatedLesson) {

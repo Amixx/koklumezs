@@ -45,11 +45,21 @@ $this->title = \Yii::t('app', 'Subscription plans');
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view}',
+                'template' => '{view} {update}',
                 'buttons' => [
                     'view' => function ($url) {
                         return Html::a(
-                            '<span><span class="glyphicon glyphicon-eye-open"> </span> Detalizēta informācija</span>',
+                            '<span style="display:inline-block"><span class="glyphicon glyphicon-eye-open"> </span> Plāna faili</span>',
+                            $url
+                        );
+                    },
+                    'update' => function ($url, $provider) {
+                        if ($provider['plan']['type'] === 'rent') {
+                            return null;
+                        }
+
+                        return Html::a(
+                            '<span style="display:inline-block"><span class="glyphicon glyphicon-pencil"> </span> Nopauzēt plānu</span>',
                             $url
                         );
                     },
@@ -57,6 +67,9 @@ $this->title = \Yii::t('app', 'Subscription plans');
                 'urlCreator' => function ($action, $model) {
                     if ($action === 'view') {
                         return Url::to(['student-sub-plans/view', 'id' => $model["id"]]);
+                    }
+                    if ($action === 'update') {
+                        return Url::to(['student-sub-plans/pause', 'id' => $model["id"]]);
                     }
                 }
             ],
