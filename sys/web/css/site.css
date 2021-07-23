@@ -336,9 +336,6 @@ a.desc:after {
     height: auto;
 }
 
-.btn-group{
-    float:right;
-}
 .evaluation-and-favorite{
     float: left;
 }
@@ -1081,7 +1078,7 @@ div.has-experience.active, div.rent.active {
     }
 
     .next-lesson {
-        margin: 8px 0;
+        margin: 8px 0 0 0;
     }
     .big-title{
         display: none;
@@ -1139,7 +1136,7 @@ div.has-experience.active, div.rent.active {
         width: 80%;
     }
 
-    .btn-orange {
+    .btn-orange, .btn-blue {
         margin-right: 0;
     }
 

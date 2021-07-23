@@ -565,6 +565,10 @@ return [
     'School requisites' => 'Skolas rekvizīti',
     'Edit school requisites' => 'Rediģēt skolas rekvizītus',
     'Edit student subscription plan' => 'Rediģēt skolēna abonēšanas plānu',
+    'I need help' => 'Man nepieciešama palīdzība',
     'I need help with this task' => 'Man nepieciešama palīdzība ar šo uzdevumu',
-    'This plan has no files' => 'Šim plānam nav pievienots neviens fails'
+    'Hey! Write to us that did not reach you or remained unclear ... We will be happy to help you understand the task!' => 'Hei! Uzraksti - kas nesanāca vai palika neskaidrs... Labpbrāt palīdzēsim saprast uzdevumu!',
+    'This plan has no files' => 'Šim plānam nav pievienots neviens fails',
+    'Enter a message' => 'Ievadiet ziņu',
+    'Submit message' => 'Nosūtīt ziņu',
 ];
