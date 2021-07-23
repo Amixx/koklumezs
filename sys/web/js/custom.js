@@ -636,6 +636,7 @@ function setupNeedHelpButton(){
         var message = $message[0].value;
         if(!message) {
             $error.show();
+            return;
         }
 
         var lessonId = $(this).data("lessonid");
