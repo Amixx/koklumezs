@@ -86,4 +86,12 @@ class SchoolRegistrationEmails extends \yii\db\ActiveRecord
 
         return $emailsForIndex;
     }
+
+    public static function getByType($schoolId, $type)
+    {
+        $schoolRegistrationEmails = self::findOne(['school_id' => $schoolId]);
+        if (!$schoolRegistrationEmails) return null;
+
+        return $schoolRegistrationEmails[$type];
+    }
 }

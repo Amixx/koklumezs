@@ -32,7 +32,7 @@ class StartLaterCommitments extends \yii\db\ActiveRecord
             [['user_id', 'start_date'], 'required'],
             [['user_id'], 'integer'],
             [['start_date', 'start_time_of_day'], 'string'],
-            [['chosen_period_started', 'commitment_fulfilled'], 'string'],
+            [['chosen_period_started', 'commitment_fulfilled'], 'boolean'],
         ];
     }
 
