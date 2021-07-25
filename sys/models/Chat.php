@@ -76,6 +76,9 @@ class Chat extends \yii\db\ActiveRecord
     public static function getUnreadCountInCorrespondence($authorId, $recipientId)
     {
         $opentime = CorrespondenceOpentimes::getOpentimeValue($authorId, $recipientId);
+        if (!$opentime) {
+            $opentime = Yii::$app->user->identity['last_opened_chat'];
+        }
 
         $chatMessagesQuery = static::find()
             ->where([

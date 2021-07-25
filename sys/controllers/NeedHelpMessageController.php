@@ -36,7 +36,7 @@ class NeedHelpMessageController extends Controller
 
     public function actionCreate()
     {
-        $post = $this->request->post();
+        $post = Yii::$app->request->post();
 
         $model = new NeedHelpMessages;
         $model->author_id = Yii::$app->user->identity->id;
