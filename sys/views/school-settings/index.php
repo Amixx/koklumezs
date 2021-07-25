@@ -5,7 +5,7 @@ use yii\helpers\Url;
 use yii\grid\GridView;
 use yii\widgets\ActiveForm;
 
-$this->title = \Yii::t('app',  'School settings');
+$this->title = Yii::t('app',  'School settings');
 
 ?>
 <div class="settings-index">
@@ -14,33 +14,40 @@ $this->title = \Yii::t('app',  'School settings');
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item active">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
-                <?= \Yii::t('app', 'Settings') ?>
+                <?= Yii::t('app', 'Settings') ?>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false">
-                <?= \Yii::t('app', 'Parameters') ?>
+                <?= Yii::t('app', 'Parameters') ?>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="faqs-tab" data-toggle="tab" href="#faqs" role="tab" aria-controls="faqs" aria-selected="false">
-                <?= \Yii::t('app', 'FAQs') ?>
+                <?= Yii::t('app', 'FAQs') ?>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="signup-questions-tab" data-toggle="tab" href="#signup-questions" role="tab" aria-controls="signup-questions" aria-selected="false">
-                <?= \Yii::t('app', 'Questions after signup') ?>
+                <?= Yii::t('app', 'Questions after signup') ?>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="bank-account-tab" data-toggle="tab" href="#bank-account" role="tab" aria-controls="bank-account" aria-selected="false">
-                <?= \Yii::t('app', 'Bank requisites') ?>
+                <?= Yii::t('app', 'Bank requisites') ?>
             </a>
         </li>
         <li class="nav-item">
             <?= Html::a(
-                \Yii::t('app', 'Registration lessons and messages'),
+                Yii::t('app', 'Registration lessons and messages'),
                 ['/registration-lessons'],
+                ['class' => 'nav-link']
+            ) ?>
+        </li>
+        <li class="nav-item">
+            <?= Html::a(
+                Yii::t('app', 'Registration e-mails'),
+                ['/school-registration-emails'],
                 ['class' => 'nav-link']
             ) ?>
         </li>

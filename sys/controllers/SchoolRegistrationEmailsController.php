@@ -2,19 +2,13 @@
 
 namespace app\controllers;
 
-use app\models\BankAccounts;
 use Yii;
-use yii\helpers\Url;
 use app\models\Users;
 use app\models\School;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use app\models\Difficulties;
-use app\models\SignupQuestions;
-use app\models\SchoolSubPlans;
-use app\models\SchoolFaqs;
+use app\models\SchoolRegistraionEmailForm;
 use app\models\SchoolRegistrationEmails;
-use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 
 class SchoolRegistrationEmailsController extends Controller
@@ -48,61 +42,69 @@ class SchoolRegistrationEmailsController extends Controller
 
     public function actionIndex()
     {
-        $schoolId = School::getCurrentSchoolId();
-        $schoolRegstrationEmails = SchoolRegistrationEmails::findOne(['school_id' => $schoolId]);
-
-        var_dump($schoolRegstrationEmails->attributes());
-        die();
-
-        $schoolRegstrationEmails = [];
-
         return $this->render('index', [
-            'emails' => $schoolRegstrationEmails,
+            'emails' => SchoolRegistrationEmails::getMappedForIndex(),
         ]);
     }
 
-    public function actionUpdate()
+    public function actionCreate()
     {
-        $post = Yii::$app->request->post();
-        $model = School::getByTeacher(Yii::$app->user->identity->id);
-        $schoolSubPlans = SchoolSubPlans::getMappedForSelection();
+        $schoolId = School::getCurrentSchoolId();
+        $newModel = false;
+        $model = SchoolRegistrationEmails::findOne(['school_id' => $schoolId]);
+        if (!$model) {
+            $model = new SchoolRegistrationEmails();
+            $model->school_id = $schoolId;
+            $newModel = true;
+        }
 
-        if (count($post) > 0) {
-            $model->load($post);
-
-            $saved = $model->save();
-            if ($saved) {
-                Yii::$app->session->setFlash('success', Yii::t('app', 'Changes saved') . '!');
-                return $this->redirect(['index']);
+        $possibleEmailTypes = SchoolRegistrationEmails::getLabels();
+        foreach ($possibleEmailTypes as $type => $label) {
+            if ($model[$type] !== NULL) {
+                unset($possibleEmailTypes[$type]);
             }
+        }
+
+        $formModel = new SchoolRegistraionEmailForm();
+
+        $post = Yii::$app->request->post();
+        if ($post && $formModel->load($post) && $formModel->validate()) {
+            $model[$formModel['type']] = $formModel['value'];
+
+            $newModel ? $model->save() : $model->update();
+
+            return $this->redirect('index');
+        }
+
+        return $this->render('create', [
+            'model' => $formModel,
+            'possibleEmailTypes' => $possibleEmailTypes,
+        ]);
+    }
+
+    public function actionUpdate($type)
+    {
+        $schoolId = School::getCurrentSchoolId();
+        $model = SchoolRegistrationEmails::findOne(['school_id' => $schoolId]);
+
+        $formModel = new SchoolRegistraionEmailForm();
+        $formModel['type'] = $type;
+        $formModel['value'] = $model[$type];
+
+        $emailTypeLabel = SchoolRegistrationEmails::getLabel($type);
+
+        $post = Yii::$app->request->post();
+
+        if ($post && $formModel->load($post) && $formModel->validate()) {
+            $model[$formModel['type']] = $formModel['value'];
+            $model->update();
+
+            return $this->redirect('index');
         }
 
         return $this->render('update', [
-            'model' => $model,
-            'schoolSubPlans' => $schoolSubPlans,
-        ]);
-    }
-
-    public function actionBankUpdate()
-    {
-
-        $post = Yii::$app->request->post();
-        $schoolId = School::getCurrentSchoolId();
-        $model = BankAccounts::getCurrentSchoolsBankAccount($schoolId);
-        $bankAccount = School::getBankAccount($schoolId);
-
-        if (count($post) > 0) {
-            $model->load($post);
-            $saved = $model->save();
-            if ($saved) {
-                Yii::$app->session->setFlash('success', Yii::t('app', 'Changes saved') . '!');
-                return $this->redirect(['index']);
-            }
-        }
-
-        return $this->render('bank-update', [
-            'model' => $model,
-            'bankAccount' => $bankAccount
+            'model' => $formModel,
+            'emailType' => $emailTypeLabel,
         ]);
     }
 

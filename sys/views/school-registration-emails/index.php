@@ -1,30 +1,27 @@
 <?php
 
 use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\grid\GridView;
-use yii\widgets\DetailView;
 
-$this->title = \Yii::t('app',  'School settings');
+$this->title = Yii::t('app', 'School registration emails');
 
 ?>
 <div class="settings-index">
-
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(\Yii::t('app', 'Create emails'), ['/school-registration-emails/create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(\Yii::t('app', 'Create email'), ['/school-registration-emails/create'], ['class' => 'btn btn-success']) ?>
     </p>
-    <div class="tab-pane fade" id="bank-account" role="tabpanel" aria-labelledby="bank-account-tab">
-        <h1><?= Yii::t("app", "School requisites") ?></h1>
+    <?php if ($emails) { ?>
         <table class="table table-striped table-bordered">
-            <?php foreach ($emails as $key => $value) { ?>
+            <?php foreach ($emails as $type => $email) { ?>
                 <tr>
-                    <th scope="row"><?= $key ?></th>
-                    <td><?= $value ?></td>
+                    <th scope="row"><?= $email['label'] ?></th>
+                    <td><?= $email['value'] ? $email['value']  : '<em><strong>Nav ievadīts<strong></em>' ?></td>
+                    <td><?= Html::a(Yii::t('app', $email['value']  ? 'Edit' : 'Create'), ['update', 'type' => $type], ['class' => 'btn btn-primary']) ?></td>
                 </tr>
             <?php } ?>
         </table>
-        <?= Html::a(\Yii::t('app',  'Edit'), ['bank-update'], ['class' => 'btn btn-primary']) ?>
-    </div>
+    <?php } else { ?>
+        <h3><?= Yii::t('app', 'No e-mails entered') ?></h3>
+    <?php } ?>
 </div>

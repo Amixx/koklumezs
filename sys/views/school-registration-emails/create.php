@@ -5,8 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Difficulties */
 
-$this->title = \Yii::t('app',  'Create parameter');
-['label' => \Yii::t('app',  'Parameters'), 'url' => ['index']];
+$this->title = \Yii::t('app',  'Create email');
 
 ?>
 <div class="difficulties-create">
@@ -15,6 +14,7 @@ $this->title = \Yii::t('app',  'Create parameter');
 
     <?= $this->render('_form', [
         'model' => $model,
+        'possibleEmailTypes' => $possibleEmailTypes,
     ]) ?>
 
 </div>

@@ -578,5 +578,12 @@ return [
     'E-mail sent half an hour before the scheduled start time' => 'E-pasts, kas tiek nosūtīts tad, kad līdz plānotajam laikam, kad jāsāk spēlēt, palikusi pus stunda',
     'E-mail sent to a student if he or she has not completed any tasks at the scheduled time' => 'E-pasts, kas tiek nosūtīts skolēnam tad, ja viņš nav spelējis nevienu uzdevumu sev ieplānotajā laikā',
     'E-mail sent to a student after a week if he did not complete any tasks at the scheduled time' => 'E-pasts, kas tiek nosūtīts skolēnam pēc nedēļas, ja viņš sev ieplānotajā laikā neizspēlēja nevienu uzdevumu',
-    'E-mail sent to those who have not started playing, on a quarterly basis' => 'E-pasts, kas tiek nosūtīts tiem, kuri nav sākuši spēlēt, reizi ceturksnī'
+    'E-mail sent to those who have not started playing, on a quarterly basis' => 'E-pasts, kas tiek nosūtīts tiem, kuri nav sākuši spēlēt, reizi ceturksnī',
+    'No e-mails entered' => 'Nav ievadīts neviens e-pasts',
+    'Create email' => 'Izveidot e-pastu',
+    'E-mail type' => 'E-pasta tips',
+    'School registration emails' => 'Skolas reģistrācijas e-pasti',
+    'Create' => 'Izveidot',
+    'Edit email' => 'Rediģēt e-pastu',
+    'Registration e-mails' => 'Reģistrācijas e-pasti'
 ];
