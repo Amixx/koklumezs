@@ -48,10 +48,24 @@ class SchoolStudent extends \yii\db\ActiveRecord
         return $this->hasMany(Users::class, ['id' => 'user_id']);
     }
 
+    public static function getSchoolStudentCommitments($schoolId)
+    {
+        $students = self::getSchoolStudents($schoolId);
+        $studentIds = ArrayHelper::getColumn($students, 'user_id');
+        $startLaterCommitments = StartLaterCommitments::find()->where(['in', 'user_id', $studentIds])->joinWith('user');
+
+        return $startLaterCommitments;
+    }
+
     public static function getSchoolStudentIds($schoolId)
     {
-        $students = self::find()->where(['school_id' => $schoolId])->asArray()->all();
+        $students = self::getSchoolStudents($schoolId);
         return ArrayHelper::map($students, 'id', 'user_id');
+    }
+
+    public static function getSchoolStudents($schoolId)
+    {
+        return self::find()->where(['school_id' => $schoolId])->asArray()->all();
     }
 
     public static function getSchoolStudent($studentId)

@@ -585,5 +585,11 @@ return [
     'School registration emails' => 'Skolas reģistrācijas e-pasti',
     'Create' => 'Izveidot',
     'Edit email' => 'Rediģēt e-pastu',
-    'Registration e-mails' => 'Reģistrācijas e-pasti'
+    'Registration e-mails' => 'Reģistrācijas e-pasti',
+    'Start later commitments' => 'Apņemšanās sākt spēlēt vēlāk',
+    'The selected date to start playing' => 'Izvēlētais datums, kad sākt spēlēt',
+    'Time of day to start playing' => 'Dienas laiks, kad sāks spēlēt',
+    'morning' => 'rīts',
+    'afternoon' => 'pēcpusdiena',
+    'evening' => 'vakars',
 ];

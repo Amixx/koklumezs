@@ -41,8 +41,8 @@ class StartLaterCommitments extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => Yii::t('app', 'User ID'),
-            'start_date' => Yii::t('app', 'Start date'),
-            'start_time_of_day' => Yii::t('app', 'Start time of day'),
+            'start_date' => Yii::t('app', 'The selected date to start playing'),
+            'start_time_of_day' => Yii::t('app', 'Time of day to start playing'),
             'chosen_period_started' => Yii::t('app', 'The chosen period of time has started'),
             'commitment_fulfilled' => Yii::t('app', 'Commitment fulfilled'),
             'created_at' => Yii::t('app', 'Date of creation'),
@@ -50,65 +50,8 @@ class StartLaterCommitments extends \yii\db\ActiveRecord
     }
 
 
-    // public function validatePassword($attribute, $params)
-    // {
-    //     if (!$this->hasErrors() && strlen($this->password) < 4) {
-    //         $this->addError($attribute, Yii::t('app', 'Password too short.'));
-    //     }
-    // }
-
-    // public function validatePasswordRepeat($attribute, $params)
-    // {
-    //     if (!$this->hasErrors() && $this->password != $this->passwordRepeat) {
-    //         $this->addError($attribute, Yii::t('app', 'Passwords don\'t match') . '.');
-    //     }
-    // }
-
-    // public function validateAgree($attribute, $params)
-    // {
-    //     if (!$this->hasErrors() && !$this->agree) {
-    //         $this->addError($attribute, Yii::t('app', 'Please confirm.'));
-    //     }
-    // }
-
-    // public function checkIfUserExists($attribute, $params)
-    // {
-    //     if (!$this->hasErrors() && Users::doesUserExist($this->first_name, $this->last_name, $this->email, $this->schoolId)) {
-    //         $this->addError($attribute, Yii::t('app', 'A profile has already been registered using this e-mail! Have you forgotten your password?'));
-    //     }
-    // }
-
-    // public function signUp()
-    // {
-    //     if ($this->validate()) {
-    //         $user = new Users();
-    //         $user->password = Yii::$app->security->generatePasswordHash($this->password);
-    //         $user->first_name = $this->first_name;
-    //         $user->last_name = $this->last_name;
-    //         $user->email = $this->email;
-    //         $user->language = $this->language;
-
-    //         $user->status = Users::STATUS_PASSIVE;
-
-    //         $saved = $user->save();
-
-    //         if ($saved) {
-    //             return $user;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    // public static function fromSession()
-    // {
-    //     $model = new SignUpForm;
-    //     if (Yii::$app->session['signupModel'] !== null) {
-    //         $signupModel = Yii::$app->session['signupModel'];
-    //         $model->first_name = $signupModel['first_name'];
-    //         $model->last_name = $signupModel['last_name'];
-    //         $model->email = $signupModel['email'];
-    //     }
-
-    //     return $model;
-    // }
+    public function getUser()
+    {
+        return $this->hasOne(Users::class, ['id' => 'user_id']);
+    }
 }
