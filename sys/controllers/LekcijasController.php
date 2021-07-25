@@ -15,6 +15,7 @@ use app\models\Users;
 use app\models\School;
 use app\models\SchoolStudent;
 use app\models\SectionsVisible;
+use app\models\StartLaterCommitments;
 use app\models\Studentgoals;
 use app\models\Trials;
 use Yii;
@@ -237,6 +238,16 @@ class LekcijasController extends Controller
                     $lectureView->save();
                 }
             }
+
+            if ($model->complexity > 5) {
+                $startLaterCommitment = StartLaterCommitments::findOne(['user_id' => $user['id']]);
+                if ($startLaterCommitment && !$startLaterCommitment['commitment_fulfilled']) {
+                    $startLaterCommitment['commitment_fulfilled'] = true;
+                    $startLaterCommitment->update();
+                }
+            }
+
+
 
             return $this->render('lekcija', [
                 'model' => $model,

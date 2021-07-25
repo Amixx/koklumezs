@@ -65,7 +65,7 @@ class RegistrationCronController extends Controller
         $commitments = self::getCommitmentsOfTimeOfDay($timeOfDay);
 
         foreach ($commitments as $commitment) {
-            if ($commitment['chosen_period_started']) return;
+            if ($commitment['chosen_period_started']) continue;
 
             $oneDayLeftDate = self::getOneDayLeftDate($commitment['start_date']);
             $sendOneDayLeftEmail = $oneDayLeftDate === $date;
@@ -74,9 +74,14 @@ class RegistrationCronController extends Controller
                 self::sendEmail($commitment['user'], 'one_day_before_email');
             } else if ($commitment['start_date'] === $date) {
                 self::sendEmail($commitment['user'], 'half_hour_before_email');
+
                 $commitmentModel = StartLaterCommitments::findOne(['id' => $commitment['id']]);
                 $commitmentModel['chosen_period_started'] = true;
                 $commitmentModel->update();
+
+                $schoolStudent = SchoolStudent::findOne(['user_id' => $commitment['user_id']]);
+                $schoolStudent->show_real_lessons = true;
+                $schoolStudent->update();
             }
         }
     }
@@ -87,7 +92,7 @@ class RegistrationCronController extends Controller
         $commitments = self::getCommitmentsOfTimeOfDay($timeOfDay);
 
         foreach ($commitments as $commitment) {
-            if ($commitment['commitment_fulfilled']) return;
+            if ($commitment['commitment_fulfilled']) continue;
 
             $weekLaterDate = self::getOneWeekLaterDate($commitment['start_date']);
 
