@@ -142,6 +142,7 @@ class Chat extends \yii\db\ActiveRecord
 
         $users = Users::find()->where(["in", "id", $userIds])->asArray()->all();
         $usersByIds = array_column($users, NULL, 'id');
+
         return array_map(function ($id) use ($usersByIds) {
             if (isset($usersByIds[$id])) {
                 return $usersByIds[$id];
@@ -219,6 +220,20 @@ class Chat extends \yii\db\ActiveRecord
 
 
         if ($usersWithConversations) {
+            usort($usersWithConversations, function ($userA, $userB) {
+                if ($userA == NULL || $userB == NULL) {
+                    return 0;
+                }
+
+                $aHasNew = Chat::hasNewChats($userA['id']);
+                $bHasNew = Chat::hasNewChats($userB['id']);
+
+                if ($aHasNew < $bHasNew) return 1;
+                if ($aHasNew > $bHasNew) return -1;
+
+                return 0;
+            });
+
             foreach ($usersWithConversations as $user) {
                 if ($user == NULL) {
                     continue;
