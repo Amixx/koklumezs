@@ -33,7 +33,7 @@ class EmailSender
             )
             ->setFrom([$schoolEmail => Yii::$app->name])
             ->setTo($userEmail)
-            ->setSubject("Atgādinājums par rēķina apmaksu")
+            ->setSubject("Atgādinājums par rēķinu apmaksu")
             ->send();
     }
 
