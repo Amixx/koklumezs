@@ -229,7 +229,7 @@ class SiteController extends Controller
                 if ($model->hasExperience) {
                     $this->redirect(["signup-questions", 'u' => $user['id'], 's' => $s]);
                 } else {
-                    Yii::$app->session->setFlash('success', Yii::t('app', 'Hello! You\'ve registered successfully. Watch the introduction video and let\'s start playing! You have a free trial period for 2 weeks') . '!');
+                    Yii::$app->session->setFlash('success', Yii::t('app', 'Hey! You\'ve registered successfully. Your 2 week trial period will start after you play and evaluate currently assigned lessons. After that, we will see that you are ready to learn') . '!');
                     return $this->redirect(['lekcijas/index']);
                 }
             }
@@ -307,7 +307,7 @@ class SiteController extends Controller
             $user['about'] = $aboutUser;
             $saved = $user->save();
             if ($saved) {
-                Yii::$app->session->setFlash('success', Yii::t('app', 'Hello! You\'ve registered successfully. Watch the introduction video and let\'s start playing! You have a free trial period for 2 weeks') . '!');
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Hey! You\'ve registered successfully. Your 2 week trial period will start after you play and evaluate currently assigned lessons. After that, we will see that you are ready to learn') . '!');
                 return $this->redirect(['lekcijas/index']);
             }
         }
