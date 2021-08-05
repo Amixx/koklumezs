@@ -5,7 +5,9 @@ namespace app\helpers;
 use yii\helpers\Html;
 use app\models\Users;
 use app\models\School;
+use app\models\SchoolStudent;
 use app\models\SchoolTeacher;
+use app\models\StartLaterCommitments;
 use yii;
 
 class UserLayoutHelper extends LayoutHelper
@@ -157,6 +159,30 @@ class UserLayoutHelper extends LayoutHelper
         ];
 
         return $array;
+    }
+
+    public function getActionButton()
+    {
+        if ($this->isTeacher) return "";
+
+        $userId = Yii::$app->user->identity->id;
+
+        $schoolStudent = SchoolStudent::getSchoolStudent($userId);
+        $startLaterCommitment = StartLaterCommitments::findOne(['user_id' => $userId]);
+
+        if ($schoolStudent['signed_up_to_rent_instrument'] && !$schoolStudent['has_instrument']) {
+            return Html::a(
+                Yii::t('app', 'I have received the instrument'),
+                ['site/received-instrument'],
+                ['class' => 'btn btn-orange btn-received-instrument']
+            );
+        } else if (!$schoolStudent['show_real_lessons'] && $startLaterCommitment && !$startLaterCommitment['chosen_period_started']) {
+            return Html::a(
+                Yii::t('app', 'I want to start playing now!'),
+                ['user/start-immediately'],
+                ['class' => 'btn btn-orange btn-received-instrument']
+            );
+        }
     }
 
     public function getChatButton()

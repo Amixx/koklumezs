@@ -13,7 +13,9 @@ use app\models\Userlectureevaluations;
 use app\models\UserLectures;
 use app\models\Users;
 use app\models\School;
+use app\models\SchoolStudent;
 use app\models\SectionsVisible;
+use app\models\StartLaterCommitments;
 use app\models\Studentgoals;
 use app\models\Trials;
 use Yii;
@@ -237,6 +239,16 @@ class LekcijasController extends Controller
                 }
             }
 
+            if ($model->complexity > 5) {
+                $startLaterCommitment = StartLaterCommitments::findOne(['user_id' => $user['id']]);
+                if ($startLaterCommitment && !$startLaterCommitment['commitment_fulfilled']) {
+                    $startLaterCommitment['commitment_fulfilled'] = true;
+                    $startLaterCommitment->update();
+                }
+            }
+
+
+
             return $this->render('lekcija', [
                 'model' => $model,
                 'difficulties' => $difficulties,
@@ -284,8 +296,14 @@ class LekcijasController extends Controller
     {
         $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "new");
         $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
+        $schoolStudent = SchoolStudent::getSchoolStudent($user->id);
 
-        $newLessons = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->all();
+        $newLessonsQuery = Lectures::find()->where(['in', 'id', $latestNewLecturesIds]);
+        if (!$schoolStudent['show_real_lessons']) {
+            $newLessonsQuery->andWhere(['<', 'complexity', 5]);
+        }
+
+        $newLessons = $newLessonsQuery->all();
         $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->all();
 
         function sortFunc($a, $b, $lessonIds)

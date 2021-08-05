@@ -13,6 +13,8 @@ use app\models\SchoolSubPlans;
 use app\models\School;
 use app\models\SchoolTeacher;
 use app\models\Payer;
+use app\models\SchoolRegistrationEmails;
+use app\models\StartLaterCommitments;
 use app\models\SchoolStudent;
 use app\models\StudentSubPlans;
 use yii\web\Controller;
@@ -276,6 +278,48 @@ class UserController extends Controller
         $student->update();
 
         Yii::$app->session->setFlash('success', Yii::t('app', 'Thank you for your message! Next time we will send more tasks! Have a good day!'));
+        return $this->redirect(Yii::$app->request->referrer);
+    }
+
+    public function actionStartNow()
+    {
+        Yii::$app->session->remove('renderPostRegistrationModal');
+
+        $schoolStudent = SchoolStudent::findOne(['user_id' => Yii::$app->user->identity->id]);
+        $schoolStudent->show_real_lessons = true;
+        $schoolStudent->update();
+
+        return $this->redirect(Yii::$app->request->referrer);
+    }
+
+    public function actionStartLater()
+    {
+        Yii::$app->session->remove('renderPostRegistrationModal');
+
+        $post = Yii::$app->request->post();
+        $model = new StartLaterCommitments();
+        $model->load($post);
+        $model->user_id = Yii::$app->user->identity->id;
+
+        $user = $this->findModel(Yii::$app->user->identity->id);
+
+        SchoolRegistrationEmails::sendEmail($user, 'start_later_planned_email');
+        $model->validate() && $model->save();
+
+        return $this->redirect(Yii::$app->request->referrer);
+    }
+
+    public function actionStartImmediately()
+    {
+        $commitmentModel = StartLaterCommitments::findOne(['user_id' => Yii::$app->user->identity->id]);
+        $commitmentModel['chosen_period_started'] = true;
+        $commitmentModel['start_date'] = date('Y-m-d');
+        $commitmentModel->update();
+
+        $schoolStudent = SchoolStudent::findOne(['user_id' => Yii::$app->user->identity->id]);
+        $schoolStudent->show_real_lessons = true;
+        $schoolStudent->update();
+
         return $this->redirect(Yii::$app->request->referrer);
     }
 

@@ -30,4 +30,12 @@
             'renderRequestButton' => false,
         ]) ?>
     </div>
+
+    <?php
+    $session = Yii::$app->session;
+
+    if ($session->has("renderPostRegistrationModal") && $session->get("renderPostRegistrationModal")) {
+        echo $this->render('post-registration-modal');
+    }
+    ?>
 </div>

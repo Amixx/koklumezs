@@ -11,14 +11,14 @@ use app\models\SchoolSubPlans;
 use app\models\LectureViews;
 
 $this->title = \Yii::t('app',  'Users');
-
-
-$planEndMonths = [];
 ?>
 <div class="user-index">
     <h1><?= Yii::t('app', 'Students') ?></h1>
     <p>
         <?= Html::a(\Yii::t('app',  'Create user'), ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
+    <p>
+        <?= Html::a(\Yii::t('app',  'Student "commitments" to start later'), ['start-later-commitments/index'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?php
     $status = [10 => \Yii::t('app',  'Active'), 9 => \Yii::t('app',  'Inactive'), 0 => \Yii::t('app',  'Deleted')];

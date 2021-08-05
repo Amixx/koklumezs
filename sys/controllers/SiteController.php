@@ -213,6 +213,7 @@ class SiteController extends Controller
             $user = $model->signUp();
             if ($user && SchoolStudent::createNew($s, $user->id)) {
                 Yii::$app->user->login($user);
+                $user->updateLoginTime();
 
                 RegistrationLesson::assignToStudent($s, $user->id, $model);
                 EmailSender::sendNewStudentNotification($user, $school['email']);
@@ -225,6 +226,8 @@ class SiteController extends Controller
                 if ($school['registration_message'] != null && $model->ownsInstrument) {
                     EmailSender::sendPostSignupMessage($school['registration_message'], $school['email'], $user['email']);
                 }
+
+                Yii::$app->session->set("renderPostRegistrationModal", true);
 
                 if ($model->hasExperience) {
                     $this->redirect(["signup-questions", 'u' => $user['id'], 's' => $s]);
@@ -261,8 +264,9 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $user = RentForm::registerUser($signupModel, $model->phone_number);
 
-            if ($user && SchoolStudent::createNew($s, $user->id)) {
+            if ($user && SchoolStudent::createNew($s, $user->id, true, false)) {
                 RegistrationLesson::assignToStudent($s, $user->id, $signupModel);
+                $user->updateLoginTime();
 
                 $chatMessage = RegistrationMessage::getBody($s, $signupModel->ownsInstrument, $signupModel->hasExperience);
                 if ($chatMessage) {
@@ -330,5 +334,17 @@ class SiteController extends Controller
         }
 
         return $this->redirect([$url]);
+    }
+
+
+    public function actionReceivedInstrument()
+    {
+        $schoolStudent = SchoolStudent::getSchoolStudent(Yii::$app->user->identity->id);
+        $schoolStudent['has_instrument'] = true;
+        $schoolStudent->save();
+
+        Yii::$app->session->set("renderPostRegistrationModal", true);
+
+        return $this->redirect(Yii::$app->request->referrer);
     }
 }
