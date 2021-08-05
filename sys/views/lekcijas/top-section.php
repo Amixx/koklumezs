@@ -8,9 +8,13 @@ $heartClasses = $uLecture && $uLecture->is_favourite
 
 $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
 
+$modalBodyText = Yii::t('app', 'Hey! Write to us that did not reach you or remained unclear ... We will be happy to help you understand the task!');
+$modalErrorText = Yii::t('app', 'Enter a message');
+$modalButtonText = Yii::t('app', 'Submit message');
+
 $helpModalBody = <<<EOD
 <div class='form-group'>
-    <label for='need-help-message'>Ar ko tev vajadzīga palīdzība?</label>
+    <label for='need-help-message'>$modalBodyText</label>
     <textarea
         class='form-control rounded-0'
         rows="5"
@@ -18,13 +22,13 @@ $helpModalBody = <<<EOD
         id='need-help-message'
     ></textarea>
 </div>
-<p class='alert alert-danger' id='need-help-error'>Ievadiet ziņu!</p>
+<p class='alert alert-danger' id='need-help-error'>$modalErrorText!</p>
 <div style='text-align:right'>
     <button
         class='btn btn-orange'
         id='submit-need-help-message'
         data-lessonid='$uLecture->lecture_id'
-    >Nosūtīt ziņu</button>
+    >$modalButtonText</button>
 </div>
 EOD;
 
@@ -52,8 +56,8 @@ EOD;
             <?= Html::endForm() ?>
         </div>
     </div>
-    <div class="btn-group">
-        <div>
+    <div class="pull-right">
+        <div style="position:relative; display:inline-block">
             <?php if ($lecturefiles) { ?>
                 <button type="button" class="btn btn-orange dropdown-toggle hidden-xs" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
                     <?= \Yii::t('app', 'Lyrics and notes'); ?>
@@ -63,16 +67,7 @@ EOD;
                 </div>
             <?php } ?>
         </div>
-        <div class="next-lesson">
-            <button type="button" class="btn btn-blue" data-toggle="modal" data-target="#need-help-modal">
-                <?= \Yii::t('app',  'I need help'); ?>
-            </button>
-
-            <?= $this->render("@app/views/shared/modal", [
-                'id' => 'need-help-modal',
-                'title' => \Yii::t('app', 'I need help'),
-                'body' => $helpModalBody
-            ]); ?>
+        <div class="next-lesson" style="display:inline-block">
             <?php if (!$hasEvaluatedLesson) {
                 $modalType = "next-lesson";
                 echo $this->render('alertEvaluation', [
@@ -90,5 +85,16 @@ EOD;
                 echo Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-orange']);
             } ?>
         </div>
+    </div>
+    <div class="pull-right next-lesson">
+        <button type="button" class="btn btn-blue" data-toggle="modal" data-target="#need-help-modal">
+            <?= \Yii::t('app',  'I need help'); ?>
+        </button>
+
+        <?= $this->render("@app/views/shared/modal", [
+            'id' => 'need-help-modal',
+            'title' => \Yii::t('app', 'I need help with this task'),
+            'body' => $helpModalBody
+        ]); ?>
     </div>
 </div>

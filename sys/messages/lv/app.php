@@ -608,4 +608,10 @@ return [
     'Let\'s try? - lessons are waiting for you!' => 'Izmēģināsim? - nodarbības gaida tevi!',
     'Hey! - let\'s start?' => 'Hei! - sākam?',
     'I want to start playing now!' => 'Vēlos sākt spēlēt tagad!',
+    'I need help' => 'Man nepieciešama palīdzība',
+    'I need help with this task' => 'Man nepieciešama palīdzība ar šo uzdevumu',
+    'Hey! Write to us that did not reach you or remained unclear ... We will be happy to help you understand the task!' => 'Hei! Uzraksti - kas nesanāca vai palika neskaidrs... Labpbrāt palīdzēsim saprast uzdevumu!',
+    'This plan has no files' => 'Šim plānam nav pievienots neviens fails',
+    'Enter a message' => 'Ievadiet ziņu',
+    'Submit message' => 'Nosūtīt ziņu',
 ];

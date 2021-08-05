@@ -86,7 +86,7 @@ class Trials extends \yii\db\ActiveRecord
         if (!$trial) {
             return false;
         }
-        $trialEndDate = strtotime("+2 weeks", strtotime($trial['start_date']));
+        $trialEndDate = strtotime("+13 days", strtotime($trial['start_date']));
         $time = time();
 
         return $time > $trialEndDate;

@@ -54,22 +54,12 @@ class StudentSubPlansController extends Controller
     public function actionView($id)
     {
         $subplan = StudentSubPlans::findOne($id);
-
         $planFiles = PlanFiles::getFilesForPlan($subplan["plan_id"])->asArray()->all();
-        $planPauses = new ActiveDataProvider([
-            'query' => StudentSubplanPauses::getForStudentSubplan($subplan['id']),
-        ]);
-        $newPause = new StudentSubplanPauses;
-        $remainingPauseWeeks = StudentSubPlans::getRemainingPauseWeeks($subplan['id']);
-        $planCurrentlyPaused = StudentSubPlans::isPlanCurrentlyPaused($subplan['id']);
+
 
         return $this->render('view', [
             'subplan' => $subplan,
             'planFiles' => $planFiles,
-            'planPauses' => $planPauses,
-            'newPause' => $newPause,
-            'remainingPauseWeeks' => $remainingPauseWeeks,
-            'planCurrentlyPaused' => $planCurrentlyPaused,
         ]);
     }
 
@@ -95,5 +85,24 @@ class StudentSubPlansController extends Controller
         StudentSubplans::setStudentSubplanInactive($id);
 
         return $this->redirect(Yii::$app->request->referrer);
+    }
+
+    public function actionPause($id)
+    {
+        $planPauses = new ActiveDataProvider([
+            'query' => StudentSubplanPauses::getForStudentSubplan($id),
+        ]);
+        $newPause = new StudentSubplanPauses;
+        $remainingPauseWeeks = StudentSubPlans::getRemainingPauseWeeks($id);
+        $planCurrentlyPaused = StudentSubPlans::isPlanPaused($id);
+
+
+        return $this->render('pause', [
+            'subplanId' => $id,
+            'planPauses' => $planPauses,
+            'newPause' => $newPause,
+            'remainingPauseWeeks' => $remainingPauseWeeks,
+            'planCurrentlyPaused' => $planCurrentlyPaused,
+        ]);
     }
 }

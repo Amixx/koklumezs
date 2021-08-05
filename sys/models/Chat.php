@@ -76,27 +76,28 @@ class Chat extends \yii\db\ActiveRecord
     public static function getUnreadCountInCorrespondence($authorId, $recipientId)
     {
         $opentime = CorrespondenceOpentimes::getOpentimeValue($authorId, $recipientId);
-        $lastOpenedChat = Yii::$app->user->identity['last_opened_chat'];
+        if (!$opentime) {
+            $opentime = Yii::$app->user->identity['last_opened_chat'];
+        }
 
-        $query = static::find()
-            ->select(['COUNT(*) as count'])
+        $chatMessagesQuery = static::find()
             ->where([
                 'recipient_id' => $authorId,
                 'author_id' => $recipientId
             ]);
 
+        $needHelpMessagesQuery = NeedHelpMessages::find()
+            ->where(['author_id' => $recipientId]);
+
         if ($opentime) {
-            $query->andWhere(['>', 'update_date', $opentime]);
+            $chatMessagesQuery->andWhere(['>', 'update_date', $opentime]);
+            $needHelpMessagesQuery->andWhere(['>', 'created_at', $opentime]);
         }
 
-        // LEGACY: for transition from last_opened_chat to opentime for each correspondence. remove after a month or so (?)
-        if ($lastOpenedChat) {
-            $query->andWhere(['>', 'update_date', $lastOpenedChat]);
-        }
+        $unseenChatMessagesCount = (int) $chatMessagesQuery->count();
+        $unseenNeedHelpMessagesCount = (int) $needHelpMessagesQuery->count();
 
-        $data = $query->createCommand()->queryAll();
-
-        return (int) $data[0]["count"];
+        return $unseenChatMessagesCount + $unseenNeedHelpMessagesCount;
     }
 
     public static function unreadCountForCurrentUser()
@@ -144,6 +145,7 @@ class Chat extends \yii\db\ActiveRecord
 
         $users = Users::find()->where(["in", "id", $userIds])->asArray()->all();
         $usersByIds = array_column($users, NULL, 'id');
+
         return array_map(function ($id) use ($usersByIds) {
             if (isset($usersByIds[$id])) {
                 return $usersByIds[$id];
@@ -221,6 +223,20 @@ class Chat extends \yii\db\ActiveRecord
 
 
         if ($usersWithConversations) {
+            usort($usersWithConversations, function ($userA, $userB) {
+                if ($userA == NULL || $userB == NULL) {
+                    return 0;
+                }
+
+                $aHasNew = Chat::hasNewChats($userA['id']);
+                $bHasNew = Chat::hasNewChats($userB['id']);
+
+                if ($aHasNew < $bHasNew) return 1;
+                if ($aHasNew > $bHasNew) return -1;
+
+                return 0;
+            });
+
             foreach ($usersWithConversations as $user) {
                 if ($user == NULL) {
                     continue;
