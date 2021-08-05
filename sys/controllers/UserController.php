@@ -13,6 +13,7 @@ use app\models\SchoolSubPlans;
 use app\models\School;
 use app\models\SchoolTeacher;
 use app\models\Payer;
+use app\models\SchoolRegistrationEmails;
 use app\models\StartLaterCommitments;
 use app\models\SchoolStudent;
 use app\models\StudentSubPlans;
@@ -282,6 +283,8 @@ class UserController extends Controller
 
     public function actionStartNow()
     {
+        Yii::$app->session->remove('renderPostRegistrationModal');
+
         $schoolStudent = SchoolStudent::findOne(['user_id' => Yii::$app->user->identity->id]);
         $schoolStudent->show_real_lessons = true;
         $schoolStudent->update();
@@ -291,11 +294,16 @@ class UserController extends Controller
 
     public function actionStartLater()
     {
+        Yii::$app->session->remove('renderPostRegistrationModal');
+
         $post = Yii::$app->request->post();
         $model = new StartLaterCommitments();
         $model->load($post);
         $model->user_id = Yii::$app->user->identity->id;
 
+        $user = $this->findModel(Yii::$app->user->identity->id);
+
+        SchoolRegistrationEmails::sendEmail($user, 'start_later_planned_email');
         $model->validate() && $model->save();
 
         return $this->redirect(Yii::$app->request->referrer);

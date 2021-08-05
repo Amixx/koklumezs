@@ -51,6 +51,22 @@ class SchoolRegistrationEmails extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function sendEmail($user, $emailType)
+    {
+        $school = School::getByStudent($user['id']);
+        $email = SchoolRegistrationEmails::getByType($school['id'], $emailType);
+
+        return Yii::$app
+            ->mailer
+            ->compose(['html' => 'blank-message-html', 'text' => 'blank-message-text'], [
+                'message' => $email,
+            ])
+            ->setFrom([$school['email'] => Yii::$app->name])
+            ->setTo($user['email'])
+            ->setSubject(SchoolRegistrationEmails::getSubjects()[$emailType])
+            ->send();
+    }
+
     public static function getLabel($email)
     {
         return self::getLabels()[$email];
@@ -66,6 +82,23 @@ class SchoolRegistrationEmails extends \yii\db\ActiveRecord
             'week_after_missed_email' => Yii::t('app', 'E-mail sent to a student after a week if he did not complete any tasks at the scheduled time'),
             'quarterly_reminder_email' => Yii::t('app', 'E-mail sent to those who have not started playing, on a quarterly basis'),
         ];
+    }
+
+    public static function getSubjects()
+    {
+        return [
+            'start_later_planned_email' => self::formatSubject('Congratulations on registering!'),
+            'one_day_before_email' => self::formatSubject('Are you ready to start?'),
+            'half_hour_before_email' => self::formatSubject('Let\'s get started!'),
+            'missed_session_email' => self::formatSubject('Let\'s try? - lessons are waiting for you!'),
+            'week_after_missed_email' => self::formatSubject('Hey! - let\'s start?'),
+            'quarterly_reminder_email' => self::formatSubject('Want to try? - Start and enjoy 2 weeks for free!'),
+        ];
+    }
+
+    private static function formatSubject($subject)
+    {
+        return Yii::t('app', $subject) . ' - ' . Yii::$app->name;
     }
 
     public static function getMappedForIndex()

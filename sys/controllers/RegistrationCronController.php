@@ -2,23 +2,11 @@
 
 namespace app\controllers;
 
-use app\models\LectureAssignment;
-use app\models\School;
-use app\models\Sentlectures;
-use app\models\Studentgoals;
-use app\models\UserLectures;
-use app\models\Lectures;
-use app\models\Users;
-use app\models\StudentSubPlans;
 use Yii;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use app\helpers\InvoiceManager;
-use app\helpers\EmailSender;
 use app\models\SchoolRegistrationEmails;
 use app\models\SchoolStudent;
 use app\models\StartLaterCommitments;
-use app\models\Trials;
 
 class RegistrationCronController extends Controller
 {
@@ -34,19 +22,9 @@ class RegistrationCronController extends Controller
         self::sessionStart(self::TIMES_OF_DAY[0]);
     }
 
-    public function actionMorningSessionEnd()
-    {
-        self::sessionEnd(self::TIMES_OF_DAY[0]);
-    }
-
     public function actionAfternoonSessionStart()
     {
         self::sessionStart(self::TIMES_OF_DAY[1]);
-    }
-
-    public function actionAfternoonSessionEnd()
-    {
-        self::sessionEnd(self::TIMES_OF_DAY[1]);
     }
 
     public function actionEveningSessionStart()
@@ -54,28 +32,81 @@ class RegistrationCronController extends Controller
         self::sessionStart(self::TIMES_OF_DAY[2]);
     }
 
-    public function actionEveningSessionEnd()
+    public function actionQuarterlyReminder()
     {
-        self::sessionEnd(self::TIMES_OF_DAY[2]);
+        $commitments = self::getAllCommitments();
+
+        foreach ($commitments as $commitment) {
+            if ($commitment['commitment_fulfilled']) continue;
+
+            self::setSiteLanguage($commitment);
+
+            $emailSent = SchoolRegistrationEmails::sendEmail($commitment['user'], 'quarterly_reminder_email');
+
+            if ($emailSent) {
+                $commitmentModel = self::getCommitment($commitment['id']);
+                $commitmentModel['quarterly_reminders_sent_count'] += 1;
+                $commitmentModel->update();
+            }
+        }
     }
+
+    public function actionEveryDayAt10()
+    {
+        $date = self::getCurrentDate();
+        $commitments = self::getAllCommitments();
+
+        foreach ($commitments as $commitment) {
+            if ($commitment['commitment_fulfilled']) continue;
+
+            self::setSiteLanguage($commitment);
+
+            $dayLaterDate = self::getOneDayLaterDate($commitment['start_date']);
+            $weekLaterDate = self::getOneWeekLaterDate($commitment['start_date']);
+
+            if ($dayLaterDate === $date) {
+                $emailSent = SchoolRegistrationEmails::sendEmail($commitment['user'], 'missed_session_email');
+
+                $commitmentModel = self::getCommitment($commitment['id']);
+                $commitmentModel['missed_session_email_sent'] = $emailSent;
+                $commitmentModel->update();
+            } else if ($weekLaterDate === $date) {
+                $emailSent = SchoolRegistrationEmails::sendEmail($commitment['user'], 'week_after_missed_email');
+
+                $commitmentModel = self::getCommitment($commitment['id']);
+                $commitmentModel['week_after_missed_email_sent'] = $emailSent;
+                $commitmentModel->update();
+            }
+        }
+    }
+
+
 
     private static function sessionStart($timeOfDay)
     {
         $date = self::getCurrentDate();
         $commitments = self::getCommitmentsOfTimeOfDay($timeOfDay);
+        $emailSent = false;
 
         foreach ($commitments as $commitment) {
             if ($commitment['chosen_period_started']) continue;
+
+            self::setSiteLanguage($commitment);
 
             $oneDayLeftDate = self::getOneDayLeftDate($commitment['start_date']);
             $sendOneDayLeftEmail = $oneDayLeftDate === $date;
 
             if ($sendOneDayLeftEmail) {
-                self::sendEmail($commitment['user'], 'one_day_before_email');
-            } else if ($commitment['start_date'] === $date) {
-                self::sendEmail($commitment['user'], 'half_hour_before_email');
+                $emailSent = SchoolRegistrationEmails::sendEmail($commitment['user'], 'one_day_before_email');
 
-                $commitmentModel = StartLaterCommitments::findOne(['id' => $commitment['id']]);
+                $commitmentModel = self::getCommitment($commitment['id']);
+                $commitmentModel['day_before_email_sent'] = $emailSent;
+                $commitmentModel->update();
+            } else if ($commitment['start_date'] === $date) {
+                $emailSent = SchoolRegistrationEmails::sendEmail($commitment['user'], 'half_hour_before_email');
+
+                $commitmentModel = self::getCommitment($commitment['id']);
+                $commitmentModel['half_hour_before_email_sent'] = $emailSent;
                 $commitmentModel['chosen_period_started'] = true;
                 $commitmentModel->update();
 
@@ -86,22 +117,10 @@ class RegistrationCronController extends Controller
         }
     }
 
-    private static function sessionEnd($timeOfDay)
+    private static function setSiteLanguage($commitment)
     {
-        $date = self::getCurrentDate();
-        $commitments = self::getCommitmentsOfTimeOfDay($timeOfDay);
-
-        foreach ($commitments as $commitment) {
-            if ($commitment['commitment_fulfilled']) continue;
-
-            $weekLaterDate = self::getOneWeekLaterDate($commitment['start_date']);
-
-            if ($commitment['start_date'] === $date) {
-                self::sendEmail($commitment['user'], 'missed_session_email');
-            } else if ($weekLaterDate === $date) {
-                self::sendEmail($commitment['user'], 'week_after_missed_email');
-            }
-        }
+        Yii::$app->language = $commitment['user'] && $commitment['user']['language'] == "lv"
+            ? 'lv' : 'eng';
     }
 
     private static function getCurrentDate()
@@ -114,31 +133,31 @@ class RegistrationCronController extends Controller
         return date('Y-m-d', strtotime("-1 days", strtotime($start_date)));
     }
 
+    private static function getOneDayLaterDate($start_date)
+    {
+        return date('Y-m-d', strtotime("+1 days", strtotime($start_date)));
+    }
+
     private static function getOneWeekLaterDate($start_date)
     {
         return date('Y-m-d', strtotime("+1 weeks", strtotime($start_date)));
     }
 
-    public static function getCommitmentsOfTimeOfDay($timeOfDay)
+    private static function getAllCommitments()
+    {
+        return StartLaterCommitments::find()
+            ->joinWith('user')->asArray()->all();
+    }
+
+    private static function getCommitmentsOfTimeOfDay($timeOfDay)
     {
         return StartLaterCommitments::find()
             ->where(['start_time_of_day' => $timeOfDay])
             ->joinWith('user')->asArray()->all();
     }
 
-    private static function sendEmail($user, $emailType)
+    private static function getCommitment($id)
     {
-        $school = School::getByStudent($user['id']);
-        $email = SchoolRegistrationEmails::getByType($school['id'], $emailType);
-
-        return Yii::$app
-            ->mailer
-            ->compose(['html' => 'blank-message-html', 'text' => 'blank-message-text'], [
-                'message' => $email,
-            ])
-            ->setFrom([$school['email'] => Yii::$app->name])
-            ->setTo($user['email'])
-            ->setSubject("TODO: paprasīt subjectu - " . Yii::$app->name)
-            ->send();
+        return StartLaterCommitments::findOne(['id' => $id]);
     }
 }
