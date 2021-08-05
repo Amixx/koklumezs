@@ -607,5 +607,5 @@ return [
     'Let\'s get started!' => 'Sākam darboties!',
     'Let\'s try? - lessons are waiting for you!' => 'Izmēģināsim? - nodarbības gaida tevi!',
     'Hey! - let\'s start?' => 'Hei! - sākam?',
-    'Want to try? - Start and enjoy 2 weeks for free!' => 'Vēlies izmēģināt? - sāc un darbojies 2 nedēļas bez maksas!',
+    'I want to start playing now!' => 'Vēlos sākt spēlēt tagad!',
 ];

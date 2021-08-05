@@ -309,6 +309,20 @@ class UserController extends Controller
         return $this->redirect(Yii::$app->request->referrer);
     }
 
+    public function actionStartImmediately()
+    {
+        $commitmentModel = StartLaterCommitments::findOne(['user_id' => Yii::$app->user->identity->id]);
+        $commitmentModel['chosen_period_started'] = true;
+        $commitmentModel['start_date'] = date('Y-m-d');
+        $commitmentModel->update();
+
+        $schoolStudent = SchoolStudent::findOne(['user_id' => Yii::$app->user->identity->id]);
+        $schoolStudent->show_real_lessons = true;
+        $schoolStudent->update();
+
+        return $this->redirect(Yii::$app->request->referrer);
+    }
+
     protected function findModel($id)
     {
         if (($model = Users::find()->where(['users.id' => $id])->joinWith("payer")->one()) !== null) {
