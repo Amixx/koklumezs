@@ -32,25 +32,6 @@ class RegistrationCronController extends Controller
         self::sessionStart(self::TIMES_OF_DAY[2]);
     }
 
-    public function actionQuarterlyReminder()
-    {
-        $commitments = self::getAllCommitments();
-
-        foreach ($commitments as $commitment) {
-            if ($commitment['commitment_fulfilled']) continue;
-
-            self::setSiteLanguage($commitment);
-
-            $emailSent = SchoolRegistrationEmails::sendEmail($commitment['user'], 'quarterly_reminder_email');
-
-            if ($emailSent) {
-                $commitmentModel = self::getCommitment($commitment['id']);
-                $commitmentModel['quarterly_reminders_sent_count'] += 1;
-                $commitmentModel->update();
-            }
-        }
-    }
-
     public function actionEveryDayAt10()
     {
         $date = self::getCurrentDate();
@@ -63,6 +44,7 @@ class RegistrationCronController extends Controller
 
             $dayLaterDate = self::getOneDayLaterDate($commitment['start_date']);
             $weekLaterDate = self::getOneWeekLaterDate($commitment['start_date']);
+            $threeMonthsLaterDate = self::getThreeMonthsLaterDate($commitment['start_date']);
 
             if ($dayLaterDate === $date) {
                 $emailSent = SchoolRegistrationEmails::sendEmail($commitment['user'], 'missed_session_email');
@@ -76,6 +58,12 @@ class RegistrationCronController extends Controller
                 $commitmentModel = self::getCommitment($commitment['id']);
                 $commitmentModel['week_after_missed_email_sent'] = $emailSent;
                 $commitmentModel->update();
+            } else if ($threeMonthsLaterDate === $date) {
+                $emailSent = SchoolRegistrationEmails::sendEmail($commitment['user'], 'quarterly_reminder_email');
+
+                $commitmentModel = self::getCommitment($commitment['id']);
+                $commitmentModel['quarterly_reminder_sent'] = $emailSent;
+                $commitmentModel->update();
             }
         }
     }
@@ -86,7 +74,6 @@ class RegistrationCronController extends Controller
     {
         $date = self::getCurrentDate();
         $commitments = self::getCommitmentsOfTimeOfDay($timeOfDay);
-        $emailSent = false;
 
         foreach ($commitments as $commitment) {
             if ($commitment['chosen_period_started']) continue;
@@ -128,19 +115,24 @@ class RegistrationCronController extends Controller
         return date('Y-m-d');
     }
 
-    private static function getOneDayLeftDate($start_date)
+    private static function getOneDayLeftDate($date)
     {
-        return date('Y-m-d', strtotime("-1 days", strtotime($start_date)));
+        return date('Y-m-d', strtotime("-1 days", strtotime($date)));
     }
 
-    private static function getOneDayLaterDate($start_date)
+    private static function getOneDayLaterDate($date)
     {
-        return date('Y-m-d', strtotime("+1 days", strtotime($start_date)));
+        return date('Y-m-d', strtotime("+1 days", strtotime($date)));
     }
 
-    private static function getOneWeekLaterDate($start_date)
+    private static function getOneWeekLaterDate($date)
     {
-        return date('Y-m-d', strtotime("+1 weeks", strtotime($start_date)));
+        return date('Y-m-d', strtotime("+1 weeks", strtotime($date)));
+    }
+
+    private static function getThreeMonthsLaterDate($date)
+    {
+        return date('Y-m-d', strtotime("+3 months", strtotime($date)));
     }
 
     private static function getAllCommitments()

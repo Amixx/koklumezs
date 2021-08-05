@@ -80,7 +80,7 @@ class SchoolRegistrationEmails extends \yii\db\ActiveRecord
             'half_hour_before_email' => Yii::t('app', 'E-mail sent half an hour before the scheduled start time'),
             'missed_session_email' => Yii::t('app', 'E-mail sent to a student if he or she has not completed any tasks at the scheduled time'),
             'week_after_missed_email' => Yii::t('app', 'E-mail sent to a student after a week if he did not complete any tasks at the scheduled time'),
-            'quarterly_reminder_email' => Yii::t('app', 'E-mail sent to those who have not started playing, on a quarterly basis'),
+            'quarterly_reminder_email' => Yii::t('app', 'E-mail sent to a student after 3 months if he did not complete any tasks at the scheduled time'),
         ];
     }
 
