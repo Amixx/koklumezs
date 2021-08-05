@@ -45,7 +45,12 @@ class LoginForm extends Model
             if ($logged) {
                 $model = Users::findOne($this->_user->id);
                 if ($model) {
-                    Yii::$app->session->set("renderPostRegistrationModal", $model['last_login'] == NULL);
+                    $schoolStudent = SchoolStudent::findOne(['user_id' => $model['id']]);
+                    $startLaterCommitment = StartLaterCommitments::findOne(['user_id' => $model['id']]);
+
+                    if (!$schoolStudent['show_real_lessons'] && !$startLaterCommitment) {
+                        Yii::$app->session->set("renderPostRegistrationModal", true);
+                    }
 
                     $model->last_login = date('Y-m-d H:i:s', time());
                     $model->update();
