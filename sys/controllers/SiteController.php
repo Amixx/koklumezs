@@ -264,11 +264,9 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $user = RentForm::registerUser($signupModel, $model->phone_number);
 
-            if ($user && SchoolStudent::createNew($s, $user->id)) {
+            if ($user && SchoolStudent::createNew($s, $user->id, true, false)) {
                 RegistrationLesson::assignToStudent($s, $user->id, $signupModel);
                 $user->updateLoginTime();
-
-                Yii::$app->session->set("renderPostRegistrationModal", true);
 
                 $chatMessage = RegistrationMessage::getBody($s, $signupModel->ownsInstrument, $signupModel->hasExperience);
                 if ($chatMessage) {
@@ -336,5 +334,17 @@ class SiteController extends Controller
         }
 
         return $this->redirect([$url]);
+    }
+
+
+    public function actionReceivedInstrument()
+    {
+        $schoolStudent = SchoolStudent::getSchoolStudent(Yii::$app->user->identity->id);
+        $schoolStudent['has_instrument'] = true;
+        $schoolStudent->save();
+
+        Yii::$app->session->set("renderPostRegistrationModal", true);
+
+        return $this->redirect(Yii::$app->request->referrer);
     }
 }

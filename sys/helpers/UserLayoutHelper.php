@@ -5,6 +5,7 @@ namespace app\helpers;
 use yii\helpers\Html;
 use app\models\Users;
 use app\models\School;
+use app\models\SchoolStudent;
 use app\models\SchoolTeacher;
 use yii;
 
@@ -157,6 +158,21 @@ class UserLayoutHelper extends LayoutHelper
         ];
 
         return $array;
+    }
+
+    public function getActionButton()
+    {
+        if ($this->isTeacher) return "";
+
+        $schoolStudent = SchoolStudent::getSchoolStudent(Yii::$app->user->identity->id);
+
+        if ($schoolStudent['signed_up_to_rent_instrument'] && !$schoolStudent['has_instrument']) {
+            return Html::a(
+                Yii::t('app', 'I have received the instrument'),
+                ['site/received-instrument'],
+                ['class' => 'btn btn-orange btn-received-instrument']
+            );
+        }
     }
 
     public function getChatButton()

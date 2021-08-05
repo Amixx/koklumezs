@@ -16,7 +16,11 @@ class SchoolStudent extends \yii\db\ActiveRecord
         return [
             [['school_id', 'user_id'], 'required'],
             [['school_id', 'user_id'], 'integer'],
-            [['show_real_lessons'], 'boolean'],
+            [[
+                'show_real_lessons',
+                'signed_up_to_rent_instrument',
+                'has_instrument',
+            ], 'boolean'],
             ['show_real_lessons', 'default', 'value' => false],
             [['school_id'], 'exist', 'skipOnError' => true, 'targetClass' => School::class, 'targetAttribute' => ['school_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['user_id' => 'id']],
@@ -27,9 +31,11 @@ class SchoolStudent extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'school_id' => \Yii::t('app',  'School'),
-            'user_id' => \Yii::t('app',  'Student'),
-            'show_real_lessons' => \Yii::t('app',  'Does the user see lessons with difficulty larger than 1'),
+            'school_id' => \Yii::t('app', 'School'),
+            'user_id' => \Yii::t('app', 'Student'),
+            'show_real_lessons' => \Yii::t('app', 'Does the user see lessons with difficulty larger than 1'),
+            'signed_up_to_rent_instrument' => \Yii::t('app', 'Signed up to rent instrument'),
+            'has_instrument' => \Yii::t('app', 'Has intrument'),
         ];
     }
 
@@ -73,11 +79,13 @@ class SchoolStudent extends \yii\db\ActiveRecord
         return self::find()->where(['user_id' => $studentId])->joinWith('school')->joinWith('user')->one();
     }
 
-    public static function createNew($schoolId, $userId)
+    public static function createNew($schoolId, $userId, $signedUpToRentInstrument = false, $hasInstrument = true)
     {
         $schoolStudent = new SchoolStudent;
         $schoolStudent->school_id = $schoolId;
         $schoolStudent->user_id = $userId;
+        $schoolStudent->signed_up_to_rent_instrument = $signedUpToRentInstrument;
+        $schoolStudent->has_instrument = $hasInstrument;
 
         return $schoolStudent->save();
     }

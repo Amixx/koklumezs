@@ -662,6 +662,13 @@ div.has-experience.active, div.rent.active {
     text-align: center;
 }
 
+.btn-received-instrument {
+    position: absolute;
+    left: calc(50% - 485px);
+    top: 24px;
+    z-index: 1050;
+}
+
 
 
 /******************** SPINNER ************/
@@ -982,6 +989,10 @@ div.has-experience.active, div.rent.active {
     #chat-btn-with-icons.teacher {
         left: calc(50% - 630px);
     }
+
+    .btn-received-instrument {
+        left: calc(50% - 580px);
+    }
 }
 
 
@@ -1160,6 +1171,10 @@ div.has-experience.active, div.rent.active {
     
     .btn-narrow {
         padding: 6px 10px;
+    }
+
+    .btn-received-instrument {
+        left: 32px;
     }
 }
 
