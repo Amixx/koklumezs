@@ -614,4 +614,10 @@ return [
     'This plan has no files' => 'Šim plānam nav pievienots neviens fails',
     'Enter a message' => 'Ievadiet ziņu',
     'Submit message' => 'Nosūtīt ziņu',
+    'Message' => 'Paziņojums',
+    'Update message' => 'Atjaunot paziņojumu',
+    'Message after evaluation' => 'Paziņojums pēc novērtēšanas',
+    'Messages after evaluation' => 'Paziņojumi pēc novērtēšanas',
+    'Add new message' => 'Pievienot jaunu paziņojumu',
+    'No messages' => 'Nav paziņojumu',
 ];

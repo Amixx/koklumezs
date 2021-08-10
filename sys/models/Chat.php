@@ -18,8 +18,8 @@ class Chat extends \yii\db\ActiveRecord
     {
         return [
             [['message'], 'required'],
-            [['author_id', 'recipient_id'], 'integer'],
-            [['update_date', 'message'], 'safe']
+            [['author_id', 'recipient_id', 'status'], 'integer'],
+            [['update_date', 'message', 'status'], 'safe']
         ];
     }
 
@@ -171,12 +171,13 @@ class Chat extends \yii\db\ActiveRecord
         }
     }
 
-    public static function addNewMessage($message, $authorId, $recipientId)
+    public static function addNewMessage($message, $authorId, $recipientId, $status)
     {
         $model = new Chat;
 
         $model->message = $message;
         $model->author_id = $authorId;
+        $model->status = $status;
         $model->recipient_id = $recipientId;
 
         return $model->save();
@@ -262,5 +263,16 @@ class Chat extends \yii\db\ActiveRecord
             'content' => $output,
             'userList' => $userList
         ];
+    }
+
+    public static function isChatCooldown()
+    {
+        $userId = Yii::$app->user->id;
+        $lastSystemMessage = self::find()->where(['recipient_id' => $userId, 'status' => 2])->orderBy('id desc')->limit(1)->all();
+        $lastMessageTime = strtotime($lastSystemMessage[0]->update_date);
+        $now = time();
+        $isCooldown = !(round(($now - $lastMessageTime) / 60, 2) >= 10);
+
+        return $isCooldown;
     }
 }

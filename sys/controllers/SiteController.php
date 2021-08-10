@@ -220,7 +220,7 @@ class SiteController extends Controller
 
                 $chatMessage = RegistrationMessage::getBody($s, $model->ownsInstrument, $model->hasExperience);
                 if ($chatMessage) {
-                    Chat::addNewMessage($chatMessage, $schoolTeacher['id'], $user['id']);
+                    Chat::addNewMessage($chatMessage, $schoolTeacher['id'], $user['id'], 1);
                 }
 
                 if ($school['registration_message'] != null && $model->ownsInstrument) {
@@ -270,7 +270,7 @@ class SiteController extends Controller
 
                 $chatMessage = RegistrationMessage::getBody($s, $signupModel->ownsInstrument, $signupModel->hasExperience);
                 if ($chatMessage) {
-                    Chat::addNewMessage($chatMessage, $schoolTeacher['id'], $user['id']);
+                    Chat::addNewMessage($chatMessage, $schoolTeacher['id'], $user['id'], 1);
                 }
 
                 if ($school['renter_message'] != null && $school['rent_schoolsubplan_id'] != null) {

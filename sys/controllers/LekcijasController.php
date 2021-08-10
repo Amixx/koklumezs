@@ -14,6 +14,9 @@ use app\models\Userlectureevaluations;
 use app\models\UserLectures;
 use app\models\Users;
 use app\models\School;
+use app\models\SchoolTeacher;
+use app\models\Chat;
+use app\models\SchoolAfterEvaluationMessages;
 use app\models\SchoolStudent;
 use app\models\SectionsVisible;
 use app\models\StartLaterCommitments;
@@ -187,6 +190,14 @@ class LekcijasController extends Controller
                     $difficultyEvaluation->evaluation = $post["difficulty-evaluation"];
                     $difficultyEvaluation->public_comment = false;
                     $difficultyEvaluation->save();
+
+                    $schoolId = School::getCurrentSchool()->id;
+                    $teacherId = SchoolTeacher::getByCurrentStudent()->user_id;
+                    $message = SchoolAfterEvaluationMessages::getRandomMessage($schoolId, $post["difficulty-evaluation"]);
+
+                    if ($message) {
+                        Chat::addNewMessage($message, $teacherId, $user->id, 2);
+                    }
 
                     $userLecture->evaluated = 1;
                     $userLecture->update();
