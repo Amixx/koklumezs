@@ -48,7 +48,7 @@ class LoginForm extends Model
                     $schoolStudent = SchoolStudent::findOne(['user_id' => $model['id']]);
                     $startLaterCommitment = StartLaterCommitments::findOne(['user_id' => $model['id']]);
 
-                    if (!$schoolStudent['show_real_lessons'] && !$startLaterCommitment) {
+                    if ($schoolStudent && !$schoolStudent['show_real_lessons'] && !$startLaterCommitment) {
                         Yii::$app->session->set("renderPostRegistrationModal", true);
                     }
 
