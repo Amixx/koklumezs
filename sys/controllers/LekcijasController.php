@@ -9,6 +9,7 @@ use app\models\Lecturesevaluations;
 use app\models\Lecturesfiles;
 use app\models\LectureViews;
 use app\models\RelatedLectures;
+use app\models\RegistrationLesson;
 use app\models\Userlectureevaluations;
 use app\models\UserLectures;
 use app\models\Users;
@@ -247,7 +248,7 @@ class LekcijasController extends Controller
                 }
             }
 
-
+            $isRegisteredAndNewLesson = RegistrationLesson::isRegistrationLesson($model->id);
 
             return $this->render('lekcija', [
                 'model' => $model,
@@ -269,6 +270,7 @@ class LekcijasController extends Controller
                 'hasEvaluatedLesson' => $hasEvaluatedLesson,
                 'difficultyEvaluation' => $difficultyEvaluation,
                 'sortByDifficulty' => $sortByDifficulty,
+                'isRegisteredAndNewLesson' => $isRegisteredAndNewLesson,
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');

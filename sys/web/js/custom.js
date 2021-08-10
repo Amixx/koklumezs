@@ -135,6 +135,7 @@ $(document).ready(function() {
 
     setupVideoPlayers();
     setupPostRegistrationModal();
+    firstLessonEvaluateLessonModal();
 });
 
 function addPopoverToElement($selector, html){
@@ -675,5 +676,17 @@ function setupPostRegistrationModal(){
             $startLaterForm.show();
             $btnContainer.hide();
         });
+    }
+}
+
+function firstLessonEvaluateLessonModal() {
+    if (isRegisteredAndNewLesson){   
+        var ul = document.getElementById("navbar-collapse").getElementsByTagName("li");
+        for (var i = 0; i < ul.length - 1; i++) {
+            ul[i].addEventListener("click", function(event) {
+                event.preventDefault();
+                $("#alertEvaluation-next-lesson").modal("show");
+            });
+        }
     }
 }
