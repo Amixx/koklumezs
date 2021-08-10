@@ -16,23 +16,21 @@ use yii\helpers\Html;
             </tr>
 
             <?php foreach ($messages[$evaluation] as $message) { ?>
-                <?php if ($message->evaluation === $evaluation) { ?>
-                    <tr>
-                        <td>
-                            <p><?= $message->message; ?>
-                        </td>
-                        <td class="text-right">
-                            <?= Html::a(\Yii::t('app',  'Edit'), ['update', 'id' => $message->id], ['class' => 'btn btn-primary']) ?>
-                            <?= Html::a(\Yii::t('app', 'Delete'), ['delete', 'id' => $message->id], [
-                                'class' => 'btn btn-danger',
-                                'data' => [
-                                    'confirm' => \Yii::t('app', 'Do you really want to delete this entry?'),
-                                    'method' => 'post',
-                                ],
-                            ]) ?>
-                        </td>
-                    </tr>
-                <?php } ?>
+                <tr>
+                    <td>
+                        <p><?= $message->message; ?>
+                    </td>
+                    <td class="text-right">
+                        <?= Html::a(\Yii::t('app',  'Edit'), ['update', 'id' => $message->id], ['class' => 'btn btn-primary']) ?>
+                        <?= Html::a(\Yii::t('app', 'Delete'), ['delete', 'id' => $message->id], [
+                            'class' => 'btn btn-danger',
+                            'data' => [
+                                'confirm' => \Yii::t('app', 'Do you really want to delete this entry?'),
+                                'method' => 'post',
+                            ],
+                        ]) ?>
+                    </td>
+                </tr>
             <?php } ?>
         </table>
 
