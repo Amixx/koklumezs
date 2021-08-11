@@ -42,7 +42,7 @@ class TeacherUserSearch extends Users
         $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
 
-        $query = Users::find()->where(['in', 'users.id', $schoolStudentIds]);
+        $query = Users::find()->where(['in', 'users.id', $schoolStudentIds])->andWhere(['is_deleted' => false]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

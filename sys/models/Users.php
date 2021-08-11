@@ -75,6 +75,7 @@ class Users extends ActiveRecord implements IdentityInterface
             'status' => \Yii::t('app',  'Status'),
             'allowed_to_download_files' => \Yii::t('app',  'Allowed to download files'),
             'wants_more_lessons' => \Yii::t('app',  'Wants more lessons'),
+            'is_deleted' => \Yii::t('app',  'Is deleted'),
         ];
     }
 
@@ -103,12 +104,12 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function getByEmail($email)
     {
-        return static::findOne(['email' => $email]);
+        return static::findOne(['email' => $email, 'is_deleted' => false]);
     }
 
     public static function isActive($id)
     {
-        $status = static::findOne(['id' => $id])->status;
+        $status = static::findOne(['id' => $id, 'is_deleted' => false])->status;
         return $status != 9;
     }
 
@@ -119,17 +120,17 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function getAdmins()
     {
-        return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_ADMIN])->asArray()->all(), 'id', 'email');
+        return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_ADMIN, 'is_deleted' => false])->asArray()->all(), 'id', 'email');
     }
 
     public static function getTeachers()
     {
-        return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_TEACHER])->asArray()->all(), 'id', 'email');
+        return ArrayHelper::map(self::find()->where(['user_level' => self::ROLE_TEACHER, 'is_deleted' => false])->asArray()->all(), 'id', 'email');
     }
 
     public static function getActiveStudents()
     {
-        $params = ['user_level' => self::ROLE_USER, 'status' => self::STATUS_ACTIVE];
+        $params = ['user_level' => self::ROLE_USER, 'status' => self::STATUS_ACTIVE, 'is_deleted' => false];
         $users = self::find()->where($params)->asArray()->all();
 
         $result = [];
@@ -147,7 +148,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function getAllStudents()
     {
-        $users = self::find()->where(['user_level' => self::ROLE_USER])->joinWith("payer")->asArray()->all();
+        $users = self::find()->where(['user_level' => self::ROLE_USER, 'is_deleted' => false])->joinWith("payer")->asArray()->all();
         $result = [];
         foreach ($users as $u) {
             $result[$u['id']] = $u;
@@ -158,7 +159,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function getStudents()
     {
-        $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE, self::STATUS_PASSIVE]];
+        $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE, self::STATUS_PASSIVE], 'is_deleted' => false];
         $users = self::find()->where($params)->asArray()->all();
 
         $result = [];
@@ -182,7 +183,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function getStudentsForSchool()
     {
-        $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE, self::STATUS_PASSIVE]];
+        $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE, self::STATUS_PASSIVE], 'is_deleted' => false];
         $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
         $usersData = self::find()->where($params)->andWhere(['in', 'id', $schoolStudentIds])->asArray()->all();
@@ -209,7 +210,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function getStudentsWithParams($lang, $subTypes)
     {
-        $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE]];
+        $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE], 'is_deleted' => false];
         $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
 
@@ -249,6 +250,7 @@ class Users extends ActiveRecord implements IdentityInterface
     public static function findByEmail($email)
     {
         $user = self::find()
+            ->where(['is_deleted' => false])
             ->andWhere([
                 'or',
                 ['email' => $email],
@@ -266,6 +268,7 @@ class Users extends ActiveRecord implements IdentityInterface
         $user = self::find()
             ->where([
                 "id" => $id,
+                'is_deleted' => false,
             ])
             ->one();
         if (empty($user)) {
@@ -325,7 +328,8 @@ class Users extends ActiveRecord implements IdentityInterface
         $data = self::find()->where([
             'first_name' => $firstName,
             'last_name' => $lastName,
-            'email' => $email
+            'email' => $email,
+            'is_deleted' => false,
         ])->one();
 
         if ($data) {
@@ -421,17 +425,17 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function isUserAdmin($email)
     {
-        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN]);
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN, 'is_deleted' => false]);
     }
 
     public static function isStudent($email)
     {
-        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_USER]);
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_USER, 'is_deleted' => false]);
     }
 
     public static function isTeacher($email)
     {
-        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER]);
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER, 'is_deleted' => false]);
     }
 
     public static function isCurrentUserTeacher()
@@ -452,7 +456,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function isAdminOrTeacher($email)
     {
-        return (bool) static::findOne(['email' => $email, 'user_level' => [self::ROLE_ADMIN, self::ROLE_TEACHER]]);
+        return (bool) static::findOne(['email' => $email, 'user_level' => [self::ROLE_ADMIN, self::ROLE_TEACHER], 'is_deleted' => false]);
     }
 
     public static function getStatus()

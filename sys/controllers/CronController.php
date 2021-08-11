@@ -188,7 +188,7 @@ class CronController extends Controller
         if (!isset($get['id'])) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-        $users = Users::find()->where(['id' => $get['id']])->asArray()->all();
+        $users = Users::find()->where(['id' => $get['id'], 'is_deleted' => false])->asArray()->all();
         $tmp = [];
         foreach ($users as $u) {
             $tmp[$u['id']] = $u;

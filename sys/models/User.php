@@ -56,6 +56,7 @@ class User extends ActiveRecord implements IdentityInterface
             'about' => \Yii::t('app',  'About user'),
             'last_opened_chat' => \Yii::t('app',  'Last time opened chat'),
             'wants_more_lessons' => \Yii::t('app',  'Wants more lessons'),
+            'is_deleted' => \Yii::t('app',  'Is deleted'),
         ];
     }
 
@@ -68,7 +69,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => [self::STATUS_ACTIVE, self::STATUS_PASSIVE]]);
+        return static::findOne(['id' => $id, 'status' => [self::STATUS_ACTIVE, self::STATUS_PASSIVE], 'is_deleted' => false]);
     }
 
     public static function findIdentityByAccessToken($token, $type = null)
@@ -81,6 +82,7 @@ class User extends ActiveRecord implements IdentityInterface
         $user = self::find()
             ->where([
                 "email" => $email,
+                'is_deleted' => false
             ])
             ->one();
         if (empty($user)) {
@@ -128,6 +130,7 @@ class User extends ActiveRecord implements IdentityInterface
         return static::findOne([
             'password_reset_token' => $token,
             'status' => self::STATUS_ACTIVE,
+            'is_deleted' => false
         ]);
     }
 
@@ -136,6 +139,7 @@ class User extends ActiveRecord implements IdentityInterface
         return static::findOne([
             'verification_token' => $token,
             'status' => self::STATUS_INACTIVE,
+            'is_deleted' => false
         ]);
     }
 
@@ -175,17 +179,17 @@ class User extends ActiveRecord implements IdentityInterface
 
     public static function isUserAdmin($email)
     {
-        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN]);
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN, 'is_deleted' => false]);
     }
 
     public static function isStudent($email)
     {
-        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_USER]);
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_USER, 'is_deleted' => false]);
     }
 
     public static function isTeacher($email)
     {
-        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER]);
+        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER, 'is_deleted' => false]);
     }
 
     public static function getStatus()

@@ -614,4 +614,9 @@ return [
     'This plan has no files' => 'Šim plānam nav pievienots neviens fails',
     'Enter a message' => 'Ievadiet ziņu',
     'Submit message' => 'Nosūtīt ziņu',
+    'An e-mail sent to a student when he has not paid the first rental invoice within 10 days and his profile is deleted' => 'E-pasts, kas skolēnam tiek nosūtīts tad, kad viņš 10 dienu laikā nav samaksājis pirmo īres rēķinu, un viņa profils tiek dzēsts',
+    'Your profile is being deleted!' => 'Jūsu profils tiek dzēsts!',
+    'Miscellaneous e-mails' => 'Dažādi e-pasti',
+    'Miscellaneous school emails' => 'Dažadi skolas e-pasti',
+    'Is deleted' => 'Vai ir dzēsts'
 ];
