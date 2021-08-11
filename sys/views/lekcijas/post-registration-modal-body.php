@@ -14,7 +14,7 @@ use yii\helpers\Html;
     </div>
 
     <?php $form = ActiveForm::begin([
-        'action' => '/user/start-later',
+        'action' => Url::to(['user/start-later']),
         'options' => [
             'id' => 'start-later-form'
         ]

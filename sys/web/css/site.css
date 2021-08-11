@@ -1171,7 +1171,9 @@ div.has-experience.active, div.rent.active {
     }
 
     .btn-received-instrument {
-        left: 32px;
+        right: 70px;
+        left: auto;
+        top: 60px;
     }
 }
 

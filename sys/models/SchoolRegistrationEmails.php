@@ -108,12 +108,14 @@ class SchoolRegistrationEmails extends \yii\db\ActiveRecord
         $emailLabels = self::getLabels();
         $emailsForIndex = [];
 
-        foreach ($schoolRegistrationEmails as $attr => $val) {
-            if (isset($emailLabels[$attr])) {
-                $emailsForIndex[$attr] = [
-                    'label' => $emailLabels[$attr],
-                    'value' => $val,
-                ];
+        if ($schoolRegistrationEmails) {
+            foreach ($schoolRegistrationEmails as $attr => $val) {
+                if (isset($emailLabels[$attr])) {
+                    $emailsForIndex[$attr] = [
+                        'label' => $emailLabels[$attr],
+                        'value' => $val,
+                    ];
+                }
             }
         }
 
