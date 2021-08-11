@@ -549,7 +549,7 @@ return [
     'Invoice date' => 'Rēķina datums',
     'To pay until' => 'Apmaksāt līdz',
     'Due date' => 'Apmaksas termiņš',
-    'In 14 days' => '14 dienu laikā',
+    'In {0} days' => '{0} dienu laikā',
     'Supplier' => 'Piegādātājs',
     'Recipient' => 'Saņēmējs',
     'Contacts' => 'Kontakti',
@@ -618,5 +618,6 @@ return [
     'Your profile is being deleted!' => 'Jūsu profils tiek dzēsts!',
     'Miscellaneous e-mails' => 'Dažādi e-pasti',
     'Miscellaneous school emails' => 'Dažadi skolas e-pasti',
-    'Is deleted' => 'Vai ir dzēsts'
+    'Is deleted' => 'Vai ir dzēsts',
+    'How many days to pay the bill' => 'Cik dienās jāapmaksā rēķinu',
 ];

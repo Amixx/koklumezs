@@ -17,7 +17,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
     {
         return [
             [['school_id', 'name', 'months', 'max_pause_weeks'], 'required'],
-            [['school_id', 'months', 'max_pause_weeks', 'pvn_percent'], 'number'],
+            [['school_id', 'months', 'max_pause_weeks', 'pvn_percent', 'days_for_payment'], 'number'],
             [['name', 'description', 'files', 'message', 'type'], 'string'],
         ];
     }
@@ -35,6 +35,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
             'max_pause_weeks' => \Yii::t('app',  'Pause weeks'),
             'files' => \Yii::t('app',  'Files'),
             'message' => \Yii::t('app',  'Message to send with the invoice'),
+            'days_for_payment' => \Yii::t('app', 'How many days to pay the bill'),
         ];
     }
 

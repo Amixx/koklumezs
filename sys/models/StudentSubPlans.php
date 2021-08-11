@@ -280,4 +280,13 @@ class StudentSubPlans extends \yii\db\ActiveRecord
             ->andFilterWhere(['schoolsubplans.type' => $type])
             ->one();
     }
+
+    public static function findFirstRentSubPlan($studentId)
+    {
+        return self::find()->where(['user_id' => $studentId, 'is_active' => false])
+            ->joinWith('plan')
+            ->orderBy(['studentsubplans.id' => SORT_ASC])
+            ->andFilterWhere(['schoolsubplans.type' => "rent"])
+            ->one();
+    }
 }

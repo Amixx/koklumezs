@@ -239,6 +239,13 @@ class Users extends ActiveRecord implements IdentityInterface
         return $result;
     }
 
+    public static function softDelete($userId)
+    {
+        $model = static::findOne(['id' => $userId]);
+        $model->is_deleted = true;
+        $model->save();
+    }
+
     /**
      * {@inheritdoc}
      */

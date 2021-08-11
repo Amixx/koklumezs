@@ -4,7 +4,8 @@ use app\models\PlanParts;
 
 $dateToday = Date("d.m.Y.");
 $payDate = date_create($dateToday);
-date_add($payDate, date_interval_create_from_date_string("14 days"));
+$daysToPay = $subplan['days_for_payment'];
+date_add($payDate, date_interval_create_from_date_string("$daysToPay days"));
 $payDateString = date_format($payDate, "d.m.Y.");
 
 $divider = 1 + ($subplan['pvn_percent'] / 100);
@@ -30,7 +31,7 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
             <div class="font-xs align-right lh-2">
                 <div><?= Yii::t('app', 'Invoice date') ?>: <span class="font-m"><?= $dateToday ?></span></div>
                 <div><?= Yii::t('app', 'To pay until') ?>: <span class="font-m"><?= $payDateString ?></span></div>
-                <div><?= Yii::t('app', 'Due date') ?>: <span class="font-m"><?= Yii::t('app', 'In 14 days') ?></span></div>
+                <div><?= Yii::t('app', 'Due date') ?>: <span class="font-m"><?= Yii::t('app', 'In {0} days', $daysToPay) ?></span></div>
             </div>
             <hr>
             <table class="lh-2">

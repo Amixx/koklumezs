@@ -15,6 +15,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use app\helpers\InvoiceManager;
 use app\helpers\EmailSender;
+use app\models\SentInvoices;
 use app\models\Trials;
 
 class CronController extends Controller
@@ -287,6 +288,18 @@ class CronController extends Controller
                 $sent = EmailSender::sendTrialEndMessage($student);
                 if ($sent) {
                     Trials::markEndMessageSent($student["id"]);
+                }
+            }
+
+            $x = StudentSubPlans::findFirstRentSubPlan($student['id']);
+            if ($x['sent_invoices_count'] === 1 && $x['times_paid'] === 0) {
+                $invoice = SentInvoices::findOne(['studentsubplan_id' => $x['id']]);
+                $today = date('d.m.Y');
+                $match_date = date('d.m.Y', strtotime($invoice["sent_date"] . " + 11 days"));
+
+                if ($today === $match_date) {
+                    EmailSender::sendFirstRentPaymentFailedEmail($student);
+                    Users::softDelete($student['id']);
                 }
             }
         }
