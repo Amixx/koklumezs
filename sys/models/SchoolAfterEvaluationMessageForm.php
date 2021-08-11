@@ -8,7 +8,6 @@ use yii\base\Model;
 class SchoolAfterEvaluationMessageForm extends Model
 {
     public $message;
-    public $evaluation;
 
     public function rules()
     {

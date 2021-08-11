@@ -1,12 +1,32 @@
 <?php
 
 use yii\helpers\Html;
+
+switch ($evaluation) {
+    case 2:
+        $title = \Yii::t('app', 'Super easy, boring');
+        break;
+    case 4:
+        $title = \Yii::t('app', 'Easy');
+        break;
+    case 6:
+        $title = \Yii::t('app', 'Goal');
+        break;
+    case 8:
+        $title = \Yii::t('app', 'Hard');
+        break;
+    case 10:
+        $title = \Yii::t('app', 'Challenging');
+        break;
+    default:
+        $title = '';
+}
 ?>
 
 <div>
     <hr>
     <h2><?= $title ?></h2>
-    <?php if (!count($messages[$evaluation]) > 0) { ?>
+    <?php if (!count($messages) > 0) { ?>
         <h3><?= \Yii::t('app', 'No messages') ?></h3>
     <?php } else { ?>
         <table class="table">
@@ -15,7 +35,7 @@ use yii\helpers\Html;
                 <th class="text-center" style="width: 160px;"><?= \Yii::t('app', 'Actions') ?></th>
             </tr>
 
-            <?php foreach ($messages[$evaluation] as $message) { ?>
+            <?php foreach ($messages as $message) { ?>
                 <tr>
                     <td>
                         <p><?= $message->message; ?>

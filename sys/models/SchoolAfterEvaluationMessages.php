@@ -43,11 +43,11 @@ class SchoolAfterEvaluationMessages extends \yii\db\ActiveRecord
     public static function getMessagesBySchoolIdGrouped($schoolId)
     {
         $messages = [];
-        $messages[2] = self::getSchoolMessagesByEvaluation($schoolId, 2);
-        $messages[4] = self::getSchoolMessagesByEvaluation($schoolId, 4);
-        $messages[6] = self::getSchoolMessagesByEvaluation($schoolId, 6);
-        $messages[8] = self::getSchoolMessagesByEvaluation($schoolId, 8);
-        $messages[10] = self::getSchoolMessagesByEvaluation($schoolId, 10);
+
+        for ($i = 2; $i <= 10; $i += 2) {
+            $messages[$i] = self::getSchoolMessagesByEvaluation($schoolId, $i);
+        }
+
         return $messages;
     }
 
