@@ -55,9 +55,13 @@ class RegistrationLesson extends \yii\db\ActiveRecord
         $schoolId = School::getCurrentSchoolId();
         $userId = Yii::$app->user->identity->id;
         $isStudent = Yii::$app->user->identity->user_level == 'Student';
-        $isRegisteredLesson = (bool)static::find()->where(['school_id' => $schoolId, 'lesson_id' => $lessonId])->all();
-        $isEvaluatedLesson = (bool)Userlectureevaluations::getLectureEvaluations($userId, $lessonId);
-        return $isRegisteredLesson && !$isEvaluatedLesson && $isStudent;
+        if (!$isStudent) {
+            return false;
+        }
+
+        $isRegisteredLesson = !empty(static::find()->where(['school_id' => $schoolId, 'lesson_id' => $lessonId])->all());
+        $isEvaluatedLesson = !empty(Userlectureevaluations::getLectureEvaluations($userId, $lessonId));
+        return $isRegisteredLesson && !$isEvaluatedLesson;
     }
 
     public static function assignToStudent($schoolId, $userId, $model)
