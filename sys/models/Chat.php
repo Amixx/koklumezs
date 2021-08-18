@@ -143,7 +143,7 @@ class Chat extends \yii\db\ActiveRecord
             }
         }
 
-        $users = Users::find()->where(["in", "id", $userIds])->asArray()->all();
+        $users = Users::find()->where(["in", "id", $userIds])->andWhere(['is_deleted' => false])->asArray()->all();
         $usersByIds = array_column($users, NULL, 'id');
 
         return array_map(function ($id) use ($usersByIds) {

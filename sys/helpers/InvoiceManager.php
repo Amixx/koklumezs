@@ -111,7 +111,7 @@ class InvoiceManager
         $studentSubplan = StudentSubPlans::findOne($formModel['plan_id']);
         $userId = $studentSubplan['user_id'];
         $schoolSubplan = $studentSubplan["plan"];
-        $user = Users::find()->where(['users.id' => $userId])->joinWith('payer')->one();
+        $user = Users::find()->where(['users.id' => $userId, 'is_deleted' => false])->joinWith('payer')->one();
         $school = School::getByStudent($userId);
         $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
         $invoiceBasePath = self::getInvoiceBasePath($schoolTeacher['user_id'], false, strtotime($formModel['paid_date']));

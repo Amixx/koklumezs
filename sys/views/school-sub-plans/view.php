@@ -39,6 +39,7 @@ $this->title = $model->name;
             'months',
             'max_pause_weeks',
             'message',
+            'days_for_payment',
             [
                 'attribute' => 'Monthly cost',
                 'label' => Yii::t('app',  'Monthly cost (with PVN)'),

@@ -2,6 +2,7 @@
 
 namespace app\helpers;
 
+use app\models\MiscSchoolEmails;
 use app\models\School;
 use Yii;
 
@@ -177,6 +178,27 @@ class EmailSender
                 ->setFrom([$school['email'] => Yii::$app->name])
                 ->setTo($student['email'])
                 ->setSubject("Bedzies izmēģinājuma periods - " . Yii::$app->name)
+                ->send();
+        }
+
+        return false;
+    }
+
+    public static function sendFirstRentPaymentFailedEmail($student)
+    {
+        $school = School::getByStudent($student['id']);
+        $miscSchoolEmails = MiscSchoolEmails::findOne(['school_id' => $school['id']]);
+        $messageName = 'after_failed_first_rent_payment_email';
+
+        if ($miscSchoolEmails != null) {
+            return Yii::$app
+                ->mailer
+                ->compose(['html' => 'blank-message-html', 'text' => 'blank-message-text'], [
+                    'message' => $miscSchoolEmails[$messageName],
+                ])
+                ->setFrom([$school['email'] => Yii::$app->name])
+                ->setTo($student['email'])
+                ->setSubject(MiscSchoolEmails::getSubjects()[$messageName])
                 ->send();
         }
 

@@ -266,7 +266,9 @@ class UserController extends Controller
             ->delete('studentgoals', ['user_id' => $id])
             ->execute();
 
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->is_deleted = true;
+        $model->save();
 
         return $this->redirect(['index']);
     }
@@ -325,7 +327,7 @@ class UserController extends Controller
 
     protected function findModel($id)
     {
-        if (($model = Users::find()->where(['users.id' => $id])->joinWith("payer")->one()) !== null) {
+        if (($model = Users::find()->where(['users.id' => $id, 'users.is_deleted' => false])->joinWith("payer")->one()) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

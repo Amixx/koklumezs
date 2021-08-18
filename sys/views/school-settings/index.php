@@ -53,6 +53,13 @@ $this->title = Yii::t('app',  'School settings');
         </li>
         <li class="nav-item">
             <?= Html::a(
+                Yii::t('app', 'Miscellaneous e-mails'),
+                ['/misc-school-emails'],
+                ['class' => 'nav-link']
+            ) ?>
+        </li>
+        <li class="nav-item">
+            <?= Html::a(
                 Yii::t('app', 'Message after evaluation'),
                 ['/school-after-evaluation-messages'],
                 ['class' => 'nav-link']

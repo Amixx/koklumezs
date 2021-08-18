@@ -55,6 +55,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
             <?= $form->field($model, 'months')->textInput() ?>
             <?= $form->field($model, 'max_pause_weeks')->textInput() ?>
             <?= $form->field($model, 'message')->textInput() ?>
+            <?= $form->field($model, 'days_for_payment')->textInput() ?>
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
             <?php if (isset($planFiles)) {

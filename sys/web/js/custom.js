@@ -668,8 +668,7 @@ function setupPostRegistrationModal(){
         $startLaterForm.hide();
 
         $startInstantlyBtn.on('click', function(){
-            // load rest of lessons
-            $modal.modal('hide');
+            $startInstantlyBtn.button('loading');
         });
 
         $startLaterBtn.on('click', function(){

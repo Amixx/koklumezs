@@ -38,6 +38,7 @@ $this->title = \Yii::t('app', 'Subscription plans');
             'months',
             'max_pause_weeks',
             'message',
+            'days_for_payment',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
