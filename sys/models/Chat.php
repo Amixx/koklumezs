@@ -171,7 +171,7 @@ class Chat extends \yii\db\ActiveRecord
         }
     }
 
-    public static function addNewMessage($message, $authorId, $recipientId, $status)
+    public static function addNewMessage($message, $authorId, $recipientId, $status = 1)
     {
         // 1 - User message
         // 2 - System message (currently only used for after evaluation messages)
@@ -271,7 +271,11 @@ class Chat extends \yii\db\ActiveRecord
     {
         $userId = Yii::$app->user->id;
         $lastSystemMessage = self::find()->where(['recipient_id' => $userId, 'status' => 2])->orderBy('id desc')->one();
-        $lastMessageTime = strtotime($lastSystemMessage[0]->update_date);
+        if (!$lastSystemMessage) {
+            return false;
+        }
+
+        $lastMessageTime = strtotime($lastSystemMessage->update_date);
         $now = time();
         $isCooldown = !(round(($now - $lastMessageTime) / 60, 2) >= 10);
 

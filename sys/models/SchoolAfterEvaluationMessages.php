@@ -66,15 +66,9 @@ class SchoolAfterEvaluationMessages extends \yii\db\ActiveRecord
     {
 
         $messages = self::getSchoolMessagesByEvaluation($schoolId, $evaluation);
-
         if (empty($messages) || Chat::isChatCooldown()) return null;
 
-        $messageTexts = [];
-
-        foreach ($messages as $message) {
-            $messageTexts[] = $message->message;
-        }
-
-        return $messageTexts[rand(0, count($messageTexts) - 1)];
+        $randomIndex = rand(0, count($messages) - 1);
+        return $messages[$randomIndex]->message;
     }
 }

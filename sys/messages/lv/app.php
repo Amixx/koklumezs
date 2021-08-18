@@ -626,4 +626,5 @@ return [
     'Miscellaneous school emails' => 'Dažadi skolas e-pasti',
     'Is deleted' => 'Vai ir dzēsts',
     'How many days to pay the bill' => 'Cik dienās jāapmaksā rēķinu',
+    'Manageable' => 'Tiku galā',
 ];
