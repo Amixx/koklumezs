@@ -121,7 +121,6 @@ $this->title = \Yii::t('app',  'Lesson assigning');
                     </td>
                     <td style="display:none" class="user-language"><?= $user['language'] ?></td>
                     <td style="display:none" class="user-subscription-type"><?= $user['subscription_type'] ?></td>
-                    <td style="display:none" class="user-status"><?= $user['status'] ?></td>
                 </tr>
             <?php $a++;
             } ?>

@@ -291,9 +291,9 @@ class CronController extends Controller
                 }
             }
 
-            $x = StudentSubPlans::findFirstRentSubPlan($student['id']);
-            if ($x['sent_invoices_count'] === 1 && $x['times_paid'] === 0) {
-                $invoice = SentInvoices::findOne(['studentsubplan_id' => $x['id']]);
+            $firstRentPlan = StudentSubPlans::findFirstRentSubPlan($student['id']);
+            if ($firstRentPlan && $firstRentPlan['sent_invoices_count'] === 1 && $firstRentPlan['times_paid'] === 0) {
+                $invoice = SentInvoices::findOne(['studentsubplan_id' => $firstRentPlan['id']]);
                 $today = date('d.m.Y');
                 $match_date = date('d.m.Y', strtotime($invoice["sent_date"] . " + 11 days"));
 

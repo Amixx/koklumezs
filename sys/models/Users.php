@@ -170,7 +170,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public static function getStudentsWithoutPausesForSchool()
     {
-        $students = self::getStudentsForSchool();
+        $students = self::getStudentsForSchool(false);
         foreach ($students as $key => $student) {
             $isCurrentLearningPlanPaused = StudentSubPlans::isCurrentLearningPlanPaused($student['id']);
             if ($isCurrentLearningPlanPaused) {
@@ -181,9 +181,12 @@ class Users extends ActiveRecord implements IdentityInterface
         return $students;
     }
 
-    public static function getStudentsForSchool()
+    public static function getStudentsForSchool($includePassive = true)
     {
-        $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE, self::STATUS_PASSIVE], 'is_deleted' => false];
+        $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE], 'is_deleted' => false];
+        if ($includePassive) {
+            $params['status'][] = self::STATUS_PASSIVE;
+        }
         $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
         $usersData = self::find()->where($params)->andWhere(['in', 'id', $schoolStudentIds])->asArray()->all();

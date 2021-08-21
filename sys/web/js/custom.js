@@ -218,149 +218,139 @@ function setupLectureFilterByDifficulty(){
     })
 }
 
+var SUB_TYPES = {
+    free: "free",
+    paid: "paid",
+    lead: "lead",
+    pausing: "pausing"
+}
+
 function setupAssignUserListFilters(){
-    var SUB_TYPES = {
-        free: "free",
-        paid: "paid",
-        lead: "lead",
-        pausing: "pausing"
-    }
-
-    function getSubTypeSelector(type) {
-        return ".subscription-type-selector.type-" + type;
-    }    
-
-    var subTypeSelectors = Object.keys(SUB_TYPES).map(function (subType) {
-        return getSubTypeSelector(subType);
-    });
-
-    function getSelectedSubTypes() {
-        var subTypes = [];
-
-        if ($(getSubTypeSelector(SUB_TYPES.free)).prop("checked")) subTypes.push("free");
-        if ($(getSubTypeSelector(SUB_TYPES.paid)).prop("checked")) subTypes.push("paid");
-        if ($(getSubTypeSelector(SUB_TYPES.lead)).prop("checked")) subTypes.push("lead");
-        if ($(getSubTypeSelector(SUB_TYPES.pausing)).prop("checked")) subTypes.push("pausing");
-
-        return subTypes;
-    }
-
-    
-
-    function setupAssignFilterByLanguage() {
-        $("#UserLanguageSelector").on("change", function () {
-            var lang = this.value;
-            var subTypes = getSelectedSubTypes();
-
-            modifyViewHrefOnFilter("lang", lang);
-            filterAssignStudentList($("#UserLanguageSelector").val(), subTypes);
-        });
-    }
-
-    function setupAssignFilterBySubscriptionType() {
-        subTypeSelectors.forEach(function (selector) {
-            $(selector).on("change", function () {
-                var subTypes = getSelectedSubTypes();
-
-                modifyViewHrefOnFilter("subTypes", subTypes.join(","));
-                filterAssignStudentList($("#UserLanguageSelector").val(), subTypes);
-            });
-        })
-
-        $(getSubTypeSelector(SUB_TYPES.free)).trigger("click");
-        $(getSubTypeSelector(SUB_TYPES.paid)).trigger("click");
-        $(getSubTypeSelector(SUB_TYPES.lead)).trigger("click");
-    }
-
-    function filterAssignStudentList(lang, subTypes) {
-        $("#AssignTable tr").each(function () {
-            this.style.display = "";
-        });
-
-        var $langElems = $("td.user-language");
-        $langElems.each(function () {
-            var $subTypeElem = $(this).next()[0];
-            var $userStatusElem = $(this).next().next()[0];
-            var langText = this.innerText;
-            var subTypeText = $subTypeElem.innerText;
-            var isUserPassive = parseInt($userStatusElem.innerText.trim()) === 11;
-
-            if (shouldHideRow(lang, langText, subTypes, subTypeText, isUserPassive)) {
-                this.parentElement.style.display = "none";
-            }
-        });
-
-        function shouldHideRow(lang, langText, subTypes, subTypeText, isUserPassive) {
-            var hideRow;
-            var showAllSubTypes = subTypes.length === 0 || subTypes.length === 4;
-            var onlyPausing = subTypes.length === 1 && subTypes[0] === "pausing";
-
-            if (lang === "all") {
-                if (showAllSubTypes) {
-                    hideRow = false;
-                } else if (onlyPausing) {
-                    hideRow = !isUserPassive;
-                } else if (isUserPassive && subTypes.indexOf("pausing") === -1 ) {
-                    return true;
-                } else {
-                    hideRow = subTypes.indexOf(subTypeText) === -1;
-                }
-            } else {
-                if (showAllSubTypes) {
-                    hideRow = lang !== langText;
-                } else if (onlyPausing) {
-                    hideRow = lang !== langText && !isUserPassive;
-                } else {
-                    hideRow = lang !== langText || subTypes.indexOf(subTypeText) === -1;
-                }
-            }           
-
-            return hideRow;
-        }
-    }
-
-    //TODO: refaktorēt šo
-    function modifyViewHrefOnFilter(name, value) {
-        $("#AssignTable tbody tr td a[title='Apskatīt']").each(function () {
-            var hrefParts = this.href.split(/[?&]+/)
-            var newHrefPart = value !== "all" ? name + "=" + value : "";
-            if (hrefParts.length === 1) {
-                this.href += "?" + newHrefPart;
-            } else if (hrefParts.length === 2) {
-                if (hrefParts[1].indexOf(name) !== -1) {
-                    if (newHrefPart) {
-                        this.href = hrefParts[0] + "?" + newHrefPart;
-                    } else {
-                        this.href = hrefParts[0];
-                    }
-                } else {
-                    this.href = this.href + "&" + newHrefPart;
-                }
-            } else {
-                if (hrefParts[1].indexOf(name) !== -1) {
-                    if (newHrefPart) {
-                        this.href = hrefParts[0] + "?" + newHrefPart + "&" + hrefParts[2];
-                    } else {
-                        this.href = hrefParts[0] + "?" + hrefParts[2];
-                    }
-                } else {
-                    if (newHrefPart) {
-                        this.href = hrefParts[0] + "?" + newHrefPart + "&" + hrefParts[1];
-                    } else {
-                        this.href = hrefParts[0] + "?" + hrefParts[1];
-                    }
-
-                }
-            }
-        })
-    }
-
-    setupAssignFilterByLanguage();
-    setupAssignFilterBySubscriptionType();
+    var $langElems = $("td.user-language");
+    setupAssignFilterByLanguage($langElems);
+    setupAssignFilterBySubscriptionType($langElems);
 
     loadUnreadMessagesCount();
 
     setupNeedHelpButton();
+}
+
+function getSubTypeSelector(type) {
+    return ".subscription-type-selector.type-" + type;
+}    
+
+var subTypeSelectors = Object.keys(SUB_TYPES).map(function (subType) {
+    return getSubTypeSelector(subType);
+}).join(", ");
+
+function getSelectedSubTypes() {
+    var subTypes = [];
+
+    if ($(getSubTypeSelector(SUB_TYPES.free)).prop("checked")) subTypes.push("free");
+    if ($(getSubTypeSelector(SUB_TYPES.paid)).prop("checked")) subTypes.push("paid");
+    if ($(getSubTypeSelector(SUB_TYPES.lead)).prop("checked")) subTypes.push("lead");
+    if ($(getSubTypeSelector(SUB_TYPES.pausing)).prop("checked")) subTypes.push("pausing");
+
+    return subTypes;
+}
+
+
+
+function setupAssignFilterByLanguage($langElems) {
+    $("#UserLanguageSelector").on("change", function () {
+        var lang = this.value;
+        var subTypes = getSelectedSubTypes();
+
+        modifyViewHrefOnFilter("lang", lang);
+        filterAssignStudentList($("#UserLanguageSelector").val(), $langElems, subTypes);
+    });
+}
+
+function setupAssignFilterBySubscriptionType($langElems) {
+    $(subTypeSelectors).on("change", function () {
+        var subTypes = getSelectedSubTypes();
+
+        modifyViewHrefOnFilter("subTypes", subTypes.join(","));
+        filterAssignStudentList($("#UserLanguageSelector").val(), $langElems, subTypes);
+    });
+
+    $(getSubTypeSelector(SUB_TYPES.free)).prop("checked", true);
+    $(getSubTypeSelector(SUB_TYPES.paid)).prop("checked", true);
+    $(getSubTypeSelector(SUB_TYPES.lead)).prop("checked", true);
+}
+
+function filterAssignStudentList(lang, $langElems, subTypes) {
+    $("#AssignTable tr").each(function () {
+        this.style.display = "";
+    });
+
+    $langElems.each(function () {
+        var $this = $(this);
+        var $subTypeElem = $this.next();
+        var langText = $this.text();
+        var subTypeText = $subTypeElem.text();
+
+        if (shouldHideRow(lang, langText, subTypes, subTypeText)) {
+            this.parentElement.style.display = "none";
+        }
+    });
+}
+
+function shouldHideRow(lang, langText, subTypes, subTypeText) {
+    var hideRow;
+    var showAllSubTypes = subTypes.length === 0 || subTypes.length === 4;
+
+    if (lang === "all") {
+        if (showAllSubTypes) {
+            hideRow = false;
+        } else {
+            hideRow = subTypes.indexOf(subTypeText) === -1;
+        }
+    } else {
+        if (showAllSubTypes) {
+            hideRow = lang !== langText;
+        } else {
+            hideRow = lang !== langText || subTypes.indexOf(subTypeText) === -1;
+        }
+    }           
+
+    return hideRow;
+}
+
+//TODO: refaktorēt šo
+function modifyViewHrefOnFilter(name, value) {
+    $("#AssignTable tbody tr td a[title='Apskatīt']").each(function () {
+        var hrefParts = this.href.split(/[?&]+/)
+        var newHrefPart = value !== "all" ? name + "=" + value : "";
+        if (hrefParts.length === 1) {
+            this.href += "?" + newHrefPart;
+        } else if (hrefParts.length === 2) {
+            if (hrefParts[1].indexOf(name) !== -1) {
+                if (newHrefPart) {
+                    this.href = hrefParts[0] + "?" + newHrefPart;
+                } else {
+                    this.href = hrefParts[0];
+                }
+            } else {
+                this.href = this.href + "&" + newHrefPart;
+            }
+        } else {
+            if (hrefParts[1].indexOf(name) !== -1) {
+                if (newHrefPart) {
+                    this.href = hrefParts[0] + "?" + newHrefPart + "&" + hrefParts[2];
+                } else {
+                    this.href = hrefParts[0] + "?" + hrefParts[2];
+                }
+            } else {
+                if (newHrefPart) {
+                    this.href = hrefParts[0] + "?" + newHrefPart + "&" + hrefParts[1];
+                } else {
+                    this.href = hrefParts[0] + "?" + hrefParts[1];
+                }
+
+            }
+        }
+    })
 }
 
 function reloadChat(message, clearChat, showSpinner) {
@@ -679,7 +669,7 @@ function setupPostRegistrationModal(){
 }
 
 function firstLessonEvaluateLessonModal() {
-    if (isRegisteredAndNewLesson){   
+    if (window.isRegisteredAndNewLesson){   
         var ul = document.getElementById("navbar-collapse").getElementsByTagName("li");
         for (var i = 0; i < ul.length - 1; i++) {
             ul[i].addEventListener("click", function(event) {
