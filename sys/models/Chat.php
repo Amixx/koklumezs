@@ -28,7 +28,7 @@ class Chat extends \yii\db\ActiveRecord
         if (isset($this->userModel)) {
             return $this->hasOne($this->userModel, ['id' => 'author_id']);
         } else {
-            return $this->hasOne(Yii::$app->getUser()->identityClass, ['id' => 'author_id']);
+            return $this->hasOne(Users::class, ['id' => 'author_id']);
         }
     }
 
@@ -37,7 +37,7 @@ class Chat extends \yii\db\ActiveRecord
         if (isset($this->userModel)) {
             return $this->hasOne($this->userModel, ['id' => 'recipient_id']);
         } else {
-            return $this->hasOne(Yii::$app->getUser()->identityClass, ['id' => 'recipient_id']);
+            return $this->hasOne(Users::class, ['id' => 'recipient_id']);
         }
     }
 
@@ -73,86 +73,7 @@ class Chat extends \yii\db\ActiveRecord
         return $allMessages;
     }
 
-    public static function getUnreadCountInCorrespondence($authorId, $recipientId)
-    {
-        $opentime = CorrespondenceOpentimes::getOpentimeValue($authorId, $recipientId);
-        if (!$opentime) {
-            $opentime = Yii::$app->user->identity['last_opened_chat'];
-        }
-
-        $chatMessagesQuery = static::find()
-            ->where([
-                'recipient_id' => $authorId,
-                'author_id' => $recipientId
-            ]);
-
-        $needHelpMessagesQuery = NeedHelpMessages::find()
-            ->where(['author_id' => $recipientId]);
-
-        if ($opentime) {
-            $chatMessagesQuery->andWhere(['>', 'update_date', $opentime]);
-            $needHelpMessagesQuery->andWhere(['>', 'created_at', $opentime]);
-        }
-
-        $unseenChatMessagesCount = (int) $chatMessagesQuery->count();
-        $unseenNeedHelpMessagesCount = (int) $needHelpMessagesQuery->count();
-
-        return $unseenChatMessagesCount + $unseenNeedHelpMessagesCount;
-    }
-
-    public static function unreadCountForCurrentUser()
-    {
-        $currentUserId = Yii::$app->user->identity->id;
-
-        $totalUnreadCount = 0;
-        $usersWithConversations = self::getUsersWithConversations($currentUserId);
-        foreach ($usersWithConversations as $user) {
-            $totalUnreadCount += self::getUnreadCountInCorrespondence($currentUserId, $user['id']);
-        }
-
-        return $totalUnreadCount;
-    }
-
-    public static function hasNewChats($senderId)
-    {
-        $currentUserId = Yii::$app->user->identity->id;
-
-        return self::getUnreadCountInCorrespondence($currentUserId, $senderId);
-    }
-
-    public static function getUsersWithConversations($authorId)
-    {
-        $userIdsData = static::find()
-            ->select(['author_id', 'recipient_id'])
-            ->andWhere([
-                'or',
-                ['author_id' => $authorId],
-                ['recipient_id' => $authorId],
-            ])
-            ->orderBy('id desc')
-            ->asArray()
-            ->all();
-
-        $userIds = [];
-        foreach ($userIdsData as $data) {
-            if (!in_array($data['author_id'], $userIds) && $data['author_id'] != $authorId) {
-                $userIds[] = $data['author_id'];
-            }
-            if (!in_array($data['recipient_id'], $userIds) && $data['recipient_id'] != $authorId) {
-                $userIds[] = $data['recipient_id'];
-            }
-        }
-
-        $users = Users::find()->where(["in", "id", $userIds])->andWhere(['is_deleted' => false])->asArray()->all();
-        $usersByIds = array_column($users, NULL, 'id');
-
-        return array_map(function ($id) use ($usersByIds) {
-            if (isset($usersByIds[$id])) {
-                return $usersByIds[$id];
-            }
-        }, $userIds);
-    }
-
+    // TODO: iespējams šis arī jāpārnes uz user modeli
     public static function findFirstRecipient()
     {
         $authorId = Yii::$app->user->identity->id;
@@ -192,7 +113,9 @@ class Chat extends \yii\db\ActiveRecord
         $currentUserId = Yii::$app->user->identity->id;
         $isTeacher = Users::isCurrentUserTeacher();
         $messages = Chat::recordsForTwoUsers($currentUserId, $recipientId, $isTeacher);
-        $usersWithConversations = $isTeacher ? Chat::getUsersWithConversations($currentUserId) : null;
+        $user = Users::getCurrentUserForChat();
+
+        $usersWithConversations = $isTeacher ? $user->getUsersWithConversations() : null;
 
         if ($updateOpentime) {
             CorrespondenceOpentimes::updateOpentime($currentUserId, $recipientId);
@@ -224,38 +147,23 @@ class Chat extends \yii\db\ActiveRecord
             }
         }
 
-
         if ($usersWithConversations) {
-            usort($usersWithConversations, function ($userA, $userB) {
-                if ($userA == NULL || $userB == NULL) {
-                    return 0;
-                }
-
-                $aHasNew = Chat::hasNewChats($userA['id']);
-                $bHasNew = Chat::hasNewChats($userB['id']);
-
-                if ($aHasNew < $bHasNew) return 1;
-                if ($aHasNew > $bHasNew) return -1;
-
-                return 0;
-            });
-
-            foreach ($usersWithConversations as $user) {
-                if ($user == NULL) {
+            foreach ($usersWithConversations as $u) {
+                if ($u == NULL) {
                     continue;
                 }
 
-                $isActive = $user['id'] == $recipientId;
+                $isActive = $u['id'] == $recipientId;
                 $style = $isActive ? "background-color:#b0f3fc;" : "";
-                $hasNewChats = Chat::hasNewChats($user['id']);
+                $hasNewChats = $user->hasUnreadMessages($u['id']);
                 if ($hasNewChats) {
                     $style .= "font-weight: bold;";
                 }
 
                 $userList .= "
-                  <li class='chat-user-item' data-userid='" . $user['id'] . "' style='" . $style . "'>
+                  <li class='chat-user-item' data-userid='" . $u['id'] . "' style='" . $style . "'>
                     <span class='glyphicon glyphicon-user'></span>
-                    <span>" . $user['first_name'] . " " . $user['last_name'] . "</span>
+                    <span>" . $u['first_name'] . " " . $u['last_name'] . "</span>
                   </li>
                 ";
             }

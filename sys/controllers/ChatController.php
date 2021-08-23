@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use yii\web\Controller;
-use app\models\Chat;
+use app\models\Users;
 use app\widgets\ChatRoom;
 
 class ChatController extends Controller
@@ -39,9 +39,12 @@ class ChatController extends Controller
 
     public function actionGetUnreadCount()
     {
-        if (Yii::$app->user->isGuest){
+        if (Yii::$app->user->isGuest) {
             return 0;
         }
-        return Chat::unreadCountForCurrentUser();
+
+        $user = Users::getCurrentUserForChat();
+
+        return $user->getTotalUnreadCount();
     }
 }

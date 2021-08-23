@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 class School extends \yii\db\ActiveRecord
 {
@@ -118,6 +119,13 @@ class School extends \yii\db\ActiveRecord
         }
 
         return $school;
+    }
+
+    public static function getSchoolStudentIds()
+    {
+        $school = self::getByTeacher(Yii::$app->user->identity->id);
+        $students = SchoolStudent::getSchoolStudents($school['id']);
+        return ArrayHelper::map($students, 'id', 'user_id');
     }
 
     public static function getCurrentSchoolId()

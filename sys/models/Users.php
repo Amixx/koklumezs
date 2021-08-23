@@ -30,6 +30,8 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public $authKey;
 
+    private $receivedNeedHelpMessages;
+
     public static function tableName()
     {
         return 'users';
@@ -89,6 +91,145 @@ class Users extends ActiveRecord implements IdentityInterface
     public function getPayer()
     {
         return $this->hasOne(Payer::class, ['user_id' => 'id']);
+    }
+
+    public function getSchoolStudent()
+    {
+        return $this->hasOne(SchoolStudent::class, ['user_id' => 'id']);
+    }
+
+
+    public function getReceivedChatMessages()
+    {
+        return $this->hasMany(Chat::class, ['recipient_id' => 'id'])->orderBy(['id' => SORT_DESC]);
+    }
+
+    public function getCorrespondenceOpenTimes()
+    {
+        return $this->hasMany(CorrespondenceOpentimes::class, ['author_id' => 'id']);
+    }
+
+    public function getUsersWithConversations()
+    {
+        $userIdsData = Chat::find()
+            ->select(['author_id', 'recipient_id'])->distinct()
+            ->andWhere([
+                'or',
+                ['author_id' => $this->id],
+                ['recipient_id' => $this->id],
+            ])
+            ->orderBy('id desc')
+            ->asArray()
+            ->all();
+
+
+        $userIds = array_map(function ($item) {
+            return $item['author_id'] != $this->id
+                ? $item['author_id']
+                : $item['recipient_id'];
+        }, $userIdsData);
+
+
+        $usersWithConversations = Users::find()
+            ->where(['is_deleted' => false])
+            ->andWhere(["in", "users.id", $userIds])
+            ->andWhere(["in", "status", [Users::STATUS_ACTIVE, Users::STATUS_PASSIVE]])
+            ->all();
+
+        $this->receivedNeedHelpMessages = [];
+        if (Users::isCurrentUserTeacher()) {
+            $this->receivedNeedHelpMessages = $this->getReceivedNeedHelpMessages();
+        }
+        usort($usersWithConversations, [Users::class, "sortUsers"]);
+
+        return $usersWithConversations;
+    }
+
+    public function sortUsers($userA, $userB)
+    {
+        if ($userA && $userB) {
+            $aHasNew = $this->hasUnreadMessages($userA['id']);
+            $bHasNew = $this->hasUnreadMessages($userB['id']);
+
+            if ($aHasNew < $bHasNew) return 1;
+            if ($aHasNew > $bHasNew) return -1;
+        }
+
+        return 0;
+    }
+
+    public function hasUnreadMessages($recipientId)
+    {
+        return $this->getUnreadMessagesCount($recipientId) > 0;
+    }
+
+    public function getUnreadMessagesCount($recipientId)
+    {
+        return $this->getUnreadItems($recipientId, $this->receivedChatMessages, "update_date")
+            + $this->getUnreadItems($recipientId, $this->receivedNeedHelpMessages, "created_at");
+    }
+
+    private function getUnreadItems($recipientId, $messagesArray, $timeProperty)
+    {
+        $opentime = $this->getConversationOpentime($recipientId);
+
+        $i = 0;
+        $res = 0;
+
+        while (isset($messagesArray[$i]) && $currentItem = $messagesArray[$i]) {
+            $i++;
+            if ($currentItem->author_id != $recipientId) continue;
+
+            if (!$opentime || $currentItem->{$timeProperty} > $opentime) $res++;
+        }
+
+        return $res;
+    }
+
+    function getConversationOpentime($recipientId)
+    {
+        $res = null;
+
+        $i = array_search($recipientId, array_column($this->correspondenceOpenTimes, 'recipient_id'));
+
+        if ($i !== false) {
+            $res = $this->correspondenceOpenTimes[$i]->opentime;
+        } else if ($this->last_opened_chat) {
+            $res = $this->last_opened_chat;
+        }
+
+        return $res;
+    }
+
+    private function getReceivedNeedHelpMessages()
+    {
+        $schoolStudentIds = School::getSchoolStudentIds();
+        return NeedHelpMessages::find()->where(['in', 'author_id', $schoolStudentIds])->all();
+    }
+
+    public function getTotalUnreadCount()
+    {
+        $usersWithConversations = $this->getUsersWithConversations();
+        $this->receivedNeedHelpMessages = [];
+        if (Users::isCurrentUserTeacher()) {
+            $this->receivedNeedHelpMessages = $this->getReceivedNeedHelpMessages();
+        }
+        $res = 0;
+
+        foreach ($usersWithConversations as $uwc) {
+            $res += $this->getUnreadMessagesCount($uwc->id);
+        }
+
+        return $res;
+    }
+
+    public static function getCurrentUserForChat()
+    {
+        return Users::find()
+            ->where(['users.id' => Yii::$app->user->identity->id])
+            ->joinWith("receivedChatMessages")
+            ->joinWith("correspondenceOpenTimes")
+            ->limit(1)->one(); // NENOŅEMT ->limit(1) - rada memory exhausted erroru.
     }
 
     public function updateLoginTime()
