@@ -18,7 +18,7 @@ class GuestLayoutHelper extends LayoutHelper
             return null;
         }
 
-        return Url::to(['site/sign-up', 's' => $this->school->id, 'l' => Yii::$app->language]);
+        return Url::to(['registration/index', 's' => $this->school->id, 'l' => Yii::$app->language]);
     }
 
     public function getLoginUrl()

@@ -78,6 +78,11 @@ class SiteController extends Controller
         }
     }
 
+    public function actionSignUp($s, $l)
+    {
+        return $this->redirect(Url::to(["registration/index", 's' => $s, 'l' => $l]));
+    }
+
     public function actionRequestPasswordReset()
     {
         $this->layout = '@app/views/layouts/login';
@@ -186,141 +191,6 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    public function actionSignUp($s, $l)
-    {
-        $this->layout = '@app/views/layouts/signup';
-        if (!Yii::$app->user->isGuest) {
-            Yii::$app->user->logout();
-        }
-
-        Yii::$app->language = $l;
-
-        $school = School::findOne($s);
-        $schoolTeacher = SchoolTeacher::getBySchoolId($s)["user"];
-        $layoutHelper = new GuestLayoutHelper($school);
-        $this->view->params['layoutHelper'] = $layoutHelper;
-
-        $model = SignUpForm::fromSession();
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model['language'] = $l;
-
-            if (!$model->ownsInstrument) {
-                Yii::$app->session['signupModel'] = $model;
-                return $this->redirect(Url::to(["site/rent", 's' => $s, 'l' => $l]));
-            }
-
-            $user = $model->signUp();
-            if ($user && SchoolStudent::createNew($s, $user->id)) {
-                Yii::$app->user->login($user);
-                $user->updateLoginTime();
-
-                RegistrationLesson::assignToStudent($s, $user->id, $model);
-                EmailSender::sendNewStudentNotification($user, $school['email']);
-
-                $chatMessage = RegistrationMessage::getBody($s, $model->ownsInstrument, $model->hasExperience);
-                if ($chatMessage) {
-                    Chat::addNewMessage($chatMessage, $schoolTeacher['id'], $user['id']);
-                }
-
-                if ($school['registration_message'] != null && $model->ownsInstrument) {
-                    EmailSender::sendPostSignupMessage($school['registration_message'], $school['email'], $user['email']);
-                }
-
-                Yii::$app->session->set("renderPostRegistrationModal", true);
-
-                if ($model->hasExperience) {
-                    $this->redirect(["signup-questions", 'u' => $user['id'], 's' => $s]);
-                } else {
-                    Yii::$app->session->setFlash('success', Yii::t('app', 'Hey! You\'ve registered successfully. Your 2 week trial period will start after you play and evaluate currently assigned lessons. After that, we will see that you are ready to learn') . '!');
-                    return $this->redirect(['lekcijas/index']);
-                }
-            }
-        }
-
-        $model->password = '';
-        $model->passwordRepeat = '';
-        $instrument = strtolower($school['instrument']);
-        return $this->render('signup', [
-            'model' => $model,
-            'registration_title' => $school['registration_title'],
-            'instrument' => $instrument,
-        ]);
-    }
-
-    public function actionRent($s, $l)
-    {
-        $school = School::findOne($s);
-        $schoolTeacher = SchoolTeacher::getBySchoolId($s)["user"];
-        $layoutHelper = new GuestLayoutHelper($school);
-
-        $this->layout = '@app/views/layouts/login';
-        $this->view->params['layoutHelper'] = $layoutHelper;
-        Yii::$app->language = $l;
-
-        $signupModel = Yii::$app->session['signupModel'];
-        $model = RentForm::createFromSession($signupModel);
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $user = RentForm::registerUser($signupModel, $model->phone_number);
-
-            if ($user && SchoolStudent::createNew($s, $user->id, true, false)) {
-                RegistrationLesson::assignToStudent($s, $user->id, $signupModel);
-                $user->updateLoginTime();
-
-                $chatMessage = RegistrationMessage::getBody($s, $signupModel->ownsInstrument, $signupModel->hasExperience);
-                if ($chatMessage) {
-                    Chat::addNewMessage($chatMessage, $schoolTeacher['id'], $user['id']);
-                }
-
-                if ($school['renter_message'] != null && $school['rent_schoolsubplan_id'] != null) {
-                    $studentSubplan = RentForm::registerPlanForUser($user->id, $school['rent_schoolsubplan_id']);
-                    InvoiceManager::sendAdvanceInvoice($user, $studentSubplan, true);
-                }
-
-                $sent = EmailSender::sendRentNotification($model, $school['email']);
-
-                if ($sent) {
-                    Yii::$app->session->setFlash('success', \Yii::t('app', 'Hey! You\'ve registered successfully. Your 2 week trial period will start after you play and evaluate currently assigned lessons. After that, we will see that you are ready to learn') . '!');
-                    Yii::$app->user->login($user, 3600 * 24 * 30);
-                    return $this->redirect(['lekcijas/index']);
-                }
-            }
-        }
-
-        return $this->render('rent', [
-            'model' => $model,
-            'backUrl' => Url::to(['site/sign-up', 's' => $s, 'l' => $l]),
-        ]);
-    }
-
-    public function actionSignupQuestions($u, $s)
-    {
-        $user = Users::findOne($u);
-        $schoolSignupQuestions = SignupQuestions::getForSchool($s);
-
-        $post = Yii::$app->request->post();
-        if ($post && isset($post['answers']) && count($post['answers']) > 0) {
-            $aboutUser = "";
-            foreach ($post['answers'] as $answer) {
-                if ($answer !== "") {
-                    $aboutUser .= $answer;
-                    $aboutUser .= "\n";
-                }
-            }
-            $user['about'] = $aboutUser;
-            $saved = $user->save();
-            if ($saved) {
-                Yii::$app->session->setFlash('success', Yii::t('app', 'Hey! You\'ve registered successfully. Your 2 week trial period will start after you play and evaluate currently assigned lessons. After that, we will see that you are ready to learn') . '!');
-                return $this->redirect(['lekcijas/index']);
-            }
-        }
-
-        return $this->render('signup-questions', [
-            'questions' => $schoolSignupQuestions,
-        ]);
-    }
-
     public function actionMainpage()
     {
         $current = Yii::$app->user->identity;
@@ -334,17 +204,5 @@ class SiteController extends Controller
         }
 
         return $this->redirect([$url]);
-    }
-
-
-    public function actionReceivedInstrument()
-    {
-        $schoolStudent = SchoolStudent::getSchoolStudent(Yii::$app->user->identity->id);
-        $schoolStudent['has_instrument'] = true;
-        $schoolStudent->save();
-
-        Yii::$app->session->set("renderPostRegistrationModal", true);
-
-        return $this->redirect(Yii::$app->request->referrer);
     }
 }
