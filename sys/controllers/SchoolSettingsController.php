@@ -48,7 +48,7 @@ class SchoolSettingsController extends Controller
     {
         $settings = School::getSettings(Yii::$app->user->identity->id);
         $schoolId = School::getCurrentSchoolId();
-        $signupUrl = Url::base(true) . "/site/sign-up?s=" . $schoolId . "&l=" . Yii::$app->language;
+        $signupUrl = Url::base(true) . "/registration/index?s=" . $schoolId . "&l=" . Yii::$app->language;
         $loginUrl = Url::base(true) . "/site/login?s=" . $schoolId . "&l=" . Yii::$app->language;
         $difficultiesDataProvider = new ActiveDataProvider([
             'query' => Difficulties::find()->where(['school_id' => $schoolId]),

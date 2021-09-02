@@ -49,13 +49,6 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
         <?= $form->field($model, 'registration_title')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
-
-        <?= $form->field($model, 'registration_image')->widget(InputFile::class, $fileInputSettings); ?>
-
-        <?= $form->field($model, 'rent_text')->widget(CKEditor::class, [
-            'editorOptions' => $ckeditorOptions,
-        ]) ?>
-
         <?= $form->field($model, 'login_title')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
         ]) ?>

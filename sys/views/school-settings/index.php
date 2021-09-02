@@ -28,28 +28,9 @@ $this->title = Yii::t('app',  'School settings');
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="signup-questions-tab" data-toggle="tab" href="#signup-questions" role="tab" aria-controls="signup-questions" aria-selected="false">
-                <?= Yii::t('app', 'Questions after signup') ?>
-            </a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link" id="bank-account-tab" data-toggle="tab" href="#bank-account" role="tab" aria-controls="bank-account" aria-selected="false">
                 <?= Yii::t('app', 'Bank requisites') ?>
             </a>
-        </li>
-        <li class="nav-item">
-            <?= Html::a(
-                Yii::t('app', 'Registration lessons and messages'),
-                ['/registration-lessons'],
-                ['class' => 'nav-link']
-            ) ?>
-        </li>
-        <li class="nav-item">
-            <?= Html::a(
-                Yii::t('app', 'Registration e-mails'),
-                ['/school-registration-emails'],
-                ['class' => 'nav-link']
-            ) ?>
         </li>
         <li class="nav-item">
             <?= Html::a(
@@ -62,6 +43,13 @@ $this->title = Yii::t('app',  'School settings');
             <?= Html::a(
                 Yii::t('app', 'Message after evaluation'),
                 ['/school-after-evaluation-messages'],
+                ['class' => 'nav-link']
+            ) ?>
+        </li>
+        <li class="nav-item">
+            <?= Html::a(
+                Yii::t('app', 'Registration settings'),
+                ['/registration-settings'],
                 ['class' => 'nav-link']
             ) ?>
         </li>
