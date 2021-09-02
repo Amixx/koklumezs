@@ -14,7 +14,7 @@ class SignUpForm extends Model
     public $email;
     public $language;
     public $rememberMe = true;
-    public $ownsInstrument = null;
+    public $ownsInstrument = false;
     public $hasExperience = false;
     public $agree = false;
 
@@ -77,12 +77,20 @@ class SignUpForm extends Model
     public function signUp()
     {
         if ($this->validate()) {
+            $qna = Yii::$app->session['questionsAndAnswers'];
+            $aboutUser = "";
+            foreach ($qna as $qnaItem) {
+                $aboutUser .= $qnaItem['answer'];
+                $aboutUser .= "\n";
+            }
+
             $user = new Users();
             $user->password = Yii::$app->security->generatePasswordHash($this->password);
             $user->first_name = $this->first_name;
             $user->last_name = $this->last_name;
             $user->email = $this->email;
             $user->language = $this->language;
+            $user->about = $aboutUser;
 
             $user->status = Users::STATUS_PASSIVE;
 
@@ -101,8 +109,8 @@ class SignUpForm extends Model
         if (Yii::$app->session['signupModel'] !== null) {
             $signupModel = Yii::$app->session['signupModel'];
             $model->first_name = $signupModel['first_name'];
-            $model->last_name = $signupModel['last_name'];
-            $model->email = $signupModel['email'];
+            $model->ownsInstrument = $signupModel['ownsInstrument'];
+            $model->hasExperience = $signupModel['hasExperience'];
         }
 
         return $model;

@@ -1,4 +1,2 @@
-Jaunais skolēns <?= $model['fullname'] ?> (<?= $model['email'] ?>) vēlas īrēt instrumentu!
-E-pasts: <?= $model['email'] ?>.
-Telefona nr.: <?= $model['phone_number'] ?>.
-Omnivas pakomāta adrese: <?= $model['address'] ?>.
+Jaunais skolēns <?= $model['first_name'] ?> <?= $model['last_name'] ?> vēlas īrēt instrumentu!
+E-pasts: <strong><?= $model['email'] ?></strong>.

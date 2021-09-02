@@ -1182,3 +1182,57 @@ div.has-experience.active, div.rent.active {
         padding: 6px;
     }
 }
+
+
+
+
+.reg-page-1 h3 {
+    text-transform:uppercase
+}
+
+.reg-page-1-container {
+    display:flex;
+    grid-gap: 64px;
+    align-items:center;
+}
+
+.reg-page-1-img-wrapper {
+    flex: 0 0 150px;
+}
+
+.reg-page-1-img-wrapper img {
+    width:100%;
+}
+
+.reg-page-1-title-outer {
+    flex: 0 1 100%; 
+    background:rgba(196,196,196,0.5);
+    border-radius: 50%;
+    min-height: 200px;
+}
+
+.reg-page-1-title-inner {
+    margin-top: 40px;
+    margin-left: 120px;
+}
+
+.reg-page-1-btn-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.reg-page-1-btn-container button {
+    flex: 0 1 80%;
+}
+
+.reg-page-1-btn-container span {
+    flex: 1 0 15%;
+    font-weight: bold;
+    color: white;
+    text-align: right;
+}
+
+#post-registration-modal.modal-dialog {
+    top: 160px;
+}

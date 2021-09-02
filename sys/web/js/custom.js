@@ -679,3 +679,13 @@ function firstLessonEvaluateLessonModal() {
         }
     }
 }
+
+$("#signup-questions-add-answer").on('click', function(){
+    var $addedQuestionsContainer = $("#signup-questions-answer-choices");
+    var $addedQuestions = $addedQuestionsContainer.find(".form-group");
+    var addedQuestionsCount = $addedQuestions.length;
+
+    var $newQuestion = $($addedQuestions[0]).clone();
+    $newQuestion.find("input").attr('name', 'answer_choice[' + addedQuestionsCount + ']');
+    $addedQuestionsContainer.append($newQuestion);
+});
