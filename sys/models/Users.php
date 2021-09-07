@@ -104,6 +104,16 @@ class Users extends ActiveRecord implements IdentityInterface
         return $this->hasMany(Chat::class, ['recipient_id' => 'id'])->orderBy(['id' => SORT_DESC]);
     }
 
+    public function getSentChatMessages()
+    {
+        return $this->hasMany(Chat::class, ['author_id' => 'id'])->orderBy(['id' => SORT_DESC]);
+    }
+
+    public function getSentNeedHelpMessages()
+    {
+        return $this->hasMany(NeedHelpMessages::class, ['author_id' => 'id'])->orderBy(['id' => SORT_DESC]);
+    }
+
     public function getCorrespondenceOpenTimes()
     {
         return $this->hasMany(CorrespondenceOpentimes::class, ['author_id' => 'id']);
@@ -133,7 +143,10 @@ class Users extends ActiveRecord implements IdentityInterface
         $usersWithConversations = Users::find()
             ->where(['is_deleted' => false])
             ->andWhere(["in", "users.id", $userIds])
-            ->andWhere(["in", "status", [Users::STATUS_ACTIVE, Users::STATUS_PASSIVE]])
+            ->andWhere(["in", "users.status", [Users::STATUS_ACTIVE, Users::STATUS_PASSIVE]])
+            ->joinWith("receivedChatMessages")
+            ->joinWith("sentChatMessages")
+            ->joinWith("sentNeedHelpMessages")
             ->all();
 
         $this->receivedNeedHelpMessages = [];
@@ -151,8 +164,10 @@ class Users extends ActiveRecord implements IdentityInterface
             $aHasNew = $this->hasUnreadMessages($userA['id']);
             $bHasNew = $this->hasUnreadMessages($userB['id']);
 
-            if ($aHasNew < $bHasNew) return 1;
-            if ($aHasNew > $bHasNew) return -1;
+            if ($aHasNew) return -1;
+            if ($bHasNew) return 1;
+            if ($userA->getLatestMessageTime() < $userB->getLatestMessageTime()) return 1;
+            else return -1;
         }
 
         return 0;
@@ -205,6 +220,22 @@ class Users extends ActiveRecord implements IdentityInterface
     {
         $schoolStudentIds = School::getSchoolStudentIds();
         return NeedHelpMessages::find()->where(['in', 'author_id', $schoolStudentIds])->all();
+    }
+
+    private function getLatestMessageTime()
+    {
+        $latestTimes = [
+            self::getLatestTime($this->receivedChatMessages, 'update_date'),
+            self::getLatestTime($this->sentChatMessages, 'update_date'),
+            self::getLatestTime($this->sentNeedHelpMessages, 'created_at')
+        ];
+
+        return max($latestTimes);
+    }
+
+    private static function getLatestTime($messages, $column)
+    {
+        return !empty($messages) ? $messages[0][$column] : null;
     }
 
     public function getTotalUnreadCount()
