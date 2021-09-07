@@ -173,7 +173,7 @@ class UserLayoutHelper extends LayoutHelper
         if ($schoolStudent['signed_up_to_rent_instrument'] && !$schoolStudent['has_instrument']) {
             return Html::a(
                 Yii::t('app', 'I have received the instrument'),
-                ['site/received-instrument'],
+                ['registration/received-instrument'],
                 ['class' => 'btn btn-orange btn-received-instrument']
             );
         } else if (!$schoolStudent['show_real_lessons'] && $startLaterCommitment && !$startLaterCommitment['chosen_period_started']) {

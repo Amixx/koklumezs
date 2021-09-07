@@ -642,4 +642,5 @@ return [
     'I have read and agree to the terms of the lease agreement' => 'Ar īres līguma noteikumiem esmu iepazinies un piekrītu',
     'Aggree to terms' => 'Piekrītu nosacījumiem',
     'Text to show in the rent page' => 'Teksts, ko parādīt īres lapā',
+    'Create question' => 'Izveidot jautājumu',
 ];

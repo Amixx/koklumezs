@@ -2,8 +2,8 @@
 
 use yii\helpers\Html;
 
-$this->title = \Yii::t('app', 'Create parameter');
-['label' => \Yii::t('app', 'Parameters'), 'url' => ['index']];
+$this->title = \Yii::t('app', 'Create question');
+['label' => \Yii::t('app', 'Signup questions'), 'url' => ['index']];
 
 ?>
 <div class="difficulties-create">
