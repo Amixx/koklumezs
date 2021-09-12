@@ -643,4 +643,8 @@ return [
     'Aggree to terms' => 'Piekrītu nosacījumiem',
     'Text to show in the rent page' => 'Teksts, ko parādīt īres lapā',
     'Create question' => 'Izveidot jautājumu',
+    'Students waiting for a kokle' => 'Skolēni, kuri gaida kokli',
+    'Students who are committed to starting later' => 'Skolēni, kuri ir apņēmušies uzsākt vēlāk',
+    'Students who have not yet evaluated the first lessons' => 'Skolēni, kuri vēl nav novērtējuši pirmās nodarbības',
+    'Students who have registered but have not started playing yet' => 'Skolēni, kuri ir reģistrējušies, bet vēl nav sākuši spēlēt'
 ];

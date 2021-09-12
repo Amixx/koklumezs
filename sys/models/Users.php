@@ -98,6 +98,11 @@ class Users extends ActiveRecord implements IdentityInterface
         return $this->hasOne(SchoolStudent::class, ['user_id' => 'id']);
     }
 
+    public function getTrial()
+    {
+        return $this->hasOne(Trials::class, ['user_id' => 'id']);
+    }
+
 
     public function getReceivedChatMessages()
     {
