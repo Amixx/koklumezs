@@ -1187,13 +1187,13 @@ div.has-experience.active, div.rent.active {
 
 
 .reg-page-1 h3 {
-    text-transform:uppercase
+    text-transform: uppercase;
 }
 
 .reg-page-1-container {
-    display:flex;
-    grid-gap: 64px;
-    align-items:center;
+    display: flex;
+    grid-gap: 32px;
+    align-items: center;
 }
 
 .reg-page-1-img-wrapper {
@@ -1201,19 +1201,12 @@ div.has-experience.active, div.rent.active {
 }
 
 .reg-page-1-img-wrapper img {
-    width:100%;
+    width: 100%;
 }
 
 .reg-page-1-title-outer {
     flex: 0 1 100%; 
-    background:rgba(196,196,196,0.5);
-    border-radius: 50%;
     min-height: 200px;
-}
-
-.reg-page-1-title-inner {
-    margin-top: 40px;
-    margin-left: 120px;
 }
 
 .reg-page-1-btn-container {
@@ -1235,4 +1228,18 @@ div.has-experience.active, div.rent.active {
 
 #post-registration-modal.modal-dialog {
     top: 160px;
+}
+
+@media (max-width: 767px){
+    .reg-page-1-container {
+        flex-wrap: wrap;
+    }
+
+    .reg-page-1-img-wrapper {
+        flex: 0 0 100%;
+    }
+
+    .reg-page-1-title-outer {
+        min-height: unset;
+    }
 }

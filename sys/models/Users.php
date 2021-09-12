@@ -101,12 +101,12 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public function getReceivedChatMessages()
     {
-        return $this->hasMany(Chat::class, ['recipient_id' => 'id'])->orderBy(['id' => SORT_DESC]);
+        return $this->hasMany(Chat::class, ['recipient_id' => 'id'])->orderBy(['id' => SORT_DESC])->alias("received");
     }
 
     public function getSentChatMessages()
     {
-        return $this->hasMany(Chat::class, ['author_id' => 'id'])->orderBy(['id' => SORT_DESC]);
+        return $this->hasMany(Chat::class, ['author_id' => 'id'])->orderBy(['id' => SORT_DESC])->alias("sent");
     }
 
     public function getSentNeedHelpMessages()

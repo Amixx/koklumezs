@@ -49,8 +49,8 @@ function getFieldOptions($fieldName, $hasInfo = false)
         <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
 
         <div class="row" style="margin-top: 32px;">
-            <div class="col-xs-4"></div>
-            <div class="col-xs-4">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
                 <?= $form
                     ->field($model, 'first_name', getFieldOptions('first_name'))
                     ->label(false)
@@ -63,7 +63,7 @@ function getFieldOptions($fieldName, $hasInfo = false)
                     <span>1 no 4</span>
                 </div>
             </div>
-            <div class="col-xs-4"></div>
+            <div class="col-sm-4"></div>
         </div>
 
         <?php ActiveForm::end(); ?>
