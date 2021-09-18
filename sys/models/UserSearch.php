@@ -55,7 +55,7 @@ class UserSearch extends Users
      */
     public function search($params)
     {
-        $query = Users::find()->where(['is_deleted' => false]);
+        $query = Users::find()->where(['is_deleted' => false])->orderBy(['id' => SORT_DESC]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
