@@ -79,8 +79,7 @@ class RecentlyRegisteredStudentsController extends Controller
             if ($ss['signed_up_to_rent_instrument'] && !$ss['has_instrument']) {
                 $sections['waitingForInstrument']['users'][] = $u;
             } else if (!$ss['show_real_lessons']) {
-                $commmitment = StartLaterCommitments::findOne(['user_id' => $u['id']]);
-                $trial = Trials::find()->where(['user_id' => $u['id']])->one();
+                $commmitment = StartLaterCommitments::find()->where(['user_id' => $u['id']])->one();
 
                 if ($commmitment && !$commmitment['chosen_period_started']) {
                     $sections['willStartLater']['users'][] = [
@@ -90,12 +89,8 @@ class RecentlyRegisteredStudentsController extends Controller
                         'start_later_date' => $commmitment['start_date']
                     ];
                 }
-
-                if (!$trial) {
-                    if (!$commmitment || ($commmitment && $commmitment['chosen_period_started'])) {
-                        $sections['firstLessonsNotEvaluated']['users'][] = $u;
-                    }
-                }
+            } else if ($ss['show_real_lessons'] && !Userlectureevaluations::hasAnyLegitEvaluations($u['id']) && $u['id'] > 1000) {
+                $sections['firstLessonsNotEvaluated']['users'][] = $u;
             }
         }
 

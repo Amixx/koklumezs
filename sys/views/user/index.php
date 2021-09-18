@@ -18,7 +18,7 @@ $this->title = \Yii::t('app',  'Users');
         <?= Html::a(\Yii::t('app',  'Create user'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <p>
-        <?= Html::a(\Yii::t('app',  'Students who have registered but have not started playing yet'), ['start-later-commitments/index'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(\Yii::t('app',  'Students who have registered but have not started playing yet'), ['recently-registered-students/index'], ['class' => 'btn btn-primary']) ?>
     </p>
     <p>
         <?= Html::a(\Yii::t('app',  'Student "commitments" to start later'), ['start-later-commitments/index'], ['class' => 'btn btn-primary']) ?>
