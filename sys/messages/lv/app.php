@@ -646,5 +646,6 @@ return [
     'Students waiting for a kokle' => 'Skolēni, kuri gaida kokli',
     'Students who are committed to starting later' => 'Skolēni, kuri ir apņēmušies uzsākt vēlāk',
     'Students who have not yet evaluated the first lessons' => 'Skolēni, kuri vēl nav novērtējuši pirmās nodarbības',
-    'Students who have registered but have not started playing yet' => 'Skolēni, kuri ir reģistrējušies, bet vēl nav sākuši spēlēt'
+    'Students who have registered but have not started playing yet' => 'Skolēni, kuri ir reģistrējušies, bet vēl nav sākuši spēlēt',
+    'A portrait of the teacher' => 'Skolotāja portreta attēls'
 ];

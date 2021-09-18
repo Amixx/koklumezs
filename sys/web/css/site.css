@@ -581,7 +581,7 @@ div.has-experience.active, div.rent.active {
     top: 20px;
     position: fixed;
     display: inline-block;
-    left: calc(50% - 250px);
+    left: calc(50% - 265px);
     z-index: 1050; /* slikti :))) */
 }
 
@@ -595,6 +595,14 @@ div.has-experience.active, div.rent.active {
     color: black;
     margin-top: 4px;
 }
+
+.teacher-communication-button.with-portrait {
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 95px;
+}
+
 .teacher-communication-button:hover { 
     color: black;
 }
@@ -661,7 +669,7 @@ div.has-experience.active, div.rent.active {
 
 .btn-received-instrument {
     position: absolute;
-    left: calc(50% - 485px);
+    left: calc(50% - 500px);
     top: 24px;
     z-index: 1050;
 }
@@ -980,7 +988,7 @@ div.has-experience.active, div.rent.active {
     }
 
     #chat-btn-with-icons {
-        left: calc(50% - 350px);
+        left: calc(50% - 365px);
     }
 
     #chat-btn-with-icons.teacher {
@@ -988,7 +996,7 @@ div.has-experience.active, div.rent.active {
     }
 
     .btn-received-instrument {
-        left: calc(50% - 580px);
+        left: calc(50% - 595px);
     }
 }
 
@@ -999,7 +1007,11 @@ div.has-experience.active, div.rent.active {
         height: 396px;
     }
 
-    #chat-btn-with-icons, #chat-btn-with-icons.teacher {
+    #chat-btn-with-icons {
+        left: calc(50% - 475px);
+    }
+
+    #chat-btn-with-icons.teacher {
         left: calc(50% - 460px);
     }
 }

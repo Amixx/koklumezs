@@ -43,14 +43,21 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
         <?= $form->field($model, 'registration_background_image')->widget(InputFile::class, $fileInputSettings); ?>
         <?= $form->field($model, 'video_thumbnail')->widget(InputFile::class, $fileInputSettings); ?>
         <?= $form->field($model, 'logo')->widget(InputFile::class, $fileInputSettings); ?>
+        <?= $form->field($model, 'registration_image')->widget(InputFile::class, $fileInputSettings); ?>
+        <?= $form->field($model, 'teacher_portrait')->widget(InputFile::class, $fileInputSettings); ?>
+
+        <?= $form->field($model, 'rent_schoolsubplan_id')
+            ->dropDownList(
+                $schoolSubPlans,
+                ['prompt' => '']
+            )->label(Yii::t('app', 'Subscription plan')) ?>
+
         <?= $form->field($model, 'email')->textInput(['class' => 'form-control form-group has-feedback field-with-info-widget']) ?>
         <span class="glyphicon glyphicon-info-sign info info-school-email" style="margin-top: -50px;"></span>
 
         <?= $form->field($model, 'registration_title')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
-
-        <?= $form->field($model, 'registration_image')->widget(InputFile::class, $fileInputSettings); ?>
 
         <?= $form->field($model, 'rent_text')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
@@ -71,12 +78,6 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
         <?= $form->field($model, 'trial_ended_message')->widget(CKEditor::class, [
             'editorOptions' => $ckeditorOptions,
         ]) ?>
-
-        <?= $form->field($model, 'rent_schoolsubplan_id')
-            ->dropDownList(
-                $schoolSubPlans,
-                ['prompt' => '']
-            )->label(Yii::t('app', 'Subscription plan')) ?>
 
         <div class="form-group">
             <?= Html::submitButton(\Yii::t('app',  'Save'), ['class' => 'btn btn-success']) ?>

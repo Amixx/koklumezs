@@ -29,6 +29,7 @@ class School extends \yii\db\ActiveRecord
                 'renter_message',
                 'trial_ended_message',
                 'registration_image',
+                'teacher_portrait',
                 'rent_text',
             ], 'string'],
             [['rent_schoolsubplan_id'], 'number'],
@@ -54,6 +55,7 @@ class School extends \yii\db\ActiveRecord
             'renter_message' => \Yii::t('app',  'Message for students who want to rent an instrument'),
             'trial_ended_message' => \Yii::t('app',  'Message to send after trial period has ended'),
             'registration_image' => \Yii::t('app',  'Image in the first page of registration'),
+            'teacher_portrait' => \Yii::t('app',  'A portrait of the teacher'),
             'rent_text' => \Yii::t('app',  'Text to show in the rent page'),
         ];
     }
@@ -90,6 +92,7 @@ class School extends \yii\db\ActiveRecord
             \Yii::t('app', 'Message for students who want to rent an instrument') => $school->renter_message,
             \Yii::t('app', 'Message to send after trial period has ended') => $school->trial_ended_message,
             \Yii::t('app', 'Image in the first page of registration') => $school->registration_image,
+            \Yii::t('app', 'A portrait of the teacher') => $school->teacher_portrait,
             \Yii::t('app', 'Text to show in the rent page') => $school->rent_text,
         ];
     }
