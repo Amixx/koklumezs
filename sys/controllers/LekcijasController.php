@@ -310,6 +310,7 @@ class LekcijasController extends Controller
         $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "new");
         $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
         $schoolStudent = SchoolStudent::getSchoolStudent($user->id);
+        $teacherPortrait = $schoolStudent->school->teacher_portrait;
 
         $newLessonsQuery = Lectures::find()->where(['in', 'id', $latestNewLecturesIds]);
         if (!$schoolStudent['show_real_lessons']) {
@@ -339,8 +340,6 @@ class LekcijasController extends Controller
 
         $opened = UserLectures::getOpened($user->id);
         $userLectureEvaluations = Userlectureevaluations::hasLectureEvaluations($user->id);
-
-        $title_filter = 1;
 
         $userId = Yii::$app->user->identity->id;
         $user = Users::findOne($userId);
@@ -384,6 +383,7 @@ class LekcijasController extends Controller
             'isNextLesson' => $isNextLesson,
             'renderRequestButton' => !$user->wants_more_lessons,
             'isActive' => $isActive,
+            'teacherPortrait' => $teacherPortrait,
         ]);
     }
 

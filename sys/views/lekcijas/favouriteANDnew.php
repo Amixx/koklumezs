@@ -5,10 +5,16 @@ use app\models\Lectures;
 use app\helpers\ThumbnailHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
+
+$sectionClass = "LectureOverview__Section";
+if (empty($lectures) && $teacherPortrait) {
+    $sectionClass .= " LectureOverview__Section--empty-with-portrait";
+}
+
 ?>
 
 <div class="col-md-6 LectureOverview__Wrap">
-    <div class="LectureOverview__Section">
+    <div class="<?= $sectionClass ?>">
         <h4 class="text-center"><?= \Yii::t('app', $divTitle) ?></h4>
         <?php if (empty($Lectures)) {
             $userId = Yii::$app->user->identity->id; ?>
@@ -17,9 +23,15 @@ use yii\helpers\Url;
             </h4>
             <?php if ($type == 'new' && $isNextLesson && $isActive) { ?>
                 <div class="row text-center">
-                    <button type="button" class="btn btn-orange btn-long" data-toggle="modal" data-target="#moreLessons">
-                        <?= \Yii::t('app', 'I want more tasks'); ?>
-                    </button>
+                    <div>
+                        <?php if ($teacherPortrait) { ?>
+                            <div class="more-lessons-teacher-portrait" style="background-image: url(<?= $teacherPortrait ?>)"></div>
+                        <?php } ?>
+                        <button type="button" class="btn btn-orange more-lessons-button" data-toggle="modal" data-target="#moreLessons">
+                            <?= \Yii::t('app', 'Hey! click here if you want another task!'); ?>
+                        </button>
+                    </div>
+
                     <?= $this->render('moreLessonsModal', [
                         'nextLessons' => $nextLessons,
                     ]) ?>

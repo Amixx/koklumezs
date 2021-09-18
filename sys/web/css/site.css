@@ -412,7 +412,7 @@ a.desc:after {
 }
 
 .LectureOverview__EmptyText {
-    margin-bottom:185px;
+    margin-bottom: 165px;
 }
 
 .LectureOverview__LinkToAll {
@@ -977,6 +977,24 @@ div.has-experience.active, div.rent.active {
     display: flex;
 }
 
+.more-lessons-teacher-portrait {
+    height: 70px;
+    width: 70px;
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    margin-left: 60px;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgb(0 0 0 / 50%);
+}
+
+.more-lessons-button {
+    background: rgba(248, 197, 67, 1);  
+    position: relative;
+}
+
 @media(max-width: 1199px) {
     .video-js {
         width: 520px;
@@ -998,6 +1016,10 @@ div.has-experience.active, div.rent.active {
     .btn-received-instrument {
         left: calc(50% - 595px);
     }
+
+    .more-lessons-teacher-portrait {
+        margin-left: 10px;
+    }
 }
 
 
@@ -1014,6 +1036,10 @@ div.has-experience.active, div.rent.active {
     #chat-btn-with-icons.teacher {
         left: calc(50% - 460px);
     }
+
+    .more-lessons-teacher-portrait {
+        margin-left: 135px;
+    }
 }
 
 @media (min-width: 991px) {
@@ -1028,6 +1054,14 @@ div.has-experience.active, div.rent.active {
 
 
 @media(max-width:768px) {
+    .more-lessons-teacher-portrait {
+        margin-left: max(calc(50% - 184px), 12px);
+    }
+
+    .more-lessons-button {
+        font-size: 11px;
+    }
+
     .video-js {
         width: 300px;
         height: 236px;
@@ -1116,8 +1150,12 @@ div.has-experience.active, div.rent.active {
     .LectureOverview__LinkToAll {
         float:none; margin-top:0;
     }  
-     .LectureOverview__Section {
+    .LectureOverview__Section {
         min-height: unset;
+    }
+
+    .LectureOverview__Section--empty-with-portrait {
+        padding-bottom: 64px;
     }
 
     .LectureOverview__EmptyText {
