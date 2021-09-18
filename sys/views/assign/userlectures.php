@@ -66,7 +66,13 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
         <span>
             (<?= $currentUserIndex + 1 ?>/<?= $userCount ?>)
         </span>
-        <?= $this->title . " (<span class='text-" . $subscriptionTypeClassSuffix . "'>" . $subscriptionTypeText . "</span>)" ?>
+        <span><?= $this->title ?></span>
+        <span>
+            <span data-userid='<?= $user['id'] ?>' style='width: 41px;' class='btn btn-success glyphicon glyphicon-envelope chat-with-student'>
+                &nbsp;
+            </span>
+        </span>
+        <span class='text-<?= $subscriptionTypeClassSuffix ?>'>(<?= $subscriptionTypeText ?>)</span>
     </h1>
 
     <?php
@@ -112,7 +118,15 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
                         <td class="text-center"><?= $lecture->created ?></td>
                         <td class="text-center"><?= (int) $lecture->opened ? 'Jā' : 'Nē' ?></td>
                         <td class="text-center"><?= $lecture->open_times ?></td>
-                        <td class="text-center"><?= $lecture->lecture->complexity ? $lecture->lecture->complexity : $empty ?></td>
+                        <td class="text-center">
+                            <strong>Izrēķinātā sarežģītība: <?= $lecture->lecture->complexity ? $lecture->lecture->complexity : $empty ?></strong>
+                            <br>
+                            <div style="margin-top: 8px;">
+                                <?php foreach ($lecture->lecture->lectureDifficulties as $lectureDiff) { ?>
+                                    <div><?= $lectureDiff->diff->name ?>: <?= $lectureDiff->value ?></div>
+                                <?php } ?>
+                            </div>
+                        </td>
                         <?= $this->render('evaluation-titles', [
                             'evaluationsTitles' => $evaluationsTitles,
                             'evaluationsValues' => $evaluationsValues,

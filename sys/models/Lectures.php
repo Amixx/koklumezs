@@ -89,6 +89,11 @@ class Lectures extends \yii\db\ActiveRecord
             ->from(['u2' => Users::tableName()]);
     }
 
+    public function getLectureDifficulties()
+    {
+        return $this->hasMany(LecturesDifficulties::class, ['lecture_id' => 'id']);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
