@@ -84,7 +84,7 @@ class RegistrationController extends Controller
         $model = new RegistrationQuestionForm;
 
         $post = Yii::$app->request->post();
-        if ($post && $model->load($post)) {
+        if ($post && $model->load($post) && $model->validate()) {
             $qna = Yii::$app->session['questionsAndAnswers'];
             $qna[] = [
                 'question' => $questionOfIndex['text'],
@@ -218,7 +218,7 @@ class RegistrationController extends Controller
                 $sent = EmailSender::sendRentNotification($user, $school['email']);
 
                 if ($sent) {
-                    Yii::$app->session->setFlash('success', \Yii::t('app', 'Hey! You\'ve registered successfully. Your 2 week trial period will start after you play and evaluate currently assigned lessons. After that, we will see that you are ready to learn') . '!');
+                    Yii::$app->session->setFlash('success', \Yii::t('app', 'Hey! Your profile has been successfully created! We have sent information about kokle rent to your e-mail. While kokle is still on its way, you can watch the video which will familiarize you with the platform.'));
                     Yii::$app->user->login($user, 3600 * 24 * 30);
                     return $this->redirect(['lekcijas/index']);
                 }
