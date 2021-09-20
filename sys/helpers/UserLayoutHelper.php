@@ -187,16 +187,29 @@ class UserLayoutHelper extends LayoutHelper
 
     public function getChatButton()
     {
-        $chatButtonText = $this->isTeacher ? "Chat with students" : "Send us a message";
-        $unreadGroups = $this->isTeacher ? '<span class="chat-unread-count-groups"></span>' : '';
-        $outerClass = $this->isTeacher ? "teacher" : "student";
+        $chatButtonText = "Chat";
+        $unreadGroups =  "";
+        $outerClass = "";
+        $buttonClasses = "btn btn-success teacher-communication-button";
+        $buttonBackgroundImage = "unset";
+
+        if ($this->isTeacher) {
+            $chatButtonText = "Chat with students";
+            $unreadGroups = "<span class='chat-unread-count-groups'></span>";
+            $outerClass = "teacher";
+        } else {
+            if ($this->school['teacher_portrait']) {
+                $buttonClasses .= " with-portrait";
+                $buttonBackgroundImage = $this->school['teacher_portrait'];
+            }
+        }
 
         return '<div id="chat-btn-with-icons" class="' . $outerClass . '">'
             . '<div id="notification-badges">'
             . $unreadGroups
             . '<span class="chat-unread-count"></span>'
             . '</div>'
-            . '<button class="btn btn-success teacher-communication-button" id="chat-toggle-button" data-toggle="modal" data-target="#chatModal">'
+            . '<button class="' . $buttonClasses . '" id="chat-toggle-button" style="background-image: url(' . $buttonBackgroundImage . ')" data-toggle="modal" data-target="#chatModal">'
             . \Yii::t('app', $chatButtonText)
             . '</button>'
             . '</div>';
