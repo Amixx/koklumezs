@@ -58,17 +58,16 @@ class RecentlyRegisteredStudentsController extends Controller
             'waitingForInstrument' => [
                 'title' => Yii::t('app', 'Students waiting for a kokle'),
                 'users' => [],
-                'renderDateCol' => false,
             ],
             'willStartLater' => [
                 'title' => Yii::t('app', 'Students who are committed to starting later'),
                 'users' => [],
-                'renderDateCol' => true,
+                'dateColText' => 'Ieplānotais sākuma datums',
             ],
             'firstLessonsNotEvaluated' => [
                 'title' => Yii::t('app', 'Students who have not yet evaluated the first lessons'),
                 'users' => [],
-                'renderDateCol' => false,
+                'dateColText' => 'Reģistrācijas datums un laiks',
             ],
         ];
 
@@ -86,11 +85,16 @@ class RecentlyRegisteredStudentsController extends Controller
                         'first_name' => $u['first_name'],
                         'last_name' => $u['last_name'],
                         'email' => $u['email'],
-                        'start_later_date' => $commmitment['start_date']
+                        'date' => $commmitment['start_date']
                     ];
                 }
             } else if ($ss['show_real_lessons'] && !Userlectureevaluations::hasAnyLegitEvaluations($u['id']) && $u['id'] > 1000) {
-                $sections['firstLessonsNotEvaluated']['users'][] = $u;
+                $sections['firstLessonsNotEvaluated']['users'][] = [
+                    'first_name' => $u['first_name'],
+                    'last_name' => $u['last_name'],
+                    'email' => $u['email'],
+                    'date' => $ss['created']
+                ];
             }
         }
 

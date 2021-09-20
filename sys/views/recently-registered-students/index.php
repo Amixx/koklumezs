@@ -21,8 +21,8 @@ $this->title = \Yii::t('app', 'Students who have registered but have not started
                     <th scope="col">Vārds</th>
                     <th scope="col">Uzvārds</th>
                     <th scope="col">E-pasts</th>
-                    <?php if ($section['renderDateCol']) { ?>
-                        <th scope="col">Ieplānotais sākuma datums</th>
+                    <?php if (isset($section['dateColText'])) { ?>
+                        <th scope="col"><?= $section['dateColText'] ?></th>
                     <?php } ?>
                 </tr>
                 <?php foreach ($section['users'] as $user) { ?>
@@ -30,7 +30,10 @@ $this->title = \Yii::t('app', 'Students who have registered but have not started
                         <td><?= $user['first_name'] ?></td>
                         <td><?= $user['last_name'] ?></td>
                         <td><?= $user['email'] ?></td>
-                        <td><?= isset($user['start_later_date']) ?  $user['start_later_date'] : "" ?></td>
+                        <?php if (isset($user['date'])) { ?>
+                            <td><?= $user['date'] ?></td>
+                        <?php } ?>
+
                     </tr>
                 <?php } ?>
             </tbody>
