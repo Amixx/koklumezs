@@ -172,11 +172,15 @@ class TestController extends Controller
         //     echo "<hr>";
         // }
 
-        $x = StudentSubPlans::findFirstRentSubPlan(1280);
-        if ($x['sent_invoices_count'] === 1 && $x['times_paid'] === 0) {
-            $invoice = SentInvoices::findOne(['studentsubplan_id' => $x['id']]);
-            $today = date('d.m.Y');
-            $match_date = date('d.m.Y', strtotime($invoice["sent_date"] . " + 8 days"));
-        }
+        // $x = StudentSubPlans::findFirstRentSubPlan(1280);
+        // if ($x['sent_invoices_count'] === 1 && $x['times_paid'] === 0) {
+        //     $invoice = SentInvoices::findOne(['studentsubplan_id' => $x['id']]);
+        //     $today = date('d.m.Y');
+        //     $match_date = date('d.m.Y', strtotime($invoice["sent_date"] . " + 8 days"));
+        // }
+
+
+        $schoolId = School::getCurrentSchoolId();
+        var_dump($schoolId);
     }
 }

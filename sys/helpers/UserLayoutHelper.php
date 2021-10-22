@@ -191,7 +191,7 @@ class UserLayoutHelper extends LayoutHelper
         $unreadGroups =  "";
         $outerClass = "";
         $buttonClasses = "btn btn-success teacher-communication-button";
-        $buttonBackgroundImage = "unset";
+        $buttonStyle = "unset";
 
         if ($this->isTeacher) {
             $chatButtonText = "Chat with students";
@@ -200,7 +200,7 @@ class UserLayoutHelper extends LayoutHelper
         } else {
             if ($this->school['teacher_portrait']) {
                 $buttonClasses .= " with-portrait";
-                $buttonBackgroundImage = $this->school['teacher_portrait'];
+                $buttonStyle = "background-image: url($this->school['teacher_portrait'])";
             }
         }
 
@@ -209,7 +209,7 @@ class UserLayoutHelper extends LayoutHelper
             . $unreadGroups
             . '<span class="chat-unread-count"></span>'
             . '</div>'
-            . '<button class="' . $buttonClasses . '" id="chat-toggle-button" style="background-image: url(' . $buttonBackgroundImage . ')" data-toggle="modal" data-target="#chatModal">'
+            . '<button class="' . $buttonClasses . '" id="chat-toggle-button" style="' . $buttonStyle . '" data-toggle="modal" data-target="#chatModal">'
             . \Yii::t('app', $chatButtonText)
             . '</button>'
             . '</div>';
