@@ -51,7 +51,8 @@ class SentInvoices extends \yii\db\ActiveRecord
 
     public static function getForCurrentSchool()
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $schoolStudentIds = SchoolStudent::getSchoolStudentIds($schoolId);
 
         return self::find()->andWhere(['and', ['in', 'sentinvoices.user_id', $schoolStudentIds]])->joinWith('student');

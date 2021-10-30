@@ -39,8 +39,8 @@ class TeacherUserSearch extends Users
      */
     public function search($params)
     {
-        $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
-        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
+        $userContext = Yii::$app->user->identity;
+        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($userContext->getSchool()->id);
 
         $query = Users::find()->where(['in', 'users.id', $schoolStudentIds])->andWhere(['is_deleted' => false])->orderBy(['id' => SORT_DESC]);
 

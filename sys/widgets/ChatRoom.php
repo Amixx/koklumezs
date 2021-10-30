@@ -34,7 +34,10 @@ class ChatRoom extends Widget
 
         $this->model->userModel = $this->userModel;
 
-        $this->recipientId = Users::isCurrentUserTeacher() ? Chat::findFirstRecipient() : SchoolTeacher::getByCurrentStudent()['user_id'];
+        $userContext = Yii::$app->user->identity;
+        $this->recipientId = $userContext->isTeacher()
+            ? Chat::findFirstRecipient()
+            : SchoolTeacher::getByCurrentStudent()['user_id'];
 
         parent::init();
     }

@@ -42,7 +42,8 @@ class SchoolEvaluationsController extends Controller
 
     public function actionIndex()
     {
-        $schoolId = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id)->school_id;
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $dataProvider = new ActiveDataProvider([
             'query' => SchoolEvaluations::getForSchool($schoolId),
         ]);

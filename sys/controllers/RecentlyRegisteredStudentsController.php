@@ -47,7 +47,8 @@ class RecentlyRegisteredStudentsController extends Controller
 
     public function actionIndex()
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
 
         $users = Users::find()
             ->where(['is_deleted' => false, 'user_level' => Users::ROLE_USER, 'schoolstudents.school_id' => $schoolId])

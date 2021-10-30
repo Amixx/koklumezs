@@ -42,8 +42,8 @@ class TeacherLecturesSearch extends Lectures
      */
     public function search($params)
     {
-        $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
-        $schoolLectureIds = SchoolLecture::getSchoolLectureIds($currentUserTeacher->school_id);
+        $userContext = Yii::$app->user->identity;
+        $schoolLectureIds = SchoolLecture::getSchoolLectureIds($userContext->getSchool()->id);
 
         $query = Lectures::find()->where(['in', 'lectures.id', $schoolLectureIds]);
 

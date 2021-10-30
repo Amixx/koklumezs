@@ -5,6 +5,7 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Userlectureevaluations;
+use Yii;
 
 /**
  * UserlectureevaluationsSearch represents the model behind the search form of `app\models\Userlectureevaluations`.
@@ -90,7 +91,8 @@ class UserlectureevaluationsSearch extends Userlectureevaluations
             ['like', self::tableName() . '.created', $this->created]
         );
 
-        $defaultEvaluationId = Users::isCurrentUserTeacher() ? null : 4;
+        $userContext = Yii::$app->user->identity;
+        $defaultEvaluationId = $userContext->isTeacher() ? null : 4;
 
         $query->andFilterWhere([
             'id' => $this->id,

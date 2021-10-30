@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\data\ActiveDataProvider;
 
 class StudentSubPlans extends \yii\db\ActiveRecord
@@ -87,7 +88,8 @@ class StudentSubPlans extends \yii\db\ActiveRecord
             return [];
         }
 
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $studentPlans = self::find()->joinWith("plan")->andFilterWhere(['schoolsubplans.school_id' => $schoolId, 'is_active' => true])->asArray()->all();
 
         $planEndDates = array_map(function ($studentPlan) {

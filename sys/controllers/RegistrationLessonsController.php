@@ -41,7 +41,8 @@ class RegistrationLessonsController extends Controller
 
     public function actionIndex()
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $lectures = Lectures::getLectures();
         $conf = [];
 

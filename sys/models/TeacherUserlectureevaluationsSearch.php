@@ -42,9 +42,9 @@ class TeacherUserlectureevaluationsSearch extends Userlectureevaluations
      */
     public function search($params, $onlyComments)
     {
-        $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
-        $schoolLectureIds = SchoolLecture::getSchoolLectureIds($currentUserTeacher->school_id);
-        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
+        $userContext = Yii::$app->user->identity;
+        $schoolLectureIds = SchoolLecture::getSchoolLectureIds($userContext->getSchool()->id);
+        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($userContext->getSchool()->id);
 
         $query = Userlectureevaluations::find();
 

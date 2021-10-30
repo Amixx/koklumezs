@@ -72,7 +72,8 @@ class SchoolSubPlansController extends Controller
     public function actionCreate()
     {
         $model = new SchoolSubPlans();
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
             $model->school_id = $schoolId;
@@ -96,7 +97,8 @@ class SchoolSubPlansController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $planFiles = new ActiveDataProvider([
             'query' => PlanFiles::getFilesForPlan($model->id),
         ]);

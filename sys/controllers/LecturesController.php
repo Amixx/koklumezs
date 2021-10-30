@@ -61,8 +61,12 @@ class LecturesController extends Controller
      */
     public function actionIndex()
     {
-        $isCurrentUserTeacher = Users::isCurrentUserTeacher();
-        $searchModel = $isCurrentUserTeacher ? new TeacherLecturesSearch() : new LecturesSearch();
+        $userContext = Yii::$app->user->identity;
+
+        $isCurrentUserTeacher = $userContext->isTeacher();
+        $searchModel = $isCurrentUserTeacher
+            ? new TeacherLecturesSearch()
+            : new LecturesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $get = Yii::$app->request->queryParams;
         $admins = Users::getAdmins();
@@ -72,7 +76,6 @@ class LecturesController extends Controller
             'dataProvider' => $dataProvider,
             'get' => $get,
             'admins' => $admins,
-
         ]);
     }
 
@@ -91,7 +94,9 @@ class LecturesController extends Controller
 
     public function actionCreate()
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
+
         $difficulties = Difficulties::getDifficultiesForSchool($schoolId);
         $evaluations = Evaluations::getEvaluations();
         $lectures = SchoolLecture::getSchoolLectureTitles($schoolId);
@@ -116,10 +121,9 @@ class LecturesController extends Controller
         }
 
         if ($model->load($post) && $model->save()) {
-            if (Users::isCurrentUserTeacher()) {
+            if ($userContext->isTeacher()) {
                 $newSchoolLecture = new SchoolLecture();
-                $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
-                $newSchoolLecture->school_id = $currentUserTeacher->school_id;
+                $newSchoolLecture->school_id = $userContext->getSchool()->id;
                 $newSchoolLecture->lecture_id = $model->id;
                 $newSchoolLecture->save();
             }
@@ -165,7 +169,8 @@ class LecturesController extends Controller
 
     public function actionUpdate($id)
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $post = Yii::$app->request->post();
         $difficulties = Difficulties::getDifficultiesForSchool($schoolId);
         $evaluations = Evaluations::getEvaluations();

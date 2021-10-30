@@ -30,7 +30,7 @@ class SchoolSettingsController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
-                            return Users::isCurrentUserTeacher();
+                            return Yii::$app->user->identity->isTeacher();
                         }
                     ],
                 ],
@@ -46,8 +46,9 @@ class SchoolSettingsController extends Controller
 
     public function actionIndex()
     {
-        $settings = School::getSettings(Yii::$app->user->identity->id);
-        $schoolId = School::getCurrentSchoolId();
+        $settings = School::getSettings();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $signupUrl = Url::base(true) . "/registration/index?s=" . $schoolId . "&l=" . Yii::$app->language;
         $loginUrl = Url::base(true) . "/site/login?s=" . $schoolId . "&l=" . Yii::$app->language;
         $difficultiesDataProvider = new ActiveDataProvider([
@@ -75,8 +76,9 @@ class SchoolSettingsController extends Controller
 
     public function actionUpdate()
     {
+        $userContext = Yii::$app->user->identity;
         $post = Yii::$app->request->post();
-        $model = School::getByTeacher(Yii::$app->user->identity->id);
+        $model = $userContext->getSchool();
         $schoolSubPlans = SchoolSubPlans::getMappedForSelection();
 
         if (count($post) > 0) {
@@ -97,9 +99,9 @@ class SchoolSettingsController extends Controller
 
     public function actionBankUpdate()
     {
-
         $post = Yii::$app->request->post();
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $model = BankAccounts::getCurrentSchoolsBankAccount($schoolId);
         $bankAccount = School::getBankAccount($schoolId);
 

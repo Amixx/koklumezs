@@ -103,7 +103,8 @@ class SchoolRegistrationEmails extends \yii\db\ActiveRecord
 
     public static function getMappedForIndex()
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $schoolRegistrationEmails = self::findOne(['school_id' => $schoolId]);
         $emailLabels = self::getLabels();
         $emailsForIndex = [];

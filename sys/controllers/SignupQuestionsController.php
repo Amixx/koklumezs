@@ -41,9 +41,10 @@ class SignupQuestionsController extends Controller
 
     public function actionCreate()
     {
+        $userContext = Yii::$app->user->identity;
         $post = Yii::$app->request->post();
         $model = new SignupQuestions();
-        $model->school_id = School::getCurrentSchoolId();
+        $model->school_id = $userContext->getSchool()->id;
 
         if ($post) {
             $model->load($post);

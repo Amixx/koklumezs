@@ -52,7 +52,8 @@ class RegistrationLesson extends \yii\db\ActiveRecord
 
     public static function isRegistrationLesson($lessonId)
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $userId = Yii::$app->user->identity->id;
         $isStudent = Yii::$app->user->identity->user_level == 'Student';
         if (!$isStudent) {

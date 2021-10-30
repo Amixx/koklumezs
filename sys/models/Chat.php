@@ -110,8 +110,9 @@ class Chat extends \yii\db\ActiveRecord
     {
         $output = "";
         $userList = null;
-        $currentUserId = Yii::$app->user->identity->id;
-        $isTeacher = Users::isCurrentUserTeacher();
+        $userContext = Yii::$app->user->identity;
+        $currentUserId = $userContext->id;
+        $isTeacher = $userContext->isTeacher();
         $messages = Chat::recordsForTwoUsers($currentUserId, $recipientId, $isTeacher);
         $user = Users::getCurrentUserForChat();
 

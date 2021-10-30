@@ -7,8 +7,10 @@ use app\models\Users;
 use  yii\jui\DatePicker;
 use yii\grid\GridView;
 use app\models\SchoolSubplanParts;
+use Yii;
 
-$isTeacher = Users::isCurrentUserTeacher();
+$userContext = Yii::$app->user->identity;
+$isTeacher = $userContext->isTeacher();
 ?>
 
 <div class="user-form">

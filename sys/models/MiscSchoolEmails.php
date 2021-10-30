@@ -73,7 +73,8 @@ class MiscSchoolEmails extends \yii\db\ActiveRecord
 
     public static function getMappedForIndex()
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $miscSchoolEmails = self::findOne(['school_id' => $schoolId]);
         $emailLabels = self::getLabels();
         $emailsForIndex = [];

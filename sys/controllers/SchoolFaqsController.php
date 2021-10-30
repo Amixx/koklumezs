@@ -35,7 +35,8 @@ class SchoolFaqsController extends Controller
 
     public function actionIndex()
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $dataProvider = new ActiveDataProvider([
             'query' => SchoolFaqs::find()->where(['school_id' => $schoolId]),
         ]);
@@ -56,7 +57,8 @@ class SchoolFaqsController extends Controller
     {
         $model = new SchoolFaqs();
 
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         if ($model->load(Yii::$app->request->post())) {
             $model->school_id = $schoolId;
             if ($model->save()) {

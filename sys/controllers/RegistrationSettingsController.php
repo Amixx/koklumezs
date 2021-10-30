@@ -30,7 +30,7 @@ class RegistrationSettingsController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
-                            return Users::isCurrentUserTeacher();
+                            return Yii::$app->user->identity->isTeacher();
                         }
                     ],
                 ],
@@ -46,7 +46,8 @@ class RegistrationSettingsController extends Controller
 
     public function actionIndex()
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $signupQuestionsDataProvider = new ActiveDataProvider([
             'query' => SignupQuestions::find()->where(['school_id' => $schoolId])->joinWith('answerChoices'),
         ]);

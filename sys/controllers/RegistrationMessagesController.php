@@ -33,8 +33,10 @@ class RegistrationMessagesController extends Controller
 
     public function actionCreate($withInstrument, $withExperience)
     {
+        $userContext = Yii::$app->user->identity;
+
         $model = new RegistrationMessage;
-        $model->school_id = School::getCurrentSchoolId();
+        $model->school_id = $userContext->getSchool()->id;
         $model->for_students_with_instrument = $withInstrument;
         $model->for_students_with_experience = $withExperience;
         $valid = $model->load(Yii::$app->request->post()) && $model->validate();

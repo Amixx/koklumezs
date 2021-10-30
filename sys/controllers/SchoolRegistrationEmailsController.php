@@ -26,7 +26,7 @@ class SchoolRegistrationEmailsController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
-                            return Users::isCurrentUserTeacher();
+                            return Yii::$app->user->identity->isTeacher();
                         }
                     ],
                 ],
@@ -49,7 +49,8 @@ class SchoolRegistrationEmailsController extends Controller
 
     public function actionCreate()
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $newModel = false;
         $model = SchoolRegistrationEmails::findOne(['school_id' => $schoolId]);
         if (!$model) {
@@ -84,7 +85,8 @@ class SchoolRegistrationEmailsController extends Controller
 
     public function actionUpdate($type)
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $model = SchoolRegistrationEmails::findOne(['school_id' => $schoolId]);
 
         $formModel = new SchoolRegistraionEmailForm();

@@ -53,9 +53,11 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
+        $userContext = Yii::$app->user->identity;
+
         $get = Yii::$app->request->queryParams;
         $lectures = Lectures::getLectures();
-        $isCurrentUserTeacher = Users::isCurrentUserTeacher();
+        $isCurrentUserTeacher = $userContext->isTeacher();
         $searchModel = $isCurrentUserTeacher ? new TeacherUserSearch() : new UserSearch();
         $dataProvider = $searchModel->search($get);
         $schoolSubPlanPrices = SchoolSubPlans::getPrices();
@@ -100,9 +102,8 @@ class UserController extends Controller
         $model = new Users();
         $difficulties = Difficulties::getDifficulties();
         $post = Yii::$app->request->post();
-        $currentUserEmail = Yii::$app->user->identity->email;
-        $currentUser = Users::getByEmail($currentUserEmail);
-        $isCurrentUserTeacher = Users::isTeacher($currentUserEmail);
+        $userContext = Yii::$app->user->identity;
+        $isCurrentUserTeacher = $userContext->isTeacher();
         $studentSubplan = new StudentSubPlans;
 
         if ($model->load($post)) {
@@ -136,7 +137,7 @@ class UserController extends Controller
                 $newSchoolTeacher->save();
             }
             if ($isCurrentUserTeacher) {
-                $teacher = SchoolTeacher::getSchoolTeacher($currentUser->id);
+                $teacher = $userContext->schoolTeacher;
                 $newSchoolStudent = new SchoolStudent;
                 $newSchoolStudent->school_id = $teacher->school_id;
                 $newSchoolStudent->user_id = $model->id;

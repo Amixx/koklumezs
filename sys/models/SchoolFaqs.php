@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use Yii;
+
 /**
  * This is the model class for table "difficulties".
  *
@@ -50,7 +52,8 @@ class SchoolFaqs extends \yii\db\ActiveRecord
 
     public static function getForCurrentSchool()
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         return self::getForSchool($schoolId);
     }
 }

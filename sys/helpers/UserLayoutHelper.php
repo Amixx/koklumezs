@@ -8,7 +8,7 @@ use app\models\School;
 use app\models\SchoolStudent;
 use app\models\SchoolTeacher;
 use app\models\StartLaterCommitments;
-use yii;
+use Yii;
 
 class UserLayoutHelper extends LayoutHelper
 {
@@ -18,10 +18,12 @@ class UserLayoutHelper extends LayoutHelper
 
     public function __construct()
     {
-        $this->school = School::getCurrentSchool();
-        $this->isAdmin = Yii::$app->user->identity->user_level == 'Admin';
-        $this->isTeacher = Yii::$app->user->identity->user_level == 'Teacher';
-        $this->isStudent = Yii::$app->user->identity->user_level == 'Student';
+        $userContext = Yii::$app->user->identity;
+
+        $this->school = $userContext->getSchool();
+        $this->isAdmin = $userContext->isAdmin();
+        $this->isTeacher = $userContext->isTeacher();
+        $this->isStudent = $userContext->isStudent();
     }
 
     public function getNavItems()
@@ -84,7 +86,7 @@ class UserLayoutHelper extends LayoutHelper
         return '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                \Yii::t('app',  'Sign out') . " <br> ($fullName)",
+                Yii::t('app',  'Sign out') . " <br> ($fullName)",
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
@@ -93,72 +95,73 @@ class UserLayoutHelper extends LayoutHelper
 
     private function getUserTypeNavItems()
     {
-        $hasStudents = Users::isCurrentUserTeacher() == 'Teacher' ? count(Users::getStudentsWithoutPausesForSchool()) > 0 : 0;
+        $userContext = Yii::$app->user->identity;
+        $hasStudents = $userContext->isTeacher()
+            ? count(Users::getStudentsWithoutPausesForSchool()) > 0
+            : false;
 
-        $array = [
+        return [
             'admin' => [
-                ['label' => 'Piešķiršana', 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),],
-                ['label' => 'Piešķirts', 'url' => ['/user-lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lectures']),],
-                ['label' => \Yii::t('app',  'Lessons'), 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),],
-                ['label' => 'Faili', 'url' => ['/lecturesfiles'], 'active' =>  in_array(\Yii::$app->controller->id, ['lecturesfiles']),],
-                ['label' => 'Parametri', 'url' => ['/difficulties'], 'active' =>  in_array(\Yii::$app->controller->id, ['difficulties']),],
-                ['label' => \Yii::t('app',  'Section visibility'), 'url' => ['/sections'], 'active' =>  in_array(\Yii::$app->controller->id, ['sections']),],
-                ['label' => \Yii::t('app',  'Evaluations'), 'url' => ['/evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['evaluations'])],
-                ['label' => 'Lietotāji', 'url' => ['/user'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])],
-                ['label' => 'Lietotāju vērtējumi', 'url' => ['/user-lecture-evaluations'], 'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations'])],
-                ['label' => 'Izsūtītie e-pasti', 'url' => ['/sentlectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['sentlectures'])],
+                ['label' => 'Piešķiršana', 'url' => ['/assign'], 'active' =>  in_array(Yii::$app->controller->id, ['assign']),],
+                ['label' => 'Piešķirts', 'url' => ['/user-lectures'], 'active' =>  in_array(Yii::$app->controller->id, ['user-lectures']),],
+                ['label' => Yii::t('app',  'Lessons'), 'url' => ['/lectures'], 'active' =>  in_array(Yii::$app->controller->id, ['lectures']),],
+                ['label' => 'Faili', 'url' => ['/lecturesfiles'], 'active' =>  in_array(Yii::$app->controller->id, ['lecturesfiles']),],
+                ['label' => 'Parametri', 'url' => ['/difficulties'], 'active' =>  in_array(Yii::$app->controller->id, ['difficulties']),],
+                ['label' => Yii::t('app',  'Section visibility'), 'url' => ['/sections'], 'active' =>  in_array(Yii::$app->controller->id, ['sections']),],
+                ['label' => Yii::t('app',  'Evaluations'), 'url' => ['/evaluations'], 'active' =>  in_array(Yii::$app->controller->id, ['evaluations'])],
+                ['label' => 'Lietotāji', 'url' => ['/user'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
+                ['label' => 'Lietotāju vērtējumi', 'url' => ['/user-lecture-evaluations'], 'active' =>  in_array(Yii::$app->controller->id, ['user-lecture-evaluations'])],
+                ['label' => 'Izsūtītie e-pasti', 'url' => ['/sentlectures'], 'active' =>  in_array(Yii::$app->controller->id, ['sentlectures'])],
             ],
             'teacher' => [
-                ['label' => \Yii::t('app',  'School'), 'url' => ['/assign'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign']),],
-                $hasStudents ? ['label' => '+', 'url' => ['/assign/userlectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['assign'])] : ['label' => '', 'url' => ['/assign']],
-                ['label' => \Yii::t('app',  'Students'), 'url' => ['/user'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])],
-                ['label' => '+', 'url' => ['/user/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['user'])],
-                ['label' => \Yii::t('app',  'Lessons'), 'url' => ['/lectures'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),],
-                ['label' => '+', 'url' => ['/lectures/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['lectures']),],
+                ['label' => Yii::t('app',  'School'), 'url' => ['/assign'], 'active' =>  in_array(Yii::$app->controller->id, ['assign']),],
+                $hasStudents ? ['label' => '+', 'url' => ['/assign/userlectures'], 'active' =>  in_array(Yii::$app->controller->id, ['assign'])] : ['label' => '', 'url' => ['/assign']],
+                ['label' => Yii::t('app',  'Students'), 'url' => ['/user'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
+                ['label' => '+', 'url' => ['/user/create'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
+                ['label' => Yii::t('app',  'Lessons'), 'url' => ['/lectures'], 'active' =>  in_array(Yii::$app->controller->id, ['lectures']),],
+                ['label' => '+', 'url' => ['/lectures/create'], 'active' =>  in_array(Yii::$app->controller->id, ['lectures']),],
                 [
-                    'label' => \Yii::t('app',  'Subscription plans'),
+                    'label' => Yii::t('app',  'Subscription plans'),
                     'url' => ['/school-sub-plans'],
-                    'active' =>  in_array(\Yii::$app->controller->id, ['school-sub-plans']),
+                    'active' =>  in_array(Yii::$app->controller->id, ['school-sub-plans']),
                     'items' => [
-                        ['label' => \Yii::t('app',  'Subscription plans'), 'url' => ['/school-sub-plans']],
-                        ['label' => \Yii::t('app',  'Plan parts'), 'url' => ['/plan-parts']],
-                        ['label' => \Yii::t('app',  'Plan pauses'), 'url' => ['/student-subplan-pauses']],
+                        ['label' => Yii::t('app',  'Subscription plans'), 'url' => ['/school-sub-plans']],
+                        ['label' => Yii::t('app',  'Plan parts'), 'url' => ['/plan-parts']],
+                        ['label' => Yii::t('app',  'Plan pauses'), 'url' => ['/student-subplan-pauses']],
                     ],
                     'options' => ['class' => 'nav-item dropdown']
                 ],
-                ['label' => '+', 'url' => ['/school-sub-plans/create'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-sub-plans']),],
+                ['label' => '+', 'url' => ['/school-sub-plans/create'], 'active' =>  in_array(Yii::$app->controller->id, ['school-sub-plans']),],
                 [
-                    'label' => \Yii::t('app',  'Metrics'),
-                    'active' =>  in_array(\Yii::$app->controller->id, ['user-lecture-evaluations']) && Yii::$app->controller->action->actionMethod != "actionComments",
+                    'label' => Yii::t('app',  'Metrics'),
+                    'active' =>  in_array(Yii::$app->controller->id, ['user-lecture-evaluations']) && Yii::$app->controller->action->actionMethod != "actionComments",
                     'items' => [
-                        ['label' => \Yii::t('app',  'Student evaluations'), 'url' => ['/user-lecture-evaluations']],
-                        ['label' => \Yii::t('app',  'Sent invoices'), 'url' => ['/sent-invoices']],
+                        ['label' => Yii::t('app',  'Student evaluations'), 'url' => ['/user-lecture-evaluations']],
+                        ['label' => Yii::t('app',  'Sent invoices'), 'url' => ['/sent-invoices']],
                     ],
                     'options' => ['class' => 'nav-item dropdown']
                 ],
-                ['label' => \Yii::t('app',  'Settings'), 'url' => ['/school-settings'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-settings'])],
+                ['label' => Yii::t('app',  'Settings'), 'url' => ['/school-settings'], 'active' =>  in_array(Yii::$app->controller->id, ['school-settings'])],
             ],
             'student' => [
                 [
-                    'label' => \Yii::t('app',  'Lessons'),
-                    'active' =>  in_array(\Yii::$app->controller->id, ['lekcijas']),
+                    'label' => Yii::t('app',  'Lessons'),
+                    'active' =>  in_array(Yii::$app->controller->id, ['lekcijas']),
                     'items' => [
-                        ['label' => \Yii::t('app',  'New lessons'), 'url' => ['/lekcijas?type=new&sortByDifficulty=asc']],
-                        ['label' => \Yii::t('app',  'Favourite lessons'), 'url' => ['/lekcijas?type=favourite&sortByDifficulty=asc']]
+                        ['label' => Yii::t('app',  'New lessons'), 'url' => ['/lekcijas?type=new&sortByDifficulty=asc']],
+                        ['label' => Yii::t('app',  'Favourite lessons'), 'url' => ['/lekcijas?type=favourite&sortByDifficulty=asc']]
                     ],
                     'options' => ['class' => 'navbar-lessons-dropdown-toggle']
                 ],
-                // ['label' => \Yii::t('app',  'acords'), 'url' => ['/'], 'active' =>  in_array(\Yii::$app->controller->id, [''])],
-                ['label' => \Yii::t('app',  'Sheet music'), 'url' => ['/file'], 'active' =>  in_array(\Yii::$app->controller->id, ['file'])],
-                // ['label' => \Yii::t('app',  'play along'), 'url' => ['/'], 'active' =>  in_array(\Yii::$app->controller->id, [''])],
-                ['label' => \Yii::t('app',  'Archive'), 'url' => ['/archive'], 'active' =>  in_array(\Yii::$app->controller->id, ['archive'])],
-                // ['label' => \Yii::t('app',  'suggest a song'), 'url' => ['/'], 'active' =>  in_array(\Yii::$app->controller->id, [''])],
-                ['label' => \Yii::t('app',  'FAQs'), 'url' => ['/school-faqs/for-students'], 'active' =>  in_array(\Yii::$app->controller->id, ['school-faqs'])],
-                ['label' => \Yii::t('app',  'Subscription plan'), 'url' => ['/student-sub-plans/for-user/?studentId=' . Yii::$app->user->identity->id], 'active' =>  in_array(\Yii::$app->controller->id, ['student-sub-plans'])],
+                // ['label' => Yii::t('app',  'acords'), 'url' => ['/'], 'active' =>  in_array(Yii::$app->controller->id, [''])],
+                ['label' => Yii::t('app',  'Sheet music'), 'url' => ['/file'], 'active' =>  in_array(Yii::$app->controller->id, ['file'])],
+                // ['label' => Yii::t('app',  'play along'), 'url' => ['/'], 'active' =>  in_array(Yii::$app->controller->id, [''])],
+                ['label' => Yii::t('app',  'Archive'), 'url' => ['/archive'], 'active' =>  in_array(Yii::$app->controller->id, ['archive'])],
+                // ['label' => Yii::t('app',  'suggest a song'), 'url' => ['/'], 'active' =>  in_array(Yii::$app->controller->id, [''])],
+                ['label' => Yii::t('app',  'FAQs'), 'url' => ['/school-faqs/for-students'], 'active' =>  in_array(Yii::$app->controller->id, ['school-faqs'])],
+                ['label' => Yii::t('app',  'Subscription plan'), 'url' => ['/student-sub-plans/for-user/?studentId=' . Yii::$app->user->identity->id], 'active' =>  in_array(Yii::$app->controller->id, ['student-sub-plans'])],
             ],
         ];
-
-        return $array;
     }
 
     public function getActionButton()
@@ -198,9 +201,10 @@ class UserLayoutHelper extends LayoutHelper
             $unreadGroups = "<span class='chat-unread-count-groups'></span>";
             $outerClass = "teacher";
         } else {
-            if ($this->school['teacher_portrait']) {
+            $teacherPortrait = $this->school['teacher_portrait'];
+            if ($teacherPortrait) {
                 $buttonClasses .= " with-portrait";
-                $buttonStyle = "background-image: url($this->school['teacher_portrait'])";
+                $buttonStyle = "background-image: url($teacherPortrait)";
             }
         }
 
@@ -210,7 +214,7 @@ class UserLayoutHelper extends LayoutHelper
             . '<span class="chat-unread-count"></span>'
             . '</div>'
             . '<button class="' . $buttonClasses . '" id="chat-toggle-button" style="' . $buttonStyle . '" data-toggle="modal" data-target="#chatModal">'
-            . \Yii::t('app', $chatButtonText)
+            . Yii::t('app', $chatButtonText)
             . '</button>'
             . '</div>';
     }

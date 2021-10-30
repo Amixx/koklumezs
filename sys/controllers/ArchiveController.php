@@ -39,9 +39,9 @@ class ArchiveController extends Controller
     public function actionIndex()
     {
         $archive = [];
-        $user = Yii::$app->user->identity;
-        $evaluatedIds = UserLectures::getEvaluatedUserLectures($user->id);
-        $unevaluatedStillLearning = UserLectures::getUnevaluatedStillLearning($user->id);
+        $userContext = Yii::$app->user->identity;
+        $evaluatedIds = UserLectures::getEvaluatedUserLectures($userContext->id);
+        $unevaluatedStillLearning = UserLectures::getUnevaluatedStillLearning($userContext->id);
         $archiveLessonIds = array_merge($evaluatedIds, $unevaluatedStillLearning);
 
         if ($archiveLessonIds) {
@@ -73,7 +73,7 @@ class ArchiveController extends Controller
                 return $aIndex > $bIndex;
             });
 
-            $videoThumb = School::getCurrentSchool()->video_thumbnail;
+            $videoThumb = $userContext->getSchool()->video_thumbnail;
 
             return $this->render('index', [
                 'archive' => $archive,

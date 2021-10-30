@@ -39,7 +39,8 @@ class PlanPartsController extends Controller
 
     public function actionIndex()
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $dataProvider = new ActiveDataProvider([
             'query' => PlanParts::find()->where(['school_id' => $schoolId]),
         ]);

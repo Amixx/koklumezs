@@ -47,8 +47,10 @@ class AssignController extends Controller
 
     public function actionIndex()
     {
+        $userContext = Yii::$app->user->identity;
+
         $options = [];
-        if (Users::isCurrentUserTeacher()) {
+        if ($userContext->isTeacher()) {
             $users = Users::getStudentsWithoutPausesForSchool();
         } else {
             $users = Users::getStudents();
@@ -93,15 +95,15 @@ class AssignController extends Controller
 
     public function actionUserlectures($id = null)
     {
+        $userContext = Yii::$app->user->identity;
+        $isTeacher = $userContext->isTeacher();
 
         $this->view->params['chatRecipientId'] = $id;
 
         if ($id == null) {
-            if (Users::isCurrentUserTeacher()) {
-                $users = Users::getStudentsWithoutPausesForSchool();
-            } else {
-                $users = Users::getStudents();
-            }
+            $users = $isTeacher
+                ? Users::getStudentsWithoutPausesForSchool()
+                : $users = Users::getStudents();
             $id = key($users);
         }
 
@@ -185,15 +187,15 @@ class AssignController extends Controller
         $filterSubTypes = (array_key_exists("subTypes", $get) && isset($get["subTypes"]) && $get["subTypes"] !== '') ? explode(",", $get["subTypes"]) : null;
         $users = Users::getStudentsWithParams($filterLang, $filterSubTypes);
 
-        if (Users::isCurrentUserTeacher()) {
-            $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
-            $schoolLectureIds = SchoolLecture::getSchoolLectureIds($currentUserTeacher->school_id);
-            $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
+        if ($isTeacher) {
+            $schoolId = $userContext->getSchool()->id;
+            $schoolLectureIds = SchoolLecture::getSchoolLectureIds($schoolId);
+            $schoolStudentIds = SchoolStudent::getSchoolStudentIds($schoolId);
 
             $users = array_filter($users, function ($user) use ($schoolStudentIds) {
                 return in_array($user["id"], $schoolStudentIds);
             });
-            $lectures = array_filter($lectures, function ($lecture) use ($schoolLectureIds, $userLectures) {
+            $lectures = array_filter($lectures, function ($lecture) use ($schoolLectureIds) {
                 return in_array($lecture["id"], $schoolLectureIds);
             });
         }

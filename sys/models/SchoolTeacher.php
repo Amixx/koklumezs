@@ -46,11 +46,6 @@ class SchoolTeacher extends \yii\db\ActiveRecord
         return $this->hasOne(Users::class, ['id' => 'user_id']);
     }
 
-    public static function getSchoolTeacher($teacherId)
-    {
-        return self::find()->where(['user_id' => $teacherId])->joinWith('school')->joinWith('user')->one();
-    }
-
     public static function getBySchoolId($schoolId)
     {
         return self::find()->where(['school_id' => $schoolId])->joinWith('school')->joinWith('user')->one();

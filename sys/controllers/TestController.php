@@ -180,7 +180,8 @@ class TestController extends Controller
         // }
 
 
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         var_dump($schoolId);
     }
 }

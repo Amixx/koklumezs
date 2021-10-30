@@ -51,7 +51,8 @@ class DifficultiesController extends Controller
      */
     public function actionIndex()
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $dataProvider = new ActiveDataProvider([
             'query' => Difficulties::find()->where(['school_id' => $schoolId]),
         ]);
@@ -77,7 +78,8 @@ class DifficultiesController extends Controller
     {
         $model = new Difficulties();
 
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         if ($model->load(Yii::$app->request->post())) {
             $model->school_id = $schoolId;
             if ($model->save()) {

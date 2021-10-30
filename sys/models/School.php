@@ -60,21 +60,16 @@ class School extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function getByTeacher($teacherId)
-    {
-        $schoolId = SchoolTeacher::getSchoolTeacher($teacherId)->school_id;
-        return self::findOne(['id' => $schoolId]);
-    }
-
     public static function getByStudent($studentId)
     {
         $schoolId = SchoolStudent::getSchoolStudent($studentId)->school_id;
         return self::findOne(['id' => $schoolId]);
     }
 
-    public static function getSettings($teacherId)
+    public static function getSettings()
     {
-        $school = self::getByTeacher($teacherId);
+        $userContext = Yii::$app->user->identity;
+        $school = $userContext->getSchool();
         $rentSubplanName = $school->rent_schoolsubplan_id
             ? SchoolSubPlans::find()->where(['id' => $school->rent_schoolsubplan_id])->one()['name']
             : null;
@@ -114,32 +109,11 @@ class School extends \yii\db\ActiveRecord
         }
     }
 
-    public static function getCurrentSchool()
-    {
-        $userId = Yii::$app->user->identity->id;
-        $isTeacher = Users::isCurrentUserTeacher();
-        $isStudent = Users::isCurrentUserStudent();
-        $school = null;
-
-        if ($isTeacher) {
-            $school = self::getByTeacher($userId);
-        } else if ($isStudent) {
-            $school = self::getByStudent($userId);
-        }
-
-        return $school;
-    }
-
     public static function getSchoolStudentIds()
     {
-        $school = self::getByTeacher(Yii::$app->user->identity->id);
+        $userContext = Yii::$app->user->identity;
+        $school = $userContext->getSchool();
         $students = SchoolStudent::getSchoolStudents($school['id']);
         return ArrayHelper::map($students, 'id', 'user_id');
-    }
-
-    public static function getCurrentSchoolId()
-    {
-        $currentSchool = self::getCurrentSchool();
-        return $currentSchool ? $currentSchool->id : null;
     }
 }

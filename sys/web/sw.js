@@ -81,7 +81,8 @@ self.addEventListener('fetch', function(event) {
     if (url.indexOf("sys/files") !== -1 || url.indexOf("youtube") !== -1) {
         return;
     }
-    event.respondWith(respond(event.request));
+    var res = respond(event.request);
+    event.respondWith(res);
 });
 
 function respond(request) {

@@ -155,7 +155,9 @@ class Users extends ActiveRecord implements IdentityInterface
             ->all();
 
         $this->receivedNeedHelpMessages = [];
-        if (Users::isCurrentUserTeacher()) {
+
+        $userContext = Yii::$app->user->identity;
+        if ($userContext->isTeacher()) {
             $this->receivedNeedHelpMessages = $this->getReceivedNeedHelpMessages();
         }
         usort($usersWithConversations, [Users::class, "sortUsers"]);
@@ -247,7 +249,8 @@ class Users extends ActiveRecord implements IdentityInterface
     {
         $usersWithConversations = $this->getUsersWithConversations();
         $this->receivedNeedHelpMessages = [];
-        if (Users::isCurrentUserTeacher()) {
+        $userContext = Yii::$app->user->identity;
+        if ($userContext->isTeacher()) {
             $this->receivedNeedHelpMessages = $this->getReceivedNeedHelpMessages();
         }
         $res = 0;
@@ -364,8 +367,8 @@ class Users extends ActiveRecord implements IdentityInterface
         if ($includePassive) {
             $params['status'][] = self::STATUS_PASSIVE;
         }
-        $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
-        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
+        $userContext = Yii::$app->user->identity;
+        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($userContext->getSchool()->id);
         $usersData = self::find()->where($params)->andWhere(['in', 'id', $schoolStudentIds])->asArray()->all();
 
         $result = [];
@@ -391,8 +394,9 @@ class Users extends ActiveRecord implements IdentityInterface
     public static function getStudentsWithParams($lang, $subTypes)
     {
         $params = ['user_level' => self::ROLE_USER, 'status' => [self::STATUS_ACTIVE], 'is_deleted' => false];
-        $currentUserTeacher = SchoolTeacher::getSchoolTeacher(Yii::$app->user->identity->id);
-        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($currentUserTeacher->school_id);
+
+        $userContext = Yii::$app->user->identity;
+        $schoolStudentIds = SchoolStudent::getSchoolStudentIds($userContext->getSchool()->id);
 
         if ($lang) {
             $params['language'] = $lang;

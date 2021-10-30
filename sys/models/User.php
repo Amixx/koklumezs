@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Exception;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -65,6 +66,16 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             TimestampBehavior::class,
         ];
+    }
+
+    public function getSchoolStudent()
+    {
+        return $this->hasOne(SchoolStudent::class, ['user_id' => 'id'])->joinWith("school");
+    }
+
+    public function getSchoolTeacher()
+    {
+        return $this->hasOne(SchoolTeacher::class, ['user_id' => 'id'])->joinWith("school");
     }
 
     public static function findIdentity($id)
@@ -177,20 +188,20 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password = Yii::$app->security->generatePasswordHash($password);
     }
 
-    public static function isUserAdmin($email)
-    {
-        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN, 'is_deleted' => false]);
-    }
+    // public static function isUserAdmin($email)
+    // {
+    //     return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN, 'is_deleted' => false]);
+    // }
 
-    public static function isStudent($email)
-    {
-        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_USER, 'is_deleted' => false]);
-    }
+    // public static function isStudent($email)
+    // {
+    //     return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_USER, 'is_deleted' => false]);
+    // }
 
-    public static function isTeacher($email)
-    {
-        return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER, 'is_deleted' => false]);
-    }
+    // public static function isTeacher($email)
+    // {
+    //     return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER, 'is_deleted' => false]);
+    // }
 
     public static function getStatus()
     {
@@ -209,13 +220,26 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    public function getAuthors()
+    public function getSchool()
     {
-        return $this->hasMany(Projects::class, ['created_by' => 'id']);
+        if ($this->isTeacher()) return $this->schoolTeacher->school;
+        else if ($this->isStudent()) return $this->schoolStudent->school;
+
+        throw new Exception("User is not a teacher or a student");
     }
 
-    public function getChanges()
+    public function isTeacher()
     {
-        return $this->hasMany(Projects::class, ['change_by' => 'id']);
+        return $this->user_level === self::ROLE_TEACHER;
+    }
+
+    public function isStudent()
+    {
+        return $this->user_level === self::ROLE_USER;
+    }
+
+    public function isAdmin()
+    {
+        return $this->user_level === self::ROLE_ADMIN;
     }
 }

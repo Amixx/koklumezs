@@ -54,15 +54,17 @@ class LekcijasController extends Controller
 
     /**
      * Lists all user Lectures models.
-     * @return mixed
+     * @return mixed    
      */
     public function actionIndex($type = null)
     {
+        $userContext = Yii::$app->user->identity;
+
         $models = [];
         $pages = [];
         $user = Yii::$app->user->identity;
 
-        $videoThumb = School::getCurrentSchool()->video_thumbnail;
+        $videoThumb = $userContext->getSchool()->video_thumbnail;
 
         if ($type) {
             $modelsIds = UserLectures::getLessonsOfType($user->id, $type);
@@ -128,10 +130,11 @@ class LekcijasController extends Controller
     public function actionLekcija($id)
     {
         $model = $this->findModel($id);
-        $user = Yii::$app->user->identity;
-        $dbUser = Users::findOne([$id => $user->id]);
-
-        $videoThumb = School::getCurrentSchool()->video_thumbnail;
+        $userContext = Yii::$app->user->identity;
+        $dbUser = Users::findOne([$id => $userContext->id]);
+        $school = $userContext->getSchool();
+        $schoolId = $school->id;
+        $videoThumb = $school->video_thumbnail;
 
         $SortByDifficulty = Yii::$app->request->get('sortByDifficulty');
 
@@ -144,20 +147,20 @@ class LekcijasController extends Controller
         }
 
         $force = Yii::$app->request->get('force');
-        $userLectures = $force ? [] : UserLectures::getLectures($user->id, $SortByDifficulty);
-        $modelsIds = $force ? [$id] : UserLectures::getUserLectures($user->id); //UserLectures::getSentUserLectures($user->id)
+        $userLectures = $force ? [] : UserLectures::getLectures($userContext->id, $SortByDifficulty);
+        $modelsIds = $force ? [$id] : UserLectures::getUserLectures($userContext->id); //UserLectures::getSentUserLectures($userContext->id)
         $check = in_array($id, $modelsIds);
-        $userEvaluatedLectures = $force ? [] : UserLectures::getEvaluatedLectures($user->id);
+        $userEvaluatedLectures = $force ? [] : UserLectures::getEvaluatedLectures($userContext->id);
 
         $nextLessonId = null;
-        $userLecture = UserLectures::findOne(['user_id' => $user->id, 'lecture_id' => $id]);
+        $userLecture = UserLectures::findOne(['user_id' => $userContext->id, 'lecture_id' => $id]);
 
         if ($userLecture) {
             $type = $userLecture->is_favourite ? "favourite" : "new";
-            $nextLessonId = UserLectures::getNextLessonId($user->id, $id, $type);
+            $nextLessonId = UserLectures::getNextLessonId($userContext->id, $id, $type);
         }
 
-        $difficultyEvaluation = $force ? null : Userlectureevaluations::getLecturedifficultyEvaluation($user->id, $id);
+        $difficultyEvaluation = $force ? null : Userlectureevaluations::getLecturedifficultyEvaluation($userContext->id, $id);
 
         if ($check) {
             $post = Yii::$app->request->post();
@@ -166,14 +169,14 @@ class LekcijasController extends Controller
                     $difficultyEvaluation->evaluation = $post["difficulty-evaluation"];
                     $difficultyEvaluation->update();
                 } else {
-                    $shouldStartTrial = $model->complexity > 1 && !Userlectureevaluations::hasAnyLegitEvaluations($user->id);
+                    $shouldStartTrial = $model->complexity > 1 && !Userlectureevaluations::hasAnyLegitEvaluations($userContext->id);
 
                     if ($shouldStartTrial) {
-                        $trial = Trials::find()->where(['user_id' => $user->id])->one();
+                        $trial = Trials::find()->where(['user_id' => $userContext->id])->one();
 
                         if (!$trial) {
                             $trial = new Trials;
-                            $trial->user_id = $user->id;
+                            $trial->user_id = $userContext->id;
                             $trial->save();
 
                             $dbUser->status = 10;
@@ -185,18 +188,16 @@ class LekcijasController extends Controller
                     $difficultyEvaluation = new Userlectureevaluations();
                     $difficultyEvaluation->evaluation_id = 1;
                     $difficultyEvaluation->lecture_id = $model->id;
-                    $difficultyEvaluation->user_id = $user->id;
+                    $difficultyEvaluation->user_id = $userContext->id;
                     $difficultyEvaluation->created = date('Y-m-d H:i:s', time());
                     $difficultyEvaluation->evaluation = $post["difficulty-evaluation"];
                     $difficultyEvaluation->public_comment = false;
                     $difficultyEvaluation->save();
-
-                    $schoolId = School::getCurrentSchool()->id;
                     $teacherId = SchoolTeacher::getByCurrentStudent()->user_id;
                     $message = SchoolAfterEvaluationMessages::getRandomMessage($schoolId, $post["difficulty-evaluation"]);
 
                     if ($message) {
-                        Chat::addNewMessage($message, $teacherId, $user->id, 2);
+                        Chat::addNewMessage($message, $teacherId, $userContext->id, 2);
                     }
 
                     $userLecture->evaluated = 1;
@@ -213,7 +214,7 @@ class LekcijasController extends Controller
             }
 
             if (!$force) {
-                UserLectures::setSeenByUser($user->id, $id);
+                UserLectures::setSeenByUser($userContext->id, $id);
             }
 
             $difficulties = Difficulties::getDifficulties();
@@ -227,8 +228,8 @@ class LekcijasController extends Controller
             $relatedLectures = Lectures::getLecturesByIds($relatedLessonIds);
             $difficultiesVisible = SectionsVisible::isVisible("Nodarbības sarežģītība");
 
-            $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "new");
-            $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
+            $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($userContext->id, "new");
+            $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($userContext->id, "favourite");
             $newLessons = Lectures::find()->where(['in', 'id', $latestNewLecturesIds])->orderBy($orderBy)->all();
             $favouriteLessons = Lectures::find()->where(['in', 'id', $latestFavouriteLecturesIds])->orderBy($orderBy)->all();
 
@@ -245,14 +246,14 @@ class LekcijasController extends Controller
 
                 if ($isDifferentLesson) {
                     $lectureView = new LectureViews;
-                    $lectureView->user_id = $user->id;
+                    $lectureView->user_id = $userContext->id;
                     $lectureView->lecture_id = $id;
                     $lectureView->save();
                 }
             }
 
             if ($model->complexity > 5) {
-                $startLaterCommitment = StartLaterCommitments::findOne(['user_id' => $user['id']]);
+                $startLaterCommitment = StartLaterCommitments::findOne(['user_id' => $userContext['id']]);
                 if ($startLaterCommitment && !$startLaterCommitment['commitment_fulfilled']) {
                     $startLaterCommitment['commitment_fulfilled'] = true;
                     $startLaterCommitment->update();
@@ -300,7 +301,8 @@ class LekcijasController extends Controller
         $models = [];
         $pages = [];
         $user = Users::findOne($studentId);
-        $videoThumb = School::getCurrentSchool()->video_thumbnail;
+        $userContext = Yii::$app->user->identity;
+        $videoThumb = $userContext->getSchool()->video_thumbnail;
 
         return $this->renderOverview($user, $models, $pages, $videoThumb);
     }

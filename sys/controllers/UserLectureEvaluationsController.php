@@ -37,7 +37,8 @@ class UserLectureEvaluationsController extends Controller
      */
     public function actionIndex()
     {
-        $isTeacher = Users::isCurrentUserTeacher();
+        $userContext = Yii::$app->user->identity;
+        $isTeacher = $userContext->isTeacher();
         $searchModel = $isTeacher ? new TeacherUserlectureevaluationsSearch() : new UserlectureevaluationsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, false);
         $students = Users::getActiveStudentEmails();
@@ -65,7 +66,8 @@ class UserLectureEvaluationsController extends Controller
 
     public function actionComments()
     {
-        $isTeacher = Users::isCurrentUserTeacher();
+        $userContext = Yii::$app->user->identity;
+        $isTeacher = $userContext->isTeacher();
         $searchModel = $isTeacher ? new TeacherUserlectureevaluationsSearch() : new UserlectureevaluationsSearch();
         $get = Yii::$app->request->queryParams;
         $get["UserlectureevaluationsSearch"]["evaluation_id"] = 4;

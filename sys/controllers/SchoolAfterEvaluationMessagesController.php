@@ -26,7 +26,7 @@ class SchoolAfterEvaluationMessagesController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
-                            return Users::isCurrentUserTeacher();
+                            return Yii::$app->user->identity->isTeacher();
                         }
                     ],
                 ],
@@ -42,14 +42,17 @@ class SchoolAfterEvaluationMessagesController extends Controller
 
     public function actionIndex()
     {
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         return $this->render('index', [
-            'messages' => SchoolAfterEvaluationMessages::getMessagesBySchoolIdGrouped(School::getCurrentSchoolId())
+            'messages' => SchoolAfterEvaluationMessages::getMessagesBySchoolIdGrouped($schoolId)
         ]);
     }
 
     public function actionCreate($evaluation)
     {
-        $schoolId = School::getCurrentSchoolId();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
         $model = new SchoolAfterEvaluationMessages();
         $model->school_id = $schoolId;
 
@@ -72,8 +75,6 @@ class SchoolAfterEvaluationMessagesController extends Controller
 
     public function actionUpdate($id)
     {
-
-        $schoolId = School::getCurrentSchoolId();
         $model = SchoolAfterEvaluationMessages::findOne(['id' => $id]);
 
         $formModel = new SchoolAfterEvaluationMessageForm();
