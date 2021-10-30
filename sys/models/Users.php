@@ -50,11 +50,9 @@ class Users extends ActiveRecord implements IdentityInterface
             ['subscription_type', 'default', 'value' => self::SUBTYPE_LEAD],
             ['subscription_type', 'in', 'range' => [self::SUBTYPE_FREE, self::SUBTYPE_PAID, self::SUBTYPE_LEAD]],
             [['email'], 'email'],
-            [['username'], 'unique'],
             [['phone_number'], 'string', 'max' => 30],
             [['password', 'first_name', 'last_name'], 'string', 'max' => 250],
             [['email'], 'string', 'max' => 500],
-            [['username'], 'string', 'max' => 500],
         ];
     }
 
@@ -66,7 +64,6 @@ class Users extends ActiveRecord implements IdentityInterface
             'language' => \Yii::t('app',  'User language'),
             'subscription_type' => \Yii::t('app',  'Abonement type'),
             'email' => \Yii::t('app',  'E-mail'),
-            'username' => \Yii::t('app',  'Username'),
             'phone_number' => \Yii::t('app',  'Phone number'),
             'first_name' => \Yii::t('app',  'Name'),
             'last_name' => \Yii::t('app',  'Surname'),
@@ -441,11 +438,9 @@ class Users extends ActiveRecord implements IdentityInterface
     public static function findByEmail($email)
     {
         $user = self::find()
-            ->where(['is_deleted' => false])
-            ->andWhere([
-                'or',
-                ['email' => $email],
-                ['username' => $email],
+            ->where([
+                "email" => $email,
+                'is_deleted' => false
             ])
             ->one();
         if (empty($user)) {

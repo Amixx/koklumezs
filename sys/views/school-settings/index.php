@@ -122,12 +122,16 @@ $this->title = Yii::t('app',  'School settings');
         <div class="tab-pane fade" id="bank-account" role="tabpanel" aria-labelledby="bank-account-tab">
             <h1><?= Yii::t("app", "School requisites") ?></h1>
             <table class="table table-striped table-bordered">
-                <?php foreach ($bankAccount as $key => $value) { ?>
-                    <tr>
-                        <th scope="row"><?= $key ?></th>
-                        <td><?= $value ?></td>
-                    </tr>
-                <?php } ?>
+                <?php
+                if ($bankAccount) {
+                    foreach ($bankAccount as $key => $value) { ?>
+                        <tr>
+                            <th scope="row"><?= $key ?></th>
+                            <td><?= $value ?></td>
+                        </tr>
+                <?php
+                    }
+                } ?>
             </table>
             <?= Html::a(\Yii::t('app',  'Edit'), ['bank-update'], ['class' => 'btn btn-primary']) ?>
         </div>

@@ -35,11 +35,9 @@ class User extends ActiveRecord implements IdentityInterface
             ['user_level', 'default', 'value' => self::ROLE_USER],
             ['user_level', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN, self::ROLE_TEACHER]],
             [['email'], 'email'],
-            [['username'], 'unique'],
             [['phone_number'], 'string', 'max' => 30],
             [['password', 'first_name', 'last_name'], 'string', 'max' => 250],
             [['email'], 'string', 'max' => 500],
-            [['username'], 'string', 'max' => 500],
         ];
     }
 
@@ -49,7 +47,6 @@ class User extends ActiveRecord implements IdentityInterface
             'id' => 'ID',
             'user_level' => \Yii::t('app',  'Access level'),
             'email' => \Yii::t('app',  'E-mail'),
-            'username' => \Yii::t('app',  'Username'),
             'phone_number' => \Yii::t('app',  'Phone number'),
             'first_name' =>  \Yii::t('app',  'Name'),
             'last_name' => \Yii::t('app',  'Surname'),
@@ -188,21 +185,6 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password = Yii::$app->security->generatePasswordHash($password);
     }
 
-    // public static function isUserAdmin($email)
-    // {
-    //     return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_ADMIN, 'is_deleted' => false]);
-    // }
-
-    // public static function isStudent($email)
-    // {
-    //     return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_USER, 'is_deleted' => false]);
-    // }
-
-    // public static function isTeacher($email)
-    // {
-    //     return (bool) static::findOne(['email' => $email, 'user_level' => self::ROLE_TEACHER, 'is_deleted' => false]);
-    // }
-
     public static function getStatus()
     {
         return [
@@ -225,7 +207,8 @@ class User extends ActiveRecord implements IdentityInterface
         if ($this->isTeacher()) return $this->schoolTeacher->school;
         else if ($this->isStudent()) return $this->schoolStudent->school;
 
-        throw new Exception("User is not a teacher or a student");
+        return null;
+        // throw new Exception("User is not a teacher or a student");
     }
 
     public function isTeacher()

@@ -49,7 +49,6 @@ $this->title = $model->id;
                     'last_name',
                     'phone_number',
                     'email:email',
-                    'username',
                     'user_level',
                     [
                         'attribute' => 'about',
