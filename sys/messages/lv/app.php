@@ -649,5 +649,10 @@ return [
     'Students who have registered but have not started playing yet' => 'Skolēni, kuri ir reģistrējušies, bet vēl nav sākuši spēlēt',
     'Hey! Your profile has been successfully created! We have sent information about kokle rent to your e-mail. While kokle is still on its way, you can watch the video which will familiarize you with the platform.' => 'Hei! Tavs mācību profils ir veiksmīgi izveidots! Uz Tavu epastu nosūtījām informāciju par kokles īri. Kamēr kokle vēl ir ceļā, vari noskatīties iepazīšanās video ar platformu.',
     'A portrait of the teacher' => 'Skolotāja portreta attēls',
-    'Hey! click here if you want another task!' => 'Hei! spied šeit, ja vēlies vēl kādu uzdevumu!'
+    'Hey! click here if you want another task!' => 'Hei! spied šeit, ja vēlies vēl kādu uzdevumu!',
+    'Join another school' => 'Pievienoties vēl kādai skolai',
+    'A link to join the school' => 'Saite, caur kuru var pievienoties skolai',
+    'Invalid link!' => 'Nederīga saite!',
+    'Profile successfully linked to a new school' => 'Profils veiksmīgi piesaistīts jaunai skolai',
+    'Join' => 'Pievienoties',
 ];
