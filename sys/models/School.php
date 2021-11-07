@@ -31,6 +31,7 @@ class School extends \yii\db\ActiveRecord
                 'registration_image',
                 'teacher_portrait',
                 'rent_text',
+                'rent_contract',
             ], 'string'],
             [['rent_schoolsubplan_id'], 'number'],
             [['created'], 'safe'],
@@ -57,6 +58,7 @@ class School extends \yii\db\ActiveRecord
             'registration_image' => \Yii::t('app',  'Image in the first page of registration'),
             'teacher_portrait' => \Yii::t('app',  'A portrait of the teacher'),
             'rent_text' => \Yii::t('app',  'Text to show in the rent page'),
+            'rent_contract' => \Yii::t('app',  'Rent contract'),
         ];
     }
 
@@ -75,11 +77,13 @@ class School extends \yii\db\ActiveRecord
             : null;
 
         return [
+            \Yii::t('app', 'Instrument') => $school->instrument,
             \Yii::t('app', 'School background image') => $school->background_image,
             \Yii::t('app', 'Registration page background image') => $school->registration_background_image,
             \Yii::t('app', 'Video thumbnail') => $school->video_thumbnail,
             \Yii::t('app', 'Logo') => $school->logo,
             \Yii::t('app', 'E-mail') => $school->email,
+            \Yii::t('app', 'Rent contract') => $school->rent_contract,
             \Yii::t('app', 'Registration title') => $school->registration_title,
             \Yii::t('app', 'Log in title') => $school->login_title,
             \Yii::t('app', 'Subscription plan used to generate invoice for renters') => $rentSubplanName,

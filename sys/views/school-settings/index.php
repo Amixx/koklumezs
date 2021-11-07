@@ -86,7 +86,7 @@ $this->title = Yii::t('app',  'School settings');
             <h1><?= Yii::t("app", "FAQs") ?></h1>
 
             <p>
-                <?= Html::a(\Yii::t('app', 'Create a FAQ'), ['/school-faqs/create'], ['class' => 'btn btn-success']) ?>
+                <?= Html::a(\Yii::t('app', 'Create a FAQ'), Url::to('school-faqs/create'), ['class' => 'btn btn-success']) ?>
             </p>
             <?= GridView::widget([
                 'dataProvider' => $faqsDataProvider,
@@ -108,10 +108,10 @@ $this->title = Yii::t('app',  'School settings');
                         ],
                         'urlCreator' => function ($action, $model) {
                             if ($action === 'update') {
-                                return Url::to('/school-faqs/update?id=' . $model->id);
+                                return Url::to('school-faqs/update?id=' . $model->id);
                             }
                             if ($action === 'delete') {
-                                return Url::to('/school-faqs/delete?id=' . $model->id);
+                                return Url::to('school-faqs/delete?id=' . $model->id);
                             }
                         },
                     ],

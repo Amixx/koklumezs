@@ -12,7 +12,6 @@ $this->title = \Yii::t('app',  'Your first kokle');
     <div class="rent-form row">
 
         <div class="container">
-            <h2 class="text-center"><?= Yii::t('app', 'Rent kokle') ?></h2>
             <div class="row">
                 <div class="col-sm-2"></div>
                 <div class="col-sm-8">
@@ -21,7 +20,9 @@ $this->title = \Yii::t('app',  'Your first kokle');
                     <?php } ?>
                     <?php $form = ActiveForm::begin(['id' => 'rent-form', 'enableClientValidation' => false]); ?>
 
-                    <?= Html::a(Yii::t('app', 'View rent agreement'), Url::to(["documents/Kokles līgums.docx"]), ['class' => 'btn btn-primary']) ?>
+                    <?php if ($urlToContract) {
+                        echo Html::a(Yii::t('app', 'View rent agreement'), $urlToContract, ['class' => 'btn btn-primary', 'target' => '_blank']);
+                    } ?>
 
                     <div style='margin-top: 16px;'>
                         <?= $form->field($model, 'agreeToTerms')->checkBox()

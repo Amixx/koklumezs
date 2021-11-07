@@ -197,6 +197,7 @@ class RegistrationController extends Controller
         if (!$signupModel) return $this->redirect(['index', 's' => $s, 'l' => $l]);
 
         $model = new RentForm;
+        $urlToContract = $school->rent_contract;
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $user = RentForm::registerUser($signupModel);
@@ -218,7 +219,10 @@ class RegistrationController extends Controller
                 $sent = EmailSender::sendRentNotification($user, $school['email']);
 
                 if ($sent) {
-                    Yii::$app->session->setFlash('success', \Yii::t('app', 'Hey! Your profile has been successfully created! We have sent information about kokle rent to your e-mail. While kokle is still on its way, you can watch the video which will familiarize you with the platform.'));
+                    Yii::$app->session->setFlash('success', \Yii::t(
+                        'app',
+                        'Hey! Your profile has been successfully created! We sent you information about renting the instrument to your e-mail. While it\'s still on the way, you can watch the introductory video on the platform.'
+                    ));
                     Yii::$app->user->login($user, 3600 * 24 * 30);
                     return $this->redirect(['lekcijas/index']);
                 }
@@ -229,6 +233,7 @@ class RegistrationController extends Controller
             'text' => $school['rent_text'],
             'model' => $model,
             'backUrl' => Url::to(['registration/index', 's' => $s, 'l' => $l]),
+            'urlToContract' => $urlToContract,
         ]);
     }
 

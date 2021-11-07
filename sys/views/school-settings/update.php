@@ -28,6 +28,9 @@ $fileInputSettings = [
     'multiple' => false,
 ];
 
+$docInputSettings = $fileInputSettings;
+$docInputSettings['filter'] = ['application/pdf', 'text'];
+
 $this->title = \Yii::t('app',  'Edit school settings') . ': ';
 \Yii::t('app',  'Edit');
 ?>
@@ -39,12 +42,14 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
 
         <?php $form = ActiveForm::begin(); ?>
 
+        <?= $form->field($model, 'instrument')->textInput() ?>
         <?= $form->field($model, 'background_image')->widget(InputFile::class, $fileInputSettings); ?>
         <?= $form->field($model, 'registration_background_image')->widget(InputFile::class, $fileInputSettings); ?>
         <?= $form->field($model, 'video_thumbnail')->widget(InputFile::class, $fileInputSettings); ?>
         <?= $form->field($model, 'logo')->widget(InputFile::class, $fileInputSettings); ?>
         <?= $form->field($model, 'registration_image')->widget(InputFile::class, $fileInputSettings); ?>
         <?= $form->field($model, 'teacher_portrait')->widget(InputFile::class, $fileInputSettings); ?>
+        <?= $form->field($model, 'rent_contract')->widget(InputFile::class, $docInputSettings); ?>
 
         <?= $form->field($model, 'rent_schoolsubplan_id')
             ->dropDownList(

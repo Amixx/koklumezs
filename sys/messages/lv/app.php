@@ -269,7 +269,6 @@ return [
     'Related materials' => 'Saistītie materiāli',
     'Remember me' => 'Atcerēties mani',
     'Remove subscription plan' => 'Noņemt abonēšanas plānu',
-    'Rent kokle' => 'Īrēt kokli',
     'Reply' => 'Atbildēt',
     'Reply text' => 'Atbildes teksts',
     'Reset' => 'Atiestatīt',
@@ -647,7 +646,6 @@ return [
     'Students who are committed to starting later' => 'Skolēni, kuri ir apņēmušies uzsākt vēlāk',
     'Students who have not yet evaluated the first lessons' => 'Skolēni, kuri vēl nav novērtējuši pirmās nodarbības',
     'Students who have registered but have not started playing yet' => 'Skolēni, kuri ir reģistrējušies, bet vēl nav sākuši spēlēt',
-    'Hey! Your profile has been successfully created! We have sent information about kokle rent to your e-mail. While kokle is still on its way, you can watch the video which will familiarize you with the platform.' => 'Hei! Tavs mācību profils ir veiksmīgi izveidots! Uz Tavu epastu nosūtījām informāciju par kokles īri. Kamēr kokle vēl ir ceļā, vari noskatīties iepazīšanās video ar platformu.',
     'A portrait of the teacher' => 'Skolotāja portreta attēls',
     'Hey! click here if you want another task!' => 'Hei! spied šeit, ja vēlies vēl kādu uzdevumu!',
     'Join another school' => 'Pievienoties vēl kādai skolai',
@@ -658,4 +656,6 @@ return [
     'Should use payer information' => 'Vai izmantot maksātāja informāciju',
     'The payer\'s information is being used' => 'Maksātāja informācija tiek izmantota',
     'The payer\'s information is not being used' => 'Maksātāja informācija netiek izmantota',
+    'Hey! Your profile has been successfully created! We sent you information about renting the instrument to your e-mail. While it\'s still on the way, you can watch the introductory video on the platform.' => 'Hei! Tavs mācību profils ir veiksmīgi izveidots! Uz Tavu e-pastu nosūtījām informāciju par instrumenta īri. Kamēr tas vēl ir ceļā, vari noskatīties iepazīšanās video ar platformu.',
+    'Rent contract' => 'Īres līgums',
 ];
