@@ -177,7 +177,13 @@ $this->title = \Yii::t('app',  'Users');
 
                             $timesPaid = $studentSubplan["times_paid"];
                             $sentInvoices = $studentSubplan["sent_invoices_count"];
-                            $planType = SchoolSubPlans::findOne($studentSubplan['plan']['id'])->typeText();
+                            $planType = "(Dzēsts plāns)";
+                            $planModel = SchoolSubPlans::findOne($studentSubplan['plan']['id']);
+                            
+                            if($planModel) {
+                                $planType = $planModel->typeText();
+                            }
+                            
                             $urlToEditPlan = Url::to(['student-sub-plans/update', 'id' => $studentSubplan['id']]);
                             $urlToSendReminder = Url::to(['cron/remind-to-pay', 'studentSubplanId' => $studentSubplan['id']]);
                             $remindToPayHtml = $isLate

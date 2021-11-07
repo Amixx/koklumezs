@@ -180,8 +180,12 @@ class TestController extends Controller
         // }
 
 
-        $userContext = Yii::$app->user->identity;
-        $schoolId = $userContext->getSchool()->id;
-        var_dump($schoolId);
+        // $userContext = Yii::$app->user->identity;
+        // $schoolId = $userContext->getSchool()->id;
+        // var_dump($schoolId);
+
+        // $user = Users::findOne(['id' => 813]);
+        // $user->password = \Yii::$app->security->generatePasswordHash("1234");
+        // $user->update();
     }
 }

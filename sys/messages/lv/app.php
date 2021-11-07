@@ -655,4 +655,7 @@ return [
     'Invalid link!' => 'Nederīga saite!',
     'Profile successfully linked to a new school' => 'Profils veiksmīgi piesaistīts jaunai skolai',
     'Join' => 'Pievienoties',
+    'Should use payer information' => 'Vai izmantot maksātāja informāciju',
+    'The payer\'s information is being used' => 'Maksātāja informācija tiek izmantota',
+    'The payer\'s information is not being used' => 'Maksātāja informācija netiek izmantota',
 ];

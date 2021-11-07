@@ -7,7 +7,6 @@ use app\models\Users;
 use  yii\jui\DatePicker;
 use yii\grid\GridView;
 use app\models\SchoolSubplanParts;
-use Yii;
 
 $userContext = Yii::$app->user->identity;
 $isTeacher = $userContext->isTeacher();
@@ -18,23 +17,23 @@ $isTeacher = $userContext->isTeacher();
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item active">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
-                <?= \Yii::t('app',  'User data') ?>
+                <?= Yii::t('app',  'User data') ?>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="params-tab" data-toggle="tab" href="#params" role="tab" aria-controls="params" aria-selected="false">
-                <?= \Yii::t('app',  'Parameters') ?>
+                <?= Yii::t('app',  'Parameters') ?>
             </a>
         </li>
         <?php if ($model->id) { ?>
             <li class="nav-item">
                 <a class="nav-link" id="plan-tab" data-toggle="tab" href="#plan" role="tab" aria-controls="plan" aria-selected="false">
-                    <?= \Yii::t('app', 'Add subscription plan to student') ?>
+                    <?= Yii::t('app', 'Add subscription plan to student') ?>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="payer-tab" data-toggle="tab" href="#payer" role="tab" aria-controls="payer" aria-selected="false">
-                    <?= \Yii::t('app', 'Payer') ?>
+                    <?= Yii::t('app', 'Payer') ?>
                 </a>
             </li>
         <?php } ?>
@@ -53,38 +52,38 @@ $isTeacher = $userContext->isTeacher();
 
             <?php if (!$isTeacher) {
                 echo $form->field($model, 'user_level')->dropDownList([
-                    'Admin' => \Yii::t('app',  'Administrator'),
-                    'Student' => \Yii::t('app',  'Student'),
-                    'Teacher' => \Yii::t('app',  'Teacher')
+                    'Admin' => Yii::t('app',  'Administrator'),
+                    'Student' => Yii::t('app',  'Student'),
+                    'Teacher' => Yii::t('app',  'Teacher')
                 ], ['prompt' => '']);
             ?>
-                <label for="teacher_instrument"><?= \Yii::t('app',  'Instrument (only for teachers)') ?>:</label>
+                <label for="teacher_instrument"><?= Yii::t('app',  'Instrument (only for teachers)') ?>:</label>
             <?php
                 echo Html::input("text", "teacher_instrument", "", ['class' => 'form-control']);
             } ?>
 
             <?= $form->field($model, 'language')->dropDownList([
-                'lv' => \Yii::t('app',  'Latvian'),
-                'eng' => \Yii::t('app',  'English')
+                'lv' => Yii::t('app',  'Latvian'),
+                'eng' => Yii::t('app',  'English')
             ], ['prompt' => '']) ?>
 
             <?= $form->field($model, 'subscription_type')->dropDownList([
-                'free' => \Yii::t('app',  'For free'),
-                'paid' => \Yii::t('app',  'Paid'),
-                'lead' => \Yii::t('app',  'Lead'),
+                'free' => Yii::t('app',  'For free'),
+                'paid' => Yii::t('app',  'Paid'),
+                'lead' => Yii::t('app',  'Lead'),
             ], ['prompt' => '']) ?>
 
             <?= $form->field($model, 'status')->dropDownList([
-                Users::STATUS_INACTIVE => \Yii::t('app',  'Inactive'),
-                Users::STATUS_ACTIVE => \Yii::t('app',  'Active'),
-                Users::STATUS_PASSIVE => \Yii::t('app',  'Passive')
+                Users::STATUS_INACTIVE => Yii::t('app',  'Inactive'),
+                Users::STATUS_ACTIVE => Yii::t('app',  'Active'),
+                Users::STATUS_PASSIVE => Yii::t('app',  'Passive')
             ], ['prompt' => '']) ?>
 
             <?= $form->field($model, 'about')->textArea(['rows' => 6]) ?>
 
             <?= $form->field($model, 'allowed_to_download_files')->dropDownList([
-                0 => \Yii::t('app',  'No'),
-                1 => \Yii::t('app',  'Yes')
+                0 => Yii::t('app',  'No'),
+                1 => Yii::t('app',  'Yes')
             ], [
                 'prompt' => '',
                 'value' => $model['allowed_to_download_files'] ? 1 : 0
@@ -164,17 +163,29 @@ $isTeacher = $userContext->isTeacher();
             </div>
             <!-- <div class="form-group">
                 <?= Html::a(
-                    \Yii::t('app', 'Remove subscription plan'),
+                    Yii::t('app', 'Remove subscription plan'),
                     ["/student-sub-plans/delete?userId=" . $model["id"]],
                     ['class' => 'btn btn-danger']
                 ) ?>
             </div> -->
         </div>
         <div class="tab-pane fade" id="payer" role="tabpanel" aria-labelledby="payer-tab">
-            <h4><?= Yii::t('app', 'The payer\'s information will be used if at least the name and address are filled in') ?>.</h4>
+            <?php
+            $statusText = $model['payer']['should_use']
+                ? 'The payer\'s information is being used'
+                : 'The payer\'s information is not being used';
+
+            $statusColor = $model['payer']['should_use'] ? 'green' : 'red';
+            ?>
+            <h4 style="color:<?= $statusColor ?>"><?= Yii::t('app', $statusText) ?>.</h4>
             <div class="form-group">
+                <?= $form->field($model, 'payer[should_use]')->dropDownList([
+                    '0' => Yii::t('app',  'No'),
+                    '1' => Yii::t('app',  'Yes')
+                ], ['prompt' => ''])->label(Yii::t('app', 'Should use payer information')) ?>
                 <?= $form->field($model, 'payer[name]')->textInput()
                     ->label(Yii::t('app', 'Name/Title')) ?>
+                <?= $form->field($model, 'payer[email]')->textInput()->label(Yii::t('app', 'E-mail'))  ?>
                 <?= $form->field($model, 'payer[personal_code]')->textInput()
                     ->label(Yii::t('app', 'Personal code')) ?>
                 <?= $form->field($model, 'payer[address]')->textInput()->label(Yii::t('app', 'Legal address')) ?>
@@ -193,7 +204,7 @@ $isTeacher = $userContext->isTeacher();
     </div>
 
     <div class="form-group">
-        <?= Html::submitButton(\Yii::t('app',  'Save'), ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(Yii::t('app',  'Save'), ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

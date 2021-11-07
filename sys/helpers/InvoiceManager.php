@@ -27,12 +27,13 @@ class InvoiceManager
         $subplanParts = SchoolSubplanParts::getPartsForSubplan($schoolSubplan['id']);
         $subplanCost = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
         $bankAccount = School::getBankAccount($school->id);
+        $destinationEmail = self::getDestinationEmail($user);
 
         $invoiceContent = Yii::$app->view->render('@app/views/invoice-templates/advance', [
             'bankAccount' => $bankAccount,
             'id' => $invoiceNumber,
             'fullName' => $userFullName,
-            'email' => $user['email'],
+            'email' => $destinationEmail,
             'subplan' => $schoolSubplan,
             'subplanCost' => $subplanCost,
             'subplanParts' => $subplanParts,
@@ -42,13 +43,13 @@ class InvoiceManager
         InvoicePdfFileGenerator::generate($invoicePath, $invoiceContent, $title);
 
         if ($sendToRenter) {
-            $sent = EmailSender::sendInvoiceToRenter($school['renter_message'], $school['email'], $user['email'], $invoicePath);
+            $sent = EmailSender::sendInvoiceToRenter($school['renter_message'], $school['email'], $destinationEmail, $invoicePath);
         } else {
             $message = isset($schoolSubplan['message']) && $schoolSubplan['message']
                 ? $schoolSubplan['message']
                 : "Nosūtam rēķinu par tekošā mēneša nodarbībām. Lai jauka diena!";
 
-            $sent = EmailSender::sendEmailWithAdvanceInvoice($message, $school['email'], $user['email'], $invoiceNumber, $invoicePath);
+            $sent = EmailSender::sendEmailWithAdvanceInvoice($message, $school['email'], $destinationEmail, $invoiceNumber, $invoicePath);
         }
 
         if ($sent) {
@@ -56,7 +57,7 @@ class InvoiceManager
 
             SentInvoices::createAdvance($user['id'], $invoiceNumber, $schoolSubplan, $studentSubplan);
         } else {
-            EmailSender::sendWarningToTeacher($user['email'], $school['email']);
+            EmailSender::sendWarningToTeacher($destinationEmail, $school['email']);
         }
     }
 
@@ -87,7 +88,7 @@ class InvoiceManager
             'bankAccount' => $bankAccount,
             'number' => $invoiceNumber,
             'fullName' => $userFullName,
-            'email' => $model['student']['email'],
+            'email' => self::getDestinationEmail($model['student']),
             'subplan' => $schoolSubplan,
             'subplanCost' => $subplanCost,
             'subplanParts' => $subplanParts,
@@ -127,7 +128,7 @@ class InvoiceManager
             'bankAccount' => $bankAccount,
             'number' => $invoiceNumber,
             'fullName' => $userFullName,
-            'email' => $user['email'],
+            'email' => self::getDestinationEmail($user),
             'subplan' => $schoolSubplan,
             'subplanCost' => $subplanCost,
             'subplanParts' => $subplanParts,
@@ -165,5 +166,12 @@ class InvoiceManager
         $prefix = $isAdvance ? "avansa-" : "";
 
         return $prefix . "rekins-$invoiceNumber.pdf";
+    }
+
+    private static function getDestinationEmail($user)
+    {
+        return isset($user['payer']) && $user['payer'] && $user['payer']['should_use']
+            ? $user['payer']['email']
+            : $user['email'];
     }
 }

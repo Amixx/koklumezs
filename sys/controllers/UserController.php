@@ -218,7 +218,9 @@ class UserController extends Controller
                     $newPayer = true;
                 }
 
+                $payer->should_use = $postData["should_use"];
                 $payer->name = $postData["name"];
+                $payer->email = $postData["email"];
                 $payer->address = $postData["address"];
                 $payer->personal_code = $postData["personal_code"];
                 $payer->registration_number = $postData["registration_number"];

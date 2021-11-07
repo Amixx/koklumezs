@@ -13,7 +13,7 @@ $priceWithoutPvn = number_format($subplanCost / $divider, 2);
 $pvnAmount = number_format($subplanCost - $priceWithoutPvn, 2);
 $payAmount = number_format($subplanCost, 2);
 
-$usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
+$usePayer = isset($payer) && $payer && $payer['should_use'];
 
 ?>
 
@@ -99,6 +99,16 @@ $usePayer = isset($payer) && $payer && $payer['name'] && $payer['address'];
                     </td>
                 </tr>
                 <?php if ($usePayer) { ?>
+                    <?php if ($payer['email']) { ?>
+                        <tr>
+                            <td class="leftcol">
+                                <?= Yii::t('app', 'Contacts') ?>:
+                            </td>
+                            <td>
+                                <?= $payer['email'] ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
                     <?php if ($payer['personal_code']) { ?>
                         <tr>
                             <td class="leftcol">
