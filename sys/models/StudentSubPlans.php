@@ -186,7 +186,7 @@ class StudentSubPlans extends \yii\db\ActiveRecord
 
     public static function getPlanEndDateString($subplan)
     {
-        if ($subplan == null) {
+        if ($subplan == null || $subplan['plan'] == null) {
             return null;
         }
         if ($subplan['plan']['months'] == "0") {

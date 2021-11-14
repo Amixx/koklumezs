@@ -22,13 +22,15 @@ $this->title = \Yii::t('app', 'Subscription plans');
             [
                 'label' => Yii::t('app', 'Plan name'),
                 'value' => function ($dataProvider) {
-                    return $dataProvider->plan->name;
+                    return $dataProvider->plan ? $dataProvider->plan->name : "-";
                 }
             ],
             [
                 'label' => Yii::t('app', 'Plan monthly cost'),
                 'value' => function ($dataProvider) {
-                    return SchoolSubplanParts::getPlanTotalCost($dataProvider->plan['id']);
+                    return $dataProvider->plan
+                        ? SchoolSubplanParts::getPlanTotalCost($dataProvider->plan['id'])
+                        : "-";
                 }
             ],
             [

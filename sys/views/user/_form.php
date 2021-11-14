@@ -107,25 +107,27 @@ $isTeacher = $userContext->isTeacher();
                             [
                                 'label' => Yii::t('app', 'Plan name'),
                                 'value' => function ($dataProvider) {
-                                    return $dataProvider->plan->name;
+                                    return $dataProvider->plan ? $dataProvider->plan->name : "(Dzēsts plāns)";
                                 }
                             ],
                             [
                                 'label' => Yii::t('app', 'Plan monthly cost'),
                                 'value' => function ($dataProvider) {
-                                    return SchoolSubplanParts::getPlanTotalCost($dataProvider->plan['id']);
+                                    return $dataProvider->plan
+                                        ? SchoolSubplanParts::getPlanTotalCost($dataProvider->plan['id'])
+                                        : "-";
                                 }
                             ],
                             [
                                 'label' => Yii::t('app', 'Plan months count'),
                                 'value' => function ($dataProvider) {
-                                    return $dataProvider->plan->months;
+                                    return $dataProvider->plan ? $dataProvider->plan->months : "-";
                                 }
                             ],
                             [
                                 'label' => Yii::t('app', 'Type'),
                                 'value' => function ($dataProvider) {
-                                    return $dataProvider->plan->typeText();
+                                    return $dataProvider->plan ? $dataProvider->plan->typeText() : "-";
                                 }
                             ],
                             [

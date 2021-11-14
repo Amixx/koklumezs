@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 
-$this->title = $subplan['plan']['name'];
+$this->title = $subplan['plan'] ? $subplan['plan']['name'] : "";
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="difficulties-view">
