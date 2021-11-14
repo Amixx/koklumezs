@@ -54,6 +54,14 @@ $inputFileOptions = [
             ]) ?>
             <?= $form->field($model, 'file')->widget(InputFile::class, $inputFileOptions); ?>
             <?= $form->field($model, 'play_along_file')->widget(InputFile::class, $inputFileOptions); ?>
+            <?= $form->field($model, 'lang')
+                ->dropDownList(
+                    [
+                        'lv' => Yii::t('app',  'Latvian'),
+                        'eng' => Yii::t('app',  'English')
+                    ],
+                    ['prompt' => '']
+                ) ?>
             <?= $this->render('related', ['lectures' => $lectures, 'relatedLectures' => $relatedLectures]) ?>
             <small><?= \Yii::t('app', 'If you need to add more files, go to section "Files"') ?></small><br /><br />
         </div>
