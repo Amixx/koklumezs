@@ -362,12 +362,11 @@ class UserLectures extends \yii\db\ActiveRecord
         return EmailSender::sendReminderToTeacher($user, $lecture, $x, $school['email']);
     }
 
-    public static function getUnassignedLectures($id)
+    public static function getUnassignedLecturesForUser($user)
     {
-
-        $school = School::getByStudent($id);
-        $assignableSchoolLectures = SchoolLecture::getAssignableSchoolLectureIds($school->id);
-        $userLectures = self::getUserLectures($id);
+        $school = School::getByStudent($user->id);
+        $assignableSchoolLectures = SchoolLecture::getAssignableSchoolLectureIds($school->id, $user->language);
+        $userLectures = self::getUserLectures($user->id);
         $unassigned = [];
         foreach ($assignableSchoolLectures as $slecture) {
             $new = true;
@@ -407,7 +406,7 @@ class UserLectures extends \yii\db\ActiveRecord
             return null;
         }
 
-        $unassignedLectures = self::getUnassignedLectures($userId);
+        $unassignedLectures = self::getUnassignedLecturesForUser($user);
         $avg = self::getLastThreeComplexityAverage($userId);
         $nextLessons = ['easy' => null, 'medium' => null, 'hard' => null];
 

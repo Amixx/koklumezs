@@ -54,9 +54,15 @@ class SchoolLecture extends \yii\db\ActiveRecord
         $schoolLectures = self::getForSchool($schoolId);
         return ArrayHelper::map($schoolLectures, 'id', 'lecture_id');
     }
-    public static function getAssignableSchoolLectureIds($schoolId)
+    public static function getAssignableSchoolLectureIds($schoolId, $lang)
     {
-        $schoolLectures = self::find()->joinWith('lecture')->andWhere(['>', 'complexity', '1'])->where(['school_id' => $schoolId])->asArray()->all();
+        $schoolLectures = self::find()
+            ->joinWith('lecture')
+            ->where(['school_id' => $schoolId])
+            ->andWhere(['>', 'complexity', '1'])
+            ->andWhere(['lang' => $lang])
+            ->asArray()->all();
+
         return ArrayHelper::map($schoolLectures, 'id', 'lecture_id');
     }
 
