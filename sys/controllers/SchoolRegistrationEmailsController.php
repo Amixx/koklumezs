@@ -33,9 +33,7 @@ class SchoolRegistrationEmailsController extends Controller
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
+                'actions' => [],
             ],
         ];
     }
@@ -110,9 +108,16 @@ class SchoolRegistrationEmailsController extends Controller
         ]);
     }
 
-    public function actionDelete($id)
+    public function actionDelete($type)
     {
-        $this->findModel($id)->delete();
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
+        $model = SchoolRegistrationEmails::findOne(['school_id' => $schoolId]);
+
+        $model[$type] = null;
+        $model->update();
+
+        Yii::$app->session->setFlash('success', Yii::t('app', 'E-mail deleted') . '!');
 
         return $this->redirect(['index']);
     }

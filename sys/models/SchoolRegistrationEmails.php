@@ -56,15 +56,17 @@ class SchoolRegistrationEmails extends \yii\db\ActiveRecord
         $school = School::getByStudent($user['id']);
         $email = SchoolRegistrationEmails::getByType($school['id'], $emailType);
 
-        return Yii::$app
-            ->mailer
-            ->compose(['html' => 'blank-message-html', 'text' => 'blank-message-text'], [
-                'message' => $email,
-            ])
-            ->setFrom([$school['email'] => Yii::$app->name])
-            ->setTo($user['email'])
-            ->setSubject(SchoolRegistrationEmails::getSubjects()[$emailType])
-            ->send();
+        if ($email && $email != "") {
+            return Yii::$app
+                ->mailer
+                ->compose(['html' => 'blank-message-html', 'text' => 'blank-message-text'], [
+                    'message' => $email,
+                ])
+                ->setFrom([$school['email'] => Yii::$app->name])
+                ->setTo($user['email'])
+                ->setSubject(SchoolRegistrationEmails::getSubjects()[$emailType])
+                ->send();
+        }
     }
 
     public static function getLabel($email)

@@ -230,7 +230,7 @@ function setupAssignUserListFilters(){
     setupAssignFilterByLanguage($langElems);
     setupAssignFilterBySubscriptionType($langElems);
 
-    loadUnreadMessagesCount();
+    // loadUnreadMessagesCount();
 
     setupNeedHelpButton();
 }

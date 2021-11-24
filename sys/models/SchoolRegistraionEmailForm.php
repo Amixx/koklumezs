@@ -13,7 +13,7 @@ class SchoolRegistraionEmailForm extends Model
     public function rules()
     {
         return [
-            [['type', 'value'], 'required'],
+            [['type'], 'required'],
             [['type', 'value'], 'string'],
         ];
     }

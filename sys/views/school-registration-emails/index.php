@@ -17,7 +17,10 @@ $this->title = Yii::t('app', 'School registration emails');
                 <tr>
                     <th scope="row"><?= $email['label'] ?></th>
                     <td><?= $email['value'] ? $email['value']  : '<em><strong>Nav ievadīts<strong></em>' ?></td>
-                    <td><?= Html::a(Yii::t('app', $email['value']  ? 'Edit' : 'Create'), ['update', 'type' => $type], ['class' => 'btn btn-primary']) ?></td>
+                    <td>
+                        <?= Html::a(Yii::t('app', $email['value']  ? 'Edit' : 'Create'), ['update', 'type' => $type], ['class' => 'btn btn-primary']) ?>
+                        <?= $email['value'] ? Html::a(Yii::t('app', 'Delete'), ['delete', 'type' => $type], ['class' => 'btn btn-danger', 'style' => 'margin-top: 16px']) : '' ?>
+                    </td>
                 </tr>
             <?php } ?>
         </table>

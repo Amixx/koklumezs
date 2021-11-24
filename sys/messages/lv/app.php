@@ -658,4 +658,5 @@ return [
     'The payer\'s information is not being used' => 'Maksātāja informācija netiek izmantota',
     'Hey! Your profile has been successfully created! We sent you information about renting the instrument to your e-mail. While it\'s still on the way, you can watch the introductory video on the platform.' => 'Hei! Tavs mācību profils ir veiksmīgi izveidots! Uz Tavu e-pastu nosūtījām informāciju par instrumenta īri. Kamēr tas vēl ir ceļā, vari noskatīties iepazīšanās video ar platformu.',
     'Rent contract' => 'Īres līgums',
+    'E-mail deleted' => 'E-pasts dzēsts'
 ];
