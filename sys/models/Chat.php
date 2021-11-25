@@ -18,7 +18,7 @@ class Chat extends \yii\db\ActiveRecord
     {
         return [
             [['message'], 'required'],
-            [['author_id', 'recipient_id', 'status'], 'integer'],
+            [['author_id', 'recipient_id', 'status', 'lesson_id'], 'integer'],
             [['update_date', 'message', 'status'], 'safe']
         ];
     }
@@ -41,6 +41,22 @@ class Chat extends \yii\db\ActiveRecord
         }
     }
 
+    public function getLesson()
+    {
+        return $this->hasOne(Lectures::class, ['id' => 'lesson_id']);
+    }
+
+    public function getOpenTime()
+    {
+        return $this->hasOne(CorrespondenceOpentimes::class, ['author_id' => 'recipient_id', 'recipient_id' => 'author_id']);
+    }
+
+    public function isUnread()
+    {
+        if (!$this->openTime) return true;
+        return $this->openTime->opentime < $this->update_date;
+    }
+
     public function attributeLabels()
     {
         return [
@@ -55,22 +71,11 @@ class Chat extends \yii\db\ActiveRecord
     public static function recordsForTwoUsers($authorId, $recipientId, $isTeacher)
     {
 
-        $chatMessages = static::find()->andWhere([
+        return static::find()->andWhere([
             'or',
             ['author_id' => $authorId, 'recipient_id' => $recipientId],
             ['author_id' => $recipientId, 'recipient_id' => $authorId],
-        ])->orderBy('id asc')->all();
-
-        $needHelpMessagesAuthorId = $isTeacher ? $recipientId : $authorId;
-        $needHelpMessages = NeedHelpMessages::getFormattedForChat($needHelpMessagesAuthorId);
-
-        $allMessages = array_merge($chatMessages, $needHelpMessages);
-
-        usort($allMessages, function ($a, $b) {
-            return strtotime($a->update_date) - strtotime($b->update_date);
-        });
-
-        return $allMessages;
+        ])->orderBy('update_date asc')->all();
     }
 
     // TODO: iespējams šis arī jāpārnes uz user modeli
@@ -92,16 +97,22 @@ class Chat extends \yii\db\ActiveRecord
         }
     }
 
-    public static function addNewMessage($message, $authorId, $recipientId, $status = 1)
+    public static function addNewMessage($message, $authorId, $recipientId, $status = 1, $lessonId = null, $createdAt = null)
     {
-        // 1 - User message
-        // 2 - System message (currently only used for after evaluation messages)
+        // 1 - Parasta ziņa, ko nosūta čatā
+        // 2 - Ziņa no sistēmas - piem. pēc noteikta nodarbības novērtējuma
+        // 3 - Ziņa no skolēna par to, ka vajag palīdzību (izsaucama ar pogu nodarbībā)
         $model = new Chat;
 
         $model->message = $message;
         $model->author_id = $authorId;
         $model->status = $status;
         $model->recipient_id = $recipientId;
+        $model->lesson_id = $lessonId;
+        if ($createdAt) {
+            $model->update_date = $createdAt;
+        }
+
 
         return $model->save();
     }
@@ -115,8 +126,8 @@ class Chat extends \yii\db\ActiveRecord
         $isTeacher = $userContext->isTeacher();
         $messages = Chat::recordsForTwoUsers($currentUserId, $recipientId, $isTeacher);
         $user = Users::getCurrentUserForChat();
+        $latestConversations = $isTeacher ? $user->getLatestConversations() : null;
 
-        $usersWithConversations = $isTeacher ? $user->getUsersWithConversations() : null;
 
         if ($updateOpentime) {
             CorrespondenceOpentimes::updateOpentime($currentUserId, $recipientId);
@@ -124,7 +135,7 @@ class Chat extends \yii\db\ActiveRecord
 
         if ($messages) {
             foreach ($messages as $message) {
-                $isNeedHelpMessage = property_exists($message, 'is_need_help_message');
+                $isNeedHelpMessage = $message->status === 3;
                 $outerClass = "chat-message";
                 $needHelpPrefix = "";
 
@@ -148,23 +159,21 @@ class Chat extends \yii\db\ActiveRecord
             }
         }
 
-        if ($usersWithConversations) {
-            foreach ($usersWithConversations as $u) {
-                if ($u == NULL) {
-                    continue;
-                }
+        if ($latestConversations) {
+            foreach ($latestConversations as $conv) {
+                if ($conv == NULL || $conv['user'] == null) continue;
 
-                $isActive = $u['id'] == $recipientId;
+                $uId = $conv['user']->id;
+                $userFullName = Users::getFullName($conv['user']);
+
+                $isActive = $uId == $recipientId;
                 $style = $isActive ? "background-color:#b0f3fc;" : "";
-                $hasNewChats = $user->hasUnreadMessages($u['id']);
-                if ($hasNewChats) {
-                    $style .= "font-weight: bold;";
-                }
+                if ($conv['is_unread']) $style .= "font-weight: bold;";
 
                 $userList .= "
-                  <li class='chat-user-item' data-userid='" . $u['id'] . "' style='" . $style . "'>
+                  <li class='chat-user-item' data-userid='" . $uId . "' style='" . $style . "'>
                     <span class='glyphicon glyphicon-user'></span>
-                    <span>" . $u['first_name'] . " " . $u['last_name'] . "</span>
+                    <span>" . $userFullName . "</span>
                   </li>
                 ";
             }

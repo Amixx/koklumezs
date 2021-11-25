@@ -5,8 +5,8 @@ namespace app\widgets;
 use Yii;
 use yii\base\Widget;
 use app\models\Chat;
-use app\models\Users;
 use app\models\SchoolTeacher;
+use yii\helpers\Url;
 
 class ChatRoom extends Widget
 {
@@ -25,29 +25,17 @@ class ChatRoom extends Widget
     public $model;
     public $recipientId;
 
-    public function init()
-    {
-        $this->model = new Chat();
-        if ($this->userModel === NULL) {
-            $this->userModel = Yii::$app->getUser()->identityClass;
-        }
-
-        $this->model->userModel = $this->userModel;
-
-        $userContext = Yii::$app->user->identity;
-        $this->recipientId = $userContext->isTeacher()
-            ? Chat::findFirstRecipient()
-            : SchoolTeacher::getByCurrentStudent()['user_id'];
-
-        parent::init();
-    }
-
     public function run()
     {
         parent::init();
-        $model = new Chat();
-        $model->userModel = $this->userModel;
-        $data = $model->data($this->recipientId, false);
+
+        $this->model = new Chat();
+        $userContext = Yii::$app->user->identity;
+        $schoolTeacher = SchoolTeacher::getBySchoolId($userContext->school->id);
+        $this->url = Url::to(['/chat/send-chat']);
+        $this->recipientId = $schoolTeacher['user']['id'];
+        $this->userModel = Users::class;
+        $data = $this->model->data($this->recipientId, false);
 
         return $this->render('index', [
             'data' => $data,

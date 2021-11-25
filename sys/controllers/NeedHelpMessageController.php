@@ -2,8 +2,7 @@
 
 namespace app\controllers;
 
-use app\models\Lectures;
-use app\models\NeedHelpMessages;
+use app\models\Chat;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -37,31 +36,11 @@ class NeedHelpMessageController extends Controller
     public function actionCreate()
     {
         $post = Yii::$app->request->post();
+        $userContext = Yii::$app->user->identity;
+        $recipientId = $userContext->getSchool()->schoolTeacher->user->id;
 
-        $model = new NeedHelpMessages;
-        $model->author_id = Yii::$app->user->identity->id;
-        $model->lesson_id = $post['lessonId'];
-        $model->message = $post['message'];
+        $saved = Chat::addNewMessage($post['message'], $userContext->id, $recipientId, 3, $post['lessonId']);
 
-        if ($model->save()) {
-            return json_encode($model);
-        }
-    }
-
-
-    /**
-     * Finds the Lectures model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Lectures the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = NeedHelpMessages::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
+        return $saved;
     }
 }

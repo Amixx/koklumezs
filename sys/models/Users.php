@@ -30,8 +30,6 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public $authKey;
 
-    private $receivedNeedHelpMessages;
-
     public static function tableName()
     {
         return 'users';
@@ -111,70 +109,51 @@ class Users extends ActiveRecord implements IdentityInterface
         return $this->hasMany(Chat::class, ['author_id' => 'id'])->orderBy(['id' => SORT_DESC])->alias("sent");
     }
 
-    public function getSentNeedHelpMessages()
-    {
-        return $this->hasMany(NeedHelpMessages::class, ['author_id' => 'id'])->orderBy(['id' => SORT_DESC]);
-    }
-
     public function getCorrespondenceOpenTimes()
     {
         return $this->hasMany(CorrespondenceOpentimes::class, ['author_id' => 'id']);
     }
 
-    public function getUsersWithConversations()
+    public function getLatestConversations()
     {
-        $userIdsData = Chat::find()
-            ->select(['author_id', 'recipient_id'])->distinct()
-            ->andWhere([
-                'or',
-                ['author_id' => $this->id],
-                ['recipient_id' => $this->id],
-            ])
-            ->orderBy('id desc')
-            ->asArray()
+        $latestMessageInEachConversation = Chat::find()
+            ->where("update_date in (
+                SELECT max(update_date)
+                FROM chat where author_id = $this->id or recipient_id = $this->id
+                GROUP BY author_id, recipient_id
+            )")
+            ->orderBy('update_date desc')
+            ->limit(20)
             ->all();
 
+        $latestConversations = [];
 
-        $userIds = array_map(function ($item) {
-            return $item['author_id'] != $this->id
-                ? $item['author_id']
-                : $item['recipient_id'];
-        }, $userIdsData);
+        foreach ($latestMessageInEachConversation as $msg) {
+            $currentUserIsAuthor = $msg->author_id == $this->id;
 
+            $user = $currentUserIsAuthor
+                ? $msg->recipient
+                : $msg->author;
 
-        $usersWithConversations = Users::find()
-            ->where(['is_deleted' => false])
-            ->andWhere(["in", "users.id", $userIds])
-            ->andWhere(["in", "users.status", [Users::STATUS_ACTIVE, Users::STATUS_PASSIVE]])
-            ->joinWith("receivedChatMessages")
-            ->joinWith("sentChatMessages")
-            ->joinWith("sentNeedHelpMessages")
-            ->all();
+            $userAlreadyAdded = !empty(array_filter($latestConversations, function ($conv) use ($user) {
+                return $conv['user']->id === $user->id;
+            }));
 
-        $this->receivedNeedHelpMessages = [];
+            if ($userAlreadyAdded) continue;
 
-        $userContext = Yii::$app->user->identity;
-        if ($userContext->isTeacher()) {
-            $this->receivedNeedHelpMessages = $this->getReceivedNeedHelpMessages();
-        }
-        usort($usersWithConversations, [Users::class, "sortUsers"]);
+            $isUnreadByCurrentUser = !$currentUserIsAuthor && $msg->isUnread();
 
-        return $usersWithConversations;
-    }
+            $conversationToAdd = [
+                'user' => $user,
+                'is_unread' => $isUnreadByCurrentUser,
+            ];
 
-    public function sortUsers($userA, $userB)
-    {
-        if ($userA && $userB) {
-            $aHasNew = $this->hasUnreadMessages($userA['id']);
-            $bHasNew = $this->hasUnreadMessages($userB['id']);
-
-            if ($aHasNew) return -1;
-            if ($bHasNew) return 1;
-            if ($userA->getLatestMessageTime() < $userB->getLatestMessageTime()) return 1;
-            else return -1;
+            $isUnreadByCurrentUser // ja current useris nav lasījis pēdējo ziņu, tad sarakste ir augšā
+                ? array_unshift($latestConversations, $conversationToAdd)
+                : array_push($latestConversations, $conversationToAdd);
         }
 
-        return 0;
+        return $latestConversations;
     }
 
     public function hasUnreadMessages($recipientId)
@@ -184,8 +163,7 @@ class Users extends ActiveRecord implements IdentityInterface
 
     public function getUnreadMessagesCount($recipientId)
     {
-        return $this->getUnreadItems($recipientId, $this->receivedChatMessages, "update_date")
-            + $this->getUnreadItems($recipientId, $this->receivedNeedHelpMessages, "created_at");
+        return $this->getUnreadItems($recipientId, $this->receivedChatMessages, "update_date");
     }
 
     private function getUnreadItems($recipientId, $messagesArray, $timeProperty)
@@ -220,39 +198,12 @@ class Users extends ActiveRecord implements IdentityInterface
         return $res;
     }
 
-    private function getReceivedNeedHelpMessages()
-    {
-        $schoolStudentIds = School::getSchoolStudentIds();
-        return NeedHelpMessages::find()->where(['in', 'author_id', $schoolStudentIds])->all();
-    }
-
-    private function getLatestMessageTime()
-    {
-        $latestTimes = [
-            self::getLatestTime($this->receivedChatMessages, 'update_date'),
-            self::getLatestTime($this->sentChatMessages, 'update_date'),
-            self::getLatestTime($this->sentNeedHelpMessages, 'created_at')
-        ];
-
-        return max($latestTimes);
-    }
-
-    private static function getLatestTime($messages, $column)
-    {
-        return !empty($messages) ? $messages[0][$column] : null;
-    }
-
     public function getTotalUnreadCount()
     {
-        $usersWithConversations = $this->getUsersWithConversations();
-        $this->receivedNeedHelpMessages = [];
-        $userContext = Yii::$app->user->identity;
-        if ($userContext->isTeacher()) {
-            $this->receivedNeedHelpMessages = $this->getReceivedNeedHelpMessages();
-        }
+        $latestConversations = $this->getLatestConversations();
         $res = 0;
 
-        foreach ($usersWithConversations as $uwc) {
+        foreach ($latestConversations as $uwc) {
             $res += $this->getUnreadMessagesCount($uwc->id);
         }
 
@@ -263,8 +214,8 @@ class Users extends ActiveRecord implements IdentityInterface
     {
         return Users::find()
             ->where(['users.id' => Yii::$app->user->identity->id])
-            ->joinWith("receivedChatMessages")
-            ->joinWith("correspondenceOpenTimes")
+            // ->joinWith("receivedChatMessages")
+            // ->joinWith("correspondenceOpenTimes")
             ->limit(1)->one(); // NENOŅEMT ->limit(1) - rada memory exhausted erroru.
     }
 

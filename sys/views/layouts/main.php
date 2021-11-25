@@ -57,11 +57,7 @@ $this->beginPage() ?>
 
     <?php
     if ($layoutHelper->shouldRenderChat()) {
-        echo ChatRoom::widget([
-            'url' => \yii\helpers\Url::to(['/chat/send-chat']),
-            'userModel' =>  \app\models\User::class,
-            'recipientId' => $layoutHelper->getChatRecipientId(),
-        ]);
+        echo ChatRoom::widget();
     } ?>
 
     <?= $this->render('components/footer'); ?>

@@ -69,16 +69,6 @@ class UserLayoutHelper extends LayoutHelper
         return $class;
     }
 
-    public function getChatRecipientId()
-    {
-        if ($this->isTeacher) {
-            return null;
-        }
-
-        $schoolTeacher = SchoolTeacher::getBySchoolId($this->school->id);
-        return $schoolTeacher['user']['id'];
-    }
-
     private function getNavEnd()
     {
         $fullName = Users::getFullName(Yii::$app->user->identity);

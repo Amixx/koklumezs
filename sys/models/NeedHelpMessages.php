@@ -55,22 +55,4 @@ class NeedHelpMessages extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Lectures::class, ['id' => 'lesson_id']);
     }
-
-    public static function getFormattedForChat($userId)
-    {
-        $formattedForChat = [];
-        $messages = self::find()->where(['author_id' => $userId])->joinWith('author')->joinWith('lesson')->orderBy('id desc')->all();
-
-        foreach ($messages as $message) {
-            $formattedForChat[] = (object)[
-                'message' => $message->message,
-                'author' => $message->author,
-                'lesson' => $message->lesson,
-                'update_date' => $message->created_at,
-                'is_need_help_message' => true,
-            ];
-        }
-
-        return $formattedForChat;
-    }
 }

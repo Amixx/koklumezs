@@ -62,6 +62,11 @@ class School extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getSchoolTeacher()
+    {
+        return $this->hasOne(SchoolTeacher::class, ['school_id' => 'id']);
+    }
+
     public static function getByStudent($studentId)
     {
         $schoolId = SchoolStudent::getSchoolStudent($studentId)->school_id;

@@ -32,8 +32,10 @@ use app\models\School;
 use app\models\BankAccounts;
 use app\models\SchoolStudent;
 use app\models\CommentResponses;
+use app\models\NeedHelpMessages;
 use app\models\RegistrationMessage;
 use app\models\Trials;
+use app\models\User;
 use app\models\UserLectures;
 use app\models\Userlectureevaluations;
 use kartik\mpdf\Pdf;
@@ -187,5 +189,18 @@ class TestController extends Controller
         // $user = Users::findOne(['id' => 813]);
         // $user->password = \Yii::$app->security->generatePasswordHash("1234");
         // $user->update();
+
+
+        $messages = NeedHelpMessages::find()->all();
+        foreach ($messages as $msg) {
+
+            $user = User::findOne(['id' => $msg->author->id]);
+            $schoolTeacherId = SchoolTeacher::getBySchoolId($user->getSchool()->id)->user->id;
+
+            Chat::addNewMessage($msg['message'], $msg['author_id'], $schoolTeacherId, 3, $msg['lesson_id'], $msg['created_at']);
+
+            echo "<hr>";
+        }
+        die();
     }
 }
