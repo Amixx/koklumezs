@@ -135,6 +135,8 @@ class Users extends ActiveRecord implements IdentityInterface
                 ? $msg->recipient
                 : $msg->author;
 
+            if (!$user) continue;
+
             $userAlreadyAdded = !empty(array_filter($latestConversations, function ($conv) use ($user) {
                 return $conv['user']->id === $user->id;
             }));
@@ -208,15 +210,6 @@ class Users extends ActiveRecord implements IdentityInterface
         }
 
         return $res;
-    }
-
-    public static function getCurrentUserForChat()
-    {
-        return Users::find()
-            ->where(['users.id' => Yii::$app->user->identity->id])
-            // ->joinWith("receivedChatMessages")
-            // ->joinWith("correspondenceOpenTimes")
-            ->limit(1)->one(); // NENOŅEMT ->limit(1) - rada memory exhausted erroru.
     }
 
     public function updateLoginTime()

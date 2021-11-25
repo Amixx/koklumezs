@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Chat;
 use Yii;
 use yii\web\Controller;
 use app\models\Users;
@@ -43,8 +44,6 @@ class ChatController extends Controller
             return 0;
         }
 
-        $user = Users::getCurrentUserForChat();
-
-        return $user->getTotalUnreadCount();
+        return json_encode(Chat::unreadDataForCurrentUser());
     }
 }

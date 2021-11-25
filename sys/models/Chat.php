@@ -70,31 +70,11 @@ class Chat extends \yii\db\ActiveRecord
 
     public static function recordsForTwoUsers($authorId, $recipientId, $isTeacher)
     {
-
         return static::find()->andWhere([
             'or',
             ['author_id' => $authorId, 'recipient_id' => $recipientId],
             ['author_id' => $recipientId, 'recipient_id' => $authorId],
         ])->orderBy('update_date asc')->all();
-    }
-
-    // TODO: iespējams šis arī jāpārnes uz user modeli
-    public static function findFirstRecipient()
-    {
-        $authorId = Yii::$app->user->identity->id;
-        $data = static::find()->where(['!=', 'recipient_id', $authorId])->andWhere([
-            'or',
-            ['author_id' => $authorId],
-            ['recipient_id' => $authorId],
-        ])->orderBy('id desc')
-            ->limit(1)
-            ->one();
-
-        if ($data) {
-            return $data['recipient_id'];
-        } else {
-            return null;
-        }
     }
 
     public static function addNewMessage($message, $authorId, $recipientId, $status = 1, $lessonId = null, $createdAt = null)
@@ -125,7 +105,7 @@ class Chat extends \yii\db\ActiveRecord
         $currentUserId = $userContext->id;
         $isTeacher = $userContext->isTeacher();
         $messages = Chat::recordsForTwoUsers($currentUserId, $recipientId, $isTeacher);
-        $user = Users::getCurrentUserForChat();
+        $user = Users::findOne($currentUserId);
         $latestConversations = $isTeacher ? $user->getLatestConversations() : null;
 
 
@@ -162,7 +142,6 @@ class Chat extends \yii\db\ActiveRecord
         if ($latestConversations) {
             foreach ($latestConversations as $conv) {
                 if ($conv == NULL || $conv['user'] == null) continue;
-
                 $uId = $conv['user']->id;
                 $userFullName = Users::getFullName($conv['user']);
 
@@ -198,5 +177,28 @@ class Chat extends \yii\db\ActiveRecord
         $isCooldown = !(round(($now - $lastMessageTime) / 60, 2) >= 10);
 
         return $isCooldown;
+    }
+
+    public static function unreadDataForCurrentUser()
+    {
+        $userContext = Yii::$app->user->identity;
+
+        $unreadMessages = self::find()
+            ->where("opentime IS NULL OR update_date > opentime")
+            ->andWhere(['chat.recipient_id' => $userContext->id])
+            ->joinWith('openTime')
+            ->asArray()
+            ->all();
+
+        $unreadConversations = count(
+            array_unique(
+                array_column($unreadMessages, "author_id")
+            )
+        );
+
+        return [
+            'messages' => count($unreadMessages),
+            'conversations' => $unreadConversations,
+        ];
     }
 }

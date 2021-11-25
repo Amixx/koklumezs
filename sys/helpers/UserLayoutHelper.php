@@ -2,6 +2,7 @@
 
 namespace app\helpers;
 
+use app\models\Chat;
 use yii\helpers\Html;
 use app\models\Users;
 use app\models\School;
@@ -182,14 +183,21 @@ class UserLayoutHelper extends LayoutHelper
     public function getChatButton()
     {
         $chatButtonText = "Chat";
-        $unreadGroups =  "";
         $outerClass = "";
         $buttonClasses = "btn btn-success teacher-communication-button";
         $buttonStyle = "unset";
 
+        ['messages' => $unreadMessages, 'conversations' => $unreadConversations] = Chat::unreadDataForCurrentUser();
+
+        $unreadConversationsHtml = $unreadConversations > 1
+            ? "<span class='chat-unread-count-groups'>$unreadConversations</span>"
+            : "";
+        $unreadMessagesHtml = $unreadMessages > 0
+            ? '<span class="chat-unread-count">' . $unreadMessages . '</span>'
+            : "";
+
         if ($this->isTeacher) {
             $chatButtonText = "Chat with students";
-            $unreadGroups = "<span class='chat-unread-count-groups'></span>";
             $outerClass = "teacher";
         } else {
             $teacherPortrait = $this->school['teacher_portrait'];
@@ -201,8 +209,8 @@ class UserLayoutHelper extends LayoutHelper
 
         return '<div id="chat-btn-with-icons" class="' . $outerClass . '">'
             . '<div id="notification-badges">'
-            . $unreadGroups
-            . '<span class="chat-unread-count"></span>'
+            . $unreadConversationsHtml
+            . $unreadMessagesHtml
             . '</div>'
             . '<button class="' . $buttonClasses . '" id="chat-toggle-button" style="' . $buttonStyle . '" data-toggle="modal" data-target="#chatModal">'
             . Yii::t('app', $chatButtonText)

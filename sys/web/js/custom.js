@@ -230,8 +230,6 @@ function setupAssignUserListFilters(){
     setupAssignFilterByLanguage($langElems);
     setupAssignFilterBySubscriptionType($langElems);
 
-    // loadUnreadMessagesCount();
-
     setupNeedHelpButton();
 }
 
@@ -396,22 +394,33 @@ function scrollChatToBottom(){
     }
 }
 
-var $unreadCount = $(".chat-unread-count");
+var $unreadMessagesCount = $(".chat-unread-count");
+var $unreadConversationsCount = $(".chat-unread-count-groups");
 
 function loadUnreadMessagesCount() {
     var url = IS_PROD ? "/sys/chat/get-unread-count" : "/chat/get-unread-count";
 
-    $unreadCount.hide();
+    $unreadMessagesCount.hide();
+    $unreadConversationsCount.hide();
 
     $.ajax({
         url: url,
         type: "POST",
-        success: function (count) {
-            if(parseInt(count) > 0){
-                $unreadCount.html(count);
-                $unreadCount.show();
-            }else{
-                $unreadCount.hide();
+        success: function (jsonData) {
+            var data = JSON.parse(jsonData);
+            
+            if(parseInt(data.messages) > 0){
+                $unreadMessagesCount.html(data.messages);
+                $unreadMessagesCount.show();
+            } else {
+                $unreadMessagesCount.hide();
+            }
+
+            if(parseInt(data.conversations) > 1){
+                $unreadConversationsCount.html(data.conversations);
+                $unreadConversationsCount.show();
+            } else {
+                $unreadConversationsCount.hide();
             }
         }
     });
