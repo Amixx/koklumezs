@@ -123,7 +123,7 @@ class Users extends ActiveRecord implements IdentityInterface
                 GROUP BY author_id, recipient_id
             )")
             ->orderBy('update_date desc')
-            ->limit(20)
+            ->limit(30)
             ->all();
 
         $latestConversations = [];
@@ -135,7 +135,7 @@ class Users extends ActiveRecord implements IdentityInterface
                 ? $msg->recipient
                 : $msg->author;
 
-            if (!$user) continue;
+            if (!$user || $user->is_deleted) continue;
 
             $userAlreadyAdded = !empty(array_filter($latestConversations, function ($conv) use ($user) {
                 return $conv['user']->id === $user->id;
@@ -156,60 +156,6 @@ class Users extends ActiveRecord implements IdentityInterface
         }
 
         return $latestConversations;
-    }
-
-    public function hasUnreadMessages($recipientId)
-    {
-        return $this->getUnreadMessagesCount($recipientId) > 0;
-    }
-
-    public function getUnreadMessagesCount($recipientId)
-    {
-        return $this->getUnreadItems($recipientId, $this->receivedChatMessages, "update_date");
-    }
-
-    private function getUnreadItems($recipientId, $messagesArray, $timeProperty)
-    {
-        $opentime = $this->getConversationOpentime($recipientId);
-
-        $i = 0;
-        $res = 0;
-
-        while (isset($messagesArray[$i]) && $currentItem = $messagesArray[$i]) {
-            $i++;
-            if ($currentItem->author_id != $recipientId) continue;
-
-            if (!$opentime || $currentItem->{$timeProperty} > $opentime) $res++;
-        }
-
-        return $res;
-    }
-
-    function getConversationOpentime($recipientId)
-    {
-        $res = null;
-
-        $i = array_search($recipientId, array_column($this->correspondenceOpenTimes, 'recipient_id'));
-
-        if ($i !== false) {
-            $res = $this->correspondenceOpenTimes[$i]->opentime;
-        } else if ($this->last_opened_chat) {
-            $res = $this->last_opened_chat;
-        }
-
-        return $res;
-    }
-
-    public function getTotalUnreadCount()
-    {
-        $latestConversations = $this->getLatestConversations();
-        $res = 0;
-
-        foreach ($latestConversations as $uwc) {
-            $res += $this->getUnreadMessagesCount($uwc->id);
-        }
-
-        return $res;
     }
 
     public function updateLoginTime()

@@ -186,6 +186,7 @@ class Chat extends \yii\db\ActiveRecord
         $unreadMessages = self::find()
             ->where("opentime IS NULL OR update_date > opentime")
             ->andWhere(['chat.recipient_id' => $userContext->id])
+            ->andWhere(['>', 'update_date', '2021-03-19 23:23:17'])
             ->joinWith('openTime')
             ->asArray()
             ->all();

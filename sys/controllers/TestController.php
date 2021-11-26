@@ -191,16 +191,16 @@ class TestController extends Controller
         // $user->update();
 
 
-        $messages = NeedHelpMessages::find()->all();
-        foreach ($messages as $msg) {
+        // $messages = NeedHelpMessages::find()->all();
+        // foreach ($messages as $msg) {
 
-            $user = User::findOne(['id' => $msg->author->id]);
-            $schoolTeacherId = SchoolTeacher::getBySchoolId($user->getSchool()->id)->user->id;
+        //     $user = User::findOne(['id' => $msg->author->id]);
+        //     $schoolTeacherId = SchoolTeacher::getBySchoolId($user->getSchool()->id)->user->id;
 
-            Chat::addNewMessage($msg['message'], $msg['author_id'], $schoolTeacherId, 3, $msg['lesson_id'], $msg['created_at']);
+        //     Chat::addNewMessage($msg['message'], $msg['author_id'], $schoolTeacherId, 3, $msg['lesson_id'], $msg['created_at']);
 
-            echo "<hr>";
-        }
-        die();
+        //     echo "<hr>";
+        // }
+        // die();
     }
 }
