@@ -905,6 +905,33 @@ div.has-experience.active, div.rent.active {
     content: "\1f61f";
 }
 
+.lecture-status {
+    position: absolute;
+    padding: 5px 15px;
+    width: 50%; 
+    text-align: center !important;
+    border-radius: 8px;
+    bottom: 23px;
+    left: 24px;
+    right: 24px;
+    color: black;
+    text-align: left;
+    font-size: 14px;
+    z-index:2;   
+}
+
+.bg-yellow {
+    background-color: #E0FF9D;
+}
+
+.bg-blue {
+    background-color: #33FFCE;
+}
+
+.bg-purple {
+    background-color: #F79DFF;
+}
+
 .lecturelikes {
     position: absolute;
     right: 24px;

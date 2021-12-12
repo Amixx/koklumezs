@@ -173,4 +173,37 @@ class Lectures extends \yii\db\ActiveRecord
 
         return count($favUserLectures);
     }
+
+    /**
+     * Return status text for lesson, like 'New', 'Play me', 'Rate me'
+     * @param integer $lectureId
+     * @return array ['text' => ... , 'class' => '']
+     */
+    public static function getLectureStatus($lectureId): array
+    {
+        $userId = Yii::$app->user->identity->id;
+        $userLecture = UserLectures::findOne(['lecture_id' => $lectureId, 'user_id' => $userId]);
+
+        if ($userLecture->opened) {
+            return [
+                'text' => 'Rate me',
+                'class' => 'bg-blue'
+            ];
+        }
+
+        $created_at = new \DateTime($userLecture->created);
+        $now = new \DateTime();
+        $diff = $now->diff($created_at);
+
+        if ($diff->days > 10) {
+            return [
+                'text' => 'Play me',
+                'class' => 'bg-purple'
+            ];
+        }
+        return [
+            'text' => 'New',
+            'class' => 'bg-yellow'
+        ];
+    }
 }
