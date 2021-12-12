@@ -25,6 +25,7 @@ use app\models\Trials;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -47,7 +48,9 @@ class LekcijasController extends Controller
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
-                'actions' => [],
+                'actions' => [
+                    'requestDifferentLesson' => ['POST'],
+                ],
             ],
         ];
     }
@@ -283,6 +286,7 @@ class LekcijasController extends Controller
                 'difficultyEvaluation' => $difficultyEvaluation,
                 'sortByDifficulty' => $sortByDifficulty,
                 'isRegisteredAndNewLesson' => $isRegisteredAndNewLesson,
+                'showChangeTaskButton' => $model->complexity > 5 && !$difficultyEvaluation,
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');
@@ -388,6 +392,31 @@ class LekcijasController extends Controller
             'teacherPortrait' => $teacherPortrait,
         ]);
     }
+
+
+    public function actionRequestDifferentLesson($lessonId)
+    {
+        $lessonIdToAssign = Lectures::getLessonIdOfSimilarDifficulty($lessonId);
+        $userContext = Yii::$app->user->identity;
+
+        if ($lessonIdToAssign) {
+            UserLectures::findOne(['lecture_id' => $lessonId])->delete();
+            $model = new UserLectures;
+            $model->assigned = $userContext->id;
+            $model->created = date('Y-m-d H:i:s', time());
+            $model->user_id = $userContext->id;
+            $model->lecture_id = $lessonIdToAssign;
+            $model->user_difficulty = 0;
+            $model->save();
+
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Task changed') . '!');
+            return $this->redirect(Url::to("/lekcijas/lekcija/" . $lessonIdToAssign));
+        } else {
+            return $this->redirect(Yii::$app->request->referrer);
+        }
+    }
+
+
 
     /**
      * Finds the Lectures model based on its primary key value.

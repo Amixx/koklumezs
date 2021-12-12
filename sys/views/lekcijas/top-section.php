@@ -84,8 +84,16 @@ EOD;
             } else if ($nextLessonId) {
                 echo Html::a(\Yii::t('app', 'Next lesson'), [$urlToNextLesson], ['class' => 'btn btn-orange']);
             } ?>
+
         </div>
     </div>
+    <?php if ($showChangeTaskButton) { ?>
+        <div class="pull-right">
+            <?= Html::beginForm(["/lekcijas/request-different-lesson?lessonId=$uLecture->lecture_id"]) ?>
+            <button type="submit" class="btn btn-secondary" style="margin: 4px;"><?= \Yii::t('app', 'Change task'); ?></button>
+            <?= Html::endForm() ?>
+        </div>
+    <?php } ?>
     <div class="pull-right next-lesson">
         <button type="button" class="btn btn-blue" data-toggle="modal" data-target="#need-help-modal">
             <?= \Yii::t('app',  'I need help'); ?>

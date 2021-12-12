@@ -212,4 +212,45 @@ class Lectures extends \yii\db\ActiveRecord
             'class' => 'bg-yellow'
         ];
     }
+
+    public static function getLessonIdOfSimilarDifficulty($lessonId)
+    {
+        $userContext = Yii::$app->user->identity;
+        $schoolId = $userContext->getSchool()->id;
+        $assignedIds = UserLectures::getUserLectures($userContext->id);
+
+        $schoolLessons = SchoolLecture::find()
+            ->where(['school_id' => $schoolId])
+            ->andWhere(['not in', 'lectures.id', $assignedIds])
+            ->andWhere(['>', 'complexity', 0])
+            ->orWhere(['lectures.id' => $lessonId])
+            ->joinWith("lecture")
+            ->orderBy('complexity')->asArray()->all();
+        $res = null;
+
+        foreach ($schoolLessons as $key => $schoolLesson) {
+            if ($schoolLesson["lecture"]["id"] == $lessonId) {
+
+                $currentComplexity = (int)$schoolLesson["lecture"]["complexity"];
+                $lessComplexLesson = isset($schoolLessons[$key - 1]) ? $schoolLessons[$key - 1]["lecture"] : null;
+                $moreComplexLesson = isset($schoolLessons[$key + 1]) ? $schoolLessons[$key + 1]["lecture"] : null;
+
+                if ($lessComplexLesson) {
+                    if ($moreComplexLesson) {
+                        $res = 2 * $currentComplexity > (int)$lessComplexLesson["complexity"] + (int)$moreComplexLesson["complexity"]
+                            ? $lessComplexLesson["id"]
+                            : $moreComplexLesson["id"];
+                    } else {
+                        $res = $lessComplexLesson["id"];
+                    }
+                } else if ($moreComplexLesson) {
+                    $res = $moreComplexLesson["id"];
+                }
+
+                break;
+            }
+        }
+
+        return $res;
+    }
 }

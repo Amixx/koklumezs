@@ -668,4 +668,6 @@ return [
     'Update automatic message texts' => 'Atjaunot automātiskās ziņas tekstus',
     'Automatic message updated' => 'Automātiskā ziņa atjaunota',
     'Could not update automatic message' => 'Neizdevās atjaunot automātisko ziņu',
+    'Change task' => 'Nomainīt uzdevumu',
+    'Task changed' => 'Uzdevums nomainīts'
 ];
