@@ -662,4 +662,10 @@ return [
     'New' => 'Jaunums',
     'Rate me' => 'Novērtē mani',
     'Play me' => 'Izspēlē mani',
+    'Save message as automatic' => 'Saglabāt ziņu kā automātisko',
+    'Automatic message saved' => 'Automātiskā ziņa saglabāta',
+    'Could not save automatic message' => 'Neizdevās saglabāt automātisko ziņu',
+    'Update automatic message texts' => 'Atjaunot automātiskās ziņas tekstus',
+    'Automatic message updated' => 'Automātiskā ziņa atjaunota',
+    'Could not update automatic message' => 'Neizdevās atjaunot automātisko ziņu',
 ];

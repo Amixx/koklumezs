@@ -14,6 +14,7 @@ use app\models\SchoolLecture;
 use app\models\SchoolTeacher;
 use app\models\SchoolStudent;
 use app\models\LectureViews;
+use app\models\LessonAssignmentMessages;
 use app\models\RelatedLectures;
 use app\models\StudentSubPlans;
 use app\models\Trials;
@@ -126,6 +127,26 @@ class AssignController extends Controller
                     $subject = isset($post['subject']) && $post['subject'] ? $post['subject'] : "Jaunas nodarbības";
                     $teacherMessage = $post['teacherMessage'];
                     UserLectures::sendEmail($model->user_id, $subject, $teacherMessage);
+                }
+
+                $shouldSaveEmail = isset($post['saveEmail']) && $post['saveEmail'];
+                if ($shouldSaveEmail) {
+                    $saved = LessonAssignmentMessages::createFrom($model->lecture_id, $post);
+                    if ($saved) {
+                        Yii::$app->session->setFlash('success', Yii::t('app', 'Automatic message saved') . '!');
+                    } else {
+                        Yii::$app->session->setFlash('error', Yii::t('app', 'Could not save automatic message') . '!');
+                    }
+                }
+
+                $shouldUpdateEmail = isset($post['updateEmail']) && $post['updateEmail'];
+                if ($shouldUpdateEmail) {
+                    $updated = LessonAssignmentMessages::updateWith($model->lecture_id, $post);
+                    if ($updated) {
+                        Yii::$app->session->setFlash('success', Yii::t('app', 'Automatic message updated') . '!');
+                    } else {
+                        Yii::$app->session->setFlash('error', Yii::t('app', 'Could not update automatic message') . '!');
+                    }
                 }
 
                 $user->wants_more_lessons = false;

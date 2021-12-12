@@ -270,6 +270,12 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     <label for="sendEmail"><?= Yii::t('app', 'Send message to student') ?>
         <input type="checkbox" name="sendEmail">
     </label>
+    <label for="saveEmail" style="display: none;"><?= Yii::t('app', 'Save message as automatic') ?>
+        <input type="checkbox" name="saveEmail">
+    </label>
+    <label for="updateEmail" style="display: none;"><?= Yii::t('app', 'Update automatic message texts') ?>
+        <input type="checkbox" name="updateEmail">
+    </label>
     <label for="subject"><?= Yii::t('app', 'Subject') ?>
         <input type="text" name="subject" class="form-control">
     </label>
@@ -283,3 +289,7 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
 <?= Yii::$app->session->getFlash('assignmentlog') ?>
 <?php ActiveForm::end(); ?>
 </div>
+
+<script>
+    window.manualLectures = <?= json_encode($manualLectures); ?>;
+</script>

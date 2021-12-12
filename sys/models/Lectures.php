@@ -95,6 +95,11 @@ class Lectures extends \yii\db\ActiveRecord
         return $this->hasMany(LecturesDifficulties::class, ['lecture_id' => 'id']);
     }
 
+    public function getAssignmentMessage()
+    {
+        return $this->hasOne(LessonAssignmentMessages::class, ['lesson_id' => 'id']);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -116,7 +121,7 @@ class Lectures extends \yii\db\ActiveRecord
     public static function getLecturesObjectsForUser($assignedIds)
     {
         $idsToRemove = $assignedIds;
-        $data = self::find()->asArray()->all();
+        $data = self::find()->joinWith("assignmentMessage")->asArray()->all();
         $returnArray = [];
 
         foreach ($data as $d) {
@@ -134,7 +139,8 @@ class Lectures extends \yii\db\ActiveRecord
                 $returnArray[$d['id']] = [
                     'id' => $d['id'],
                     'title' => $d['title'],
-                    'complexity' => $d['complexity']
+                    'complexity' => $d['complexity'],
+                    'assignmentMessage' => $d['assignmentMessage'],
                 ];
             }
         }
