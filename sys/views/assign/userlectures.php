@@ -168,7 +168,7 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
         <h3 style="color: red"><?= Yii::t('app', 'Student\'s trial has ended') ?>!</h3>
     <?php } ?>
     <?php if (isset($user) && $user->about) { ?>
-        <p><?= \Yii::t('app', 'About user') ?>: <strong><?= $user->about ?></strong>.</p>
+        <p><?= \Yii::t('app', 'About user') ?>: <strong><?= $user->about ?></strong></p>
     <?php } ?>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['seven'], 7]); ?>.</p>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['thirty'], 30]); ?>.</p>

@@ -7,9 +7,21 @@ use app\models\Users;
 use  yii\jui\DatePicker;
 use yii\grid\GridView;
 use app\models\SchoolSubplanParts;
+use mihaildev\ckeditor\CKEditor;
+use mihaildev\elfinder\ElFinder;
 
 $userContext = Yii::$app->user->identity;
 $isTeacher = $userContext->isTeacher();
+
+$ckeditorOptions = ElFinder::ckeditorOptions(
+    'elfinder',
+    [
+        'preset' => 'full', //разработанны стандартные настройки basic, standard, full данную возможность не обязательно использовать
+        'inline' => false, //по умолчанию false
+        'filter' => ['image', 'application/pdf', 'text', 'video'],    // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
+    ]
+);
+
 ?>
 
 <div class="user-form">
@@ -79,7 +91,9 @@ $isTeacher = $userContext->isTeacher();
                 Users::STATUS_PASSIVE => Yii::t('app',  'Passive')
             ], ['prompt' => '']) ?>
 
-            <?= $form->field($model, 'about')->textArea(['rows' => 6]) ?>
+            <?= $form->field($model, 'about')->widget(CKEditor::class, [
+                'editorOptions' => $ckeditorOptions,
+            ]) ?>
 
             <?= $form->field($model, 'allowed_to_download_files')->dropDownList([
                 0 => Yii::t('app',  'No'),
