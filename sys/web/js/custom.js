@@ -136,7 +136,53 @@ $(document).ready(function() {
     setupVideoPlayers();
     setupPostRegistrationModal();
     firstLessonEvaluateLessonModal();
+
+    if(window.manualLectures){
+        setupLessonAssignmentAutomaticMessages();
+    }
 });
+
+function setupLessonAssignmentAutomaticMessages(){
+    var $lessonSelect = $("select[name='UserLectures[lecture_id]']");
+    var $saveMessageBlock = $("label[for='saveEmail']");
+    var $updateMessageBlock = $("label[for='updateEmail']");
+    var $subjectInput = $("input[name='subject']");
+    var $messageBodyInput = $("textarea[name='teacherMessage']");
+
+    $lessonSelect.on("change", function(){
+        var assignmentMessage = window.manualLectures[this.value].assignmentMessage;
+        var newTitle = "";
+        var newMessageBody = "";
+
+        if(assignmentMessage){
+            if(assignmentMessage.title) newTitle = assignmentMessage.title;
+            if(assignmentMessage.text) newMessageBody = assignmentMessage.text;
+            showUpdateMessageBlock();
+        } else {
+            showSaveMessageBlock();
+        }
+
+        $subjectInput.val(newTitle);
+        $messageBodyInput.val(newMessageBody);
+    });
+
+    function showSaveMessageBlock(){
+        $saveMessageBlock.show();
+        $updateMessageBlock.hide();
+        resetCheckboxes();
+    }
+
+    function showUpdateMessageBlock(){
+        $saveMessageBlock.hide();
+        $updateMessageBlock.show();
+        resetCheckboxes();
+    }
+
+    function resetCheckboxes(){
+        $saveMessageBlock.find("input[type='checkbox']").prop('checked', false);
+        $updateMessageBlock.find("input[type='checkbox']").prop('checked', false);
+    }
+}
 
 function addPopoverToElement($selector, html){
     $($selector).popover({
