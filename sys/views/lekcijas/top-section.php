@@ -8,43 +8,6 @@ $heartClasses = $uLecture && $uLecture->is_favourite
 
 $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
 
-$modalBodyText = Yii::t('app', 'Hey! Write to us that did not reach you or remained unclear ... We will be happy to help you understand the task!');
-$modalErrorText = Yii::t('app', 'Enter a message');
-$modalButtonText = Yii::t('app', 'Submit message');
-
-$helpModalBody = <<<EOD
-<div class='form-group'>
-    <label for='need-help-message'>$modalBodyText</label>
-    <textarea
-        class='form-control rounded-0'
-        rows="5"
-        name='need-help-message'
-        id='need-help-message'
-    ></textarea>
-</div>
-<p class='alert alert-danger' id='need-help-error'>$modalErrorText!</p>
-<div style='text-align:right'>
-    <button
-        class='btn btn-orange'
-        id='submit-need-help-message'
-        data-lessonid='$uLecture->lecture_id'
-    >$modalButtonText</button>
-</div>
-EOD;
-
-$formText = Yii::t('app', 'Change task');
-$form = Html::beginForm(["/lekcijas/request-different-lesson?lessonId=$uLecture->lecture_id"])
-    . "<button type=\"submit\" class=\"btn btn-blue\" style=\"margin: 4px;\">$formText</button>"
-    . Html::endForm();
-$modalText = Yii::t('app', 'Hey! Have you played such a task before, or maybe you just dont like it? Click "change task" and I\'ll give you another task of similar complexity. Good luck!');
-
-$changeTaskModalBody = <<<EOD
-<div class="text-center">
-    <p>$modalText</p>
-    $form
-</div>
-EOD;
-
 ?>
 
 <h3 class="text-center hidden-xs">
@@ -109,7 +72,10 @@ EOD;
     <?= $this->render("@app/views/shared/modal", [
             'id' => 'change-task-modal',
             'title' => \Yii::t('app', 'Change of task'),
-            'body' => $changeTaskModalBody
+            'bodyFileName' => "/lekcijas/change-task-modal-body",
+            'bodyFileParams' => [
+                'uLecture' => $uLecture,
+            ],
         ]);
     } ?>
     <div class="pull-right next-lesson">
@@ -120,7 +86,7 @@ EOD;
         <?= $this->render("@app/views/shared/modal", [
             'id' => 'need-help-modal',
             'title' => \Yii::t('app', 'I need help with this task'),
-            'body' => $helpModalBody
+            'bodyFileName' => "/lekcijas/help-modal-body"
         ]); ?>
     </div>
 </div>

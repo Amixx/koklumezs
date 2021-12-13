@@ -8,7 +8,11 @@
                 <h3 class="modal-title" id="modal-title"><?= $title ?></h3>
             </div>
             <div class="modal-body">
-                <?= $body ?>
+                <?php if (isset($body)) {
+                    echo $body;
+                } else if (isset($bodyFileName)) {
+                    echo $this->render($bodyFileName, isset($bodyFileParams) ? $bodyFileParams : []);
+                } ?>
             </div>
         </div>
     </div>

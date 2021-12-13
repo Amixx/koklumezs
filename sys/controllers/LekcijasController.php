@@ -27,6 +27,7 @@ use yii\data\Pagination;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\helpers\Url;
 
 class LekcijasController extends Controller
 {
@@ -47,7 +48,9 @@ class LekcijasController extends Controller
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
-                'actions' => [],
+                'actions' => [
+                    'requestDifferentLesson' => ['POST'],
+                ],
             ],
         ];
     }
@@ -283,6 +286,7 @@ class LekcijasController extends Controller
                 'difficultyEvaluation' => $difficultyEvaluation,
                 'sortByDifficulty' => $sortByDifficulty,
                 'isRegisteredAndNewLesson' => $isRegisteredAndNewLesson,
+                'showChangeTaskButton' => $model->complexity > 5 && !$difficultyEvaluation,
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');
@@ -406,7 +410,7 @@ class LekcijasController extends Controller
             $model->save();
 
             Yii::$app->session->setFlash('success', Yii::t('app', 'Task changed') . '!');
-            return $this->redirect("lekcija/" . $lessonIdToAssign);
+            return $this->redirect(Url::to("/lekcijas/lekcija/" . $lessonIdToAssign));
         } else {
             return $this->redirect(Yii::$app->request->referrer);
         }
