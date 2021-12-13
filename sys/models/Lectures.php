@@ -100,6 +100,11 @@ class Lectures extends \yii\db\ActiveRecord
         return $this->hasOne(LessonAssignmentMessages::class, ['lesson_id' => 'id']);
     }
 
+    public function getUserLectureEvaluations()
+    {
+        return $this->hasMany(Userlectureevaluations::class, ['lecture_id' => 'id']);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */

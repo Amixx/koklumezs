@@ -4,18 +4,6 @@ use yii\helpers\Html;
 
 $empty = '<code>Not set</code>';
 
-$getEvaluations = function ($etid, $id) use ($empty, $evaluations, $evaluationsValues) {
-    if (isset($evaluations[$id][$etid])) {
-        if (isset($evaluationsValues[$etid]) && isset($evaluationsValues[$etid][(int) $evaluations[$id][$etid]])) {
-            return $evaluationsValues[$etid][(int) $evaluations[$id][$etid]];
-        } else if (isset($evaluations[$id][$etid])) {
-            return $evaluations[$id][$etid];
-        }
-    }
-
-    return $empty;
-};
-
 $this->title = \Yii::t('app',  'Lesson assigning');
 ?>
 <h1><?= $this->title ?></h1>
@@ -64,9 +52,7 @@ $this->title = \Yii::t('app',  'Lesson assigning');
                 <th scope="col"><?= \Yii::t('app', 'Last lesson') ?></th>
                 <th scope="col"><?= \Yii::t('app', 'Times played') ?></th>
                 <th scope="col"><?= \Yii::t('app', 'Difficulty') ?></th>
-                <?php foreach ($evaluationsTitles as $et) { ?>
-                    <th scope="col"><?= \Yii::t('app', $et) ?></th>
-                <?php } ?>
+                <th scope="col"><?= \Yii::t('app', 'Evaluation') ?></th>
                 <th scope="col"><?= \Yii::t('app', 'Abilities') ?></th>
                 <th scope="col" class="action-column"><?= \Yii::t('app', 'Actions') ?></th>
             </tr>
@@ -77,15 +63,21 @@ $this->title = \Yii::t('app',  'Lesson assigning');
                 <tr>
                     <td><?= $a ?></td>
                     <td><?= $user['first_name'] ?> <?= $user['last_name'] ?></td>
-                    <td><?= isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->title : $empty ?></td>
-                    <td class="text-center"><?= isset($lastlectures[$id]) ? $lastlectures[$id]['open_times'] : $empty ?></td>
-                    <td class="text-center"><?= isset($lastlectures[$id]) ? $lastlectures[$id]->lecture->complexity : $empty ?></td>
-                    <?= $this->render('evaluation-titles', [
-                        'evaluationsTitles' => $evaluationsTitles,
-                        'evaluationsValues' => $evaluationsValues,
-                        'evaluations' => $evaluations,
-                        'id' => $id,
-                    ]) ?>
+                    <?php if (isset($lastlectures[$id])) { ?>
+                        <td><?= $lastlectures[$id]->lecture->title ?></td>
+                        <td class="text-center"><?= $lastlectures[$id]['open_times'] ?></td>
+                        <td class="text-center"><?= $lastlectures[$id]->lecture->complexity ?></td>
+                        <td class="text-center">
+                            <?= isset($evaluations[$id][$lastlectures[$id]->lecture_id])
+                                ? $evaluations[$id][$lastlectures[$id]->lecture_id]
+                                : $empty; ?>
+                        </td>
+                    <?php } else { ?>
+                        <td><?= $empty ?></td>
+                        <td><?= $empty ?></td>
+                        <td><?= $empty ?></td>
+                        <td><?= $empty ?></td>
+                    <?php } ?>
                     <td class="text-center"><?= isset($goals[$id][$goalsnow]) ? array_sum($goals[$id][$goalsnow]) : $empty ?></td>
                     <td class="text-center">
                         <span data-userid='<?= $user['id'] ?>' style='width: 41px;' class='btn btn-success glyphicon glyphicon-envelope chat-with-student'>

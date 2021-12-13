@@ -58,20 +58,18 @@ class AssignController extends Controller
         }
 
         $evaluations = [];
-        $lectureDifficulties = [];
         $goals = [];
-        $lastlectures = [];
+        $lastUserlectures = [];
         $videoParam = Evaluations::getVideoParam();
-        $evaluationsTitles = Evaluations::getEvaluationsTitles();
-        $evaluationsValues = Evaluations::getEvaluationsValueTexts();
         foreach ($users as $id => $e) {
-            $lastlectures[$id] = UserLectures::getLastEvaluatedLecture($id);
-            if ($lastlectures[$id]) {
+            $lastUserlectures[$id] = UserLectures::getLastEvaluatedLecture($id);
+            if ($lastUserlectures[$id]) {
                 if (!isset($evaluations[$id])) {
-                    $evaluations[$id] = Userlectureevaluations::getLectureEvaluations($id, $lastlectures[$id]['lecture_id']);
-                }
-                if (!isset($lectureDifficulties[$lastlectures[$id]['lecture_id']])) {
-                    $lectureDifficulties[$lastlectures[$id]['lecture_id']] = LecturesDifficulties::getLectureDifficulties($lastlectures[$id]['lecture_id']);
+                    foreach ($lastUserlectures[$id]->lecture->userLectureEvaluations as $ule) {
+                        if ($ule['evaluation_id'] === 1 && $ule['user_id'] == $id) {
+                            $evaluations[$id][$lastUserlectures[$id]->lecture_id] = $ule['evaluation'];
+                        }
+                    }
                 }
             }
             if (!isset($goals[$id])) {
@@ -86,10 +84,7 @@ class AssignController extends Controller
         $options['goals'] = $goals;
         $options['videoParam'] = $videoParam;
         $options['evaluations'] = $evaluations;
-        $options['lastlectures'] = $lastlectures;
-        $options['lectureDifficulties'] = $lectureDifficulties;
-        $options['evaluationsTitles'] = $evaluationsTitles;
-        $options['evaluationsValues'] = $evaluationsValues;
+        $options['lastlectures'] = $lastUserlectures;
 
         return $this->render('index', $options);
     }
@@ -115,7 +110,6 @@ class AssignController extends Controller
         $diff = Studentgoals::getUserDifficulty($id);
         $goalsnow = StudentGoals::NOW;
         $goalsum = isset($goals[$goalsnow]) ? array_sum($goals[$goalsnow]) : 0;
-        $endDate = StudentSubPlans::getLearningPlanEndDateString($id);
         if ($post) {
             $model = new UserLectures();
             $model->assigned = Yii::$app->user->identity->id;
@@ -181,25 +175,20 @@ class AssignController extends Controller
         }
         $options = [];
         $evaluations = [];
-        $lectureDifficulties = [];
-        $lastlectures = [];
+        $lastUserlectures = [];
         $videoParam = Evaluations::getVideoParam();
-        $evaluationsTitles = Evaluations::getEvaluationsTitles();
-        $evaluationsValues = Evaluations::getEvaluationsValueTexts();
-        $lastlectures = UserLectures::getAllLectures($id);
+        $lastUserlectures = UserLectures::getAllLectures($id);
         $sevenDayResult = UserLectures::getDayResult($id, 7);
         $thirtyDayResult = UserLectures::getDayResult($id, 30);
-        $PossibleThreeLectures = LectureAssignment::getPossibleThreeLectures($id);
         $userLectures = UserLectures::getUserLectures($id);
         $lectures = Lectures::getLecturesObjectsForUser($userLectures);
 
-        if ($lastlectures) {
-            foreach ($lastlectures as $lecture) {
-                if (!isset($evaluations[$lecture->lecture_id])) {
-                    $evaluations[$lecture->lecture_id] = Userlectureevaluations::getLectureEvaluations($id, $lecture->lecture_id);
-                }
-                if (!isset($lectureDifficulties[$lecture->lecture_id])) {
-                    $lectureDifficulties[$lecture->lecture_id] = LecturesDifficulties::getLectureDifficulties($lecture->lecture_id);
+        if ($lastUserlectures) {
+            foreach ($lastUserlectures as $uLecture) {
+                foreach ($uLecture->lecture->userLectureEvaluations as $ule) {
+                    if ($ule['evaluation_id'] === 1 && $ule['user_id'] == $id) {
+                        $evaluations[$uLecture->lecture_id] = $ule['evaluation'];
+                    }
                 }
             }
         }
@@ -236,26 +225,16 @@ class AssignController extends Controller
         $openTimes['seven'] = LectureViews::getDayResult($currentUserId, 7);
         $openTimes['thirty'] = LectureViews::getDayResult($currentUserId, 30);
 
-        $nextLessons = UserLectures::getNextLessons($currentUserId);
-        $isNextLessons = UserLectures::getIsNextLesson($currentUserId);
-
         $trialEnded = Trials::displayTrialEndedMessage($currentUserId);
 
         $options['id'] = $id;
         $options['videoparamtexts'] = $videotexts;
-        $options['goalsum'] = $goalsum;
-        $options['goalsnow'] = $goalsnow;
         $options['user'] = $user;
-        $options['goals'] = $goals;
         $options['videoParam'] = $videoParam;
         $options['evaluations'] = $evaluations;
-        $options['lastlectures'] = $lastlectures;
-        $options['lectureDifficulties'] = $lectureDifficulties;
-        $options['evaluationsTitles'] = $evaluationsTitles;
-        $options['evaluationsValues'] = $evaluationsValues;
+        $options['lastlectures'] = $lastUserlectures;
         $options['sevenDayResult'] = $sevenDayResult;
         $options['thirtyDayResult'] = $thirtyDayResult;
-        $options['PossibleThreeLectures'] = $PossibleThreeLectures;
         $options['manualLectures'] = $lectures;
         $options['model'] = new UserLectures;
         $options['diff'] = $diff;
@@ -267,9 +246,6 @@ class AssignController extends Controller
         $options['userCount'] = $userCount;
         $options['firstOpenTime'] = $firstOpenTime;
         $options['openTimes'] = $openTimes;
-        $options['endDate'] = $endDate;
-        $options['nextLessons'] = $nextLessons;
-        $options['isNextLessons'] = $isNextLessons;
         $options['trialEnded'] = $trialEnded;
 
         return $this->render('userlectures', $options);

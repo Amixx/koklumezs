@@ -126,7 +126,9 @@ class UserLectures extends \yii\db\ActiveRecord
 
     public static function getAllLectures($id)
     {
-        return self::find()->where(['user_id' => $id])->orderBy(['id' => SORT_DESC])->all();
+        return self::find()->where(['userlectures.user_id' => $id])
+            ->orderBy(['id' => SORT_DESC])
+            ->all();
     }
 
     public static function getDayResult($id, $days = 7)
