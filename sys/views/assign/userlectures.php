@@ -84,20 +84,17 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
 </div>
 
 <div class="grid-view" id="assign-page-main">
-    <div class="TableContainer" style="max-height:500px; overflow-y:scroll">
+    <div class="TableContainer" style="max-height: 158px; overflow-y:scroll">
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col"><?= \Yii::t('app', 'Last lesson') ?></th>
-                    <th scope="col"><?= \Yii::t('app', 'Date of assignment') ?></th>
+                    <th scope="col"><?= \Yii::t('app', 'Date') ?></th>
                     <th scope="col"><?= \Yii::t('app', 'Opened') ?></th>
-                    <th scope="col"><?= \Yii::t('app', 'Times played') ?></th>
+                    <th scope="col"><?= \Yii::t('app', 'Times') ?></th>
                     <th scope="col"><?= \Yii::t('app', 'Difficulty') ?></th>
-                    <?php foreach ($evaluationsTitles as $et) { ?>
-                        <th scope="col"><?= \Yii::t('app', $et) ?></th>
-                    <?php } ?>
-                    <th scope="col"><?= \Yii::t('app', 'Abilities') ?></th>
+                    <th scope="col"><?= \Yii::t('app', 'Evaluation') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -115,25 +112,15 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
                                 <span class="glyphicon glyphicon-asterisk"></span>
                             <?php } ?>
                         </td>
-                        <td class="text-center"><?= $lecture->created ?></td>
+                        <td class="text-center" style="white-space:nowrap"><?= date_format(new \DateTime($lecture->created), "Y-m-d") ?></td>
                         <td class="text-center"><?= (int) $lecture->opened ? 'Jā' : 'Nē' ?></td>
                         <td class="text-center"><?= $lecture->open_times ?></td>
                         <td class="text-center">
-                            <strong>Izrēķinātā sarežģītība: <?= $lecture->lecture->complexity ? $lecture->lecture->complexity : $empty ?></strong>
-                            <br>
-                            <div style="margin-top: 8px;">
-                                <?php foreach ($lecture->lecture->lectureDifficulties as $lectureDiff) { ?>
-                                    <div><?= $lectureDiff->diff->name ?>: <?= $lectureDiff->value ?></div>
-                                <?php } ?>
-                            </div>
+                            <strong><?= $lecture->lecture->complexity ? $lecture->lecture->complexity : $empty ?></strong>
                         </td>
-                        <?= $this->render('evaluation-titles', [
-                            'evaluationsTitles' => $evaluationsTitles,
-                            'evaluationsValues' => $evaluationsValues,
-                            'evaluations' => $evaluations,
-                            'id' => $lecture->lecture_id,
-                        ]) ?>
-                        <td class="text-center"><?= isset($lecture->user_difficulty) ? $lecture->user_difficulty : $empty ?></td>
+                        <td class="text-center">
+                            <?= isset($evaluations[$lecture->lecture_id]) ? $evaluations[$lecture->lecture_id] : $empty; ?>
+                        </td>
                         <td><?= Html::a(
                                 '<span>Dzēst</span>',
                                 ['/user-lectures/delete', 'id' => $lecture->id],
@@ -172,68 +159,15 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     <?php } ?>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['seven'], 7]); ?>.</p>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['thirty'], 30]); ?>.</p>
-    <?php if ($firstOpenTime !== null) { ?>
-        <p><?= \Yii::t('app', 'First lesson opened') ?>: <?= $firstOpenTime ?>.</p>
+    <?php if ($firstEvaluationDate !== null) { ?>
+        <p><?= \Yii::t('app', 'First lesson evaluated') ?>: <?= $firstEvaluationDate ?>.</p>
     <?php } else { ?>
-        <p><?= \Yii::t('app', 'User has not opened any lessons yet') ?>!</p>
-    <?php } ?>
-    <p><?= \Yii::t('app', 'Abilities now') ?>:<?= isset($goals[$goalsnow]) ? '<strong>' . $goalsum . '</strong>' : $empty ?></p>
-    <p><?= \Yii::t('app', 'Lesson plan end date') ?>: <?= $endDate == null ? \Yii::t('app', 'no plan assigned to pupil') : $endDate  ?></p>
-    <?php if ($isNextLessons) { ?>
-        <p> <?= Yii::t('app', 'After completing all lesosns, student can assign themself') . ' -' ?></p>
-        <?php if (isset($nextLessons['easy'])) { ?>
-            <p><?= Yii::t('app', 'Easier') . ': ' . $nextLessons['easy']->title; ?> (<?= $nextLessons['easy']->complexity; ?>)</p>
-        <?php } ?>
-        <?php if (isset($nextLessons['medium'])) { ?>
-            <p> <?= Yii::t('app', 'Just as complicated') . ': ' . $nextLessons['medium']->title; ?> (<?= $nextLessons['medium']->complexity; ?>)</p>
-        <?php } ?>
-        <?php if (isset($nextLessons['hard'])) { ?>
-            <p> <?= Yii::t('app', 'Challenge') . ': ' . $nextLessons['hard']->title; ?> (<?= $nextLessons['hard']->complexity; ?>)</p>
-        <?php } ?>
-    <?php } else { ?>
-        <p> <?= Yii::t('app', 'The student is not active or there is no lesson student can assign themself') ?>.</p>
+        <p><?= \Yii::t('app', 'User has not evaluated any lessons yet') ?>!</p>
     <?php } ?>
 
     <?php if ($user->wants_more_lessons) { ?>
         <h4><strong><?= Yii::t('app', 'Student wants more lessons') ?>!</strong></h4>
     <?php } ?>
-
-    <?php if (is_array($PossibleThreeLectures)) {
-        $limit = 3;
-    ?>
-        <h3><?= \Yii::t('app', 'Suitable lessons') ?>:</h3>
-        <?php foreach ($PossibleThreeLectures as $lid) {
-            if ($limit == 0) {
-                break;
-            }
-            if (!isset($manualLectures[$lid])) {
-                continue;
-            } ?>
-            <p>
-                <?= Html::a(
-                    '<span class="glyphicon glyphicon-plus"></span>' . $manualLectures[$lid],
-                    ['/assign/userlectures', 'id' => $id, 'assign' => $lid],
-                    [
-                        'title' => \Yii::t('app', 'Assign'),
-                        'data' => [
-                            'confirm' => \Yii::t('app', 'Are you sure?'),
-                        ]
-                    ]
-                ) ?>
-            </p>
-
-        <?php
-            $limit--;
-        }
-    } else { ?>
-        <h3><?= \Yii::t('app', 'New difficulty') ?>:
-            <strong>
-                <?= $PossibleThreeLectures > 0 ? $PossibleThreeLectures : $goalsum ?>
-            </strong>
-            <small>[<?= \Yii::t('app', 'No suitable lessons found') ?>]</small>
-        </h3>
-    <?php } ?>
-    <h3><?= \Yii::t('app', 'Manual assignment of lessons') ?>:</h3>
 
     <?php $form = ActiveForm::begin(); ?>
 
@@ -243,29 +177,11 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     }, $manualLectures);
     ?>
 
-    <!-- noņemu pagaidām, jo nav sataisīts backends -->
-    <!-- <div class="row">
-        <?php
-        $noOfTasks = 4;
-        for ($x = 0; $x < $noOfTasks; $x++) { ?>
-            <div class="col-md-3">
-                <?= $manualLectures ? $form->field($model, "lecture_id[$x]")
-                    ->dropDownList(
-                        $lectureTexts,
-                        ['prompt' => '']
-                    ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
-                
-            </div>
-        <?php } ?>
-    </div> -->
-
     <?= $manualLectures ? $form->field($model, 'lecture_id')
         ->dropDownList(
             $lectureTexts,
             ['prompt' => '']
         ) : "<p>" . \Yii::t('app', 'No lessons to assign') . "</p>" ?>
-
-
 
     <label for="sendEmail"><?= Yii::t('app', 'Send message to student') ?>
         <input type="checkbox" name="sendEmail">
@@ -286,7 +202,6 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
 <div class="form-group">
     <?= Html::submitButton(\Yii::t('app', 'Assign lesson'), ['class' => 'btn btn-success']) ?>
 </div>
-<?= Yii::$app->session->getFlash('assignmentlog') ?>
 <?php ActiveForm::end(); ?>
 </div>
 

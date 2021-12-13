@@ -673,4 +673,7 @@ return [
     'Task changed' => 'Uzdevums nomainīts',
     'Change of task' => 'Uzdevuma nomainīšana',
     'Hey! Have you played such a task before, or maybe you just dont like it? Click "change task" and I\'ll give you another task of similar complexity. Good luck!' => 'Hei! Vai esi šādu uzdevumu jau spēlējis, varbūt vienkārši īsti tas neiet pie sirds? Spied "nomainīt uzdevumu" un iedošu tev citu uzdevumu līdzīgā sarežģībā. Lai veicas!',
+    'Times' => 'Reizes',
+    'First lesson evaluated' => 'Pirmā nodarbība novērtēta',
+    'User has not evaluated any lessons yet' => 'Lietotājs vēl nav novērtējis nevienu nodarbību',
 ];
