@@ -102,5 +102,5 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
 </div>
 
 <script>
-    var isRegisteredAndNewLesson = <?= $isRegisteredAndNewLesson ?>;
+    var isRegisteredAndNewLesson = <?= $isRegisteredAndNewLesson ? "true" : "false" ?>;
 </script>

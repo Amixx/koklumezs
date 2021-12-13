@@ -389,6 +389,31 @@ class LekcijasController extends Controller
         ]);
     }
 
+
+    public function actionRequestDifferentLesson($lessonId)
+    {
+        $lessonIdToAssign = Lectures::getLessonIdOfSimilarDifficulty($lessonId);
+        $userContext = Yii::$app->user->identity;
+
+        if ($lessonIdToAssign) {
+            UserLectures::findOne(['lecture_id' => $lessonId])->delete();
+            $model = new UserLectures;
+            $model->assigned = $userContext->id;
+            $model->created = date('Y-m-d H:i:s', time());
+            $model->user_id = $userContext->id;
+            $model->lecture_id = $lessonIdToAssign;
+            $model->user_difficulty = 0;
+            $model->save();
+
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Task changed') . '!');
+            return $this->redirect("lekcija/" . $lessonIdToAssign);
+        } else {
+            return $this->redirect(Yii::$app->request->referrer);
+        }
+    }
+
+
+
     /**
      * Finds the Lectures model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

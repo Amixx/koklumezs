@@ -32,6 +32,19 @@ $helpModalBody = <<<EOD
 </div>
 EOD;
 
+$formText = Yii::t('app', 'Change task');
+$form = Html::beginForm(["/lekcijas/request-different-lesson?lessonId=$uLecture->lecture_id"])
+    . "<button type=\"submit\" class=\"btn btn-blue\" style=\"margin: 4px;\">$formText</button>"
+    . Html::endForm();
+$modalText = Yii::t('app', 'Hey! Have you played such a task before, or maybe you just dont like it? Click "change task" and I\'ll give you another task of similar complexity. Good luck!');
+
+$changeTaskModalBody = <<<EOD
+<div class="text-center">
+    <p>$modalText</p>
+    $form
+</div>
+EOD;
+
 ?>
 
 <h3 class="text-center hidden-xs">
@@ -86,6 +99,19 @@ EOD;
             } ?>
         </div>
     </div>
+    <?php if ($showChangeTaskButton) { ?>
+        <div class="pull-right">
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#change-task-modal">
+                <?= \Yii::t('app',  'I have already played this task'); ?>
+            </button>
+        </div>
+
+    <?= $this->render("@app/views/shared/modal", [
+            'id' => 'change-task-modal',
+            'title' => \Yii::t('app', 'Change of task'),
+            'body' => $changeTaskModalBody
+        ]);
+    } ?>
     <div class="pull-right next-lesson">
         <button type="button" class="btn btn-blue" data-toggle="modal" data-target="#need-help-modal">
             <?= \Yii::t('app',  'I need help'); ?>
