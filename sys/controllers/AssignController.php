@@ -220,7 +220,7 @@ class AssignController extends Controller
 
         $videotexts = unserialize($videoParam->star_text);
 
-        $firstOpenTime = UserLectures::getFirstOpentime($currentUserId);
+        $firstEvaluationDate = UserLectureEvaluations::getFirstDifficultyEvaluationDate($currentUserId);
 
         $openTimes['seven'] = LectureViews::getDayResult($currentUserId, 7);
         $openTimes['thirty'] = LectureViews::getDayResult($currentUserId, 30);
@@ -244,7 +244,7 @@ class AssignController extends Controller
         $options['filterSubTypes'] = isset($filterSubTypes) ? implode(",", $filterSubTypes) : null;
         $options['currentUserIndex'] = $currentUserKey;
         $options['userCount'] = $userCount;
-        $options['firstOpenTime'] = $firstOpenTime;
+        $options['firstEvaluationDate'] = $firstEvaluationDate;
         $options['openTimes'] = $openTimes;
         $options['trialEnded'] = $trialEnded;
 

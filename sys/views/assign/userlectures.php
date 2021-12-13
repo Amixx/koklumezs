@@ -84,15 +84,15 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
 </div>
 
 <div class="grid-view" id="assign-page-main">
-    <div class="TableContainer" style="max-height:500px; overflow-y:scroll">
+    <div class="TableContainer" style="max-height: 158px; overflow-y:scroll">
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col"><?= \Yii::t('app', 'Last lesson') ?></th>
-                    <th scope="col"><?= \Yii::t('app', 'Date of assignment') ?></th>
+                    <th scope="col"><?= \Yii::t('app', 'Date') ?></th>
                     <th scope="col"><?= \Yii::t('app', 'Opened') ?></th>
-                    <th scope="col"><?= \Yii::t('app', 'Times played') ?></th>
+                    <th scope="col"><?= \Yii::t('app', 'Times') ?></th>
                     <th scope="col"><?= \Yii::t('app', 'Difficulty') ?></th>
                     <th scope="col"><?= \Yii::t('app', 'Evaluation') ?></th>
                 </tr>
@@ -112,7 +112,7 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
                                 <span class="glyphicon glyphicon-asterisk"></span>
                             <?php } ?>
                         </td>
-                        <td class="text-center"><?= $lecture->created ?></td>
+                        <td class="text-center" style="white-space:nowrap"><?= date_format(new \DateTime($lecture->created), "Y-m-d") ?></td>
                         <td class="text-center"><?= (int) $lecture->opened ? 'Jā' : 'Nē' ?></td>
                         <td class="text-center"><?= $lecture->open_times ?></td>
                         <td class="text-center">
@@ -159,10 +159,10 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     <?php } ?>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['seven'], 7]); ?>.</p>
     <p><?= \Yii::t('app', 'User has viewed lessons {0} times in the last {1} days', [$openTimes['thirty'], 30]); ?>.</p>
-    <?php if ($firstOpenTime !== null) { ?>
-        <p><?= \Yii::t('app', 'First lesson opened') ?>: <?= $firstOpenTime ?>.</p>
+    <?php if ($firstEvaluationDate !== null) { ?>
+        <p><?= \Yii::t('app', 'First lesson evaluated') ?>: <?= $firstEvaluationDate ?>.</p>
     <?php } else { ?>
-        <p><?= \Yii::t('app', 'User has not opened any lessons yet') ?>!</p>
+        <p><?= \Yii::t('app', 'User has not evaluated any lessons yet') ?>!</p>
     <?php } ?>
 
     <?php if ($user->wants_more_lessons) { ?>

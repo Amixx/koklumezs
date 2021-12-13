@@ -166,4 +166,15 @@ class Userlectureevaluations extends \yii\db\ActiveRecord
 
         return !empty($legitEvaluations);
     }
+
+
+    public static function getFirstDifficultyEvaluationDate($userId)
+    {
+        $evaluation = self::find()
+            ->where(['user_id' => $userId, 'evaluation_id' => 1])
+            ->orderBy("created asc")
+            ->limit(1)->asArray()->all();
+
+        return $evaluation ? $evaluation[0]["created"] : null;
+    }
 }
