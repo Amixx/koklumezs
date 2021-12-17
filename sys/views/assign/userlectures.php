@@ -84,7 +84,7 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
 </div>
 
 <div class="grid-view" id="assign-page-main">
-    <div class="TableContainer" style="max-height: 158px; overflow-y:scroll">
+    <div class="TableContainer" style="max-height: 243px; overflow-y:scroll">
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
