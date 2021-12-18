@@ -15,6 +15,10 @@ function getUrl(url) {
     return prefix + url;
 }
 
+function getFullUrl(url){
+    return window.location.host + getUrl(url);
+}
+
 $(document).ready(function() {
     if ($('select').length) {
         $('select').select2();
@@ -140,7 +144,66 @@ $(document).ready(function() {
     if(window.manualLectures){
         setupLessonAssignmentAutomaticMessages();
     }
+
+    setupPayments();
 });
+
+
+
+function setupPayments(){
+    var $paymentLinks = $(".payment-link");
+    if(!$paymentLinks.length) return;
+
+    $paymentLinks.on("click", function(){
+        loadInvoice($(this).data().invoiceId, function(invoice){
+            window.location.href = generatePaymentUrl(JSON.parse(invoice));
+        });
+    });
+}
+
+
+
+function generatePaymentUrl(invoice){
+    var merchantId = 1491578;
+    var button = $ipsp.get('button');
+    button.setMerchantId(merchantId);
+    button.setAmount(invoice.price, 'EUR', true);
+    button.setHost('pay.fondy.eu');
+    button.setResponseUrl(getFullUrl("/payment/success"));
+
+    button.addField({
+        label: 'Rēķina numurs',
+        name: 'invoice_number',
+        value: invoice.invoice_number.toString(),
+        readonly: true
+    });
+     button.addField({
+        label: 'Rēķina datums',
+        name: 'invoice_date',
+        value: invoice.date.toString(),
+        readonly: true
+    });
+    button.addField({
+        label: 'Plāna nosaukums',
+        name: 'plan_name',
+        value: invoice.plan_name.toString(),
+        readonly: true
+    });
+   
+    return button.getUrl();
+}
+
+
+function loadInvoice(id, callback){
+     $.ajax({
+        url: getUrl("/sent-invoices/get-for-payment"),
+        type: "POST",
+        data: { id: id },
+        success: callback
+    });
+}
+
+
 
 function setupLessonAssignmentAutomaticMessages(){
     var $lessonSelect = $("select[name='UserLectures[lecture_id]']");

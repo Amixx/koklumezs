@@ -5,3 +5,4 @@
     </div>
 </footer>
 <script src="https://cdn.plyr.io/3.6.8/plyr.polyfilled.js"></script>
+<script src="https://pay.fondy.eu/static_common/v1/checkout/ipsp.js"></script>

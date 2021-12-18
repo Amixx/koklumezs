@@ -682,4 +682,6 @@ return [
     'Automatic assignment message created' => 'Automātiskā piešķiršanas ziņa izveidota',
     'Automatic assignment message updated' => 'Automātiskā piešķiršanas ziņa atjauninināta',
     'Automatic assignment message deleted' => 'Automātiskā piešķiršanas ziņa dzēsta',
+    'Invoices' => 'Rēķini',
+    'Pay' => 'Apmaksāt',
 ];

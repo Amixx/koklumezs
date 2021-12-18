@@ -25,7 +25,7 @@ class SentInvoicesController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function () {
-                            return Users::isAdminOrTeacher(Yii::$app->user->identity->email);
+                            return Users::isAdminOrTeacher(Yii::$app->user->identity->email) || Users::isStudent(Yii::$app->user->identity->email);
                         }
                     ],
                 ],
@@ -34,6 +34,7 @@ class SentInvoicesController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
+                    'get-for-payment' => ['POST'],
                 ],
             ],
         ];
@@ -86,6 +87,19 @@ class SentInvoicesController extends Controller
         return $this->render("advance-payment", [
             'model' => $model,
             'studentSubPlans' => $studentSubPlans,
+        ]);
+    }
+
+    public function actionGetForPayment()
+    {
+        $data = $this->findById(Yii::$app->request->post()['id']);
+        if (!$data) return null;
+
+        return json_encode([
+            'invoice_number' => $data['invoice_number'],
+            'plan_name' => $data['plan_name'],
+            'date' => $data['sent_date'],
+            'price' => $data['plan_price'],
         ]);
     }
 
