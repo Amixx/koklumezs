@@ -23,6 +23,8 @@ $this->title = \Yii::t('app', 'Edit lesson') . ': ' . $model->title;
         'lecturefiles' => $lecturefiles,
         'lectures' => $lectures,
         'relatedLectures' => $relatedLectures,
+        'assignmentMessage' => $assignmentMessage,
+        'isUpdate' => true,
     ]) ?>
 
 </div>

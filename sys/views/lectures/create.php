@@ -21,7 +21,8 @@ $this->title = \Yii::t('app',  'Create lesson');
         'lectureEvaluations' => [],
         'lecturefiles' => [],
         'lectures' => $lectures,
-        'relatedLectures' => []
+        'relatedLectures' => [],
+        'isUpdate' => false,
     ]) ?>
 
 </div>

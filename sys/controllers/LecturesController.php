@@ -12,6 +12,7 @@ use app\models\TeacherLecturesSearch;
 use app\models\RelatedLectures;
 use app\models\Lecturesevaluations;
 use app\models\LecturesDifficulties;
+use app\models\LessonAssignmentMessages;
 use app\models\SchoolLecture;
 use app\models\SchoolTeacher;
 use app\models\School;
@@ -182,6 +183,9 @@ class LecturesController extends Controller
         $model = $this->findModel($id);
         $model->updated = date('Y-m-d H:i:s', time());
         $model->complexity = 1;
+
+        $assignmentMessage = LessonAssignmentMessages::findOne(['lesson_id' => $id]);
+
         if (isset($post['difficulties']) && isset($post['difficultiesSelected'])) {
             $selectedDifficultiesCount = count($post['difficultiesSelected']);
             $sum = 0;
@@ -246,6 +250,7 @@ class LecturesController extends Controller
             'lecturefiles' => $lecturefiles,
             'relatedLectures' => $relatedLectures,
             'lectures' => $lectures,
+            'assignmentMessage' => $assignmentMessage,
         ]);
     }
 

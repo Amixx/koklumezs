@@ -676,4 +676,10 @@ return [
     'Times' => 'Reizes',
     'First lesson evaluated' => 'Pirmā nodarbība novērtēta',
     'User has not evaluated any lessons yet' => 'Lietotājs vēl nav novērtējis nevienu nodarbību',
+    'Update automatic assignment message' => 'Rediģēt automātisko piešķiršanas ziņu',
+    'Create automatic assignment message' => 'Izveidot automātisko piešķiršanas ziņu',
+    'Delete automatic assignment message' => 'Dzēst automātisko piešķiršanas ziņu',
+    'Automatic assignment message created' => 'Automātiskā piešķiršanas ziņa izveidota',
+    'Automatic assignment message updated' => 'Automātiskā piešķiršanas ziņa atjauninināta',
+    'Automatic assignment message deleted' => 'Automātiskā piešķiršanas ziņa dzēsta',
 ];

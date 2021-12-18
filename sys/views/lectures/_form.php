@@ -4,6 +4,7 @@ use mihaildev\ckeditor\CKEditor;
 use mihaildev\elfinder\ElFinder;
 use mihaildev\elfinder\InputFile;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 $ckeditorOptions = ElFinder::ckeditorOptions(
@@ -45,6 +46,25 @@ $inputFileOptions = [
                 <?= \Yii::t('app', 'Files') ?>
             </a>
         </li>
+        <?php if ($isUpdate) {
+            $action = $assignmentMessage ? "update" : "create";
+            $text = $assignmentMessage ? 'Update automatic assignment message' :  'Create automatic assignment message';
+            $deleteButton = $assignmentMessage ? 'Delete automatic assignment message' : "";
+        ?>
+            <li class="nav-item">
+                <a href="<?= Url::to(["lesson-assignment-messages/$action", 'lessonId' => $model->id]) ?>">
+                    <?= Yii::t('app', $text) ?>
+                </a>
+
+            </li>
+            <?php if ($assignmentMessage) { ?>
+                <li class="nav-item">
+                    <a href="<?= Url::to(["lesson-assignment-messages/delete", 'lessonId' => $model->id]) ?>">
+                        <?= Yii::t('app', 'Delete automatic assignment message') ?>
+                    </a>
+                </li>
+        <?php }
+        } ?>
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
