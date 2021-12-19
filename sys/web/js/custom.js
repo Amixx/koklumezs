@@ -156,20 +156,92 @@ function setupPayments(){
 
     $paymentLinks.on("click", function(){
         loadInvoice($(this).data().invoiceId, function(invoice){
-            window.location.href = generatePaymentUrl(JSON.parse(invoice));
+            invoice = JSON.parse(invoice);
+            checkout(invoice);
+        });
+    });
+
+}
+
+
+
+function checkout(invoice){
+    var $checkoutModal = $("#checkout-modal");
+
+    $ipsp.get('checkout').config({
+        'wrapper': '#checkout-modal .modal-body' ,
+        'ismodal': false,
+    }).scope(function(){
+        // add action handlers
+        this.action('decline',function(data,type){
+            console.log("declined: ", data);
+        });
+        this.action('message',function(data,type){
+            console.log("message: ", data);
+        });
+         this.action('callback',function(){
+            console.log("success");
+        });
+        this.action('show',function(){
+            $checkoutModal.modal('show');
+        });
+        this.action('hide',function(){
+            $checkoutModal.modal('hide');
+        });
+        // add resize handler that triggers
+        // when checkout page change size
+        this.action('resize',function(data,type){
+            this.setCheckoutHeight(data.height);
+        });
+        // load checkout url received from server-server api
+        // or from Button Module `$ipsp('button').getUrl()`
+        this.loadUrl(generatePaymentUrl(invoice));
+        // bind multiple html elements to open checkout
+        // this.setElementAttr('data-url');
+        // this.setClickElement('.product-list .pay-button');
+        // handle success response from checkout
+       
+       
+        // handle all response from checkout api
+        this.addCallback(__DEFAULTCALLBACK__);
+         this.addCallback(function(data){
+            handlePaymentFinish(data, invoice);
         });
     });
 }
 
 
+function handlePaymentFinish(data, invoice){
+    var $checkoutModal = $("#checkout-modal");
+    var $checkoutModalBody = $checkoutModal.find(".modal-body");
+
+    if(data.response_status === "success"){
+        $.ajax({
+            url: getUrl("/sent-invoices/handle-payment-success"),
+            type: "POST",
+            data: { invoice: invoice },
+            success: function(){
+                setTimeout(function(){
+                    window.location.reload();
+                }, 3000);
+            }
+        });
+    } else {
+        setTimeout(function(){
+            $checkoutModal.modal('hide');    
+            $checkoutModalBody.empty();
+        }, 3000);
+    }
+}
+
+
 
 function generatePaymentUrl(invoice){
-    var merchantId = 1491578;
+    var merchantId = 1396424;
     var button = $ipsp.get('button');
     button.setMerchantId(merchantId);
-    button.setAmount(invoice.price, 'EUR', true);
+    button.setAmount(invoice.plan_price, 'EUR', true);
     button.setHost('pay.fondy.eu');
-    button.setResponseUrl(getFullUrl("/payment/success"));
 
     button.addField({
         label: 'Rēķina numurs',
@@ -180,7 +252,7 @@ function generatePaymentUrl(invoice){
      button.addField({
         label: 'Rēķina datums',
         name: 'invoice_date',
-        value: invoice.date.toString(),
+        value: invoice.sent_date.toString(),
         readonly: true
     });
     button.addField({
@@ -189,13 +261,18 @@ function generatePaymentUrl(invoice){
         value: invoice.plan_name.toString(),
         readonly: true
     });
-   
+
+    var rand= Math.random().toString().substring(2, 8); 
+    button.addParam('order_id', rand);
+    button.addParam('order_desc', 'kautkāds apraksts');
+    button.addParam('design_id', 201845);
+
     return button.getUrl();
 }
 
 
 function loadInvoice(id, callback){
-     $.ajax({
+    $.ajax({
         url: getUrl("/sent-invoices/get-for-payment"),
         type: "POST",
         data: { id: id },

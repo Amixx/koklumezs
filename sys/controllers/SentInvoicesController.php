@@ -92,15 +92,32 @@ class SentInvoicesController extends Controller
 
     public function actionGetForPayment()
     {
-        $data = $this->findById(Yii::$app->request->post()['id']);
-        if (!$data) return null;
+        $invoice = $this->findById(Yii::$app->request->post()['id']);
+        if (!$invoice) return null;
 
         return json_encode([
-            'invoice_number' => $data['invoice_number'],
-            'plan_name' => $data['plan_name'],
-            'date' => $data['sent_date'],
-            'price' => $data['plan_price'],
+            'user_id' => $invoice['user_id'],
+            'studentsubplan_id' => $invoice['studentsubplan_id'],
+            'invoice_number' => $invoice['invoice_number'],
+            'plan_name' => $invoice['plan_name'],
+            'sent_date' => $invoice['sent_date'],
+            'plan_price' => $invoice['plan_price'],
+            'plan_start_date' => $invoice['plan_start_date'],
         ]);
+    }
+
+    public function actionHandlePaymentSuccess()
+    {
+        $invoice = Yii::$app->request->post()['invoice'];
+        $model = new SentInvoices;
+        $model->user_id = $invoice['user_id'];
+        $model->studentsubplan_id = $invoice['studentsubplan_id'];
+        $model->invoice_number = $invoice['invoice_number'];
+        $model->is_advance = false;
+        $model->plan_name = $invoice['plan_name'];
+        $model->plan_price = $invoice['plan_price'];
+        $model->plan_start_date = $invoice['plan_start_date'];
+        return $model->save();
     }
 
     public function actionDelete($id)

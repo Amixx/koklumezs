@@ -37,4 +37,9 @@ $this->title = \Yii::t('app', 'Unpaid invoices');
             } ?>
         </tbody>
     </table>
+    <?= $this->render("@app/views/shared/modal", [
+        'id' => 'checkout-modal',
+        'title' => 'Maksājumi',
+        'body' => ''
+    ]); ?>
 </div>
