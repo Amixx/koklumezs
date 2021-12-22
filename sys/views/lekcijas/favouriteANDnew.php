@@ -47,7 +47,7 @@ if (empty($lectures) && $teacherPortrait) {
                     <div class="col-xs-6 col-lg-3 text-center lecture-wrap">
                         <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
                         <span class="lecture-title"><?= $lecture->title ?> </span>
-                        <?php if ($divTitle === 'New lessons') { ?>
+                        <?php if ($divTitle === 'New lessons' && $isStudent) { ?>
                             <?php $lectureStatus = Lectures::getLectureStatus($lecture->id); ?>
                             <span class="lecture-status <?= $lectureStatus['class'] ?>">
                                 <?= \Yii::t('app', $lectureStatus['text']); ?>

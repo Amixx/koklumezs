@@ -19,6 +19,7 @@
             'renderRequestButton' => $renderRequestButton,
             'isActive' => $isActive,
             'teacherPortrait' => $teacherPortrait,
+            'isStudent' => $isStudent,
         ]) ?>
         <?=
         $this->render('favouriteANDnew', [
@@ -30,6 +31,7 @@
             'videoThumb' => $videoThumb,
             'renderRequestButton' => false,
             'teacherPortrait' => $teacherPortrait,
+            'isStudent' => $isStudent,
         ]) ?>
     </div>
 
