@@ -111,22 +111,22 @@ $(document).ready(function() {
     if (userNavbarLessonDropdown){
         userNavbarLessonDropdown.href = "/lekcijas";
         $(".navbar-lessons-dropdown-toggle a").removeAttr("data-toggle");
-    }    
+    }
 
     setupArchiveSearchByCategory();
     setupLectureFilterByDifficulty();
     setupAssignUserListFilters();
 
-    $("select[name='SignUpForm[ownsInstrument]']").on('change', function(){  
+    $("select[name='SignUpForm[ownsInstrument]']").on('change', function(){
         if ($("span.select2").hasClass('select-warning')) {
             $("span.select2").removeClass("select-warning");
             let div = document.getElementById('has-instrument');
             div.removeChild(div.lastChild);
-        }   
+        }
         if(parseInt(this.value) === 1){
             $("div.has-experience").addClass("active");
         }else {
-            $("div.has-experience").removeClass("active"); 
+            $("div.has-experience").removeClass("active");
         }
     });
 
@@ -151,133 +151,122 @@ $(document).ready(function() {
 
 
 function setupPayments(){
+    var $checkoutModal = $("#checkout-modal");
     var $paymentLinks = $(".payment-link");
+    var $paymentSpinner = $("#payment-spinner");
     if(!$paymentLinks.length) return;
 
+    $checkoutModal.on('hidden.bs.modal', function (e) {
+        $checkoutModal.find("iframe").remove();
+    });
+
     $paymentLinks.on("click", function(){
+        $checkoutModal.modal('show');
+        $paymentSpinner.show();
         loadInvoice($(this).data().invoiceId, function(invoice){
             invoice = JSON.parse(invoice);
             checkout(invoice);
         });
     });
 
-}
 
+    function checkout(invoice){
+        $ipsp.get('checkout').config({
+            'wrapper': '#checkout-modal .modal-body' ,
+            'ismodal': true,
+        }).scope(function(){
+            this.action('show',function(){
+                $paymentSpinner.hide();
+            });
 
+            this.action('hide',function(){
+                $checkoutModal.modal('hide');
+            });
 
-function checkout(invoice){
-    var $checkoutModal = $("#checkout-modal");
+            this.action('resize',function(data){
+                this.setCheckoutHeight(data.height);
+            });
 
-    $ipsp.get('checkout').config({
-        'wrapper': '#checkout-modal .modal-body' ,
-        'ismodal': false,
-    }).scope(function(){
-        // add action handlers
-        this.action('decline',function(data,type){
-            console.log("declined: ", data);
+            this.loadUrl(generatePaymentUrl(invoice));
+            this.addCallback(__DEFAULTCALLBACK__);
         });
-        this.action('message',function(data,type){
-            console.log("message: ", data);
-        });
-         this.action('callback',function(){
-            console.log("success");
-        });
-        this.action('show',function(){
-            $checkoutModal.modal('show');
-        });
-        this.action('hide',function(){
-            $checkoutModal.modal('hide');
-        });
-        // add resize handler that triggers
-        // when checkout page change size
-        this.action('resize',function(data,type){
-            this.setCheckoutHeight(data.height);
-        });
-        // load checkout url received from server-server api
-        // or from Button Module `$ipsp('button').getUrl()`
-        this.loadUrl(generatePaymentUrl(invoice));
-        // bind multiple html elements to open checkout
-        // this.setElementAttr('data-url');
-        // this.setClickElement('.product-list .pay-button');
-        // handle success response from checkout
-       
-       
-        // handle all response from checkout api
-        this.addCallback(__DEFAULTCALLBACK__);
-         this.addCallback(function(data){
-            handlePaymentFinish(data, invoice);
-        });
-    });
-}
 
+        function __DEFAULTCALLBACK__(data){
+            if (data.error) return;
 
-function handlePaymentFinish(data, invoice){
-    var $checkoutModal = $("#checkout-modal");
-    var $checkoutModalBody = $checkoutModal.find(".modal-body");
-
-    if(data.response_status === "success"){
-        $.ajax({
-            url: getUrl("/sent-invoices/handle-payment-success"),
-            type: "POST",
-            data: { invoice: invoice },
-            success: function(){
-                setTimeout(function(){
-                    window.location.reload();
-                }, 3000);
+            if (data.action == 'redirect') {
+                this.loadUrl(data.url);
+                return;
             }
-        });
-    } else {
-        setTimeout(function(){
-            $checkoutModal.modal('hide');    
-            $checkoutModalBody.empty();
-        }, 3000);
+
+            if (data.send_data.order_status == 'delayed') {
+                this.unbind('ready');
+                this.hide();
+                return;
+            } else {
+                this.unbind('ready').action('ready', function() {
+                    this.show();
+                });
+            }
+
+            if(data.send_data && data.url){
+                handlePaymentFinished(data, invoice);
+            }
+        }
     }
-}
 
 
+    function handlePaymentFinished(data, invoice){
+        if(data.response_status === "success" || data.send_data.response_status === "success"){
+            $.ajax({
+                url: getUrl("/sent-invoices/handle-payment-success"),
+                type: "POST",
+                data: { invoice: invoice },
+                success: function(){
+                    window.location.href += "?state=success";
+                }
+            });
+        }
+    }
 
-function generatePaymentUrl(invoice){
-    var merchantId = 1396424;
-    var button = $ipsp.get('button');
-    button.setMerchantId(merchantId);
-    button.setAmount(invoice.plan_price, 'EUR', true);
-    button.setHost('pay.fondy.eu');
+    function generatePaymentUrl(invoice){
+        var merchantId = 1491578;
+        var button = $ipsp.get('button');
+        button.setMerchantId(merchantId);
+        button.setAmount(invoice.plan_price, 'EUR', true);
+        button.setHost('pay.fondy.eu');
+        button.setResponseUrl('https://skola.koklumezs.lv/sys/sent-invoices/handle-payment-success');
 
-    button.addField({
-        label: 'Rēķina numurs',
-        name: 'invoice_number',
-        value: invoice.invoice_number.toString(),
-        readonly: true
-    });
-     button.addField({
-        label: 'Rēķina datums',
-        name: 'invoice_date',
-        value: invoice.sent_date.toString(),
-        readonly: true
-    });
-    button.addField({
-        label: 'Plāna nosaukums',
-        name: 'plan_name',
-        value: invoice.plan_name.toString(),
-        readonly: true
-    });
+        button.addField({
+            label: 'Rēķina numurs',
+            name: 'invoice_number',
+            value: invoice.invoice_number.toString(),
+            readonly: true
+        });
+        button.addField({
+            label: 'Rēķina datums',
+            name: 'invoice_date',
+            value: invoice.sent_date.toString(),
+            readonly: true
+        });
+        button.addField({
+            label: 'Plāna nosaukums',
+            name: 'plan_name',
+            value: invoice.plan_name.toString(),
+            readonly: true
+        });
 
-    var rand= Math.random().toString().substring(2, 8); 
-    button.addParam('order_id', rand);
-    button.addParam('order_desc', 'kautkāds apraksts');
-    button.addParam('design_id', 201845);
+        return button.getUrl();
+    }
 
-    return button.getUrl();
-}
-
-
-function loadInvoice(id, callback){
-    $.ajax({
-        url: getUrl("/sent-invoices/get-for-payment"),
-        type: "POST",
-        data: { id: id },
-        success: callback
-    });
+    function loadInvoice(id, callback){
+        $.ajax({
+            url: getUrl("/sent-invoices/get-for-payment"),
+            type: "POST",
+            data: { id: id },
+            success: callback
+        });
+    }
 }
 
 
@@ -354,7 +343,7 @@ function setupArchiveSearchByCategory(){
         $(selector).on("input", function () {
             filterByCategory(selector, this.checked);
         });
-    }    
+    }
 
     function filterByCategory(selector, isChecked) {
         if (isChecked) {
@@ -382,7 +371,7 @@ function setupArchiveSearchByCategory(){
 }
 
 function setupLectureFilterByDifficulty(){
-    $("#assign-page-main .select2.select2-container").on("click", function(){  
+    $("#assign-page-main .select2.select2-container").on("click", function(){
         var preferredDifficulty = $("#PreferredLectureDifficulty").val()
         if (!preferredDifficulty){
             return;
@@ -395,7 +384,7 @@ function setupLectureFilterByDifficulty(){
 
             var parts = this.innerText.split("(");
             var difficulty = parseInt(parts[parts.length-1].replace(")", "").trim());
-            
+
             if(difficulty !== parseInt(preferredDifficulty)){
                 $(this).css("display", "none");
                 $(document).scroll();
@@ -421,7 +410,7 @@ function setupAssignUserListFilters(){
 
 function getSubTypeSelector(type) {
     return ".subscription-type-selector.type-" + type;
-}    
+}
 
 var subTypeSelectors = Object.keys(SUB_TYPES).map(function (subType) {
     return getSubTypeSelector(subType);
@@ -496,7 +485,7 @@ function shouldHideRow(lang, langText, subTypes, subTypeText) {
         } else {
             hideRow = lang !== langText || subTypes.indexOf(subTypeText) === -1;
         }
-    }           
+    }
 
     return hideRow;
 }
@@ -576,7 +565,7 @@ function scrollChatToBottom(){
             $("#chat-box-container").scrollTop(function() {
                 return this.scrollHeight;
             });
-        }, 200);        
+        }, 200);
     }
 }
 
@@ -594,7 +583,7 @@ function loadUnreadMessagesCount() {
         type: "POST",
         success: function (jsonData) {
             var data = JSON.parse(jsonData);
-            
+
             if(parseInt(data.messages) > 0){
                 $unreadMessagesCount.html(data.messages);
                 $unreadMessagesCount.show();
@@ -710,22 +699,22 @@ function fiterSentInvoices(){
     var searchValue = $("input[name='sent-invoices-filter']").val().toLowerCase();
     var year = $('#invoices-year-selector').select2().val();
     var month = $('#invoices-month-selector').select2().val();
-    
+
     var filterByText = searchValue.length >= 4;
     var filterByDate = year !== "" && month !== "";
 
     if(filterByDate){
         year = parseInt(year);
         month = parseInt(month);
-        
+
         var firstDay = new Date(year, month, 1);
         var lastDay = new Date(year, month + 1, 0);
-       
+
         var firstDayDate = makeDateString(firstDay);
         var lastDayDate = makeDateString(lastDay);
     }
 
-    
+
     if(filterByText || filterByDate){
         $sentInvoicesRows.each(function(i, row){
             var $row = $(row);
@@ -818,7 +807,7 @@ function setupNeedHelpButton(){
         }
     });
 
-    
+
     $submitButton.on('click', function(){
         var message = $message[0].value;
         if(!message) {
@@ -864,7 +853,7 @@ function setupPostRegistrationModal(){
 }
 
 function firstLessonEvaluateLessonModal() {
-    if (window.isRegisteredAndNewLesson){   
+    if (window.isRegisteredAndNewLesson){
         var ul = document.getElementById("navbar-collapse").getElementsByTagName("li");
         for (var i = 0; i < ul.length - 1; i++) {
             ul[i].addEventListener("click", function(event) {

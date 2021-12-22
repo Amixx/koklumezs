@@ -12,6 +12,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\helpers\InvoiceManager;
+use yii\helpers\Url;
 
 class SentInvoicesController extends Controller
 {
@@ -38,6 +39,12 @@ class SentInvoicesController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function beforeAction($action)
+    {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
     }
 
     public function actionIndex()
@@ -108,16 +115,23 @@ class SentInvoicesController extends Controller
 
     public function actionHandlePaymentSuccess()
     {
-        $invoice = Yii::$app->request->post()['invoice'];
+        $post = Yii::$app->request->post();
+        $merchantData = json_decode($post["merchant_data"], true);
+        $invoiceNumber = $merchantData[0]["value"];
+
+        $advanceInvoice = SentInvoices::getAdvanceInvoice($invoiceNumber);
+
         $model = new SentInvoices;
-        $model->user_id = $invoice['user_id'];
-        $model->studentsubplan_id = $invoice['studentsubplan_id'];
-        $model->invoice_number = $invoice['invoice_number'];
+        $model->user_id = $advanceInvoice['user_id'];
+        $model->studentsubplan_id = $advanceInvoice['studentsubplan_id'];
+        $model->invoice_number = $advanceInvoice['invoice_number'];
         $model->is_advance = false;
-        $model->plan_name = $invoice['plan_name'];
-        $model->plan_price = $invoice['plan_price'];
-        $model->plan_start_date = $invoice['plan_start_date'];
-        return $model->save();
+        $model->plan_name = $advanceInvoice['plan_name'];
+        $model->plan_price = $advanceInvoice['plan_price'];
+        $model->plan_start_date = $advanceInvoice['plan_start_date'];
+        $model->save();
+
+        return $this->redirect(Url::to(['student-invoices/index', 'state' => 'success']));
     }
 
     public function actionDelete($id)

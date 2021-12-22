@@ -102,6 +102,14 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                 'prompt' => '',
                 'value' => $model['allowed_to_download_files'] ? 1 : 0
             ]) ?>
+
+            <?= $form->field($model, 'is_test_user')->dropDownList([
+                0 => Yii::t('app',  'No'),
+                1 => Yii::t('app',  'Yes')
+            ], [
+                'prompt' => '',
+                'value' => $model['is_test_user'] ? 1 : 0
+            ]) ?>
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
             <?php if ($difficulties) { ?>

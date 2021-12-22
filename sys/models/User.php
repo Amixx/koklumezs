@@ -2,7 +2,6 @@
 
 namespace app\models;
 
-use Exception;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -38,6 +37,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['phone_number'], 'string', 'max' => 30],
             [['password', 'first_name', 'last_name'], 'string', 'max' => 250],
             [['email'], 'string', 'max' => 500],
+            [['is_test_user'], 'boolean'],
         ];
     }
 
@@ -55,6 +55,7 @@ class User extends ActiveRecord implements IdentityInterface
             'last_opened_chat' => \Yii::t('app',  'Last time opened chat'),
             'wants_more_lessons' => \Yii::t('app',  'Wants more lessons'),
             'is_deleted' => \Yii::t('app',  'Is deleted'),
+            'is_test_user' => \Yii::t('app',  'Is test user'),
         ];
     }
 

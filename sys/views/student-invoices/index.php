@@ -30,7 +30,7 @@ $this->title = \Yii::t('app', 'Unpaid invoices');
                     <td class="text-center" style="white-space:nowrap"><?= date_format(new \DateTime($invoice['sent_date']), "Y-m-d") ?></td>
                     <td><?= $invoice['plan_price'] ?></td>
                     <td>
-                        <a class="payment-link" href="#" data-invoice-id="<?= $invoice['id'] ?>"><?= Yii::t('app', 'Pay') ?></a>
+                        <button class="btn btn-primary payment-link" data-invoice-id="<?= $invoice['id'] ?>"><?= Yii::t('app', 'Pay') ?></button>
                     </td>
                 </tr>
             <?php $a++;
@@ -40,6 +40,18 @@ $this->title = \Yii::t('app', 'Unpaid invoices');
     <?= $this->render("@app/views/shared/modal", [
         'id' => 'checkout-modal',
         'title' => 'Maksājumi',
-        'body' => ''
+        'body' => '
+            <div class="spinner-container" style="display: none;" id="payment-spinner">
+                <div class="lds-roller">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                </div>
+            </div>'
     ]); ?>
 </div>

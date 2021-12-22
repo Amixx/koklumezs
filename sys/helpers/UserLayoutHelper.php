@@ -91,7 +91,7 @@ class UserLayoutHelper extends LayoutHelper
             ? count(Users::getStudentsWithoutPausesForSchool()) > 0
             : false;
 
-        return [
+        $data = [
             'admin' => [
                 ['label' => 'Piešķiršana', 'url' => ['/assign'], 'active' =>  in_array(Yii::$app->controller->id, ['assign']),],
                 ['label' => 'Piešķirts', 'url' => ['/user-lectures'], 'active' =>  in_array(Yii::$app->controller->id, ['user-lectures']),],
@@ -152,9 +152,14 @@ class UserLayoutHelper extends LayoutHelper
                 ['label' => Yii::t('app',  'FAQs'), 'url' => ['/school-faqs/for-students'], 'active' =>  in_array(Yii::$app->controller->id, ['school-faqs'])],
                 ['label' => Yii::t('app',  'Subscription plan'), 'url' => ['/student-sub-plans/for-user/?studentId=' . Yii::$app->user->identity->id], 'active' =>  in_array(Yii::$app->controller->id, ['student-sub-plans'])],
                 // ['label' => Yii::t('app',  'Join another school'), 'url' => ['/join-school'], 'active' =>  in_array(Yii::$app->controller->id, ['join-school'])],
-                ['label' => Yii::t('app',  'Invoices'), 'url' => ['/student-invoices'], 'active' =>  in_array(Yii::$app->controller->id, ['student-invoices'])],
             ],
         ];
+
+        if ($userContext->is_test_user) {
+            $data['student'][] = ['label' => Yii::t('app',  'Invoices'), 'url' => ['/student-invoices'], 'active' =>  in_array(Yii::$app->controller->id, ['student-invoices'])];
+        }
+
+        return $data;
     }
 
     public function getActionButton()

@@ -51,6 +51,7 @@ class Users extends ActiveRecord implements IdentityInterface
             [['phone_number'], 'string', 'max' => 30],
             [['password', 'first_name', 'last_name'], 'string', 'max' => 250],
             [['email'], 'string', 'max' => 500],
+            [['is_test_user'], 'boolean'],
         ];
     }
 
@@ -73,6 +74,7 @@ class Users extends ActiveRecord implements IdentityInterface
             'allowed_to_download_files' => \Yii::t('app',  'Allowed to download files'),
             'wants_more_lessons' => \Yii::t('app',  'Wants more lessons'),
             'is_deleted' => \Yii::t('app',  'Is deleted'),
+            'is_test_user' => \Yii::t('app',  'Is test user'),
         ];
     }
 

@@ -85,6 +85,11 @@ class SentInvoices extends \yii\db\ActiveRecord
         }
     }
 
+    public static function getAdvanceInvoice($invoiceNumber)
+    {
+        return self::find()->where(['invoice_number' => $invoiceNumber, 'is_advance' => true])->asArray()->one();
+    }
+
     public static function getRealInvoice($invoiceNumber)
     {
         return self::find()->where(['invoice_number' => $invoiceNumber, 'is_advance' => false])->one();

@@ -43,6 +43,12 @@ class StudentInvoicesController extends Controller
         $userContext = Yii::$app->user->identity;
         $invoices = SentInvoices::getUnpaidForStudent($userContext->id);
 
+        $get = Yii::$app->request->get();
+
+        if (isset($get['state']) && $get['state'] === 'success') {
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Payment was successful! Thank you!'));
+        }
+
         return $this->render('index', [
             'invoices' => $invoices,
         ]);

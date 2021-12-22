@@ -684,4 +684,7 @@ return [
     'Automatic assignment message deleted' => 'Automātiskā piešķiršanas ziņa dzēsta',
     'Invoices' => 'Rēķini',
     'Pay' => 'Apmaksāt',
+    'Is test user' => 'Vai ir testa lietotājs',
+    'Payment was successful! Thank you!' => 'Maksājums veiksmīgs! Paldies!',
+    'Unfortunately the payment was not successful' => 'Diemžēl maksājums neizdevās'
 ];
