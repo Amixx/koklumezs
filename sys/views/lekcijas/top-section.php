@@ -32,6 +32,11 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
             <?= Html::endForm() ?>
         </div>
     </div>
+    <div>
+        <?php
+        echo $this->render("@app/views/audio-recorder/index");
+        ?>
+    </div>
     <div class="pull-right">
         <div style="position:relative; display:inline-block">
             <?php if ($lecturefiles) { ?>
