@@ -394,9 +394,9 @@ class UserLectures extends \yii\db\ActiveRecord
 
         $avg = 0;
         foreach ($lastLectureQuery as $lectureQuery) {
-            $avg = $avg + $lectureQuery['lecture']->complexity;
+            $avg += $lectureQuery['lecture']->complexity;
         }
-        $avg = (int)round($avg / 3, 0);
+        $avg = (int)round($avg / count($lastLectureQuery), 0);
         return $avg;
     }
 
