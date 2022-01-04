@@ -237,6 +237,8 @@ function setupPayments(){
         button.setHost('pay.fondy.eu');
         button.setResponseUrl('https://skola.koklumezs.lv/sys/sent-invoices/handle-payment-success');
 
+        if(window.userLanguage) button.addParam('lang', window.userLanguage);
+
         button.addField({
             label: 'Rēķina numurs',
             name: 'invoice_number',
