@@ -204,4 +204,17 @@ class EmailSender
 
         return false;
     }
+
+    public static function sendInfoAboutNewInvoice($student, $invoiceNumber)
+    {
+        $school = School::getByStudent($student['id']);
+
+        return Yii::$app
+            ->mailer
+            ->compose(['html' => 'new-invoice-html', 'text' => 'new-invoice-text'])
+            ->setFrom([$school['email'] => Yii::$app->name])
+            ->setTo($student['email'])
+            ->setSubject("Avansa rēķins $invoiceNumber - Kokļu mežs")
+            ->send();
+    }
 }
