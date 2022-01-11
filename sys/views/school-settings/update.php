@@ -51,12 +51,6 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
         <?= $form->field($model, 'teacher_portrait')->widget(InputFile::class, $fileInputSettings); ?>
         <?= $form->field($model, 'rent_contract')->widget(InputFile::class, $docInputSettings); ?>
 
-        <?= $form->field($model, 'rent_schoolsubplan_id')
-            ->dropDownList(
-                $schoolSubPlans,
-                ['prompt' => '']
-            )->label(Yii::t('app', 'Subscription plan')) ?>
-
         <?= $form->field($model, 'email')->textInput(['class' => 'form-control form-group has-feedback field-with-info-widget']) ?>
         <span class="glyphicon glyphicon-info-sign info info-school-email" style="margin-top: -50px;"></span>
 

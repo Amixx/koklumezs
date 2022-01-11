@@ -211,9 +211,8 @@ class RegistrationController extends Controller
                     Chat::addNewMessage($chatMessage, $schoolTeacher['id'], $user['id']);
                 }
 
-                if ($school['renter_message'] != null && $school['rent_schoolsubplan_id'] != null) {
-                    $studentSubplan = RentForm::registerPlanForUser($user->id, $school['rent_schoolsubplan_id']);
-                    InvoiceManager::sendAdvanceInvoice($user, $studentSubplan, true);
+                if ($school['renter_message'] != null) {
+                    EmailSender::sendInvoiceToRenter($school['renter_message'], $school['email'], $user['email']);
                 }
 
                 $sent = EmailSender::sendRentNotification($user, $school['email']);

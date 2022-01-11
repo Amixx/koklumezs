@@ -33,7 +33,6 @@ class School extends \yii\db\ActiveRecord
                 'rent_text',
                 'rent_contract',
             ], 'string'],
-            [['rent_schoolsubplan_id'], 'number'],
             [['created'], 'safe'],
         ];
     }
@@ -49,7 +48,6 @@ class School extends \yii\db\ActiveRecord
             'logo' => \Yii::t('app',  'Logo (preferably in SVG format)'),
             'video_thumbnail' => \Yii::t('app',  'Video thumbnail'),
             'email' => \Yii::t('app',  'E-mail'),
-            'rent_schoolsubplan_id' => \Yii::t('app',  'Subscription plan used to generate invoice for renters'),
             'registration_title' => \Yii::t('app', 'Registration title'),
             'login_title' => \Yii::t('app', 'Log in title'),
             'registration_message' => \Yii::t('app',  'Registration message'),
@@ -77,9 +75,6 @@ class School extends \yii\db\ActiveRecord
     {
         $userContext = Yii::$app->user->identity;
         $school = $userContext->getSchool();
-        $rentSubplanName = $school->rent_schoolsubplan_id
-            ? SchoolSubPlans::find()->where(['id' => $school->rent_schoolsubplan_id])->one()['name']
-            : null;
 
         return [
             \Yii::t('app', 'Instrument') => $school->instrument,
@@ -91,7 +86,6 @@ class School extends \yii\db\ActiveRecord
             \Yii::t('app', 'Rent contract') => $school->rent_contract,
             \Yii::t('app', 'Registration title') => $school->registration_title,
             \Yii::t('app', 'Log in title') => $school->login_title,
-            \Yii::t('app', 'Subscription plan used to generate invoice for renters') => $rentSubplanName,
             \Yii::t('app', 'Registration message') => $school->registration_message,
             \Yii::t('app', 'Message for students who want to rent an instrument') => $school->renter_message,
             \Yii::t('app', 'Message to send after trial period has ended') => $school->trial_ended_message,
