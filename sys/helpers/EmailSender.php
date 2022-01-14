@@ -80,7 +80,7 @@ class EmailSender
             ->send();
     }
 
-    public static function sendInvoiceToRenter($renterMessage, $schoolEmail, $userEmail)
+    public static function sendInvoiceToRenter($renterMessage, $schoolEmail, $userEmail, $invoicePath)
     {
         return Yii::$app
             ->mailer
@@ -90,6 +90,7 @@ class EmailSender
             ->setFrom([$schoolEmail => Yii::$app->name])
             ->setTo($userEmail)
             ->setSubject("Kokles īre - " . Yii::$app->name)
+            ->attach($invoicePath)
             ->send();
     }
 

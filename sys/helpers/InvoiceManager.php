@@ -14,7 +14,7 @@ use Yii;
 
 class InvoiceManager
 {
-    public static function sendAdvanceInvoice($user, $studentSubplan)
+    public static function sendAdvanceInvoice($user, $studentSubplan, $sendToRenter = false)
     {
         $schoolSubplan = $studentSubplan['plan'];
         $school = School::getByStudent($user['id']);
@@ -42,11 +42,15 @@ class InvoiceManager
 
         InvoicePdfFileGenerator::generate($invoicePath, $invoiceContent, $title);
 
-        $message = isset($schoolSubplan['message']) && $schoolSubplan['message']
-            ? $schoolSubplan['message']
-            : "Nosūtam rēķinu par tekošā mēneša nodarbībām. Lai jauka diena!";
+        if ($sendToRenter) {
+            $sent = EmailSender::sendInvoiceToRenter($school['renter_message'], $school['email'], $destinationEmail, $invoicePath);
+        } else {
+            $message = isset($schoolSubplan['message']) && $schoolSubplan['message']
+                ? $schoolSubplan['message']
+                : "Nosūtam rēķinu par tekošā mēneša nodarbībām. Lai jauka diena!";
 
-        $sent = EmailSender::sendEmailWithAdvanceInvoice($message, $school['email'], $destinationEmail, $invoiceNumber, $invoicePath);
+            $sent = EmailSender::sendEmailWithAdvanceInvoice($message, $school['email'], $destinationEmail, $invoiceNumber, $invoicePath);
+        }
 
         if ($sent) {
             StudentSubPlans::increaseSentInvoicesCount($studentSubplan);

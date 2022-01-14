@@ -65,6 +65,12 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
             'editorOptions' => $ckeditorOptions,
         ]) ?>
 
+        <?= $form->field($model, 'rent_schoolsubplan_id')
+            ->dropDownList(
+                $schoolSubPlans,
+                ['prompt' => '']
+            )->label(Yii::t('app', 'Subscription plan')) ?>
+
         <div class="form-group">
             <?= Html::submitButton(\Yii::t('app',  'Save'), ['class' => 'btn btn-success']) ?>
         </div>
