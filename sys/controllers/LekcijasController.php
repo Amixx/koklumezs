@@ -308,10 +308,10 @@ class LekcijasController extends Controller
         $userContext = Yii::$app->user->identity;
         $videoThumb = $userContext->getSchool()->video_thumbnail;
 
-        return $this->renderOverview($user, $models, $pages, $videoThumb);
+        return $this->renderOverview($user, $models, $pages, $videoThumb, false);
     }
 
-    private function renderOverview($user, $models, $pages, $videoThumb)
+    private function renderOverview($user, $models, $pages, $videoThumb, $isStudent = true)
     {
         $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "new");
         $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
@@ -390,6 +390,7 @@ class LekcijasController extends Controller
             'renderRequestButton' => !$user->wants_more_lessons,
             'isActive' => $isActive,
             'teacherPortrait' => $teacherPortrait,
+            'isStudent' => $isStudent,
         ]);
     }
 
