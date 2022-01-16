@@ -94,15 +94,16 @@ class EmailSender
             ->send();
     }
 
-    public static function sendRentNotification($model, $schoolEmail)
+    public static function sendRentNotification($model, $school)
     {
         return Yii::$app
             ->mailer
             ->compose(['html' => 'instrument-html', 'text' => 'instrument-text'], [
                 'model' => $model,
+                'instrument' => $school['instrument']
             ])
             ->setFrom([Yii::$app->params['noreplyEmail'] => Yii::$app->name])
-            ->setTo($schoolEmail)
+            ->setTo($school['email'])
             ->setSubject("Instrumenta īres pieteikums")
             ->send();
     }
