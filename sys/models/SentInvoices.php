@@ -49,6 +49,10 @@ class SentInvoices extends \yii\db\ActiveRecord
         return $this->hasOne(StudentSubPlans::class, ['id' => 'studentsubplan_id'])->joinWith('plan');
     }
 
+    public function getForAllSchools(){
+        return self::find()->joinWith('student');
+    }
+
     public static function getForCurrentSchool()
     {
         $userContext = Yii::$app->user->identity;

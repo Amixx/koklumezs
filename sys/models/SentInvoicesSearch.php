@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -21,7 +22,9 @@ class SentInvoicesSearch extends SentInvoices
 
     public function search($params)
     {
-        $query = SentInvoices::getForCurrentSchool();
+        $userContext = Yii::$app->user->identity;
+        
+        $query = $userContext->isTeacher() ? SentInvoices::getForCurrentSchool() : SentInvoices::getForAllSchools();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
