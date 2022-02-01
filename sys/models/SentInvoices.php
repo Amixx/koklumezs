@@ -41,7 +41,7 @@ class SentInvoices extends \yii\db\ActiveRecord
 
     public function getStudent()
     {
-        return $this->hasOne(Users::class, ['id' => 'user_id'])->joinWith('payer');
+        return $this->hasOne(Users::class, ['id' => 'user_id'])->joinWith('payer')->joinWith('schoolStudent');
     }
 
     public function getStudentSubplan()
@@ -50,7 +50,11 @@ class SentInvoices extends \yii\db\ActiveRecord
     }
 
     public function getForAllSchools(){
-        return self::find()->joinWith('student');
+        // skolas id 1 ir testa skolai
+        // TODO: pielikt skolām pazīmi "is_test_school"
+        return self::find()
+            ->joinWith('student')
+            ->where('NOT schoolstudents.school_id = 1');
     }
 
     public static function getForCurrentSchool()
