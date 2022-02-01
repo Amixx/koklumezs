@@ -688,4 +688,5 @@ return [
     'Payment was successful! Thank you!' => 'Maksājums veiksmīgs! Paldies!',
     'Unfortunately the payment was not successful' => 'Diemžēl maksājums neizdevās',
     'School email' => 'Skolas e-pasts',
+    'I will pay in one installment (10% discount)' => 'Maksāšu vienā maksājumā (10% atlaide)'
 ];

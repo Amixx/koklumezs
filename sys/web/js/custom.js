@@ -146,6 +146,9 @@ $(document).ready(function() {
     }
 
     setupPayments();
+
+    $planSuggestionModal = $("#plan-suggestion-modal");
+    if($planSuggestionModal) $planSuggestionModal.modal("show");
 });
 
 

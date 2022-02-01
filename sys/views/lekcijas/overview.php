@@ -41,5 +41,19 @@
     if ($session->has("renderPostRegistrationModal") && $session->get("renderPostRegistrationModal")) {
         echo $this->render('post-registration-modal');
     }
+
+    $renderPlanSuggestions = true;
+
+    if($renderPlanSuggestions){
+        echo $this->render("@app/views/shared/modal", [
+            'id' => 'plan-suggestion-modal',
+            'title' => '',
+            'bodyFileName' => "/lekcijas/plan-suggestion-modal-body",
+            'large' => true,
+            // 'bodyFileParams' => [
+            //     'uLecture' => $uLecture,
+            // ],
+        ]);
+    }
     ?>
 </div>

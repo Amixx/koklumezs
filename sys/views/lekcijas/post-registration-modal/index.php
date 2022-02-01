@@ -5,7 +5,7 @@ use app\models\StartLaterCommitments;
 $model = new StartLaterCommitments();
 $model->start_time_of_day = 'morning';
 
-$body = $this->render('post-registration-modal-body', [
+$body = $this->render('body', [
     'model' => $model
 ]);
 
