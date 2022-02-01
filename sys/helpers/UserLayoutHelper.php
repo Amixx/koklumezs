@@ -103,6 +103,11 @@ class UserLayoutHelper extends LayoutHelper
                 ['label' => 'Lietotāji', 'url' => ['/user'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
                 ['label' => 'Lietotāju vērtējumi', 'url' => ['/user-lecture-evaluations'], 'active' =>  in_array(Yii::$app->controller->id, ['user-lecture-evaluations'])],
                 ['label' => 'Izsūtītie e-pasti', 'url' => ['/sentlectures'], 'active' =>  in_array(Yii::$app->controller->id, ['sentlectures'])],
+                [
+                    'label' => Yii::t('app',  'Sent invoices'),
+                    'url' => ['/sent-invoices'],
+                    'active' =>  in_array(Yii::$app->controller->id, ['sent-invoices']),
+                ],
             ],
             'teacher' => [
                 ['label' => Yii::t('app',  'School'), 'url' => ['/assign'], 'active' =>  in_array(Yii::$app->controller->id, ['assign']),],

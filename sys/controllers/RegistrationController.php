@@ -216,7 +216,7 @@ class RegistrationController extends Controller
                     InvoiceManager::sendAdvanceInvoice($user, $studentSubplan, true);
                 }
 
-                $sent = EmailSender::sendRentNotification($user, $school['email']);
+                $sent = EmailSender::sendRentNotification($user, $school);
 
                 if ($sent) {
                     Yii::$app->session->setFlash('success', \Yii::t(

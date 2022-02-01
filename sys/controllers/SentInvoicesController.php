@@ -49,12 +49,16 @@ class SentInvoicesController extends Controller
 
     public function actionIndex()
     {
+        $userContext = Yii::$app->user->identity;
+        $isTeacher = $userContext->isTeacher();
+
         $searchModel = new SentInvoicesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
+            'isTeacher' => $isTeacher,
         ]);
     }
 

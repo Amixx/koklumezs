@@ -686,5 +686,6 @@ return [
     'Pay' => 'Apmaksāt',
     'Is test user' => 'Vai ir testa lietotājs',
     'Payment was successful! Thank you!' => 'Maksājums veiksmīgs! Paldies!',
-    'Unfortunately the payment was not successful' => 'Diemžēl maksājums neizdevās'
+    'Unfortunately the payment was not successful' => 'Diemžēl maksājums neizdevās',
+    'School email' => 'Skolas e-pasts',
 ];
