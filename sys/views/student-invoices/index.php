@@ -52,6 +52,10 @@ $this->title = \Yii::t('app', 'Unpaid invoices');
                 <div></div>
                 <div></div>
                 </div>
-            </div>'
+            </div>
+            <label>Card
+                <div id="card-element"></div>
+            </label>
+        '
     ]); ?>
 </div>

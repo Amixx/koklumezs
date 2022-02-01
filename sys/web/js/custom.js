@@ -151,6 +151,31 @@ $(document).ready(function() {
 
 
 function setupPayments(){
+    // var stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+    // var elements = stripe.elements({
+    //     clientSecret: 'CLIENT_SECRET',
+    //     locale: window.userLanguage,
+    // });
+    // var paymentElement = elements.create('payment');
+    // form.addEventListener('submit', async (event) => {
+    //     stripe.confirmPayment({
+    //         elements,
+    //         confirmParams: {
+    //             return_url: 'https://example.com',
+    //             payment_method_data: {
+    //                 billing_details: {
+    //                     name: 'Jenny Rosen',
+    //                     email: 'jenny.rosen@example.com',
+    //                 }
+    //             },
+    //     }}).then(function(result) {
+    //             if (result.error) {
+    //             // Inform the customer that there was an error.
+    //             }
+    //         });
+    //     });
+    // paymentElement.mount('#payment-element')
+
     var $checkoutModal = $("#checkout-modal");
     var $paymentLinks = $(".payment-link");
     var $paymentSpinner = $("#payment-spinner");
@@ -171,94 +196,94 @@ function setupPayments(){
 
 
     function checkout(invoice){
-        $ipsp.get('checkout').config({
-            'wrapper': '#checkout-modal .modal-body' ,
-            'ismodal': true,
-        }).scope(function(){
-            this.action('show',function(){
-                $paymentSpinner.hide();
-            });
+        // $ipsp.get('checkout').config({
+        //     'wrapper': '#checkout-modal .modal-body' ,
+        //     'ismodal': true,
+        // }).scope(function(){
+        //     this.action('show',function(){
+        //         $paymentSpinner.hide();
+        //     });
 
-            this.action('hide',function(){
-                $checkoutModal.modal('hide');
-            });
+        //     this.action('hide',function(){
+        //         $checkoutModal.modal('hide');
+        //     });
 
-            this.action('resize',function(data){
-                this.setCheckoutHeight(data.height);
-            });
+        //     this.action('resize',function(data){
+        //         this.setCheckoutHeight(data.height);
+        //     });
 
-            this.loadUrl(generatePaymentUrl(invoice));
-            this.addCallback(__DEFAULTCALLBACK__);
-        });
+        //     this.loadUrl(generatePaymentUrl(invoice));
+        //     this.addCallback(__DEFAULTCALLBACK__);
+        // });
 
-        function __DEFAULTCALLBACK__(data){
-            if (data.error) return;
+        // function __DEFAULTCALLBACK__(data){
+        //     if (data.error) return;
 
-            if (data.action == 'redirect') {
-                this.loadUrl(data.url);
-                return;
-            }
+        //     if (data.action == 'redirect') {
+        //         this.loadUrl(data.url);
+        //         return;
+        //     }
 
-            if (data.send_data.order_status == 'delayed') {
-                this.unbind('ready');
-                this.hide();
-                return;
-            } else {
-                this.unbind('ready').action('ready', function() {
-                    this.show();
-                });
-            }
+        //     if (data.send_data.order_status == 'delayed') {
+        //         this.unbind('ready');
+        //         this.hide();
+        //         return;
+        //     } else {
+        //         this.unbind('ready').action('ready', function() {
+        //             this.show();
+        //         });
+        //     }
 
-            if(data.send_data && data.url){
-                handlePaymentFinished(data, invoice);
-            }
-        }
+        //     if(data.send_data && data.url){
+        //         handlePaymentFinished(data, invoice);
+        //     }
+        // }
     }
 
 
     function handlePaymentFinished(data, invoice){
-        if(data.response_status === "success" || data.send_data.response_status === "success"){
-            $.ajax({
-                url: getUrl("/sent-invoices/handle-payment-success"),
-                type: "POST",
-                data: { invoice: invoice },
-                success: function(){
-                    window.location.href += "?state=success";
-                }
-            });
-        }
+        // if(data.response_status === "success" || data.send_data.response_status === "success"){
+        //     $.ajax({
+        //         url: getUrl("/sent-invoices/handle-payment-success"),
+        //         type: "POST",
+        //         data: { invoice: invoice },
+        //         success: function(){
+        //             window.location.href += "?state=success";
+        //         }
+        //     });
+        // }
     }
 
     function generatePaymentUrl(invoice){
-        var merchantId = 1491578;
-        var button = $ipsp.get('button');
-        button.setMerchantId(merchantId);
-        button.setAmount(invoice.plan_price, 'EUR', true);
-        button.setHost('pay.fondy.eu');
-        button.setResponseUrl('https://skola.koklumezs.lv/sys/sent-invoices/handle-payment-success');
+        // var merchantId = 1491578;
+        // var button = $ipsp.get('button');
+        // button.setMerchantId(merchantId);
+        // button.setAmount(invoice.plan_price, 'EUR', true);
+        // button.setHost('pay.fondy.eu');
+        // button.setResponseUrl('https://skola.koklumezs.lv/sys/sent-invoices/handle-payment-success');
 
-        if(window.userLanguage) button.addParam('lang', window.userLanguage);
+        // if(window.userLanguage) button.addParam('lang', window.userLanguage);
 
-        button.addField({
-            label: 'Rēķina numurs',
-            name: 'invoice_number',
-            value: invoice.invoice_number.toString(),
-            readonly: true
-        });
-        button.addField({
-            label: 'Rēķina datums',
-            name: 'invoice_date',
-            value: invoice.sent_date.toString(),
-            readonly: true
-        });
-        button.addField({
-            label: 'Plāna nosaukums',
-            name: 'plan_name',
-            value: invoice.plan_name.toString(),
-            readonly: true
-        });
+        // button.addField({
+        //     label: 'Rēķina numurs',
+        //     name: 'invoice_number',
+        //     value: invoice.invoice_number.toString(),
+        //     readonly: true
+        // });
+        // button.addField({
+        //     label: 'Rēķina datums',
+        //     name: 'invoice_date',
+        //     value: invoice.sent_date.toString(),
+        //     readonly: true
+        // });
+        // button.addField({
+        //     label: 'Plāna nosaukums',
+        //     name: 'plan_name',
+        //     value: invoice.plan_name.toString(),
+        //     readonly: true
+        // });
 
-        return button.getUrl();
+        // return button.getUrl();
     }
 
     function loadInvoice(id, callback){

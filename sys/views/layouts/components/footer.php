@@ -9,3 +9,4 @@
 <script>
     window.userLanguage = '<?= Yii::$app->language ?>'
 </script>
+<script src="https://js.stripe.com/v3/"></script>
