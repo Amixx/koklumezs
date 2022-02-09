@@ -19,6 +19,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
             [['school_id', 'name', 'months', 'max_pause_weeks'], 'required'],
             [['school_id', 'months', 'max_pause_weeks', 'pvn_percent', 'days_for_payment'], 'number'],
             [['name', 'description', 'files', 'message', 'type'], 'string'],
+            [['recommend_after_trial', 'allow_single_payment'], 'boolean'],
         ];
     }
 
@@ -36,12 +37,19 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
             'files' => \Yii::t('app',  'Files'),
             'message' => \Yii::t('app',  'Message to send with the invoice'),
             'days_for_payment' => \Yii::t('app', 'How many days to pay the bill'),
+            'recommend_after_trial' => \Yii::t('app', 'Should this plan be recommended to students after trial expiration'),
+            'allow_single_payment' => \Yii::t('app', 'Allow to pay for the entire plan in one installment'),
         ];
     }
 
     public function typeText()
     {
         return $this->type === 'lesson' ? \Yii::t('app', 'subscription') : \Yii::t('app', 'rent');
+    }
+
+    public function price()
+    {
+        return SchoolSubplanParts::getPlanTotalCost($this->id);
     }
 
     public static function getForSchool($schoolId)
@@ -75,5 +83,10 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
         }
 
         return $res;
+    }
+
+    public static function getRecommendedPlansAfterTrial()
+    {
+        return self::getForCurrentSchool()->andWhere(['recommend_after_trial' => 1])->all();
     }
 }

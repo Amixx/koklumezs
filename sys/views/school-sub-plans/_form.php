@@ -56,6 +56,18 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
             <?= $form->field($model, 'max_pause_weeks')->textInput() ?>
             <?= $form->field($model, 'message')->textInput() ?>
             <?= $form->field($model, 'days_for_payment')->textInput() ?>
+            <?= $form->field($model, 'recommend_after_trial')->dropDownList(
+                [
+                    0 => \Yii::t('app', 'No'),
+                    1 => \Yii::t('app', 'Yes'),
+                ]
+            ) ?>
+            <?= $form->field($model, 'allow_single_payment')->dropDownList(
+                [
+                    0 => \Yii::t('app', 'No'),
+                    1 => \Yii::t('app', 'Yes'),
+                ]
+            ) ?>
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
             <?php if (isset($planFiles)) {

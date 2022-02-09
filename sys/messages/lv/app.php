@@ -688,5 +688,7 @@ return [
     'Payment was successful! Thank you!' => 'Maksājums veiksmīgs! Paldies!',
     'Unfortunately the payment was not successful' => 'Diemžēl maksājums neizdevās',
     'School email' => 'Skolas e-pasts',
-    'I will pay in one installment (10% discount)' => 'Maksāšu vienā maksājumā (10% atlaide)'
+    'I will pay in one installment (10% discount)' => 'Maksāšu vienā maksājumā (10% atlaide)',
+    'Should this plan be recommended to students after trial expiration' => 'Vai šo plānu rekomendēt skolēniem, kuriem beidzies izmēģinājuma periods',
+    'Allow to pay for the entire plan in one installment' => 'Atļaut samaksāt par visu plānu vienā maksājumā'
 ];

@@ -18,6 +18,7 @@ use app\models\SchoolTeacher;
 use app\models\Chat;
 use app\models\SchoolAfterEvaluationMessages;
 use app\models\SchoolStudent;
+use app\models\SchoolSubPlans;
 use app\models\SectionsVisible;
 use app\models\StartLaterCommitments;
 use app\models\Studentgoals;
@@ -117,7 +118,6 @@ class LekcijasController extends Controller
                     'videoThumb' => $videoThumb,
                     'sortByDifficulty' => $sortByDifficulty,
                     'title_filter' => $title_filter,
-
                 ]);
             }
         } else {
@@ -313,6 +313,15 @@ class LekcijasController extends Controller
 
     private function renderOverview($user, $models, $pages, $videoThumb, $isStudent = true)
     {
+        $get = Yii::$app->request->get();
+
+        $renderPlanSuggestions = isset($get['trial_expired']) && (int)$get['trial_expired'] === 1;
+
+        $planRecommendations = null;
+        if ($renderPlanSuggestions) {
+            $planRecommendations = SchoolSubPlans::getRecommendedPlansAfterTrial();
+        }
+
         $latestNewLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "new");
         $latestFavouriteLecturesIds = UserLectures::getLatestLessonsOfType($user->id, "favourite");
         $schoolStudent = SchoolStudent::getSchoolStudent($user->id);
@@ -391,6 +400,8 @@ class LekcijasController extends Controller
             'isActive' => $isActive,
             'teacherPortrait' => $teacherPortrait,
             'isStudent' => $isStudent,
+            'renderPlanSuggestions' => $renderPlanSuggestions,
+            'planRecommendations' => $planRecommendations,
         ]);
     }
 

@@ -41,6 +41,18 @@ $this->title = $model->name;
             'message',
             'days_for_payment',
             [
+                'attribute' => 'recommend_after_trial',
+                'value' => function ($dataProvider) {
+                    return Yii::t('app', $dataProvider->recommend_after_trial ?  'Yes' : 'No');
+                }
+            ],
+            [
+                'attribute' => 'allow_single_payment',
+                'value' => function ($dataProvider) {
+                    return Yii::t('app', $dataProvider->allow_single_payment ?  'Yes' : 'No');
+                }
+            ],
+            [
                 'attribute' => 'Monthly cost',
                 'label' => Yii::t('app',  'Monthly cost (with PVN)'),
                 'value' => $planTotalCost,
