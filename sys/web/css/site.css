@@ -1336,6 +1336,13 @@ div.has-experience.active, div.rent.active {
     border-radius: 8px;
     box-shadow: 8px 8px 8px #8089dd;
     position: relative;
+    flex: 0 0 calc(25% - 12px);
+}
+
+.PlanSuggestion__Payment {
+    list-style-type: none;
+    padding: 8px;
+    flex: 0 0 calc(75% - 12px);
 }
 
 .PlanSuggestion div:not(:last-child, :nth-child(4), :nth-child(5)) {
@@ -1371,4 +1378,8 @@ div.has-experience.active, div.rent.active {
     bottom: 16px;
     left: 50%;
     transform: translatex(-50%);
+}
+
+#payment-element {
+    margin: 32px 0;
 }

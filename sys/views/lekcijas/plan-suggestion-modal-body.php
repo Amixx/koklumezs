@@ -1,7 +1,7 @@
 <div class="text-center">
     <ul class="PlanSuggestion__Container">
         <?php foreach ($planRecommendations as $plan) { ?>
-            <li class="PlanSuggestion">
+            <li class="PlanSuggestion" data-plan-id="<?= $plan->id ?>">
                 <div class="PlanSuggestion__Header"><?= $plan->name ?></div>
                 <?php if ($plan->description) { ?>
                     <div class="PlanSuggestion__Description"><?= $plan->description ?></div>
@@ -18,5 +18,15 @@
                 <button class="btn btn-success PlanSuggestion__CheckoutButton">Izvēlēties</button>
             </li>
         <?php } ?>
+        <li class="PlanSuggestion__Payment" style="display: none">
+            <div>
+                <button class="btn btn-primary PlanSuggestion__CancelPayment">Izvēlēties citu plānu</button>
+            </div>
+            <div id="payment-element"></div>
+            <div class="PlanSuggestion__ButtonContainer" style="display: none">
+                <button class="btn btn-success PlanSuggestion__ConfirmPaymentButton">Apstiprināt maksājumu</button>
+            </div>
+        </li>
     </ul>
+
 </div>

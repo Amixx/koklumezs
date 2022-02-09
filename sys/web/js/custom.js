@@ -153,31 +153,112 @@ $(document).ready(function() {
 
 
 
+
+function createPaymentIntent(){
+    var secret = 'sk_test_51KHnfwH3bdDtJYNRBaeTBL8XB6X6w4hggXIXHONhVdYVxbuwYYBHC1qmmqLKueJ9mzsVqs5aj21K0hO5fLUzr9dS00L9ZT33Jc';
+    var bearer = "Bearer " + secret;
+
+    return fetch("https://api.stripe.com/v1/payment_intents", {
+        method: 'GET',
+        withCredentials: true,
+        credentials: 'include',
+        headers: {
+            'Authorization': bearer,
+            'Content-Type': 'application/json'
+        }
+    }).then(function(res){
+        return res.json();
+    });
+}
+
+
+
+function createPaymentElement(){
+    var publishableKey = 'pk_test_51KHnfwH3bdDtJYNRzrpYkI0Zmo85tq6pt5w8VRJIb6Rd4rj2ouKsipvwBk9pNL24FCk5djvugQ8GhyuVqR8zrOCc00TugtHaba';
+    var stripe = Stripe(publishableKey);
+    var $buttonContainer = $(".PlanSuggestion__ButtonContainer");
+
+    createPaymentIntent().then(function(res){
+        var paymentIntent = res.data[0];
+        var elements = stripe.elements({
+            clientSecret: paymentIntent.client_secret,
+            locale: window.userLanguage,
+        });
+
+        var paymentElement = elements.create('payment');
+        paymentElement.mount('#payment-element');
+
+        paymentElement.on('change', function(event) {
+            console.log(event);
+            if (event.complete) {
+                $buttonContainer.show();
+            } else {
+                $buttonContainer.hide();
+            }
+        });
+
+        // form.addEventListener('submit', async (event) => {
+        //     stripe.confirmPayment({
+        //         elements,
+        //         confirmParams: {
+        //             return_url: 'https://example.com',
+        //             payment_method_data: {
+        //                 billing_details: {
+        //                     name: 'Jenny Rosen',
+        //                     email: 'jenny.rosen@example.com',
+        //                 }
+        //             },
+        //     }}).then(function(result) {
+        //             if (result.error) {
+        //             // Inform the customer that there was an error.
+        //             }
+        //         });
+        //     });
+        });
+}
+
+
+
 function setupPayments(){
-    // var stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
-    // var elements = stripe.elements({
-    //     clientSecret: 'CLIENT_SECRET',
-    //     locale: window.userLanguage,
-    // });
-    // var paymentElement = elements.create('payment');
-    // form.addEventListener('submit', async (event) => {
-    //     stripe.confirmPayment({
-    //         elements,
-    //         confirmParams: {
-    //             return_url: 'https://example.com',
-    //             payment_method_data: {
-    //                 billing_details: {
-    //                     name: 'Jenny Rosen',
-    //                     email: 'jenny.rosen@example.com',
-    //                 }
-    //             },
-    //     }}).then(function(result) {
-    //             if (result.error) {
-    //             // Inform the customer that there was an error.
-    //             }
-    //         });
-    //     });
-    // paymentElement.mount('#payment-element')
+    
+
+    var $checkoutBtn = $(".PlanSuggestion__CheckoutButton");
+    var $checkoutContainer = $(".PlanSuggestion__Payment");
+    var $confirmPaymentBtn = $(".PlanSuggestion__ConfirmPaymentButton");
+    var planIdForPayment = null;
+    var paymentElementCreated = false;
+    
+    $checkoutBtn.on("click", function(){
+        planIdForPayment = $(this).closest(".PlanSuggestion").data("planId");
+        $(".PlanSuggestion").hide();
+        $(this).closest(".PlanSuggestion").show();
+        $checkoutContainer.show();
+        $(this).closest(".PlanSuggestion__CheckoutButton").hide();
+
+        if(!paymentElementCreated) {
+            paymentElementCreated = true;
+            createPaymentElement();
+        }
+    });
+
+    $(".PlanSuggestion__CancelPayment").on("click", function(){
+        $(".PlanSuggestion").show();
+        $(".PlanSuggestion__CheckoutButton").show();
+        $checkoutContainer.hide();
+        planIdForPayment = null;
+    })
+
+    $confirmPaymentBtn.on("click", function(){
+        console.log("maksājam!!!");
+    });
+
+
+
+
+
+    
+    
+    
 
     var $checkoutModal = $("#checkout-modal");
     var $paymentLinks = $(".payment-link");
