@@ -685,5 +685,6 @@ return [
     'School email' => 'Skolas e-pasts',
     'By assignment date' => 'Pēc piešķiršanas datuma',
     'Sorting of lessons' => 'Nodarbību kārtošana',
-    'Is fitness school' => 'Vai ir fitnesa skola'
+    'Is fitness school' => 'Vai ir fitnesa skola',
+    'First lesson' => 'Pirmā nodarbība',
 ];

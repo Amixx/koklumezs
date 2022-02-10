@@ -60,15 +60,15 @@ if (isset($type)) {
                 </div>
             <?php }
         } else { ?>
-            <?php foreach ($modelGroups as $modelGroup) { ?>
-                <?php foreach ($modelGroup as $model) {
-                    $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->lecture->file, $videoThumb);
-                ?>
-                    <div class="col-md-6 col-lg-3 text-center lecture-wrap">
-                        <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
-                        <?= $model->lecture->title ?>
-                    </div>
-                <?php } ?>
+            <?php foreach ($modelGroups as $date => $modelGroup) {
+                $firstLesson = $modelGroup[0];
+                $thumbStyle = ThumbnailHelper::getThumbnailStyle($firstLesson->lecture->file, $videoThumb);
+            ?>
+                <div class="col-md-6 col-lg-3 text-center lecture-wrap">
+                    <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $firstLesson->lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
+                    <p><?= $date ?></p>
+                    <p><?= Yii::t('app', 'First lesson') ?>: <?= $firstLesson->lecture->title ?></p>
+                </div>
             <?php } ?>
         <?php } ?>
     </div>
