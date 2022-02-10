@@ -2,11 +2,16 @@
 
 use yii\helpers\Html;
 
-if (isset($sortType) && ($sortType == 'desc')) {
-    $sortTypeLabel = 'From easiest to hardest';
-} else {
-    $sortTypeLabel = 'From hardest to easiest';
+if (isset($sortType)) {
+    if ($sortType == 0) {
+        $sortTypeLabel = 'From hardest to easiest';
+    } else if ($sortType == 1) {
+        $sortTypeLabel = 'From easiest to hardest';
+    } else {
+        $sortTypeLabel = 'By assignment date';
+    }
 }
+
 ?>
 
 <h3 class="text-center"><?= \Yii::t('app',  'New lessons') ?></h3>

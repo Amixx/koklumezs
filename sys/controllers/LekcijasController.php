@@ -70,19 +70,10 @@ class LekcijasController extends Controller
         $videoThumb = $userContext->getSchool()->video_thumbnail;
 
         if ($type) {
-            $sortType = Yii::$app->request->get('sortType');
-            if (!$sortType) $sortType = 0;
             $title_filter = Yii::$app->request->get('title_filter');
+            $sortingConfig = $this->getSortingConfig();
 
-            if ($sortType == 0) {
-                $orderBy = ['lectures.complexity' => SORT_DESC];
-            } else if ($sortType == 1) {
-                $orderBy = ['lectures.complexity' => SORT_ASC];
-            } else {
-                $orderBy = ['id' => SORT_DESC];
-            }
-
-            $userLessonsQuery = UserLectures::getLessonsOfType($user->id, $type, $orderBy);
+            $userLessonsQuery = UserLectures::getLessonsOfType($user->id, $type, $sortingConfig['orderBy']);
             $countQuery = clone $userLessonsQuery;
             $pages = new Pagination(['totalCount' => $countQuery->count()]);
 
@@ -105,7 +96,7 @@ class LekcijasController extends Controller
                 'pages' => $pages,
                 'userLectureEvaluations' => $userLectureEvaluations,
                 'videoThumb' => $videoThumb,
-                'sortType' => $sortType,
+                'sortType' => $sortingConfig['type'],
                 'title_filter' => $title_filter,
 
             ]);
@@ -128,19 +119,10 @@ class LekcijasController extends Controller
         $schoolId = $school->id;
         $videoThumb = $school->video_thumbnail;
 
-        $sortType = Yii::$app->request->get('sortType');
-        if (!$sortType) $sortType = 0;
-
-        if ($sortType == 0) {
-            $orderBy = ['lectures.complexity' => SORT_DESC];
-        } else if ($sortType == 1) {
-            $orderBy = ['lectures.complexity' => SORT_ASC];
-        } else {
-            $orderBy = ['id' => SORT_DESC];
-        }
+        $sortingConfig = $this->getSortingConfig();
 
         $force = Yii::$app->request->get('force');
-        $userLectures = $force ? [] : UserLectures::getLectures($userContext->id, $orderBy);
+        $userLectures = $force ? [] : UserLectures::getLectures($userContext->id, $sortingConfig['orderBy']);
         $modelsIds = $force ? [$id] : UserLectures::getUserLectures($userContext->id); //UserLectures::getSentUserLectures($userContext->id)
         $check = in_array($id, $modelsIds);
         $userEvaluatedLectures = $force ? [] : UserLectures::getEvaluatedLectures($userContext->id);
@@ -272,7 +254,7 @@ class LekcijasController extends Controller
                 'nextLessonId' => $nextLessonId,
                 'hasEvaluatedLesson' => $hasEvaluatedLesson,
                 'difficultyEvaluation' => $difficultyEvaluation,
-                'sortType' => $sortType,
+                'sortType' => $sortingConfig['type'],
                 'isRegisteredAndNewLesson' => $isRegisteredAndNewLesson,
                 'showChangeTaskButton' => $model->complexity > 5 && !$difficultyEvaluation,
             ]);
@@ -379,6 +361,25 @@ class LekcijasController extends Controller
         } else {
             return $this->redirect(Yii::$app->request->referrer);
         }
+    }
+
+    private function getSortingConfig()
+    {
+        $sortType = Yii::$app->request->get('sortType');
+        if (!$sortType) $sortType = 0;
+
+        if ($sortType == 0) {
+            $orderBy = ['lectures.complexity' => SORT_DESC];
+        } else if ($sortType == 1) {
+            $orderBy = ['lectures.complexity' => SORT_ASC];
+        } else {
+            $orderBy = ['id' => SORT_DESC];
+        }
+
+        return [
+            'type' => $sortType,
+            'orderBy' => $orderBy,
+        ];
     }
 
 

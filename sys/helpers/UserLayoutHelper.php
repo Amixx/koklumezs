@@ -144,8 +144,8 @@ class UserLayoutHelper extends LayoutHelper
                     'label' => Yii::t('app',  'Lessons'),
                     'active' =>  in_array(Yii::$app->controller->id, ['lekcijas']),
                     'items' => [
-                        ['label' => Yii::t('app',  'New lessons'), 'url' => ['/lekcijas?type=new&sortType=asc']],
-                        ['label' => Yii::t('app',  'Favourite lessons'), 'url' => ['/lekcijas?type=favourite&sortType=asc']]
+                        ['label' => Yii::t('app',  'New lessons'), 'url' => ['/lekcijas?type=new&sortType=1']],
+                        ['label' => Yii::t('app',  'Favourite lessons'), 'url' => ['/lekcijas?type=favourite&sortType=1']]
                     ],
                     'options' => ['class' => 'navbar-lessons-dropdown-toggle']
                 ],

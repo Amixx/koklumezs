@@ -16,9 +16,10 @@ function getUrl(url) {
 }
 
 $(document).ready(function() {
-
     $('#lessons-sorting-select').on('select2:select', function (e) {
-        console.log(e.params.data.id);
+        var href = new URL(window.location.href);
+        href.searchParams.set('sortType', e.params.data.id);
+        window.location.replace(href.toString());
     });
 
     if ($('select').length) {
