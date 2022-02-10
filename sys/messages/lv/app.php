@@ -683,4 +683,6 @@ return [
     'Automatic assignment message updated' => 'Automātiskā piešķiršanas ziņa atjauninināta',
     'Automatic assignment message deleted' => 'Automātiskā piešķiršanas ziņa dzēsta',
     'School email' => 'Skolas e-pasts',
+    'By assignment date' => 'Pēc piešķiršanas datuma',
+    'Sorting of lessons' => 'Nodarbību kārtošana'
 ];

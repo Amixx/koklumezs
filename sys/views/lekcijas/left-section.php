@@ -2,24 +2,24 @@
 
 use yii\helpers\Html;
 
-if (isset($sortByDifficulty) && ($sortByDifficulty == 'desc')) {
-    $sortByDifficultyLabel = 'From easiest to hardest';
+if (isset($sortType) && ($sortType == 'desc')) {
+    $sortTypeLabel = 'From easiest to hardest';
 } else {
-    $sortByDifficultyLabel = 'From hardest to easiest';
+    $sortTypeLabel = 'From hardest to easiest';
 }
 ?>
 
 <h3 class="text-center"><?= \Yii::t('app',  'New lessons') ?></h3>
 
-<?php if (!empty($userLectures)) { ?>
+<?php if (!empty($newLessons)) { ?>
     <?= Html::a(
-        \Yii::t('app', $sortByDifficultyLabel),
-        '?sortByDifficulty=' . $sortByDifficulty,
+        \Yii::t('app', $sortTypeLabel),
+        '?sortType=' . $sortType,
         ['class' => 'btn btn-gray sort-button', 'style' => 'padding: 4px; margin-left: 0; width: 100%;']
     ) ?>
 <?php } ?>
 <?= $this->render('lesson-list', [
-    'lessons' => $newLessons,
+    'userLessons' => $newLessons,
     'currentLessonEvaluated' => $currentLessonEvaluated,
 ]) ?>
 <?= Html::a(

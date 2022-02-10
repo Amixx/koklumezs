@@ -16,6 +16,11 @@ function getUrl(url) {
 }
 
 $(document).ready(function() {
+
+    $('#lessons-sorting-select').on('select2:select', function (e) {
+        console.log(e.params.data.id);
+    });
+
     if ($('select').length) {
         $('select').select2();
         $('select.tags').select2({
