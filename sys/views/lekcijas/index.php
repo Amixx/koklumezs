@@ -50,14 +50,26 @@ if (isset($type)) {
             <div class="col-md-6">
                 <h3><?= \Yii::t('app',  'No lessons') ?>!</h3>
             </div>
-        <?php } ?>
-        <?php foreach ($models as $model) {
-            $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->lecture->file, $videoThumb);
-        ?>
-            <div class="col-md-6 col-lg-3 text-center lecture-wrap">
-                <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
-                <?= $model->lecture->title ?>
-            </div>
+        <?php } else if (!$modelGroups) { ?>
+            <?php foreach ($models as $model) {
+                $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->lecture->file, $videoThumb);
+            ?>
+                <div class="col-md-6 col-lg-3 text-center lecture-wrap">
+                    <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
+                    <?= $model->lecture->title ?>
+                </div>
+            <?php }
+        } else { ?>
+            <?php foreach ($modelGroups as $modelGroup) { ?>
+                <?php foreach ($modelGroup as $model) {
+                    $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->lecture->file, $videoThumb);
+                ?>
+                    <div class="col-md-6 col-lg-3 text-center lecture-wrap">
+                        <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
+                        <?= $model->lecture->title ?>
+                    </div>
+                <?php } ?>
+            <?php } ?>
         <?php } ?>
     </div>
     <?php

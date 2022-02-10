@@ -684,5 +684,6 @@ return [
     'Automatic assignment message deleted' => 'Automātiskā piešķiršanas ziņa dzēsta',
     'School email' => 'Skolas e-pasts',
     'By assignment date' => 'Pēc piešķiršanas datuma',
-    'Sorting of lessons' => 'Nodarbību kārtošana'
+    'Sorting of lessons' => 'Nodarbību kārtošana',
+    'Is fitness school' => 'Vai ir fitnesa skola'
 ];

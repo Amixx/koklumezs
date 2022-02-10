@@ -66,8 +66,9 @@ class LekcijasController extends Controller
         $models = [];
         $pages = [];
         $user = Yii::$app->user->identity;
-
-        $videoThumb = $userContext->getSchool()->video_thumbnail;
+        $school = $user->getSchool();
+        $isFitnessSchool = $school->is_fitness_school;
+        $videoThumb = $school->video_thumbnail;
 
         if ($type) {
             $title_filter = Yii::$app->request->get('title_filter');
@@ -90,8 +91,19 @@ class LekcijasController extends Controller
                 });
             }
 
+            $modelGroups = null;
+
+            if ($isFitnessSchool) {
+                $modelGroups = [];
+                foreach ($models as $model) {
+                    $modelGroupDate = date("Y-m-d", strtotime($model->created));
+                    $modelGroups[$modelGroupDate][] = $model;
+                }
+            }
+
             return $this->render('index', [
                 'models' => $models,
+                'modelGroups' => $modelGroups,
                 'type' => $type,
                 'pages' => $pages,
                 'userLectureEvaluations' => $userLectureEvaluations,

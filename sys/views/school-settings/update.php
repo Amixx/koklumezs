@@ -50,6 +50,13 @@ $this->title = \Yii::t('app',  'Edit school settings') . ': ';
         <?= $form->field($model, 'registration_image')->widget(InputFile::class, $fileInputSettings); ?>
         <?= $form->field($model, 'teacher_portrait')->widget(InputFile::class, $fileInputSettings); ?>
         <?= $form->field($model, 'rent_contract')->widget(InputFile::class, $docInputSettings); ?>
+        <?= $form->field($model, 'is_fitness_school')->dropDownList([
+            0 => Yii::t('app',  'No'),
+            1 => Yii::t('app',  'Yes')
+        ], [
+            'prompt' => '',
+            'value' => $model['is_fitness_school'] ? 1 : 0
+        ]) ?>
 
         <?= $form->field($model, 'rent_schoolsubplan_id')
             ->dropDownList(
