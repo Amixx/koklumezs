@@ -385,7 +385,7 @@ class LekcijasController extends Controller
         } else if ($sortType == 1) {
             $orderBy = ['lectures.complexity' => SORT_ASC];
         } else {
-            $orderBy = ['id' => SORT_DESC];
+            $orderBy = ['id' => SORT_ASC];
         }
 
         return [
