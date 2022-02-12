@@ -167,7 +167,7 @@ class UserLectures extends \yii\db\ActiveRecord
 
     private static function getFilterRelatedLecturesCondition($userId, $conditionText)
     {
-        return "lecture_id NOT IN (SELECT relatedlectures.related_id FROM relatedlectures WHERE relatedlectures.lecture_id IN (SELECT lecture_id FROM relatedlectures WHERE user_id = $userId AND sent = true AND $conditionText))";
+        return "lecture_id NOT IN (SELECT relatedlectures.related_id FROM relatedlectures WHERE relatedlectures.lecture_id IN (SELECT lecture_id FROM userlectures WHERE user_id = $userId AND sent = true AND $conditionText))";
     }
 
     public static function getLessonsOfType($id, $type, $orderBy)
