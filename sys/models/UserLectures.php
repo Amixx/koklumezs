@@ -256,29 +256,51 @@ class UserLectures extends \yii\db\ActiveRecord
     }
 
 
-    public static function getNextLessonId($studentId, $currentLectureId, $type)
+    public static function getNextLessonId($studentId, $currentUserLecture, $type)
     {
+        $userContext = Yii::$app->user->identity;
+        $isFitnessSchool = $userContext->getSchool()->is_fitness_school;
         $userLectures = self::getLessonsOfType($studentId, $type, ['id' => SORT_DESC])->all();
         if (empty($userLectures)) {
             return null;
         }
 
+        if (!$isFitnessSchool) {
+            $nextLessonSource = $userLectures;
+        } else {
+            $nextLessonSource = [];
+            $matchDate = date("Y-m-d", strtotime($currentUserLecture["created"]));
+
+            foreach ($userLectures as $model) {
+                $modelDate = date("Y-m-d", strtotime($model["created"]));
+                if ($modelDate == $matchDate) $nextLessonSource[] = $model;
+            }
+
+            usort($nextLessonSource, function ($a, $b) {
+                return $a->id > $b->id;
+            });
+        }
+
         $takeNext = false;
-        foreach ($userLectures as $userLecture) {
+        foreach ($nextLessonSource as $userLecture) {
             if ($takeNext) {
                 return $userLecture['lecture_id'];
             }
 
-            if ($userLecture["lecture_id"] == $currentLectureId) {
+            if ($userLecture["lecture_id"] == $currentUserLecture["lecture_id"]) {
                 $takeNext = true;
             }
         }
 
-        if (
-            count($userLectures) > 1 && $takeNext
-            || $userLectures[0]['lecture_id'] !== $currentLectureId
-        ) {
-            return $userLectures[0]['lecture_id'];
+        if (!$isFitnessSchool) {
+            if (
+                count($nextLessonSource) > 1 && $takeNext
+                || $nextLessonSource[0]['lecture_id'] !== $currentUserLecture["lecture_id"]
+            ) {
+                return $nextLessonSource[0]['lecture_id'];
+            }
+        } else {
+            return null;
         }
     }
 

@@ -99,6 +99,12 @@ class LekcijasController extends Controller
                     $modelGroupDate = date("Y-m-d", strtotime($model->created));
                     $modelGroups[$modelGroupDate][] = $model;
                 }
+
+                foreach ($modelGroups as &$modelGroup) {
+                    usort($modelGroup, function ($a, $b) {
+                        return $a->id > $b->id;
+                    });
+                }
             }
 
             return $this->render('index', [
@@ -144,7 +150,7 @@ class LekcijasController extends Controller
 
         if ($userLecture) {
             $type = $userLecture->is_favourite ? "favourite" : "new";
-            $nextLessonId = UserLectures::getNextLessonId($userContext->id, $id, $type);
+            $nextLessonId = UserLectures::getNextLessonId($userContext->id, $userLecture, $type);
         }
 
         $difficultyEvaluation = $force ? null : Userlectureevaluations::getLecturedifficultyEvaluation($userContext->id, $id);
