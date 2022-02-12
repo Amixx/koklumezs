@@ -12,8 +12,6 @@ use app\helpers\EmailSender;
 
 class UserLectures extends \yii\db\ActiveRecord
 {
-    const STILL_LEARNING_TRANSITION_DATE = "2021-03-13 00:00:00";
-
     public static function tableName()
     {
         return 'userlectures';
@@ -88,16 +86,6 @@ class UserLectures extends \yii\db\ActiveRecord
         return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
     }
 
-    //izgūst tās nodarbības, kas līdz šim (3/12/2021) bijušas nenovērtētas un pie 'vēl mācos' - tām turpmāk jābūt arhīvā
-    public static function getUnevaluatedStillLearning($id)
-    {
-        $results = self::find()
-            ->where(['user_id' => $id, 'evaluated' => 0, 'still_learning' => 1])
-            ->andWhere(['<', 'created', self::STILL_LEARNING_TRANSITION_DATE])
-            ->asArray()->all();
-        return $results ? ArrayHelper::map($results, 'id', 'lecture_id') : [];
-    }
-
     public static function getEvaluatedLectures($id): array
     {
         $results = self::find()->where(['user_id' => $id, 'evaluated' => 1])->asArray()->all();
@@ -163,34 +151,13 @@ class UserLectures extends \yii\db\ActiveRecord
     private static function getLessonsOfTypeQuery($userId, $type)
     {
         $query = self::find()->where(['user_id' => $userId, 'sent' => true]);
-        $oldStillLearningCondition = ['<', 'userlectures.created', self::STILL_LEARNING_TRANSITION_DATE];
         $typeCondition = null;
 
         if ($type == "new") {
-            $typeCondition = [
-                'OR',
-                ['evaluated' => false],
-                [
-                    'NOT',
-                    [
-                        'AND',
-                        ['opened' => true],
-                        $oldStillLearningCondition,
-                    ]
-                ],
-            ];
-            $query = $query->andWhere(self::getFilterRelatedLecturesCondition($userId, "evaluated = true"));
+            $typeCondition = ['evaluated' => false];
+            $query = $query->andWhere(self::getFilterRelatedLecturesCondition($userId, "evaluated = false"));
         } else if ($type == "favourite") {
-            $typeCondition = [
-                'OR',
-                ['is_favourite' => true],
-                [
-                    'AND',
-                    ['evaluated' => TRUE],
-                    ['still_learning' => TRUE],
-                    $oldStillLearningCondition,
-                ]
-            ];
+            $typeCondition = ['is_favourite' => true];
             $query = $query->andWhere(self::getFilterRelatedLecturesCondition($userId, "is_favourite = true"));
         }
 

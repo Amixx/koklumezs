@@ -41,8 +41,7 @@ class ArchiveController extends Controller
         $archive = [];
         $userContext = Yii::$app->user->identity;
         $evaluatedIds = UserLectures::getEvaluatedUserLectures($userContext->id);
-        $unevaluatedStillLearning = UserLectures::getUnevaluatedStillLearning($userContext->id);
-        $archiveLessonIds = array_merge($evaluatedIds, $unevaluatedStillLearning);
+        $archiveLessonIds = $evaluatedIds;
 
         if ($archiveLessonIds) {
             $archive_filter = Yii::$app->request->get('archive_filter');
