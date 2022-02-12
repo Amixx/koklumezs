@@ -20,6 +20,12 @@ function getFullUrl(url){
 }
 
 $(document).ready(function() {
+    $('#lessons-sorting-select').on('select2:select', function (e) {
+        var href = new URL(window.location.href);
+        href.searchParams.set('sortType', e.params.data.id);
+        window.location.replace(href.toString());
+    });
+
     if ($('select').length) {
         $('select').select2();
         $('select.tags').select2({

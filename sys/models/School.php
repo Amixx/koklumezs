@@ -34,6 +34,7 @@ class School extends \yii\db\ActiveRecord
                 'rent_contract',
             ], 'string'],
             [['rent_schoolsubplan_id'], 'number'],
+            [['is_fitness_school'], 'boolean'],
             [['created'], 'safe'],
         ];
     }
@@ -59,6 +60,7 @@ class School extends \yii\db\ActiveRecord
             'teacher_portrait' => \Yii::t('app',  'A portrait of the teacher'),
             'rent_text' => \Yii::t('app',  'Text to show in the rent page'),
             'rent_contract' => \Yii::t('app',  'Rent contract'),
+            'is_fitness_school' => \Yii::t('app',  'Is fitness school'),
         ];
     }
 
@@ -98,6 +100,7 @@ class School extends \yii\db\ActiveRecord
             \Yii::t('app', 'Image in the first page of registration') => $school->registration_image,
             \Yii::t('app', 'A portrait of the teacher') => $school->teacher_portrait,
             \Yii::t('app', 'Text to show in the rent page') => $school->rent_text,
+            \Yii::t('app', 'Is fitness school') => Yii::t('app', $school->is_fitness_school ? 'Yes' : 'No'),
         ];
     }
 

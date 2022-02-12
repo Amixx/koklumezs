@@ -7,7 +7,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $sectionClass = "LectureOverview__Section";
-if (empty($lectures) && $teacherPortrait) {
+if (empty($userLessons) && $teacherPortrait) {
     $sectionClass .= " LectureOverview__Section--empty-with-portrait";
 }
 
@@ -16,7 +16,7 @@ if (empty($lectures) && $teacherPortrait) {
 <div class="col-md-6 LectureOverview__Wrap">
     <div class="<?= $sectionClass ?>">
         <h4 class="text-center"><?= \Yii::t('app', $divTitle) ?></h4>
-        <?php if (empty($Lectures)) {
+        <?php if (empty($userLessons)) {
             $userId = Yii::$app->user->identity->id; ?>
             <h4 class="LectureOverview__EmptyText">
                 <?= \Yii::t('app', $emptyText) ?>
@@ -39,18 +39,18 @@ if (empty($lectures) && $teacherPortrait) {
             <?php } ?>
         <?php } else { ?>
             <div class="row LectureOverview__Content">
-                <?php foreach ($Lectures as $lecture) {
-                    $lecturefiles = Lecturesfiles::getLectureFiles($lecture->id);
-                    $likesCount = Lectures::getLikesCount($lecture->id);
-                    $thumbStyle = ThumbnailHelper::getThumbnailStyle($lecture->file, $videoThumb);
+                <?php foreach ($userLessons as $userLesson) {
+                    $lecturefiles = Lecturesfiles::getLectureFiles($userLesson->lecture->id);
+                    $likesCount = Lectures::getLikesCount($userLesson->lecture->id);
+                    $thumbStyle = ThumbnailHelper::getThumbnailStyle($userLesson->lecture->file, $videoThumb);
                 ?>
                     <div class="col-xs-6 col-lg-3 text-center lecture-wrap">
-                        <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
-                        <span class="lecture-title"><?= $lecture->title ?> </span>
+                        <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $userLesson->lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
+                        <span class="lecture-title"><?= $userLesson->lecture->title ?> </span>
                         <?php if ($divTitle === 'New lessons' && $isStudent) { ?>
-                            <?php $lectureStatus = Lectures::getLectureStatus($lecture->id); ?>
-                            <span class="lecture-status <?= $lectureStatus['class'] ?>">
-                                <?= \Yii::t('app', $lectureStatus['text']); ?>
+                            <?php $userLessonstatus = Lectures::getLectureStatus($userLesson->lecture->id); ?>
+                            <span class="lecture-status <?= $userLessonstatus['class'] ?>">
+                                <?= \Yii::t('app', $userLessonstatus['text']); ?>
                             </span>
                         <?php } ?>
                         <?php if ($likesCount) { ?>

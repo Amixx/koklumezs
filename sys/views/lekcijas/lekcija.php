@@ -13,10 +13,9 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
         <div class="col-md-2 lesson-column-outer">
             <div class="lesson-column wrap-overlay">
                 <?= $this->render("left-section", [
-                    'userLectures' => $userLectures,
                     'newLessons' => $newLessons,
                     'favouriteLessons' => $favouriteLessons,
-                    'sortByDifficulty' => $sortByDifficulty,
+                    'sortType' => $sortType,
                     'currentLessonEvaluated' => $uLecture && $uLecture->evaluated,
                 ]) ?>
             </div>
