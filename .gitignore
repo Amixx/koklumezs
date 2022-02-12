@@ -14,3 +14,4 @@ sys/config/db.php
 sys/web/sent-emails/*
 sys/composer.lock
 db_dump
+sys/config/secrets.php

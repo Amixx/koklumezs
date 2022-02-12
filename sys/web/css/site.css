@@ -1380,6 +1380,18 @@ div.has-experience.active, div.rent.active {
     transform: translatex(-50%);
 }
 
+.PlanSuggestion__ConfirmPaymentButton {
+    margin-top: 32px;
+}
+
 #payment-element {
-    margin: 32px 0;
+    margin-top: 32px;
+}
+
+#payment-error-message {
+    font-size: 20px;
+}
+
+#payment-error-code {
+    font-size: 11px;
 }

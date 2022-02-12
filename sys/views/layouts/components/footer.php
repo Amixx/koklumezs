@@ -7,6 +7,9 @@
 <script src="https://cdn.plyr.io/3.6.8/plyr.polyfilled.js"></script>
 <script src="https://pay.fondy.eu/static_common/v1/checkout/ipsp.js"></script>
 <script>
-    window.userLanguage = '<?= Yii::$app->language ?>'
+    window.userLanguage = '<?= Yii::$app->language ?>';
+    window.stripeConfig = {
+        pk: '<?= Yii::$app->params['stripe']['pk'] ?>'
+    }
 </script>
 <script src="https://js.stripe.com/v3/"></script>

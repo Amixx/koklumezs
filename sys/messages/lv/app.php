@@ -695,4 +695,12 @@ return [
     'Sorting of lessons' => 'Nodarbību kārtošana',
     'Is fitness school' => 'Vai ir fitnesa skola',
     'First lesson' => 'Pirmā nodarbība',
+    'An error was encountered while processing the payment' => 'Apstrādājot maksājumu, radās kļūda',
+    'Error code' => 'Kļūdas kods',
+    'Try again' => 'Mēģināt vēlreiz',
+    'Confirm payment' => 'Apstiprināt maksājumu',
+    'Choose a different plan' => 'Izvēlēties citu plānu',
+    'Choose' => 'Izvēlēties',
+    'Monthly cost (euro)' => 'Mēneša maksa (eiro)',
+    'Save up to {0} euro a year' => 'Ietaupi līdz {0} eiro gadā',
 ];

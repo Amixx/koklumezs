@@ -110,11 +110,9 @@ class LekcijasController extends Controller
                 return $this->render('index', [
                     'models' => $models,
                     'type' => $type,
-                    'opened' => $opened,
                     'pages' => $pages,
                     'userLectureEvaluations' => $userLectureEvaluations,
                     'videoThumb' => $videoThumb,
-                    'sortByDifficulty' => $sortByDifficulty,
                     'title_filter' => $title_filter,
                 ]);
             }
@@ -316,6 +314,11 @@ class LekcijasController extends Controller
         $get = Yii::$app->request->get();
 
         $renderPlanSuggestions = isset($get['trial_expired']) && (int)$get['trial_expired'] === 1;
+        $paymentSuccessful = isset($get['payment_success']) && (int)$get['payment_success'] === 1;
+
+        if ($paymentSuccessful) {
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Payment was successful! Thank you!'));
+        }
 
         $planRecommendations = null;
         if ($renderPlanSuggestions) {

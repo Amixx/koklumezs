@@ -16,7 +16,8 @@ function getUrl(url) {
 }
 
 function getFullUrl(url){
-    return window.location.host + getUrl(url);
+    var protocol = IS_LOCAL ? "http" : "https";
+    return protocol + "://" + window.location.host + getUrl(url);
 }
 
 $(document).ready(function() {
@@ -160,105 +161,87 @@ $(document).ready(function() {
 
 
 
-function createPaymentIntent(){
-    var secret = 'sk_test_51KHnfwH3bdDtJYNRBaeTBL8XB6X6w4hggXIXHONhVdYVxbuwYYBHC1qmmqLKueJ9mzsVqs5aj21K0hO5fLUzr9dS00L9ZT33Jc';
-    var bearer = "Bearer " + secret;
-
-    return fetch("https://api.stripe.com/v1/payment_intents", {
-        method: 'GET',
-        withCredentials: true,
-        credentials: 'include',
-        headers: {
-            'Authorization': bearer,
-            'Content-Type': 'application/json'
+function createPaymentIntent(planId, allAtOnce, callback){
+    $.ajax({
+        url: getUrl("/payment/generate-payment-intent"),
+        type: "POST",
+        data: { plan_id: planId, single_payment: allAtOnce },
+        success: function(res){
+            callback(res);
         }
-    }).then(function(res){
-        return res.json();
     });
 }
 
 
 
-function createPaymentElement(){
-    var publishableKey = 'pk_test_51KHnfwH3bdDtJYNRzrpYkI0Zmo85tq6pt5w8VRJIb6Rd4rj2ouKsipvwBk9pNL24FCk5djvugQ8GhyuVqR8zrOCc00TugtHaba';
-    var stripe = Stripe(publishableKey);
-    var $buttonContainer = $(".PlanSuggestion__ButtonContainer");
 
-    createPaymentIntent().then(function(res){
-        var paymentIntent = res.data[0];
-        var elements = stripe.elements({
-            clientSecret: paymentIntent.client_secret,
-            locale: window.userLanguage,
-        });
-
-        var paymentElement = elements.create('payment');
-        paymentElement.mount('#payment-element');
-
-        paymentElement.on('change', function(event) {
-            console.log(event);
-            if (event.complete) {
-                $buttonContainer.show();
-            } else {
-                $buttonContainer.hide();
-            }
-        });
-
-        // form.addEventListener('submit', async (event) => {
-        //     stripe.confirmPayment({
-        //         elements,
-        //         confirmParams: {
-        //             return_url: 'https://example.com',
-        //             payment_method_data: {
-        //                 billing_details: {
-        //                     name: 'Jenny Rosen',
-        //                     email: 'jenny.rosen@example.com',
-        //                 }
-        //             },
-        //     }}).then(function(result) {
-        //             if (result.error) {
-        //             // Inform the customer that there was an error.
-        //             }
-        //         });
-        //     });
-        });
-}
 
 
 
 function setupPayments(){
-    
+    var elements = null;
+    var paymentElement = null;
+    var stripe = null;
 
     var $checkoutBtn = $(".PlanSuggestion__CheckoutButton");
     var $checkoutContainer = $(".PlanSuggestion__Payment");
     var $confirmPaymentBtn = $(".PlanSuggestion__ConfirmPaymentButton");
-    var planIdForPayment = null;
-    var paymentElementCreated = false;
+    var $paymentSpinner = $("#payment-spinner");
+    var $cancelBtn = $(".PlanSuggestion__CancelPayment");
     
     $checkoutBtn.on("click", function(){
-        planIdForPayment = $(this).closest(".PlanSuggestion").data("planId");
+        $paymentSpinner.show();
+
+        var $planSuggestion = $(this).closest(".PlanSuggestion");
+        var planIdForPayment = $planSuggestion.data("planId");
+        var $allAtOnceCheckbox = $planSuggestion.find("input[name='payment_all_at_once']");
+        var allAtOnce = $allAtOnceCheckbox.length > 0 && $allAtOnceCheckbox.prop("checked");
+        
+        createPaymentElement(planIdForPayment, allAtOnce, function(els, el){
+            elements = els;
+            paymentElement = el;
+        });
+
         $(".PlanSuggestion").hide();
         $(this).closest(".PlanSuggestion").show();
         $checkoutContainer.show();
         $(this).closest(".PlanSuggestion__CheckoutButton").hide();
-
-        if(!paymentElementCreated) {
-            paymentElementCreated = true;
-            createPaymentElement();
-        }
+        $allAtOnceCheckbox.prop('disabled', true);
     });
 
-    $(".PlanSuggestion__CancelPayment").on("click", function(){
+    $cancelBtn.on("click", function(){
         $(".PlanSuggestion").show();
         $(".PlanSuggestion__CheckoutButton").show();
         $checkoutContainer.hide();
-        planIdForPayment = null;
-    })
-
-    $confirmPaymentBtn.on("click", function(){
-        console.log("maksājam!!!");
+        $(".PlanSuggestion input").prop('disabled', false);
+        paymentElement.destroy();
+        $cancelBtn.hide();
     });
 
+    $confirmPaymentBtn.on("click", function(){
+        if (!elements) return;
+        $paymentSpinner.show();
+        $(".PlanSuggestion__PaymentInner").hide();
 
+        stripe.confirmPayment({
+            elements,
+            confirmParams: {
+                return_url: getFullUrl("/lekcijas?payment_success=1"),
+            },
+            }).then(function(result) {
+                if (result.error) {
+                    $paymentSpinner.hide();
+                    $("#payment-error").show();
+                    $("#payment-error-message").text(result.error.message);
+                    $("#payment-error-code").append(result.error.code);
+                }
+            });
+    });
+
+    $(".PlanSuggestion__RetryPaymentButton").on('click', function(){
+        $("#payment-error").hide();
+        $(".PlanSuggestion__PaymentInner").show();
+    });
 
 
 
@@ -283,6 +266,37 @@ function setupPayments(){
             checkout(invoice);
         });
     });
+
+    function createPaymentElement(planId, allAtOnce, callback){
+        stripe = Stripe(window.stripeConfig.pk);
+        var $buttonContainer = $(".PlanSuggestion__ButtonContainer");
+
+        return createPaymentIntent(planId, allAtOnce, function(res){
+            var paymentIntent = JSON.parse(res);
+            var elements = stripe.elements({
+                clientSecret: paymentIntent.client_secret,
+                locale: window.userLanguage,
+            });
+
+            var paymentElement = elements.create('payment');
+            paymentElement.mount('#payment-element');
+            paymentElement.on('ready', function(){
+                $paymentSpinner.hide();
+                $cancelBtn.show();
+                paymentElement.focus();
+            });
+
+            paymentElement.on('change', function(event) {
+                if (event.complete) {
+                    $buttonContainer.show();
+                } else {
+                    $buttonContainer.hide();
+                }
+            });
+
+            callback(elements, paymentElement);
+        });
+    }
 
 
     function checkout(invoice){

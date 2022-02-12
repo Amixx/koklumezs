@@ -6,6 +6,7 @@ use Yii;
 use app\models\Users;
 use app\models\Difficulties;
 use app\models\School;
+use app\models\SchoolSubPlans;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\data\ActiveDataProvider;
@@ -31,7 +32,7 @@ class PaymentController extends Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'delete' => ['POST'],
+                    'generatePaymentIntent' => ['POST'],
                 ],
             ],
         ];
@@ -40,5 +41,23 @@ class PaymentController extends Controller
     public function actionSuccess()
     {
         return $this->render('index', []);
+    }
+
+    public function actionGeneratePaymentIntent()
+    {
+        $secretKey = Yii::$app->params['stripe']['sk'];
+
+        $post = Yii::$app->request->post();
+        $subPlan = SchoolSubPlans::findOne($post['plan_id']);
+        $priceInCents = $subPlan->price() * 100;
+
+        $stripe = new \Stripe\StripeClient($secretKey);
+        $paymentIntent = $stripe->paymentIntents->create([
+            'amount' => $priceInCents,
+            'currency' => 'eur',
+            // 'payment_method_types' => ['card'],
+        ]);
+
+        return json_encode($paymentIntent);
     }
 }

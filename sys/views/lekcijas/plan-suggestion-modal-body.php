@@ -6,8 +6,8 @@
                 <?php if ($plan->description) { ?>
                     <div class="PlanSuggestion__Description"><?= $plan->description ?></div>
                 <?php } ?>
-                <div class="PlanSuggestion__Price">Mēneša maksa (eiro): <?= $plan->price() ?></div>
-                <div class="PlanSuggestion__Savings">Ietaupi līdz: 92 eiro gadā</div>
+                <div class="PlanSuggestion__Price"><?= Yii::t('app', 'Monthly cost (euro)') ?>: <?= $plan->price() ?></div>
+                <div class="PlanSuggestion__Savings"><?= Yii::t('app', 'Save up to {0} euro a year', 92) ?></div>
                 <?php if ($plan->allow_single_payment) { ?>
                     <div class="form-group PlanSuggestion__PaymentCheckbox">
                         <label class="control-label">
@@ -15,16 +15,32 @@
                         </label>
                     </div>
                 <?php } ?>
-                <button class="btn btn-success PlanSuggestion__CheckoutButton">Izvēlēties</button>
+                <button class="btn btn-success PlanSuggestion__CheckoutButton"><?= Yii::t('app', 'Choose') ?></button>
             </li>
         <?php } ?>
         <li class="PlanSuggestion__Payment" style="display: none">
-            <div>
-                <button class="btn btn-primary PlanSuggestion__CancelPayment">Izvēlēties citu plānu</button>
+            <div class="lds-roller" id="payment-spinner" style="display: none">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
             </div>
-            <div id="payment-element"></div>
-            <div class="PlanSuggestion__ButtonContainer" style="display: none">
-                <button class="btn btn-success PlanSuggestion__ConfirmPaymentButton">Apstiprināt maksājumu</button>
+            <div class="PlanSuggestion__PaymentInner">
+                <button class="btn btn-primary PlanSuggestion__CancelPayment" style="display:none"><?= Yii::t('app', 'Choose a different plan') ?></button>
+                <div id="payment-element"></div>
+                <div class="PlanSuggestion__ButtonContainer" style="display: none">
+                    <button class="btn btn-success PlanSuggestion__ConfirmPaymentButton"><?= Yii::t('app', 'Confirm payment') ?></button>
+                </div>
+            </div>
+            <div id="payment-error" style="display:none">
+                <h2><?= Yii::t('app', 'An error was encountered while processing the payment') ?></h2>
+                <p id="payment-error-message" class="text-danger"></p>
+                <p id="payment-error-code" class="text-muted"><?= Yii::t('app', 'Error code') ?>: </p>
+                <button class="btn btn-primary PlanSuggestion__RetryPaymentButton"><?= Yii::t('app', 'Try again') ?></button>
             </div>
         </li>
     </ul>
