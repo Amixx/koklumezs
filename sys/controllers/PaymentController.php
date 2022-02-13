@@ -7,6 +7,7 @@ use app\models\Users;
 use app\models\Difficulties;
 use app\models\School;
 use app\models\SchoolSubPlans;
+use app\models\SentInvoices;
 use app\models\StudentSubPlans;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -34,6 +35,7 @@ class PaymentController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'generatePaymentIntent' => ['POST'],
+                    'prepareInvoicePayment' => ['POST']
                 ],
             ],
         ];
@@ -68,7 +70,6 @@ class PaymentController extends Controller
 
     public function actionGeneratePaymentIntent()
     {
-        $secretKey = Yii::$app->params['stripe']['sk'];
 
         $post = Yii::$app->request->post();
         $subPlan = SchoolSubPlans::findOne($post['plan_id']);
@@ -80,13 +81,28 @@ class PaymentController extends Controller
             ? round($monthlyPriceInCents * $subPlan['months'] * (1 - $allAtOnceDiscount))
             : $monthlyPriceInCents;
 
+        return json_encode($this->generatePaymentIntent($totalPrice));
+    }
+
+    public function actionPrepareInvoicePayment()
+    {
+        $post = Yii::$app->request->post();
+        $invoice = SentInvoices::findOne($post['invoice_id']);
+        $priceInCents = $invoice['plan_price'] * 100;
+
+        return json_encode($this->generatePaymentIntent($priceInCents));
+    }
+
+    private function generatePaymentIntent($price)
+    {
+        $secretKey = Yii::$app->params['stripe']['sk'];
         $stripe = new \Stripe\StripeClient($secretKey);
         $paymentIntent = $stripe->paymentIntents->create([
-            'amount' => $totalPrice,
+            'amount' => $price,
             'currency' => 'eur',
             // 'payment_method_types' => ['card'],
         ]);
 
-        return json_encode($paymentIntent);
+        return $paymentIntent;
     }
 }

@@ -185,7 +185,8 @@ function setupPayments(){
 
     var $checkoutBtn = $(".PlanSuggestion__CheckoutButton");
     var $checkoutContainer = $(".PlanSuggestion__Payment");
-    var $confirmPaymentBtn = $(".PlanSuggestion__ConfirmPaymentButton");
+    var $confirmPlanPurchaseBtn = $(".PlanSuggestion__ConfirmPaymentButton");
+    var $confirmInvoicePaymentBtn = $(".ConfirmInvoicePayment");
     var $paymentSpinner = $("#payment-spinner");
     var $cancelBtn = $(".PlanSuggestion__CancelPayment");
     
@@ -218,7 +219,7 @@ function setupPayments(){
         $cancelBtn.hide();
     });
 
-    $confirmPaymentBtn.on("click", function(){
+    $confirmPlanPurchaseBtn.on("click", function(){
         if (!elements) return;
         $paymentSpinner.show();
         $(".PlanSuggestion__PaymentInner").hide();
@@ -227,11 +228,26 @@ function setupPayments(){
         var planIdForPayment = $planSuggestion.data("planId");
         var $allAtOnceCheckbox = $planSuggestion.find("input[name='payment_all_at_once']");
         var allAtOnce = $allAtOnceCheckbox.length > 0 && $allAtOnceCheckbox.prop("checked");
+        var returnUrl = "/payment/success?planId=" + planIdForPayment + "&allAtOnce=" + allAtOnce;
+
+        handleConfirmPaymentClick(returnUrl);
+    });
+
+    $confirmInvoicePaymentBtn.on('click', function(){
+        var returnUrl = "/sent-invoices/handle-payment-success?invoice_id=" + $(this).data().invoiceId;
+
+        handleConfirmPaymentClick(returnUrl);
+    });
+    
+    function handleConfirmPaymentClick(returnUrl){
+        if (!elements) return;
+        $paymentSpinner.show();
+        $(".PlanSuggestion__PaymentInner").hide();
 
         stripe.confirmPayment({
             elements,
             confirmParams: {
-                return_url: getFullUrl("/payment/success?planId=" + planIdForPayment + "&allAtOnce=" + allAtOnce),
+                return_url: getFullUrl(returnUrl),
             },
             }).then(function(result) {
                 if (result.error) {
@@ -241,7 +257,7 @@ function setupPayments(){
                     $("#payment-error-code").append(result.error.code);
                 }
             });
-    });
+    }
 
     $(".PlanSuggestion__RetryPaymentButton").on('click', function(){
         $("#payment-error").hide();
@@ -256,21 +272,52 @@ function setupPayments(){
 
     var $checkoutModal = $("#checkout-modal");
     var $paymentLinks = $(".payment-link");
-    var $paymentSpinner = $("#payment-spinner");
     if(!$paymentLinks.length) return;
 
     $checkoutModal.on('hidden.bs.modal', function (e) {
-        $checkoutModal.find("iframe").remove();
+        if(paymentElement) {
+            paymentElement.destroy();
+            paymentElement = null;
+        }
     });
 
     $paymentLinks.on("click", function(){
         $checkoutModal.modal('show');
         $paymentSpinner.show();
-        loadInvoice($(this).data().invoiceId, function(invoice){
-            invoice = JSON.parse(invoice);
-            checkout(invoice);
+        stripe = Stripe(window.stripeConfig.pk);
+        var $buttonContainer = $(".PlanSuggestion__ButtonContainer");
+        var invoiceId = $(this).data().invoiceId;
+
+        $confirmInvoicePaymentBtn.data('invoiceId', invoiceId);
+
+        prepareInvoicePayment(invoiceId, function(res){
+            var paymentIntent = JSON.parse(res);
+            
+            if(!elements){
+                elements = stripe.elements({
+                    clientSecret: paymentIntent.client_secret,
+                    locale: window.userLanguage,
+                });
+            }
+
+            paymentElement = elements.create('payment');
+            paymentElement.mount('#payment-element');
+            paymentElement.on('ready', function(){
+                $paymentSpinner.hide();
+                paymentElement.focus();
+            });
+
+            paymentElement.on('change', function(event) {
+                if (event.complete) {
+                    $buttonContainer.show();
+                } else {
+                    $buttonContainer.hide();
+                }
+            });
         });
     });
+
+
 
     function createPaymentElement(planId, allAtOnce, callback){
         stripe = Stripe(window.stripeConfig.pk);
@@ -303,103 +350,11 @@ function setupPayments(){
         });
     }
 
-
-    function checkout(invoice){
-        // $ipsp.get('checkout').config({
-        //     'wrapper': '#checkout-modal .modal-body' ,
-        //     'ismodal': true,
-        // }).scope(function(){
-        //     this.action('show',function(){
-        //         $paymentSpinner.hide();
-        //     });
-
-        //     this.action('hide',function(){
-        //         $checkoutModal.modal('hide');
-        //     });
-
-        //     this.action('resize',function(data){
-        //         this.setCheckoutHeight(data.height);
-        //     });
-
-        //     this.loadUrl(generatePaymentUrl(invoice));
-        //     this.addCallback(__DEFAULTCALLBACK__);
-        // });
-
-        // function __DEFAULTCALLBACK__(data){
-        //     if (data.error) return;
-
-        //     if (data.action == 'redirect') {
-        //         this.loadUrl(data.url);
-        //         return;
-        //     }
-
-        //     if (data.send_data.order_status == 'delayed') {
-        //         this.unbind('ready');
-        //         this.hide();
-        //         return;
-        //     } else {
-        //         this.unbind('ready').action('ready', function() {
-        //             this.show();
-        //         });
-        //     }
-
-        //     if(data.send_data && data.url){
-        //         handlePaymentFinished(data, invoice);
-        //     }
-        // }
-    }
-
-
-    function handlePaymentFinished(data, invoice){
-        // if(data.response_status === "success" || data.send_data.response_status === "success"){
-        //     $.ajax({
-        //         url: getUrl("/sent-invoices/handle-payment-success"),
-        //         type: "POST",
-        //         data: { invoice: invoice },
-        //         success: function(){
-        //             window.location.href += "?state=success";
-        //         }
-        //     });
-        // }
-    }
-
-    function generatePaymentUrl(invoice){
-        // var merchantId = 1491578;
-        // var button = $ipsp.get('button');
-        // button.setMerchantId(merchantId);
-        // button.setAmount(invoice.plan_price, 'EUR', true);
-        // button.setHost('pay.fondy.eu');
-        // button.setResponseUrl('https://skola.koklumezs.lv/sys/sent-invoices/handle-payment-success');
-
-        // if(window.userLanguage) button.addParam('lang', window.userLanguage);
-
-        // button.addField({
-        //     label: 'Rēķina numurs',
-        //     name: 'invoice_number',
-        //     value: invoice.invoice_number.toString(),
-        //     readonly: true
-        // });
-        // button.addField({
-        //     label: 'Rēķina datums',
-        //     name: 'invoice_date',
-        //     value: invoice.sent_date.toString(),
-        //     readonly: true
-        // });
-        // button.addField({
-        //     label: 'Plāna nosaukums',
-        //     name: 'plan_name',
-        //     value: invoice.plan_name.toString(),
-        //     readonly: true
-        // });
-
-        // return button.getUrl();
-    }
-
-    function loadInvoice(id, callback){
+    function prepareInvoicePayment(id, callback){
         $.ajax({
-            url: getUrl("/sent-invoices/get-for-payment"),
+            url: getUrl("/payment/prepare-invoice-payment"),
             type: "POST",
-            data: { id: id },
+            data: { invoice_id: id },
             success: callback
         });
     }

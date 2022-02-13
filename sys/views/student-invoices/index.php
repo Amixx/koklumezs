@@ -40,22 +40,6 @@ $this->title = \Yii::t('app', 'Unpaid invoices');
     <?= $this->render("@app/views/shared/modal", [
         'id' => 'checkout-modal',
         'title' => 'Maksājumi',
-        'body' => '
-            <div class="spinner-container" style="display: none;" id="payment-spinner">
-                <div class="lds-roller">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                </div>
-            </div>
-            <label>Card
-                <div id="card-element"></div>
-            </label>
-        '
+        'bodyFileName' => "/student-invoices/invoice-payment-modal-body",
     ]); ?>
 </div>

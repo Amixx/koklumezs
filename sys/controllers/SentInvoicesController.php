@@ -119,11 +119,10 @@ class SentInvoicesController extends Controller
 
     public function actionHandlePaymentSuccess()
     {
-        $post = Yii::$app->request->post();
-        $merchantData = json_decode($post["merchant_data"], true);
-        $invoiceNumber = $merchantData[0]["value"];
+        $get = Yii::$app->request->get();
+        $invoiceId = $get['invoice_id'];
 
-        $advanceInvoice = SentInvoices::getAdvanceInvoice($invoiceNumber);
+        $advanceInvoice = SentInvoices::findOne($invoiceId);
 
         $model = new SentInvoices;
         $model->user_id = $advanceInvoice['user_id'];
