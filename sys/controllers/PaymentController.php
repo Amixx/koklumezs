@@ -7,6 +7,7 @@ use app\models\Users;
 use app\models\Difficulties;
 use app\models\School;
 use app\models\SchoolSubPlans;
+use app\models\StudentSubPlans;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\data\ActiveDataProvider;
@@ -40,7 +41,29 @@ class PaymentController extends Controller
 
     public function actionSuccess()
     {
-        return $this->render('index', []);
+        $userContext = Yii::$app->user->identity;
+        $get = Yii::$app->request->get();
+        $planId = (int)$get['planId'];
+        $allAtOnce = filter_var($get['allAtOnce'], FILTER_VALIDATE_BOOLEAN);
+        $subPlan = SchoolSubPlans::findOne($planId);
+
+        $studentSubplan = new StudentSubPlans;
+        $studentSubplan->user_id = $userContext->id;
+        $studentSubplan->plan_id = $planId;
+        $studentSubplan->is_active = true;
+        $studentSubplan->start_date = date('Y-m-d H:i:s', time());
+
+        if ($allAtOnce) {
+            $studentSubplan->sent_invoices_count = $subPlan['months'];
+            $studentSubplan->times_paid = $subPlan['months'];
+        } else {
+            $studentSubplan->sent_invoices_count = 1;
+            $studentSubplan->times_paid = 1;
+        }
+
+        $studentSubplan->save();
+
+        return $this->redirect(["lekcijas/index", 'payment_success' => 1]);
     }
 
     public function actionGeneratePaymentIntent()
@@ -49,11 +72,17 @@ class PaymentController extends Controller
 
         $post = Yii::$app->request->post();
         $subPlan = SchoolSubPlans::findOne($post['plan_id']);
-        $priceInCents = $subPlan->price() * 100;
+        $monthlyPriceInCents = $subPlan->price() * 100;
+        $allAtOnceDiscount = 0.1;
+        $singlePayment = filter_var($post['single_payment'], FILTER_VALIDATE_BOOLEAN);
+
+        $totalPrice = $singlePayment && $subPlan['months'] > 0
+            ? round($monthlyPriceInCents * $subPlan['months'] * (1 - $allAtOnceDiscount))
+            : $monthlyPriceInCents;
 
         $stripe = new \Stripe\StripeClient($secretKey);
         $paymentIntent = $stripe->paymentIntents->create([
-            'amount' => $priceInCents,
+            'amount' => $totalPrice,
             'currency' => 'eur',
             // 'payment_method_types' => ['card'],
         ]);

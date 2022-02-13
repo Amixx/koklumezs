@@ -223,10 +223,15 @@ function setupPayments(){
         $paymentSpinner.show();
         $(".PlanSuggestion__PaymentInner").hide();
 
+        var $planSuggestion = $(".PlanSuggestion:visible");
+        var planIdForPayment = $planSuggestion.data("planId");
+        var $allAtOnceCheckbox = $planSuggestion.find("input[name='payment_all_at_once']");
+        var allAtOnce = $allAtOnceCheckbox.length > 0 && $allAtOnceCheckbox.prop("checked");
+
         stripe.confirmPayment({
             elements,
             confirmParams: {
-                return_url: getFullUrl("/lekcijas?payment_success=1"),
+                return_url: getFullUrl("/payment/success?planId=" + planIdForPayment + "&allAtOnce=" + allAtOnce),
             },
             }).then(function(result) {
                 if (result.error) {
