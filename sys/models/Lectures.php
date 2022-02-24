@@ -190,11 +190,8 @@ class Lectures extends \yii\db\ActiveRecord
      * @param integer $lectureId
      * @return array ['text' => ... , 'class' => '']
      */
-    public static function getLectureStatus($lectureId): array
+    public static function getLectureStatus($userLecture): array
     {
-        $userId = Yii::$app->user->identity->id;
-        $userLecture = UserLectures::findOne(['lecture_id' => $lectureId, 'user_id' => $userId]);
-
         if ($userLecture->opened) {
             return [
                 'text' => 'Rate me',
