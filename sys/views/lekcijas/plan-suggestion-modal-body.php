@@ -1,7 +1,7 @@
 <div class="text-center">
     <ul class="PlanSuggestion__Container">
         <?php foreach ($planRecommendations as $plan) { ?>
-            <li class="PlanSuggestion" data-plan-id="<?= $plan->id ?>">
+            <li class="PlanSuggestion" data-plan-id="<?= $plan->id ?>" data-plan-price-id="<?= $plan->stripe_price_id ?>">
                 <div class="PlanSuggestion__Header"><?= $plan->name ?></div>
                 <?php if ($plan->description) { ?>
                     <div class="PlanSuggestion__Description"><?= $plan->description ?></div>

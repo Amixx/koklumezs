@@ -56,7 +56,8 @@ $this->title = $model->name;
                 'attribute' => 'Monthly cost',
                 'label' => Yii::t('app',  'Monthly cost (with PVN)'),
                 'value' => $planTotalCost,
-            ]
+            ],
+            'stripe_price_id',
         ],
     ]) ?>
     <h3><?= Yii::t('app', 'Plan files') ?></h3>

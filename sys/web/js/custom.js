@@ -161,19 +161,16 @@ $(document).ready(function() {
 
 
 
-function createPaymentIntent(planId, allAtOnce, callback){
+function createPaymentIntent(planId, allAtOnce, planPriceId, callback){
     $.ajax({
         url: getUrl("/payment/generate-payment-intent"),
         type: "POST",
-        data: { plan_id: planId, single_payment: allAtOnce },
+        data: { plan_id: planId, single_payment: allAtOnce, plan_price_id: planPriceId },
         success: function(res){
             callback(res);
         }
     });
 }
-
-
-
 
 
 
@@ -195,10 +192,11 @@ function setupPayments(){
 
         var $planSuggestion = $(this).closest(".PlanSuggestion");
         var planIdForPayment = $planSuggestion.data("planId");
+        var planPriceId = $planSuggestion.data("planPriceId");
         var $allAtOnceCheckbox = $planSuggestion.find("input[name='payment_all_at_once']");
         var allAtOnce = $allAtOnceCheckbox.length > 0 && $allAtOnceCheckbox.prop("checked");
         
-        createPaymentElement(planIdForPayment, allAtOnce, function(els, el){
+        createPaymentElement(planIdForPayment, allAtOnce, planPriceId, function(els, el){
             elements = els;
             paymentElement = el;
         });
@@ -319,11 +317,11 @@ function setupPayments(){
 
 
 
-    function createPaymentElement(planId, allAtOnce, callback){
+    function createPaymentElement(planId, allAtOnce, planPriceId, callback){
         stripe = Stripe(window.stripeConfig.pk);
         var $buttonContainer = $(".PlanSuggestion__ButtonContainer");
 
-        return createPaymentIntent(planId, allAtOnce, function(res){
+        return createPaymentIntent(planId, allAtOnce, planPriceId, function(res){
             var paymentIntent = JSON.parse(res);
             var elements = stripe.elements({
                 clientSecret: paymentIntent.client_secret,

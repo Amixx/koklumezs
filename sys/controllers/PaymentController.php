@@ -9,6 +9,7 @@ use app\models\School;
 use app\models\SchoolSubPlans;
 use app\models\SentInvoices;
 use app\models\StudentSubPlans;
+use app\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\data\ActiveDataProvider;
@@ -76,12 +77,13 @@ class PaymentController extends Controller
         $monthlyPriceInCents = $subPlan->price() * 100;
         $allAtOnceDiscount = 0.1;
         $singlePayment = filter_var($post['single_payment'], FILTER_VALIDATE_BOOLEAN);
-
         $totalPrice = $singlePayment && $subPlan['months'] > 0
             ? round($monthlyPriceInCents * $subPlan['months'] * (1 - $allAtOnceDiscount))
             : $monthlyPriceInCents;
 
-        return json_encode($this->generatePaymentIntent($totalPrice));
+        $paymentIntent = $singlePayment ? $this->generatePaymentIntent($totalPrice) : $this->prepareSubscription();
+
+        return json_encode($paymentIntent);
     }
 
     public function actionPrepareInvoicePayment()
@@ -91,6 +93,35 @@ class PaymentController extends Controller
         $priceInCents = $invoice['plan_price'] * 100;
 
         return json_encode($this->generatePaymentIntent($priceInCents));
+    }
+
+    private function prepareSubscription()
+    {
+        $post = Yii::$app->request->post();
+        $userContext = Yii::$app->user->identity;
+        $secretKey = Yii::$app->params['stripe']['sk'];
+        $stripe = new \Stripe\StripeClient($secretKey);
+
+        if ($userContext->stripe_id) {
+            $subscription = $stripe->subscriptions->create([
+                'customer' => $userContext->stripe_id,
+                'items' => [
+                    ['price' => $post['plan_price_id']],
+                ],
+            ]);
+        } else {
+            $customer = $this->createCustomer();
+            $subscription = $stripe->subscriptions->create([
+                'customer' => $customer['id'],
+                'items' => [
+                    ['price' => $post['plan_price_id']],
+                ],
+                'payment_behavior' => 'default_incomplete',
+                'expand' => ['latest_invoice.payment_intent'],
+            ]);
+        }
+
+        return $subscription['latest_invoice']['payment_intent'];
     }
 
     private function generatePaymentIntent($price)
@@ -104,5 +135,23 @@ class PaymentController extends Controller
         ]);
 
         return $paymentIntent;
+    }
+
+    private function createCustomer()
+    {
+        $userContext = Yii::$app->user->identity;
+        $secretKey = Yii::$app->params['stripe']['sk'];
+        $stripe = new \Stripe\StripeClient($secretKey);
+        $customer = $stripe->customers->create([
+            'name' => $userContext->first_name . " " . $userContext->last_name,
+            'email' => $userContext->email,
+            'description' => $userContext->about ? $userContext->about : "",
+        ]);
+
+        $user = User::findOne($userContext->id);
+        $user->stripe_id = $customer['id'];
+        $user->update();
+
+        return $customer;
     }
 }

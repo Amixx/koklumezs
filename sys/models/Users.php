@@ -40,7 +40,7 @@ class Users extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_PASSIVE]],
-            [['user_level'], 'string'],
+            [['user_level', 'stripe_id'], 'string'],
             ['user_level', 'default', 'value' => self::ROLE_USER],
             ['user_level', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN, self::ROLE_TEACHER]],
             ['language', 'default', 'value' => self::LANG_LV],
@@ -59,6 +59,7 @@ class Users extends ActiveRecord implements IdentityInterface
     {
         return [
             'id' => 'ID',
+            'stripe_id' => 'Stripe ID',
             'user_level' => \Yii::t('app',  'Access level'),
             'language' => \Yii::t('app',  'User language'),
             'subscription_type' => \Yii::t('app',  'Abonement type'),

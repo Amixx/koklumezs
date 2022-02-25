@@ -68,6 +68,7 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
                     1 => \Yii::t('app', 'Yes'),
                 ]
             ) ?>
+            <?= $form->field($model, 'stripe_price_id')->textInput() ?>
         </div>
         <div class="tab-pane fade" id="params" role="tabpanel" aria-labelledby="params-tab">
             <?php if (isset($planFiles)) {
