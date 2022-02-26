@@ -162,10 +162,18 @@ $(document).ready(function() {
 
 
 function createPaymentIntent(planId, allAtOnce, planPriceId, callback){
+    var data = {
+        plan_id: planId, single_payment: allAtOnce
+    }
+
+    if(planPriceId){
+        data.plan_price_id = planPriceId
+    }
+
     $.ajax({
         url: getUrl("/payment/generate-payment-intent"),
         type: "POST",
-        data: { plan_id: planId, single_payment: allAtOnce, plan_price_id: planPriceId },
+        data: data,
         success: function(res){
             callback(res);
         }
