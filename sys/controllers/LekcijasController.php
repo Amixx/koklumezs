@@ -22,6 +22,7 @@ use app\models\SchoolSubPlans;
 use app\models\SectionsVisible;
 use app\models\StartLaterCommitments;
 use app\models\Studentgoals;
+use app\models\StudentSubPlans;
 use app\models\Trials;
 use Yii;
 use yii\data\Pagination;
@@ -62,7 +63,15 @@ class LekcijasController extends Controller
      */
     public function actionIndex($type = null)
     {
+        $get = Yii::$app->request->get();
         $userContext = Yii::$app->user->identity;
+
+        $alreadyRecirected = isset($get['recommend_subscription_plans']);
+        $hasAnyActivePlans = StudentSubPlans::userHasAnyActiveLessonPlans($userContext->id);
+
+        if (!$hasAnyActivePlans && !$alreadyRecirected) {
+            return $this->redirect("?recommend_subscription_plans=1");
+        }
 
         $models = [];
         $pages = [];
@@ -313,7 +322,7 @@ class LekcijasController extends Controller
     {
         $get = Yii::$app->request->get();
 
-        $renderPlanSuggestions = isset($get['trial_expired']) && (int)$get['trial_expired'] === 1;
+        $renderPlanSuggestions = isset($get['recommend_subscription_plans']) && (int)$get['recommend_subscription_plans'] === 1;
         $paymentSuccessful = isset($get['payment_success']) && (int)$get['payment_success'] === 1;
 
         if ($paymentSuccessful) {
