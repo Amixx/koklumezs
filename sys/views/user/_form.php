@@ -195,11 +195,14 @@ $ckeditorOptions = ElFinder::ckeditorOptions(
         </div>
         <div class="tab-pane fade" id="payer" role="tabpanel" aria-labelledby="payer-tab">
             <?php
-            $statusText = $model['payer']['should_use']
-                ? 'The payer\'s information is being used'
-                : 'The payer\'s information is not being used';
-
-            $statusColor = $model['payer']['should_use'] ? 'green' : 'red';
+            if($model['payer'] && $model['payer']['should_use']) {
+                $statusText = 'The payer\'s information is being used';
+                $statusColor = 'green';
+            } else {
+                $statusText = 'The payer\'s information is not being used';
+                $statusColor = 'red';
+            }
+        
             ?>
             <h4 style="color:<?= $statusColor ?>"><?= Yii::t('app', $statusText) ?>.</h4>
             <div class="form-group">
