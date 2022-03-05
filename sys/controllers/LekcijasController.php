@@ -67,9 +67,9 @@ class LekcijasController extends Controller
         $userContext = Yii::$app->user->identity;
 
         $alreadyRecirected = isset($get['recommend_subscription_plans']);
-        $hasAnyActivePlans = StudentSubPlans::userHasAnyActiveLessonPlans($userContext->id);
+        $hasAnyActiveLessonPlans = StudentSubPlans::userHasAnyActiveLessonPlans($userContext->id);
 
-        if (!$hasAnyActivePlans && !$alreadyRecirected) {
+        if (!$hasAnyActiveLessonPlans && !$alreadyRecirected) {
             return $this->redirect("?recommend_subscription_plans=1");
         }
 
