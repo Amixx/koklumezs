@@ -76,15 +76,16 @@ class StudentSubPlans extends \yii\db\ActiveRecord
     public static function getActivePlansForStudent($studentId, $extraCond = null)
     {
         $query = self::find()->where(['user_id' => $studentId, 'is_active' => true]);
-        if($extraCond) $query = $query->andWhere($extraCond);
+        if ($extraCond) $query = $query->andWhere($extraCond);
 
         return $query->orderBy(['studentsubplans.id' => SORT_DESC])
             ->joinWith('plan')
             ->asArray()->all();
     }
 
-    public static function userHasAnyActiveLessonPlans($studentId){
-        $plans = self::getActivePlansForStudent($studentId, ['studentsubplans.type' => 'lesson']);
+    public static function userHasAnyActiveLessonPlans($studentId)
+    {
+        $plans = self::getActivePlansForStudent($studentId, ['schoolsubplans.type' => 'lesson']);
         return !empty($plans);
     }
 
