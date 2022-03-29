@@ -169,7 +169,7 @@ class UserLayoutHelper extends LayoutHelper
 
     public function getActionButton()
     {
-        if ($this->isTeacher) return "";
+        if ($this->isTeacher || $this->isAdmin) return "";
 
         $userId = Yii::$app->user->identity->id;
 
@@ -193,6 +193,8 @@ class UserLayoutHelper extends LayoutHelper
 
     public function getChatButton()
     {
+        if ($this->isAdmin) return "";
+
         $chatButtonText = "Chat";
         $outerClass = "";
         $buttonClasses = "btn btn-success teacher-communication-button";
