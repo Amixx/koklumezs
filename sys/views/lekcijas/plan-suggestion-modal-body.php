@@ -7,12 +7,6 @@
                     <div class="PlanSuggestion__Description"><?= $plan->description ?></div>
                 <?php } ?>
                 <div class="PlanSuggestion__Price"><?= Yii::t('app', 'Monthly cost (euro)') ?>: <?= $plan->price() ?></div>
-                <?php
-                $showPotentialSavings = $plan->months > 0;
-                $potentialSavings = round($plan->price() * $plan->months * 0.1, 2);
-                if ($showPotentialSavings) { ?>
-                    <div class="PlanSuggestion__Savings"><?= Yii::t('app', 'Save up to {0} euro a year', $potentialSavings) ?></div>
-                <?php } ?>
                 <?php if ($plan->allow_single_payment) { ?>
                     <div class="form-group PlanSuggestion__PaymentCheckbox">
                         <label class="control-label">

@@ -702,6 +702,6 @@ return [
     'Choose a different plan' => 'Izvēlēties citu plānu',
     'Choose' => 'Izvēlēties',
     'Monthly cost (euro)' => 'Mēneša maksa (eiro)',
-    'Save up to {0} euro a year' => 'Ietaupi līdz {0} eiro gadā',
+    'Save {0} euro a month' => 'Ietaupi {0} eiro mēnesī',
     'Stripe price ID' => 'Stripe cenas ID'
 ];
