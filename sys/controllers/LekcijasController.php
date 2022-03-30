@@ -68,8 +68,10 @@ class LekcijasController extends Controller
 
         $alreadyRecirected = isset($get['recommend_subscription_plans']);
         $hasAnyActiveLessonPlans = StudentSubPlans::userHasAnyActiveLessonPlans($userContext->id);
+        $isFreeUser = $userContext['subscription_type'] === 'free';
+        $trialEnded = Trials::trialEnded($userContext['id']);
 
-        if (!$hasAnyActiveLessonPlans && !$alreadyRecirected) {
+        if (!$hasAnyActiveLessonPlans && !$alreadyRecirected && !$isFreeUser && $trialEnded) {
             return $this->redirect("?recommend_subscription_plans=1");
         }
 

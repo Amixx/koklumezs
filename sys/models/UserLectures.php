@@ -363,6 +363,8 @@ class UserLectures extends \yii\db\ActiveRecord
             ->orderBy(['id' => SORT_DESC])
             ->limit(3)->all();
 
+        if (count($lastLectureQuery) === 0) return 0;
+
         $avg = 0;
         foreach ($lastLectureQuery as $lectureQuery) {
             $avg += $lectureQuery['lecture']->complexity;

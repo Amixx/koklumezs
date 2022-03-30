@@ -1370,6 +1370,9 @@ div.has-experience.active, div.rent.active {
 
 .PlanSuggestion__PaymentCheckbox {
     font-size: 13px;
+}
+
+.PlanSuggestion div:nth-last-child(2){
     margin-bottom: 48px;
 }
 
