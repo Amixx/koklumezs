@@ -14,6 +14,8 @@ if (isset($type)) {
     }
 }
 
+$sortType = $sortType ?? 'DESC';
+
 ?>
 <div class="lectures-index ">
     <h3><?= $this->title ?></h3>

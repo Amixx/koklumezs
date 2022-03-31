@@ -178,7 +178,7 @@ class UserLectures extends \yii\db\ActiveRecord
     public static function getLatestLessonsOfType($id, $type, $condition = null)
     {
         $query = self::getLessonsOfType($id, $type, ['id' => SORT_DESC]);
-        if ($condition) $query = $query->where($condition);
+        if ($condition) $query = $query->andWhere($condition);
         return array_slice($query->all(), 0, 8);
     }
 

@@ -72,7 +72,11 @@ class LekcijasController extends Controller
         $trialEnded = Trials::trialEnded($userContext['id']);
 
         if (!$hasAnyActiveLessonPlans && !$alreadyRecirected && !$isFreeUser && $trialEnded) {
-            return $this->redirect("?recommend_subscription_plans=1");
+            if ($type) {
+                return $this->redirect("?type=$type&recommend_subscription_plans=1");
+            } else {
+                return $this->redirect("?recommend_subscription_plans=1");
+            }
         }
 
         $models = [];
@@ -120,6 +124,7 @@ class LekcijasController extends Controller
 
                 return $this->render('index', [
                     'models' => $models,
+                    'modelGroups' => $modelGroups,
                     'type' => $type,
                     'pages' => $pages,
                     'userLectureEvaluations' => $userLectureEvaluations,
@@ -130,7 +135,6 @@ class LekcijasController extends Controller
 
             return $this->render('index', [
                 'models' => $models,
-                'modelGroups' => $modelGroups,
                 'type' => $type,
                 'pages' => $pages,
                 'userLectureEvaluations' => $userLectureEvaluations,
