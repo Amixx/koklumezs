@@ -86,6 +86,11 @@ class LekcijasController extends Controller
         $isFitnessSchool = $school->is_fitness_school;
         $videoThumb = $school->video_thumbnail;
 
+        //fitnesa skolām uzreiz rādam jaunās nodarbības
+        if ($isFitnessSchool && !$type) {
+            return $this->redirect("?type=new");
+        }
+
         if ($type) {
             $title_filter = Yii::$app->request->get('title_filter');
             $sortingConfig = $this->getSortingConfig();
@@ -130,6 +135,7 @@ class LekcijasController extends Controller
                     'userLectureEvaluations' => $userLectureEvaluations,
                     'videoThumb' => $videoThumb,
                     'title_filter' => $title_filter,
+                    'isFitnessSchool' => $isFitnessSchool,
                 ]);
             }
 
@@ -141,7 +147,7 @@ class LekcijasController extends Controller
                 'videoThumb' => $videoThumb,
                 'sortType' => $sortingConfig['type'],
                 'title_filter' => $title_filter,
-
+                'isFitnessSchool' => $isFitnessSchool,
             ]);
         } else {
             return $this->renderOverview($user, $models, $pages, $videoThumb);
@@ -150,6 +156,7 @@ class LekcijasController extends Controller
         return $this->render('index', [
             'models' => $models,
             'pages' => $pages,
+            'isFitnessSchool' => $isFitnessSchool,
         ]);
     }
 
@@ -380,6 +387,10 @@ class LekcijasController extends Controller
         $isNextLesson = UserLectures::getIsNextLesson($userId);
         $isActive =  Users::isActive($userId);
 
+        $userContext = Yii::$app->user->identity;
+        $school = $userContext->getSchool();
+        $isFitnessSchool = $school->is_fitness_school;
+
         return $this->render('overview', [
             'models' => $models,
             'newLessons' => $latestNewUserLessons,
@@ -396,6 +407,7 @@ class LekcijasController extends Controller
             'isStudent' => $isStudent,
             'renderPlanSuggestions' => $renderPlanSuggestions,
             'planRecommendations' => $planRecommendations,
+            'isFitnessSchool' => $isFitnessSchool,
         ]);
     }
 

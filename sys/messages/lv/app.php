@@ -46,6 +46,7 @@ return [
     'Open all favourite lessons' => 'Atvērt visas mīļākās nodarbības',
     'All lessons I\'m still learning' => 'Visas nodarbības, ko vēl mācos',
     'All new lessons' => 'Visas jaunās nodarbības',
+    'All new workouts' => 'Visi jaunie treniņi',
     'All paid' => 'Samaksāts',
     'Allowed to download files' => 'Vai drīkst lejupielādēt failus',
     'Answer' => 'Atbilde',
@@ -76,6 +77,7 @@ return [
     'Comments' => 'Komentāri',
     'Community' => 'Kopiena',
     'Congratulations! You\'ve seen all new lessons' => 'Apsveicu! Esi apskatījis visas jaunās nodarbības',
+    'Congratulations! You\'ve seen all new workouts' => 'Apsveicu! Esi apskatījis visus jaunos treniņus',
     'Create a FAQ' => 'Izveidot BUJ',
     'Create category' => 'Izveidot kategoriju',
     'Create evaluation' => 'Izveidot novērtējumu',
@@ -695,6 +697,7 @@ return [
     'Sorting of lessons' => 'Nodarbību kārtošana',
     'Is fitness school' => 'Vai ir fitnesa skola',
     'First lesson' => 'Pirmā nodarbība',
+    'First exercise' => 'Pirmais vingrinājums',
     'An error was encountered while processing the payment' => 'Apstrādājot maksājumu, radās kļūda',
     'Error code' => 'Kļūdas kods',
     'Try again' => 'Mēģināt vēlreiz',
@@ -703,5 +706,8 @@ return [
     'Choose' => 'Izvēlēties',
     'Monthly cost (euro)' => 'Mēneša maksa (eiro)',
     'Save {0} euro a month' => 'Ietaupi {0} eiro mēnesī',
-    'Stripe price ID' => 'Stripe cenas ID'
+    'Stripe price ID' => 'Stripe cenas ID',
+    'Favourite workouts' => 'Mīļākie treniņi',
+    'New workouts' => 'Jaunie treniņi',
+    'Workouts' => 'Treniņi',
 ];
