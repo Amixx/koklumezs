@@ -78,11 +78,12 @@ class SentInvoices extends \yii\db\ActiveRecord
 
     public static function getUnpaidForStudent($studentId)
     {
-        $query = "SELECT invoice_number FROM sentinvoices
+        $query = "SELECT * FROM sentinvoices
             WHERE is_advance = true
             AND user_id = $studentId
             AND invoice_number
-            NOT IN ( SELECT invoice_number FROM sentinvoices WHERE is_advance = false )";
+            NOT IN ( SELECT invoice_number FROM sentinvoices WHERE is_advance = false )
+            ORDER BY id DESC";
         $data = Yii::$app->db->createCommand($query)->queryAll();
 
         if ($data && count($data) > 0) {
@@ -90,6 +91,11 @@ class SentInvoices extends \yii\db\ActiveRecord
         } else {
             return null;
         }
+    }
+
+    public static function getAdvanceInvoice($invoiceNumber)
+    {
+        return self::find()->where(['invoice_number' => $invoiceNumber, 'is_advance' => true])->asArray()->one();
     }
 
     public static function getRealInvoice($invoiceNumber)

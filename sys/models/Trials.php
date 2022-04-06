@@ -80,7 +80,7 @@ class Trials extends \yii\db\ActiveRecord
         return $trial->save();
     }
 
-    private static function trialEnded($studentId)
+    public static function trialEnded($studentId)
     {
         $trial = self::getByUserId($studentId);
         if (!$trial) {

@@ -6,13 +6,26 @@ use yii\helpers\Url;
 use yii\widgets\LinkPager;
 use app\helpers\ThumbnailHelper;
 
+$titleText = '';
 if (isset($type)) {
     if ($type == "new") {
-        $this->title = \Yii::t('app',  'New lessons');
+        if ($isFitnessSchool) {
+            $titleText = 'New workouts';
+        } else {
+            $titleText = 'New lessons';
+        }
     } else if ($type == "favourite") {
-        $this->title = \Yii::t('app',  'Favourite lessons');
+        if ($isFitnessSchool) {
+            $titleText = 'Favourite workouts';
+        } else {
+            $titleText = 'Favourite lessons';
+        }
     }
 }
+
+$this->title = \Yii::t('app', $titleText);
+
+$sortType = $sortType ?? 'DESC';
 
 ?>
 <div class="lectures-index ">
@@ -50,7 +63,7 @@ if (isset($type)) {
             <div class="col-md-6">
                 <h3><?= \Yii::t('app',  'No lessons') ?>!</h3>
             </div>
-        <?php } else if (!$modelGroups) { ?>
+        <?php } else if (!isset($modelGroups) || !$modelGroups) { ?>
             <?php foreach ($models as $model) {
                 $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->lecture->file, $videoThumb);
             ?>
@@ -67,7 +80,7 @@ if (isset($type)) {
                 <div class="col-md-6 col-lg-3 text-center lecture-wrap">
                     <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $firstLesson->lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
                     <p><?= $date ?></p>
-                    <p><?= Yii::t('app', 'First lesson') ?>: <?= $firstLesson->lecture->title ?></p>
+                    <p><?= Yii::t('app', $isFitnessSchool ? 'First exercise' : 'First lesson') ?>: <?= $firstLesson->lecture->title ?></p>
                 </div>
             <?php } ?>
         <?php } ?>

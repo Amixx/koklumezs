@@ -18,9 +18,11 @@ use app\models\SchoolTeacher;
 use app\models\Chat;
 use app\models\SchoolAfterEvaluationMessages;
 use app\models\SchoolStudent;
+use app\models\SchoolSubPlans;
 use app\models\SectionsVisible;
 use app\models\StartLaterCommitments;
 use app\models\Studentgoals;
+use app\models\StudentSubPlans;
 use app\models\Trials;
 use Yii;
 use yii\data\Pagination;
@@ -61,7 +63,21 @@ class LekcijasController extends Controller
      */
     public function actionIndex($type = null)
     {
+        $get = Yii::$app->request->get();
         $userContext = Yii::$app->user->identity;
+
+        $alreadyRecirected = isset($get['recommend_subscription_plans']);
+        $hasAnyActiveLessonPlans = StudentSubPlans::userHasAnyActiveLessonPlans($userContext->id);
+        $isFreeUser = $userContext['subscription_type'] === 'free';
+        $trialEnded = Trials::trialEnded($userContext['id']);
+
+        if (!$hasAnyActiveLessonPlans && !$alreadyRecirected && !$isFreeUser && $trialEnded) {
+            if ($type) {
+                return $this->redirect("?type=$type&recommend_subscription_plans=1");
+            } else {
+                return $this->redirect("?recommend_subscription_plans=1");
+            }
+        }
 
         $models = [];
         $pages = [];
@@ -69,6 +85,11 @@ class LekcijasController extends Controller
         $school = $user->getSchool();
         $isFitnessSchool = $school->is_fitness_school;
         $videoThumb = $school->video_thumbnail;
+
+        //fitnesa skolām uzreiz rādam jaunās nodarbības
+        if ($isFitnessSchool && !$type) {
+            return $this->redirect("?type=new");
+        }
 
         if ($type) {
             $title_filter = Yii::$app->request->get('title_filter');
@@ -105,18 +126,28 @@ class LekcijasController extends Controller
                         return $a->id > $b->id;
                     });
                 }
+
+                return $this->render('index', [
+                    'models' => $models,
+                    'modelGroups' => $modelGroups,
+                    'type' => $type,
+                    'pages' => $pages,
+                    'userLectureEvaluations' => $userLectureEvaluations,
+                    'videoThumb' => $videoThumb,
+                    'title_filter' => $title_filter,
+                    'isFitnessSchool' => $isFitnessSchool,
+                ]);
             }
 
             return $this->render('index', [
                 'models' => $models,
-                'modelGroups' => $modelGroups,
                 'type' => $type,
                 'pages' => $pages,
                 'userLectureEvaluations' => $userLectureEvaluations,
                 'videoThumb' => $videoThumb,
                 'sortType' => $sortingConfig['type'],
                 'title_filter' => $title_filter,
-
+                'isFitnessSchool' => $isFitnessSchool,
             ]);
         } else {
             return $this->renderOverview($user, $models, $pages, $videoThumb);
@@ -125,6 +156,7 @@ class LekcijasController extends Controller
         return $this->render('index', [
             'models' => $models,
             'pages' => $pages,
+            'isFitnessSchool' => $isFitnessSchool,
         ]);
     }
 
@@ -301,6 +333,20 @@ class LekcijasController extends Controller
 
     private function renderOverview($user, $models, $pages, $videoThumb, $isStudent = true)
     {
+        $get = Yii::$app->request->get();
+
+        $renderPlanSuggestions = isset($get['recommend_subscription_plans']) && (int)$get['recommend_subscription_plans'] === 1;
+        $paymentSuccessful = isset($get['payment_success']) && (int)$get['payment_success'] === 1;
+
+        if ($paymentSuccessful) {
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Payment was successful! Thank you!'));
+        }
+
+        $planRecommendations = null;
+        if ($renderPlanSuggestions) {
+            $planRecommendations = SchoolSubPlans::getRecommendedPlansAfterTrial();
+        }
+
         $latestFavouriteUserLessons = UserLectures::getLatestLessonsOfType($user->id, "favourite");
         $schoolStudent = SchoolStudent::getSchoolStudent($user->id);
         $teacherPortrait = $schoolStudent->school->teacher_portrait;
@@ -341,6 +387,10 @@ class LekcijasController extends Controller
         $isNextLesson = UserLectures::getIsNextLesson($userId);
         $isActive =  Users::isActive($userId);
 
+        $userContext = Yii::$app->user->identity;
+        $school = $userContext->getSchool();
+        $isFitnessSchool = $school->is_fitness_school;
+
         return $this->render('overview', [
             'models' => $models,
             'newLessons' => $latestNewUserLessons,
@@ -355,6 +405,9 @@ class LekcijasController extends Controller
             'isActive' => $isActive,
             'teacherPortrait' => $teacherPortrait,
             'isStudent' => $isStudent,
+            'renderPlanSuggestions' => $renderPlanSuggestions,
+            'planRecommendations' => $planRecommendations,
+            'isFitnessSchool' => $isFitnessSchool,
         ]);
     }
 

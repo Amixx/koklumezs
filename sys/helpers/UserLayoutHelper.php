@@ -90,8 +90,9 @@ class UserLayoutHelper extends LayoutHelper
         $hasStudents = $userContext->isTeacher()
             ? count(Users::getStudentsWithoutPausesForSchool()) > 0
             : false;
+        $isFitnessSchool = !$this->isAdmin && $userContext->getSchool()->is_fitness_school;
 
-        return [
+        $data = [
             'admin' => [
                 ['label' => 'Piešķiršana', 'url' => ['/assign'], 'active' =>  in_array(Yii::$app->controller->id, ['assign']),],
                 ['label' => 'Piešķirts', 'url' => ['/user-lectures'], 'active' =>  in_array(Yii::$app->controller->id, ['user-lectures']),],
@@ -141,16 +142,15 @@ class UserLayoutHelper extends LayoutHelper
             ],
             'student' => [
                 [
-                    'label' => Yii::t('app',  'Lessons'),
+                    'label' => Yii::t('app',  $isFitnessSchool ? 'Workouts' : 'Lessons'),
                     'active' =>  in_array(Yii::$app->controller->id, ['lekcijas']),
                     'items' => [
-                        ['label' => Yii::t('app',  'New lessons'), 'url' => ['/lekcijas?type=new&sortType=1']],
+                        ['label' => Yii::t('app', $isFitnessSchool ? 'New workouts' : 'New lessons'), 'url' => ['/lekcijas?type=new&sortType=1']],
                         ['label' => Yii::t('app',  'Favourite lessons'), 'url' => ['/lekcijas?type=favourite&sortType=1']]
                     ],
                     'options' => ['class' => 'navbar-lessons-dropdown-toggle']
                 ],
                 // ['label' => Yii::t('app',  'acords'), 'url' => ['/'], 'active' =>  in_array(Yii::$app->controller->id, [''])],
-                ['label' => Yii::t('app',  'Sheet music'), 'url' => ['/file'], 'active' =>  in_array(Yii::$app->controller->id, ['file'])],
                 // ['label' => Yii::t('app',  'play along'), 'url' => ['/'], 'active' =>  in_array(Yii::$app->controller->id, [''])],
                 ['label' => Yii::t('app',  'Archive'), 'url' => ['/archive'], 'active' =>  in_array(Yii::$app->controller->id, ['archive'])],
                 // ['label' => Yii::t('app',  'suggest a song'), 'url' => ['/'], 'active' =>  in_array(Yii::$app->controller->id, [''])],
@@ -159,11 +159,25 @@ class UserLayoutHelper extends LayoutHelper
                 // ['label' => Yii::t('app',  'Join another school'), 'url' => ['/join-school'], 'active' =>  in_array(Yii::$app->controller->id, ['join-school'])],
             ],
         ];
+
+        if (!$isFitnessSchool) {
+            $sheetMusicItem = ['label' => Yii::t('app',  'Sheet music'), 'url' => ['/file'], 'active' =>  in_array(Yii::$app->controller->id, ['file'])];
+            $previous_items = array_slice($data['student'], 0, 1, true);
+            $next_items     = array_slice($data['student'], 1, NULL, true);
+
+            $data['student'] = array_merge($previous_items, [$sheetMusicItem], $next_items);
+        }
+
+        if ($userContext->is_test_user) {
+            $data['student'][] = ['label' => Yii::t('app',  'Invoices'), 'url' => ['/student-invoices'], 'active' =>  in_array(Yii::$app->controller->id, ['student-invoices'])];
+        }
+
+        return $data;
     }
 
     public function getActionButton()
     {
-        if ($this->isTeacher) return "";
+        if ($this->isTeacher || $this->isAdmin) return "";
 
         $userId = Yii::$app->user->identity->id;
 
@@ -187,6 +201,8 @@ class UserLayoutHelper extends LayoutHelper
 
     public function getChatButton()
     {
+        if ($this->isAdmin) return "";
+
         $chatButtonText = "Chat";
         $outerClass = "";
         $buttonClasses = "btn btn-success teacher-communication-button";

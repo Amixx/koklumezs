@@ -2,7 +2,6 @@
 
 namespace app\models;
 
-use Exception;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -31,13 +30,14 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_PASSIVE]],
-            [['user_level'], 'string'],
+            [['user_level', 'stripe_id'], 'string'],
             ['user_level', 'default', 'value' => self::ROLE_USER],
             ['user_level', 'in', 'range' => [self::ROLE_USER, self::ROLE_ADMIN, self::ROLE_TEACHER]],
             [['email'], 'email'],
             [['phone_number'], 'string', 'max' => 30],
             [['password', 'first_name', 'last_name'], 'string', 'max' => 250],
             [['email'], 'string', 'max' => 500],
+            [['is_test_user'], 'boolean'],
         ];
     }
 
@@ -45,6 +45,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             'id' => 'ID',
+            'stripe_id' => 'Stripe ID',
             'user_level' => \Yii::t('app',  'Access level'),
             'email' => \Yii::t('app',  'E-mail'),
             'phone_number' => \Yii::t('app',  'Phone number'),
@@ -55,6 +56,7 @@ class User extends ActiveRecord implements IdentityInterface
             'last_opened_chat' => \Yii::t('app',  'Last time opened chat'),
             'wants_more_lessons' => \Yii::t('app',  'Wants more lessons'),
             'is_deleted' => \Yii::t('app',  'Is deleted'),
+            'is_test_user' => \Yii::t('app',  'Is test user'),
         ];
     }
 

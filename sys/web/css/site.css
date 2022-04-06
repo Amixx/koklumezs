@@ -1320,3 +1320,93 @@ div.has-experience.active, div.rent.active {
         min-height: unset;
     }
 }
+
+
+
+.PlanSuggestion__Container {
+    display: flex;
+    gap: 16px;
+    padding-left: 0;
+}
+
+.PlanSuggestion {
+    list-style-type: none;
+    padding: 8px;
+    border: 3px solid #B1D892;
+    border-radius: 8px;
+    box-shadow: 8px 8px 8px #8089dd;
+    position: relative;
+    flex: 0 0 calc(25% - 12px);
+}
+
+.PlanSuggestion__Payment {
+    list-style-type: none;
+    padding: 8px;
+    flex: 0 0 calc(75% - 12px);
+}
+
+.PlanSuggestion div:not(:last-child, :nth-child(3), :nth-child(4)) {
+    border-bottom: 2px solid #8089DD;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+}
+
+.PlanSuggestion__Header {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.PlanSuggestion__Price {
+    color: #5FB751;
+    font-weight: bold;
+}
+
+.PlanSuggestion__Savings {
+    font-weight: bold;
+    margin-bottom: 48px;
+    color: #8089dd;
+    font-size: 13px;
+}
+
+.PlanSuggestion__PaymentCheckbox {
+    font-size: 13px;
+}
+
+.PlanSuggestion div:nth-last-child(2){
+    margin-bottom: 48px;
+}
+
+.PlanSuggestion__CheckoutButton {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translatex(-50%);
+}
+
+.PlanSuggestion__ConfirmPaymentButton {
+    margin-top: 32px;
+}
+
+#payment-element {
+    margin-top: 32px;
+}
+
+#payment-error-message {
+    font-size: 20px;
+}
+
+#payment-error-code {
+    font-size: 11px;
+}
+
+
+@media (max-width: 767px){
+    .PlanSuggestion__Container {
+        flex-direction: column;
+    }
+
+    .PlanSuggestion__CheckoutButton {
+        position: initial;
+        transform: unset;
+    }
+}

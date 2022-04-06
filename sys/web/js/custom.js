@@ -15,6 +15,11 @@ function getUrl(url) {
     return prefix + url;
 }
 
+function getFullUrl(url){
+    var protocol = IS_LOCAL ? "http" : "https";
+    return protocol + "://" + window.location.host + getUrl(url);
+}
+
 $(document).ready(function() {
     $('#lessons-sorting-select').on('select2:select', function (e) {
         var href = new URL(window.location.href);
@@ -113,22 +118,22 @@ $(document).ready(function() {
     if (userNavbarLessonDropdown){
         userNavbarLessonDropdown.href = "/lekcijas";
         $(".navbar-lessons-dropdown-toggle a").removeAttr("data-toggle");
-    }    
+    }
 
     setupArchiveSearchByCategory();
     setupLectureFilterByDifficulty();
     setupAssignUserListFilters();
 
-    $("select[name='SignUpForm[ownsInstrument]']").on('change', function(){  
+    $("select[name='SignUpForm[ownsInstrument]']").on('change', function(){
         if ($("span.select2").hasClass('select-warning')) {
             $("span.select2").removeClass("select-warning");
             let div = document.getElementById('has-instrument');
             div.removeChild(div.lastChild);
-        }   
+        }
         if(parseInt(this.value) === 1){
             $("div.has-experience").addClass("active");
         }else {
-            $("div.has-experience").removeClass("active"); 
+            $("div.has-experience").removeClass("active");
         }
     });
 
@@ -146,7 +151,222 @@ $(document).ready(function() {
     if(window.manualLectures){
         setupLessonAssignmentAutomaticMessages();
     }
+
+    setupPayments();
+
+    $planSuggestionModal = $("#plan-suggestion-modal");
+    if($planSuggestionModal) $planSuggestionModal.modal("show");
 });
+
+
+
+
+function createPaymentIntent(planId, allAtOnce, planPriceId, callback){
+    var data = {
+        plan_id: planId, single_payment: allAtOnce
+    }
+
+    if(planPriceId){
+        data.plan_price_id = planPriceId
+    }
+
+    $.ajax({
+        url: getUrl("/payment/generate-payment-intent"),
+        type: "POST",
+        data: data,
+        success: function(res){
+            callback(res);
+        }
+    });
+}
+
+
+
+
+function setupPayments(){
+    var elements = null;
+    var paymentElement = null;
+    var stripe = null;
+
+    var $checkoutBtn = $(".PlanSuggestion__CheckoutButton");
+    var $checkoutContainer = $(".PlanSuggestion__Payment");
+    var $confirmPlanPurchaseBtn = $(".PlanSuggestion__ConfirmPaymentButton");
+    var $confirmInvoicePaymentBtn = $(".ConfirmInvoicePayment");
+    var $paymentSpinner = $("#payment-spinner");
+    var $cancelBtn = $(".PlanSuggestion__CancelPayment");
+    
+    $checkoutBtn.on("click", function(){
+        $paymentSpinner.show();
+
+        var $planSuggestion = $(this).closest(".PlanSuggestion");
+        var planIdForPayment = $planSuggestion.data("planId");
+        var planPriceId = $planSuggestion.data("planPriceId");
+        var $allAtOnceCheckbox = $planSuggestion.find("input[name='payment_all_at_once']");
+        var allAtOnce = $allAtOnceCheckbox.length > 0 && $allAtOnceCheckbox.prop("checked");
+        
+        createPaymentElement(planIdForPayment, allAtOnce, planPriceId, function(els, el){
+            elements = els;
+            paymentElement = el;
+        });
+
+        $(".PlanSuggestion").hide();
+        $(this).closest(".PlanSuggestion").show();
+        $checkoutContainer.show();
+        $(this).closest(".PlanSuggestion__CheckoutButton").hide();
+        $allAtOnceCheckbox.prop('disabled', true);
+    });
+
+    $cancelBtn.on("click", function(){
+        $(".PlanSuggestion").show();
+        $(".PlanSuggestion__CheckoutButton").show();
+        $checkoutContainer.hide();
+        $(".PlanSuggestion input").prop('disabled', false);
+        paymentElement.destroy();
+        $cancelBtn.hide();
+    });
+
+    $confirmPlanPurchaseBtn.on("click", function(){
+        if (!elements) return;
+        $paymentSpinner.show();
+        $(".PlanSuggestion__PaymentInner").hide();
+
+        var $planSuggestion = $(".PlanSuggestion:visible");
+        var planIdForPayment = $planSuggestion.data("planId");
+        var $allAtOnceCheckbox = $planSuggestion.find("input[name='payment_all_at_once']");
+        var allAtOnce = $allAtOnceCheckbox.length > 0 && $allAtOnceCheckbox.prop("checked");
+        var returnUrl = "/payment/success?planId=" + planIdForPayment + "&allAtOnce=" + allAtOnce;
+
+        handleConfirmPaymentClick(returnUrl);
+    });
+
+    $confirmInvoicePaymentBtn.on('click', function(){
+        var returnUrl = "/sent-invoices/handle-payment-success?invoice_id=" + $(this).data().invoiceId;
+
+        handleConfirmPaymentClick(returnUrl);
+    });
+    
+    function handleConfirmPaymentClick(returnUrl){
+        if (!elements) return;
+        $paymentSpinner.show();
+        $(".PlanSuggestion__PaymentInner").hide();
+
+        stripe.confirmPayment({
+            elements,
+            confirmParams: {
+                return_url: getFullUrl(returnUrl),
+            },
+            }).then(function(result) {
+                if (result.error) {
+                    $paymentSpinner.hide();
+                    $("#payment-error").show();
+                    $("#payment-error-message").text(result.error.message);
+                    $("#payment-error-code").append(result.error.code);
+                }
+            });
+    }
+
+    $(".PlanSuggestion__RetryPaymentButton").on('click', function(){
+        $("#payment-error").hide();
+        $(".PlanSuggestion__PaymentInner").show();
+    });
+
+
+
+    
+    
+    
+
+    var $checkoutModal = $("#checkout-modal");
+    var $paymentLinks = $(".payment-link");
+    if(!$paymentLinks.length) return;
+
+    $checkoutModal.on('hidden.bs.modal', function (e) {
+        if(paymentElement) {
+            paymentElement.destroy();
+            paymentElement = null;
+        }
+    });
+
+    $paymentLinks.on("click", function(){
+        $checkoutModal.modal('show');
+        $paymentSpinner.show();
+        stripe = Stripe(window.stripeConfig.pk);
+        var $buttonContainer = $(".PlanSuggestion__ButtonContainer");
+        var invoiceId = $(this).data().invoiceId;
+
+        $confirmInvoicePaymentBtn.data('invoiceId', invoiceId);
+
+        prepareInvoicePayment(invoiceId, function(res){
+            var paymentIntent = JSON.parse(res);
+            
+            if(!elements){
+                elements = stripe.elements({
+                    clientSecret: paymentIntent.client_secret,
+                    locale: window.userLanguage,
+                });
+            }
+
+            paymentElement = elements.create('payment');
+            paymentElement.mount('#payment-element');
+            paymentElement.on('ready', function(){
+                $paymentSpinner.hide();
+                paymentElement.focus();
+            });
+
+            paymentElement.on('change', function(event) {
+                if (event.complete) {
+                    $buttonContainer.show();
+                } else {
+                    $buttonContainer.hide();
+                }
+            });
+        });
+    });
+
+
+
+    function createPaymentElement(planId, allAtOnce, planPriceId, callback){
+        stripe = Stripe(window.stripeConfig.pk);
+        var $buttonContainer = $(".PlanSuggestion__ButtonContainer");
+
+        return createPaymentIntent(planId, allAtOnce, planPriceId, function(res){
+            var paymentIntent = JSON.parse(res);
+            var elements = stripe.elements({
+                clientSecret: paymentIntent.client_secret,
+                locale: window.userLanguage,
+            });
+
+            var paymentElement = elements.create('payment');
+            paymentElement.mount('#payment-element');
+            paymentElement.on('ready', function(){
+                $paymentSpinner.hide();
+                $cancelBtn.show();
+                paymentElement.focus();
+            });
+
+            paymentElement.on('change', function(event) {
+                if (event.complete) {
+                    $buttonContainer.show();
+                } else {
+                    $buttonContainer.hide();
+                }
+            });
+
+            callback(elements, paymentElement);
+        });
+    }
+
+    function prepareInvoicePayment(id, callback){
+        $.ajax({
+            url: getUrl("/payment/prepare-invoice-payment"),
+            type: "POST",
+            data: { invoice_id: id },
+            success: callback
+        });
+    }
+}
+
+
 
 function setupLessonAssignmentAutomaticMessages(){
     var $lessonSelect = $("select[name='UserLectures[lecture_id]']");
@@ -220,7 +440,7 @@ function setupArchiveSearchByCategory(){
         $(selector).on("input", function () {
             filterByCategory(selector, this.checked);
         });
-    }    
+    }
 
     function filterByCategory(selector, isChecked) {
         if (isChecked) {
@@ -248,7 +468,7 @@ function setupArchiveSearchByCategory(){
 }
 
 function setupLectureFilterByDifficulty(){
-    $("#assign-page-main .select2.select2-container").on("click", function(){  
+    $("#assign-page-main .select2.select2-container").on("click", function(){
         var preferredDifficulty = $("#PreferredLectureDifficulty").val()
         if (!preferredDifficulty){
             return;
@@ -261,7 +481,7 @@ function setupLectureFilterByDifficulty(){
 
             var parts = this.innerText.split("(");
             var difficulty = parseInt(parts[parts.length-1].replace(")", "").trim());
-            
+
             if(difficulty !== parseInt(preferredDifficulty)){
                 $(this).css("display", "none");
                 $(document).scroll();
@@ -287,7 +507,7 @@ function setupAssignUserListFilters(){
 
 function getSubTypeSelector(type) {
     return ".subscription-type-selector.type-" + type;
-}    
+}
 
 var subTypeSelectors = Object.keys(SUB_TYPES).map(function (subType) {
     return getSubTypeSelector(subType);
@@ -362,7 +582,7 @@ function shouldHideRow(lang, langText, subTypes, subTypeText) {
         } else {
             hideRow = lang !== langText || subTypes.indexOf(subTypeText) === -1;
         }
-    }           
+    }
 
     return hideRow;
 }
@@ -442,7 +662,7 @@ function scrollChatToBottom(){
             $("#chat-box-container").scrollTop(function() {
                 return this.scrollHeight;
             });
-        }, 200);        
+        }, 200);
     }
 }
 
@@ -460,7 +680,7 @@ function loadUnreadMessagesCount() {
         type: "POST",
         success: function (jsonData) {
             var data = JSON.parse(jsonData);
-            
+
             if(parseInt(data.messages) > 0){
                 $unreadMessagesCount.html(data.messages);
                 $unreadMessagesCount.show();
@@ -576,22 +796,22 @@ function fiterSentInvoices(){
     var searchValue = $("input[name='sent-invoices-filter']").val().toLowerCase();
     var year = $('#invoices-year-selector').select2().val();
     var month = $('#invoices-month-selector').select2().val();
-    
+
     var filterByText = searchValue.length >= 4;
     var filterByDate = year !== "" && month !== "";
 
     if(filterByDate){
         year = parseInt(year);
         month = parseInt(month);
-        
+
         var firstDay = new Date(year, month, 1);
         var lastDay = new Date(year, month + 1, 0);
-       
+
         var firstDayDate = makeDateString(firstDay);
         var lastDayDate = makeDateString(lastDay);
     }
 
-    
+
     if(filterByText || filterByDate){
         $sentInvoicesRows.each(function(i, row){
             var $row = $(row);
@@ -684,7 +904,7 @@ function setupNeedHelpButton(){
         }
     });
 
-    
+
     $submitButton.on('click', function(){
         var message = $message[0].value;
         if(!message) {
@@ -730,7 +950,7 @@ function setupPostRegistrationModal(){
 }
 
 function firstLessonEvaluateLessonModal() {
-    if (window.isRegisteredAndNewLesson){   
+    if (window.isRegisteredAndNewLesson){
         var ul = document.getElementById("navbar-collapse").getElementsByTagName("li");
         for (var i = 0; i < ul.length - 1; i++) {
             ul[i].addEventListener("click", function(event) {

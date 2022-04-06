@@ -47,11 +47,11 @@ class SchoolSubplanParts extends \yii\db\ActiveRecord
 
     public static function getPlanTotalCost($schoolSubplanId)
     {
-        $plans = self::getForSchoolSubplan($schoolSubplanId)->asArray()->all();
+        $parts = self::getForSchoolSubplan($schoolSubplanId)->asArray()->all();
         $totalCost = 0;
 
-        foreach ($plans as $plan) {
-            $totalCost += $plan['planpart']['monthly_cost'];
+        foreach ($parts as $part) {
+            $totalCost += $part['planpart']['monthly_cost'];
         }
 
         return $totalCost;

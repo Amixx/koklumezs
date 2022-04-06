@@ -6,13 +6,17 @@
         </div>
     </div>
     <div class="row">
-        <?=
-        $this->render('favouriteANDnew', [
+        <?php
+        $emptyText = $isFitnessSchool
+            ? 'Congratulations! You\'ve seen all new workouts'
+            : 'Congratulations! You\'ve seen all new lessons';
+
+        echo $this->render('favouriteANDnew', [
             'userLessons' => $newLessons,
             'divTitle' => 'New lessons',
             'clickableTitle' => 'All new lessons',
             'type' => 'new',
-            'emptyText' => 'Congratulations! You\'ve seen all new lessons',
+            'emptyText' => $emptyText,
             'videoThumb' => $videoThumb,
             'nextLessons' => $nextLessons,
             'isNextLesson' => $isNextLesson,
@@ -20,6 +24,7 @@
             'isActive' => $isActive,
             'teacherPortrait' => $teacherPortrait,
             'isStudent' => $isStudent,
+            'isFitnessSchool' => $isFitnessSchool,
         ]) ?>
         <?=
         $this->render('favouriteANDnew', [
@@ -40,6 +45,18 @@
 
     if ($session->has("renderPostRegistrationModal") && $session->get("renderPostRegistrationModal")) {
         echo $this->render('post-registration-modal');
+    }
+
+    if ($renderPlanSuggestions) {
+        echo $this->render("@app/views/shared/modal", [
+            'id' => 'plan-suggestion-modal',
+            'title' => '',
+            'bodyFileName' => "/lekcijas/plan-suggestion-modal-body",
+            'large' => true,
+            'bodyFileParams' => [
+                'planRecommendations' => $planRecommendations,
+            ],
+        ]);
     }
     ?>
 </div>

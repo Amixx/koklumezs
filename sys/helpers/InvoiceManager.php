@@ -18,43 +18,13 @@ class InvoiceManager
     {
         $schoolSubplan = $studentSubplan['plan'];
         $school = School::getByStudent($user['id']);
-        $schoolTeacher = SchoolTeacher::getBySchoolId($school['id']);
-        $userFullName = Users::getFullName($user);
-        $invoiceBasePath = self::getInvoiceBasePath($schoolTeacher['user_id'], true);
         $invoiceNumber = self::generateInvoiceNumber();
-        $title = self::generateInvoiceTitle($invoiceNumber, true);
-        $invoicePath = $invoiceBasePath . $title;
-        $subplanParts = SchoolSubplanParts::getPartsForSubplan($schoolSubplan['id']);
-        $subplanCost = SchoolSubplanParts::getPlanTotalCost($schoolSubplan['id']);
-        $bankAccount = School::getBankAccount($school->id);
         $destinationEmail = self::getDestinationEmail($user);
 
-        $invoiceContent = Yii::$app->view->render('@app/views/invoice-templates/advance', [
-            'bankAccount' => $bankAccount,
-            'id' => $invoiceNumber,
-            'fullName' => $userFullName,
-            'email' => $destinationEmail,
-            'subplan' => $schoolSubplan,
-            'subplanCost' => $subplanCost,
-            'subplanParts' => $subplanParts,
-            'payer' => $user['payer'],
-        ]);
-
-        InvoicePdfFileGenerator::generate($invoicePath, $invoiceContent, $title);
-
-        if ($sendToRenter) {
-            $sent = EmailSender::sendInvoiceToRenter($school['renter_message'], $school['email'], $destinationEmail, $invoicePath);
-        } else {
-            $message = isset($schoolSubplan['message']) && $schoolSubplan['message']
-                ? $schoolSubplan['message']
-                : "Nosūtam rēķinu par tekošā mēneša nodarbībām. Lai jauka diena!";
-
-            $sent = EmailSender::sendEmailWithAdvanceInvoice($message, $school['email'], $destinationEmail, $invoiceNumber, $invoicePath);
-        }
+        $sent = EmailSender::sendInfoAboutNewInvoice($user, $invoiceNumber);
 
         if ($sent) {
             StudentSubPlans::increaseSentInvoicesCount($studentSubplan);
-
             SentInvoices::createAdvance($user['id'], $invoiceNumber, $schoolSubplan, $studentSubplan);
         } else {
             EmailSender::sendWarningToTeacher($destinationEmail, $school['email']);

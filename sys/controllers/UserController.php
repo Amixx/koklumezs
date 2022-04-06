@@ -162,11 +162,12 @@ class UserController extends Controller
 
     public function actionUpdate($id)
     {
+        $isAdmin = Yii::$app->user->identity->user_level == 'Admin';
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
         $studentGoals = Studentgoals::getUserGoals($id);
         $difficulties = Difficulties::getDifficulties();
-        $schoolSubPlans = SchoolSubPlans::getMappedForSelection();
+        $schoolSubPlans = $isAdmin ? [] : SchoolSubPlans::getMappedForSelection();
         $studentSubplans = StudentSubPlans::getActivePlansForStudentADP($model->id);
 
         $studentSubplanModel = new StudentSubPlans;
