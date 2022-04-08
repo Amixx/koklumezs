@@ -12,9 +12,11 @@ if (isset($sortType)) {
     }
 }
 
+$titleText = $isFitnessSchool ? 'Other exercises in this workout' : 'New lessons';
+
 ?>
 
-<h3 class="text-center"><?= \Yii::t('app',  'New lessons') ?></h3>
+<h3 class="text-center"><?= \Yii::t('app',  $titleText) ?></h3>
 
 <?php if (!empty($newLessons)) { ?>
     <?= Html::a(

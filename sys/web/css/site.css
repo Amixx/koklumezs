@@ -1067,6 +1067,11 @@ div.has-experience.active, div.rent.active {
     .more-lessons-teacher-portrait {
         margin-left: 135px;
     }
+
+    .top-and-left-section {
+        display: flex;
+        flex-direction: column-reverse;
+    }
 }
 
 @media (min-width: 991px) {
@@ -1148,10 +1153,6 @@ div.has-experience.active, div.rent.active {
     }
     .login-header,.login-input{
         font-size: 12px;
-    }
-    .top-and-left-section{
-        display: flex;
-        flex-direction: column-reverse;
     }
     .evaluation-and-favorite{
         background: rgb(196, 196, 196);
@@ -1409,4 +1410,10 @@ div.has-experience.active, div.rent.active {
         position: initial;
         transform: unset;
     }
+}
+
+
+.equipment-video {
+    padding-right: 32px;
+    margin-bottom: 32px;
 }

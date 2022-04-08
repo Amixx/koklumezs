@@ -82,6 +82,13 @@ $inputFileOptions = [
                     ],
                     ['prompt' => '']
                 ) ?>
+            <?= $form->field($model, 'is_pause')->dropDownList([
+                0 => Yii::t('app',  'No'),
+                1 => Yii::t('app',  'Yes')
+            ], [
+                'prompt' => '',
+                'value' => $model['is_pause'] ? 1 : 0
+            ]) ?>
             <?= $this->render('related', ['lectures' => $lectures, 'relatedLectures' => $relatedLectures]) ?>
             <small><?= \Yii::t('app', 'If you need to add more files, go to section "Files"') ?></small><br /><br />
         </div>

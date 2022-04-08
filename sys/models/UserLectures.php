@@ -260,7 +260,7 @@ class UserLectures extends \yii\db\ActiveRecord
     {
         $userContext = Yii::$app->user->identity;
         $isFitnessSchool = $userContext->getSchool()->is_fitness_school;
-        $userLectures = self::getLessonsOfType($studentId, $type, ['id' => SORT_DESC])->all();
+        $userLectures = self::getLessonsOfType($studentId, $type, ['id' => SORT_ASC])->all();
         if (empty($userLectures)) {
             return null;
         }

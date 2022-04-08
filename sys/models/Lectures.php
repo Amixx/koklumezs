@@ -23,7 +23,8 @@ class Lectures extends \yii\db\ActiveRecord
         return [
             [['title', 'author'], 'required'], //'complexity',
             [['title', 'description', 'file', 'play_along_file', 'lang'], 'string'],
-            [['created', 'updated'], 'safe'],
+            [['is_pause'], 'boolean'],
+            [['created', 'updated', 'pause'], 'safe'],
             [['author', 'complexity'], 'integer'],
             [['author'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author' => 'id']],
         ];
@@ -47,6 +48,7 @@ class Lectures extends \yii\db\ActiveRecord
             'play_along_file' => \Yii::t('app',  'Play along video (not required)'),
             'thumb' => \Yii::t('app',  'Video thumbnail (not required)'),
             'lang' => Yii::t('app', 'Language'),
+            'is_pause' => \Yii::t('app',  'Is pause lesson'),
         ];
     }
 

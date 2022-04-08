@@ -206,6 +206,7 @@ return [
     'Needed parameters' => 'Vajadzīgie parametri',
     'New difficulty' => 'Jaunā sarežģītība',
     'New lessons' => 'Jaunās nodarbības',
+    'Other exercises in this workout' => 'Citi vingrinājumi šajā treniņā',
     'Newest comments' => 'Jaunākie komentāri',
     'Next' => 'Nākamais',
     'No' => 'Nē',
@@ -516,6 +517,7 @@ return [
     'Does not have experience' => 'Nav pieredze',
     'Hey! You\'ve registered successfully. Your 2 week trial period will start after you play and evaluate currently assigned lessons. After that, we will see that you are ready to learn' => 'Hei! Esi veiksmīgi piereģistrējies. Tavs 2 nedēļu bezmaksas izmēģinājums sāksies pēc tam, kad būs izspēlētas un  NOVĒRTĒTAS pirmās saņemtās nodarbības - tad arī skolotājs redzēs, ka esi gatavs sākt darboties',
     'Let\'s play together' => 'Spēlēsim kopā',
+    'How to use equipment' => 'Kā lietot inventāru',
     'If you have any problems playing video, you can watch it on Youtube' => 'Ja rodas problēmas ar video atskaņošanu, vari to skatīties Youtube platformā spiežot',
     'here' => 'seit',
     'Plan part created' => 'Plāna daļa izveidota',
@@ -710,4 +712,7 @@ return [
     'Favourite workouts' => 'Mīļākie treniņi',
     'New workouts' => 'Jaunie treniņi',
     'Workouts' => 'Treniņi',
+    'Is pause lesson' => 'Vai šī ir pauzes nodarbība',
+    'How to use the equipment for next exercises' => 'Kā lietot nākamo nodarbību inventāru',
+    'How to use equipment' => 'Kā lietot inventāru',
 ];

@@ -17,6 +17,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                     'favouriteLessons' => $favouriteLessons,
                     'sortType' => $sortType,
                     'currentLessonEvaluated' => $uLecture && $uLecture->evaluated,
+                    'isFitnessSchool' => $isFitnessSchool,
                 ]) ?>
             </div>
         </div>
@@ -41,6 +42,27 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                         <?= $model->description ?>
                     </div>
                 </div>
+
+                <?php if (!empty($equipmentVideos)) { ?>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4 class='text-center'><?= Yii::t('app', 'How to use the equipment for next exercises') ?></h3>
+                                <ul class='equipment-video'>
+                                    <?php foreach ($equipmentVideos as $key => $video) { ?>
+                                        <?= $this->render(
+                                            'video',
+                                            [
+                                                'lectureVideoFiles' => [0 => ['title' => Yii::t('app', 'How to use equipment'), 'file' => $video]],
+                                                'thumbnail' => $videoThumb ?? '',
+                                                'idPrefix' => 'equipment-vid-' . $key,
+                                            ]
+                                        ); ?>
+                                    <?php } ?>
+                                </ul>
+                        </div>
+                    </div>
+                <?php } ?>
+
 
                 <?php if ($model->file) { ?>
                     <?= $this->render(
@@ -80,6 +102,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                         'lecturefiles' => $lecturefiles,
                         'userEvaluatedLectures' => $userEvaluatedLectures,
                         'videoThumb' => $videoThumb,
+                        'isFitnessSchool' => $isFitnessSchool,
                     ]);
                 } ?>
             </div>
@@ -94,6 +117,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                     'videoThumb' => $videoThumb,
                     'model' => $model,
                     'userEvaluatedLectures' => $userEvaluatedLectures,
+                    'isFitnessSchool' => $isFitnessSchool,
                 ]) ?>
             </div>
         </div>

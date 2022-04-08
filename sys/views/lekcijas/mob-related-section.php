@@ -1,3 +1,7 @@
+<?php
+$playAlongTitle = $isFitnessSchool ? 'How to use equipment' : 'Let\'s play together'
+?>
+
 <div class="visible-xs">
     <?php
 
@@ -30,7 +34,7 @@
             <div>
                 <div class="lecture-wrap">
                     <a class="lecture-thumb" data-toggle="modal" data-target="#lesson_modal_mob_<?= $model->id ?>" style="<?= $thumbStyle ?>"></a>
-                    <span class="lecture-title"><?= Yii::t('app', 'Let\'s play together'); ?>?</span>
+                    <span class="lecture-title"><?= Yii::t('app', $playAlongTitle); ?>?</span>
                 </div>
                 <?= $this->render('view-lesson-modal', [
                     'videoThumb' => $videoThumb,
