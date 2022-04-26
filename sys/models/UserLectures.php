@@ -21,7 +21,7 @@ class UserLectures extends \yii\db\ActiveRecord
     {
         return [
             [['lecture_id', 'user_id', 'assigned'], 'required'],
-            [['lecture_id', 'user_id', 'assigned', 'opened', 'sent'], 'integer'],
+            [['lecture_id', 'user_id', 'assigned', 'opened', 'sent', 'weight'], 'integer'],
             [['created', 'opentime', 'sent', 'open_times', 'user_difficulty'], 'safe'],
             [['assigned'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['assigned' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['user_id' => 'id']],
@@ -42,6 +42,7 @@ class UserLectures extends \yii\db\ActiveRecord
             'sent' => \Yii::t('app',  'E-mail sent'),
             'evaluated' => \Yii::t('app',  'Evaluated'),
             'user_difficulty' => \Yii::t('app',  'Abilities'),
+            'weight' => \Yii::t('app',  'Weight'),
         ];
     }
 

@@ -715,4 +715,5 @@ return [
     'Is pause lesson' => 'Vai šī ir pauzes nodarbība',
     'How to use the equipment for next exercises' => 'Kā lietot nākamo nodarbību inventāru',
     'How to use equipment' => 'Kā lietot inventāru',
+    'Weight' => 'Svars',
 ];

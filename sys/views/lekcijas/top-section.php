@@ -11,7 +11,10 @@ $urlToNextLesson = "lekcijas/lekcija/$nextLessonId";
 ?>
 
 <h3 class="text-center hidden-xs">
-    <?= $title ?>
+    <span><?= $title ?></span>
+    <?php if ($uLecture->weight) { ?>
+        <span>(<?= Yii::t('app', 'Weight') ?>: <?= $uLecture->weight ?> kg)</span>
+    <?php } ?>
 </h3>
 
 <div class="LessonTop">

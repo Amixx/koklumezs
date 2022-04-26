@@ -93,6 +93,8 @@ class AssignController extends Controller
     {
         $userContext = Yii::$app->user->identity;
         $isTeacher = $userContext->isTeacher();
+        $school = $userContext->getSchool();
+        $isFitnessSchool = $school->is_fitness_school;
 
         $this->view->params['chatRecipientId'] = $id;
 
@@ -141,6 +143,11 @@ class AssignController extends Controller
                     } else {
                         Yii::$app->session->setFlash('error', Yii::t('app', 'Could not update automatic message') . '!');
                     }
+                }
+
+                $shouldSetWeight = isset($post['weight']) && $post['weight'];
+                if ($shouldSetWeight) {
+                    $model->weight = $post['weight'];
                 }
 
                 $user->wants_more_lessons = false;
@@ -247,6 +254,7 @@ class AssignController extends Controller
         $options['firstEvaluationDate'] = $firstEvaluationDate;
         $options['openTimes'] = $openTimes;
         $options['trialEnded'] = $trialEnded;
+        $options['isFitnessSchool'] = $isFitnessSchool;
 
         return $this->render('userlectures', $options);
     }

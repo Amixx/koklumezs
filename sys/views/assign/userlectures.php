@@ -111,6 +111,9 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
                             <?php if ($lecture->assigned == $lecture->user_id) { ?>
                                 <span class="glyphicon glyphicon-asterisk"></span>
                             <?php } ?>
+                            <?php if ($lecture->weight) { ?>
+                                <span>(<?= Yii::t('app', 'Weight') ?>: <?= $lecture->weight ?> kg)</span>
+                            <?php } ?>
                         </td>
                         <td class="text-center" style="white-space:nowrap"><?= date_format(new \DateTime($lecture->created), "Y-m-d") ?></td>
                         <td class="text-center"><?= (int) $lecture->opened ? 'Jā' : 'Nē' ?></td>
@@ -197,6 +200,11 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     </label>
     <label for="teacherMessage"><?= Yii::t('app', 'Message for student') ?></label>
     <textarea name="teacherMessage" style="width: 100%" rows="5"></textarea>
+    <?php if ($isFitnessSchool) { ?>
+        <label for="weight"><?= Yii::t('app', 'Weight') ?> (kg)
+            <input type="number" name="weight" class="form-control">
+        </label>
+    <?php } ?>
 </div>
 <?= $manualLectures ? $form->field($model, 'user_id')->hiddenInput(['value' => $id])->label(false) : ''; ?>
 <div class="form-group">
