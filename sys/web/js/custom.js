@@ -200,9 +200,10 @@ function setupPayments(){
 
         var $planSuggestion = $(this).closest(".PlanSuggestion");
         var planIdForPayment = $planSuggestion.data("planId");
-        var planPriceId = $planSuggestion.data("planPriceId");
         var $allAtOnceCheckbox = $planSuggestion.find("input[name='payment_all_at_once']");
         var allAtOnce = $allAtOnceCheckbox.length > 0 && $allAtOnceCheckbox.prop("checked");
+
+        var planPriceId = allAtOnce ? $planSuggestion.data("planSinglePriceId") : $planSuggestion.data("planRecurringPriceId");
         
         createPaymentElement(planIdForPayment, allAtOnce, planPriceId, function(els, el){
             elements = els;

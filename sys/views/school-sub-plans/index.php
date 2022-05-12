@@ -51,7 +51,8 @@ $this->title = \Yii::t('app', 'Subscription plans');
                     return Yii::t('app', $dataProvider->allow_single_payment ?  'Yes' : 'No');
                 }
             ],
-            'stripe_price_id',
+            'stripe_single_price_id',
+            'stripe_recurring_price_id',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
