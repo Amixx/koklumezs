@@ -41,6 +41,12 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $model->title;
                     <div class="col-md-12">
                         <?= $model->description ?>
                     </div>
+                    <?php if ($uLecture && $uLecture->weight) { ?>
+                        <div class="col-md-12" style="font-size: 16px; font-weight: bold; margin-left: 8px; margin-top: 16px;">
+                            <?= Yii::t('app', 'Weight') ?>: <?= $uLecture->weight ?> (kg)
+                        </div>
+                    <?php } ?>
+
                 </div>
 
                 <?php if (!empty($equipmentVideos)) { ?>
