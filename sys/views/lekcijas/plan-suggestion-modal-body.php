@@ -1,20 +1,38 @@
 <div class="text-center">
     <ul class="PlanSuggestion__Container">
-        <?php foreach ($planRecommendations as $plan) { ?>
-            <li class="PlanSuggestion" data-plan-id="<?= $plan->id ?>" data-plan-single-price-id="<?= $plan->stripe_single_price_id ?>" data-plan-recurring-price-id="<?= $plan->stripe_recurring_price_id ?>">
+        <?php foreach ($planRecommendations['plans'] as $plan) { ?>
+            <li class="PlanSuggestion" data-plan-id="<?= $plan->id ?>">
                 <div class="PlanSuggestion__Header"><?= $plan->name ?></div>
                 <?php if ($plan->description) { ?>
                     <div class="PlanSuggestion__Description"><?= $plan->description ?></div>
                 <?php } ?>
-                <div class="PlanSuggestion__Price"><?= Yii::t('app', 'Monthly cost (euro)') ?>: <?= $plan->price() ?></div>
-                <?php if ($plan->allow_single_payment) { ?>
-                    <div class="form-group PlanSuggestion__PaymentCheckbox">
-                        <label class="control-label">
-                            <input type="checkbox" name="payment_all_at_once">&nbsp;<?= Yii::t('app', 'I will pay in one installment (10% discount)') ?>
-                        </label>
+                <?php if ($plan->stripe_single_price_id) { ?>
+                    <div class="PlanSuggestion__Option single">
+                        <h5>Maksā vienā maksājumā - ietaupi līdz 10%!</h5>
+                        <div class="PlanSuggestion__Price">
+                            <?= Yii::t('app', 'Total cost') ?>:
+                            <?= $planRecommendations['planPrices'][$plan->id]['single'] ?>
+                            €
+                        </div>
+                        <button class="btn btn-success PlanSuggestion__CheckoutButton" data-price-type="single">
+                            <?= Yii::t('app', 'Choose') ?>
+                        </button>
                     </div>
                 <?php } ?>
-                <button class="btn btn-success PlanSuggestion__CheckoutButton"><?= Yii::t('app', 'Choose') ?></button>
+                <?php if ($plan->stripe_recurring_price_id) { ?>
+                    <div class="PlanSuggestion__Option recurring">
+                        <h5>Maksā katru mēnesi</h5>
+                        </h5>
+                        <div class="PlanSuggestion__Price">
+                            <?= Yii::t('app', 'Monthly cost') ?>:
+                            <?= $planRecommendations['planPrices'][$plan->id]['recurring'] ?>
+                            €
+                        </div>
+                        <button class="btn btn-success PlanSuggestion__CheckoutButton" data-price-type="recurring">
+                            <?= Yii::t('app', 'Choose') ?>
+                        </button>
+                    </div>
+                <?php } ?>
             </li>
         <?php } ?>
         <li class="PlanSuggestion__Payment" style="display: none">

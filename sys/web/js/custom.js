@@ -161,13 +161,10 @@ $(document).ready(function() {
 
 
 
-function createPaymentIntent(planId, allAtOnce, planPriceId, callback){
+function createPaymentIntent(planId, priceType, callback){
     var data = {
-        plan_id: planId, single_payment: allAtOnce
-    }
-
-    if(planPriceId){
-        data.plan_price_id = planPriceId
+        plan_id: planId,
+        price_type: priceType,
     }
 
     $.ajax({
@@ -200,12 +197,9 @@ function setupPayments(){
 
         var $planSuggestion = $(this).closest(".PlanSuggestion");
         var planIdForPayment = $planSuggestion.data("planId");
-        var $allAtOnceCheckbox = $planSuggestion.find("input[name='payment_all_at_once']");
-        var allAtOnce = $allAtOnceCheckbox.length > 0 && $allAtOnceCheckbox.prop("checked");
-
-        var planPriceId = allAtOnce ? $planSuggestion.data("planSinglePriceId") : $planSuggestion.data("planRecurringPriceId");
+        var priceType = $(this).data('priceType');
         
-        createPaymentElement(planIdForPayment, allAtOnce, planPriceId, function(els, el){
+        createPaymentElement(planIdForPayment, priceType, function(els, el){
             elements = els;
             paymentElement = el;
         });
@@ -214,12 +208,13 @@ function setupPayments(){
         $(this).closest(".PlanSuggestion").show();
         $checkoutContainer.show();
         $(this).closest(".PlanSuggestion__CheckoutButton").hide();
-        $allAtOnceCheckbox.prop('disabled', true);
+        $('.PlanSuggestion__CheckoutButton:visible').parent().hide();
     });
 
     $cancelBtn.on("click", function(){
         $(".PlanSuggestion").show();
         $(".PlanSuggestion__CheckoutButton").show();
+        $(".PlanSuggestion__Option").show();
         $checkoutContainer.hide();
         $(".PlanSuggestion input").prop('disabled', false);
         paymentElement.destroy();
@@ -233,9 +228,7 @@ function setupPayments(){
 
         var $planSuggestion = $(".PlanSuggestion:visible");
         var planIdForPayment = $planSuggestion.data("planId");
-        var $allAtOnceCheckbox = $planSuggestion.find("input[name='payment_all_at_once']");
-        var allAtOnce = $allAtOnceCheckbox.length > 0 && $allAtOnceCheckbox.prop("checked");
-        var returnUrl = "/payment/success?planId=" + planIdForPayment + "&allAtOnce=" + allAtOnce;
+        var returnUrl = "/payment/success?planId=" + planIdForPayment;
 
         handleConfirmPaymentClick(returnUrl);
     });
@@ -326,11 +319,11 @@ function setupPayments(){
 
 
 
-    function createPaymentElement(planId, allAtOnce, planPriceId, callback){
+    function createPaymentElement(planId, priceType, callback){
         stripe = Stripe(window.stripeConfig.pk);
         var $buttonContainer = $(".PlanSuggestion__ButtonContainer");
 
-        return createPaymentIntent(planId, allAtOnce, planPriceId, function(res){
+        return createPaymentIntent(planId, priceType, function(res){
             var paymentIntent = JSON.parse(res);
             var elements = stripe.elements({
                 clientSecret: paymentIntent.client_secret,

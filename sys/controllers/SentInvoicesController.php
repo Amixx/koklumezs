@@ -134,6 +134,20 @@ class SentInvoicesController extends Controller
         $model->plan_start_date = $advanceInvoice['plan_start_date'];
         $model->save();
 
+        $secretKey = Yii::$app->params['stripe']['sk'];
+        $stripe = new \Stripe\StripeClient($secretKey);
+
+        $paymentIntent = $stripe->paymentIntents->retrieve(
+            $get['payment_intent'],
+            []
+        );
+        $stripe->customers->update(
+            $paymentIntent['customer'],
+            [
+                'invoice_settings' => ['default_payment_method' => $paymentIntent['payment_method']]
+            ]
+        );
+
         return $this->redirect(Url::to(['student-invoices/index', 'state' => 'success']));
     }
 

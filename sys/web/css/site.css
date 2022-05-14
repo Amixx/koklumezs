@@ -1346,10 +1346,14 @@ div.has-experience.active, div.rent.active {
     flex: 0 0 calc(75% - 12px);
 }
 
-.PlanSuggestion div:not(:last-child, :nth-child(3), :nth-child(4)) {
+.PlanSuggestion__Header, .PlanSuggestion__Option {
     border-bottom: 2px solid #8089DD;
     padding-bottom: 8px;
     margin-bottom: 16px;
+}
+
+.PlanSuggestion__Option button {
+    margin-top: 8px;
 }
 
 .PlanSuggestion__Header {
@@ -1373,17 +1377,6 @@ div.has-experience.active, div.rent.active {
     font-size: 13px;
 }
 
-.PlanSuggestion div:nth-last-child(2){
-    margin-bottom: 48px;
-}
-
-.PlanSuggestion__CheckoutButton {
-    position: absolute;
-    bottom: 16px;
-    left: 50%;
-    transform: translatex(-50%);
-}
-
 .PlanSuggestion__ConfirmPaymentButton {
     margin-top: 32px;
 }
@@ -1404,11 +1397,6 @@ div.has-experience.active, div.rent.active {
 @media (max-width: 767px){
     .PlanSuggestion__Container {
         flex-direction: column;
-    }
-
-    .PlanSuggestion__CheckoutButton {
-        position: initial;
-        transform: unset;
     }
 }
 

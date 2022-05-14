@@ -89,6 +89,8 @@ class SchoolSubPlansController extends Controller
             }
         }
 
+        if (!$model->days_for_payment) $model->days_for_payment = 14;
+
         return $this->render('create', [
             'model' => $model,
         ]);

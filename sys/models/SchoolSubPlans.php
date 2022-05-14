@@ -40,7 +40,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
             'recommend_after_trial' => \Yii::t('app', 'Should this plan be recommended to students after trial expiration'),
             'allow_single_payment' => \Yii::t('app', 'Allow to pay for the entire plan in one installment'),
             'stripe_single_price_id' => \Yii::t('app', 'Stripe price ID (for single payment)'),
-            'stripe_recurring_price_id' => \Yii::t('app', 'Stripe price ID (for monthly payment)')
+            'stripe_recurring_price_id' => \Yii::t('app', 'Stripe price ID (for monthly payment)'),
         ];
     }
 
@@ -89,6 +89,46 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
 
     public static function getRecommendedPlansAfterTrial()
     {
-        return self::getForCurrentSchool()->andWhere(['recommend_after_trial' => 1])->all();
+        $plans = self::getForCurrentSchool()->andWhere(['recommend_after_trial' => 1])->all();
+        $planPrices = [];
+        foreach ($plans as $plan) {
+            $planPrices[$plan['id']] = self::getSubPlanStripePrices($plan);
+        }
+
+        return [
+            'plans' => $plans,
+            'planPrices' => $planPrices,
+        ];
+    }
+
+    public static function getSubPlanStripePrices($plan)
+    {
+        $prices = [
+            'single' => null,
+            'recurring' => null,
+        ];
+
+        $stripe = new \Stripe\StripeClient(
+            'sk_test_51KHnfwH3bdDtJYNRBaeTBL8XB6X6w4hggXIXHONhVdYVxbuwYYBHC1qmmqLKueJ9mzsVqs5aj21K0hO5fLUzr9dS00L9ZT33Jc'
+        );
+
+        if ($plan['stripe_single_price_id']) {
+            $stripePrice = self::fetchPrice($stripe, $plan['stripe_single_price_id']);
+            $prices['single'] = number_format($stripePrice['unit_amount'] / 100, 2);
+        }
+        if ($plan['stripe_recurring_price_id']) {
+            $stripePrice = self::fetchPrice($stripe, $plan['stripe_recurring_price_id']);
+            $prices['recurring'] = number_format($stripePrice['unit_amount'] / 100, 2);
+        }
+
+        return $prices;
+    }
+
+    private static function fetchPrice($stripe, $priceId)
+    {
+        return $stripe->prices->retrieve(
+            $priceId,
+            []
+        );
     }
 }

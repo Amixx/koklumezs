@@ -86,23 +86,21 @@ class PaymentController extends Controller
 
     public function actionGeneratePaymentIntent()
     {
-
         $post = Yii::$app->request->post();
         $subPlan = SchoolSubPlans::findOne($post['plan_id']);
-        $monthlyPriceInCents = $subPlan->price() * 100;
-        $allAtOnceDiscount = 0.1;
-        $singlePayment = filter_var($post['single_payment'], FILTER_VALIDATE_BOOLEAN);
-        $totalPrice = $singlePayment && $subPlan['months'] > 0
-            ? round($monthlyPriceInCents * $subPlan['months'] * (1 - $allAtOnceDiscount))
-            : $monthlyPriceInCents;
+        $priceType = $post['price_type'];
 
-        $paymentIntent = $singlePayment ? $this->generatePaymentIntent($totalPrice) : $this->prepareSubscription();
+        $planPrices = SchoolSubPlans::getSubPlanStripePrices($subPlan);
 
-        if($paymentIntent['status'] == 'succeeded') {
+        $paymentIntent = $priceType === 'single'
+            ? $this->generatePaymentIntent((int)$planPrices['single'] * 100)
+            : $this->prepareSubscription($subPlan['stripe_recurring_price_id']);
+
+        if ($paymentIntent['status'] == 'succeeded') {
             return $this->redirect([
-                'success', 
+                'success',
                 'planId' => $post['plan_id'],
-                'allAtOnce' => $singlePayment,
+                'allAtOnce' => $priceType === 'single',
                 'payment_intent' => $paymentIntent['id'],
             ]);
         }
@@ -119,36 +117,49 @@ class PaymentController extends Controller
         return json_encode($this->generatePaymentIntent($priceInCents));
     }
 
-    private function prepareSubscription()
+    private function prepareSubscription($recurringPriceId)
     {
-        $post = Yii::$app->request->post();
         $userContext = Yii::$app->user->identity;
         $secretKey = Yii::$app->params['stripe']['sk'];
         $stripe = new \Stripe\StripeClient($secretKey);
 
-        if(!isset($post['plan_price_id'])){
-            throw new InvalidArgumentException("Nav norādīta plāna cena (parametrs plan_price_id). Plāna cenas nosaukums jānorāda obligāti!");
-        }
+        $subscriptionConfig = [
+            'items' => [['price' => $recurringPriceId]],
+            'expand' => ['latest_invoice.payment_intent'],
+        ];
 
         if ($userContext->stripe_id) {
-            $subscription = $stripe->subscriptions->create([
-                'customer' => $userContext->stripe_id,
-                'items' => [
-                    ['price' => $post['plan_price_id']],
-                ],
-                'expand' => ['latest_invoice.payment_intent'],
-            ]);
+            $customer = $stripe->customers->retrieve(
+                $userContext->stripe_id,
+                []
+            );
+
+            $subscriptionConfig['customer'] = $customer['id'];
+
+            $paymentMethods = $stripe->customers->allPaymentMethods(
+                $userContext->stripe_id,
+                ['type' => 'card']
+            );
+
+            if (!$customer['invoice_settings']['default_payment_method']) {
+                if (!empty($paymentMethods['data'])) {
+                    $stripe->customers->update(
+                        $userContext->stripe_id,
+                        [
+                            'invoice_settings' => ['default_payment_method' => $paymentMethods['data'][0]['id']]
+                        ]
+                    );
+                } else {
+                    $subscriptionConfig['payment_behavior'] = 'default_incomplete';
+                }
+            }
         } else {
             $customer = $this->createCustomer();
-            $subscription = $stripe->subscriptions->create([
-                'customer' => $customer['id'],
-                'items' => [
-                    ['price' => $post['plan_price_id']],
-                ],
-                'payment_behavior' => 'default_incomplete',
-                'expand' => ['latest_invoice.payment_intent'],
-            ]);
+            $subscriptionConfig['customer'] = $customer['id'];
+            $subscriptionConfig['payment_behavior'] = 'default_incomplete';
         }
+
+        $subscription = $stripe->subscriptions->create($subscriptionConfig);
 
         return $subscription['latest_invoice']['payment_intent'];
     }
@@ -166,16 +177,12 @@ class PaymentController extends Controller
             $customerId = $customer['id'];
         }
 
-        $paymentIntent = $stripe->paymentIntents->create([
+        return $stripe->paymentIntents->create([
             'amount' => $price,
             'currency' => 'eur',
             'customer' => $customerId,
             'setup_future_usage' => 'off_session'
-            // 'payment_method_types' => ['card'],
-            // 'receipt_email' => ...
         ]);
-        
-        return $paymentIntent;
     }
 
     private function createCustomer()
