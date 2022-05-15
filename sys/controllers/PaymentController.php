@@ -81,6 +81,10 @@ class PaymentController extends Controller
 
         $studentSubplan->save();
 
+        $student = Users::findOne($userContext->id);
+        $student->status = Users::STATUS_ACTIVE;
+        $student->update();
+
         return $this->redirect(["lekcijas/index", 'payment_success' => 1]);
     }
 

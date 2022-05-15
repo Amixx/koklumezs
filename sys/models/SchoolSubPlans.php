@@ -108,9 +108,7 @@ class SchoolSubPlans extends \yii\db\ActiveRecord
             'recurring' => null,
         ];
 
-        $stripe = new \Stripe\StripeClient(
-            'sk_test_51KHnfwH3bdDtJYNRBaeTBL8XB6X6w4hggXIXHONhVdYVxbuwYYBHC1qmmqLKueJ9mzsVqs5aj21K0hO5fLUzr9dS00L9ZT33Jc'
-        );
+        $stripe = new \Stripe\StripeClient(Yii::$app->params['stripe']['sk']);
 
         if ($plan['stripe_single_price_id']) {
             $stripePrice = self::fetchPrice($stripe, $plan['stripe_single_price_id']);

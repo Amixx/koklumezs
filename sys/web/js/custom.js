@@ -228,8 +228,9 @@ function setupPayments(){
 
         var $planSuggestion = $(".PlanSuggestion:visible");
         var planIdForPayment = $planSuggestion.data("planId");
-        var returnUrl = "/payment/success?planId=" + planIdForPayment;
-
+        var allAtOnce = $('.PlanSuggestion__Option:visible').hasClass('single');
+        var returnUrl = "/payment/success?planId=" + planIdForPayment + "&allAtOnce=" + allAtOnce;
+        
         handleConfirmPaymentClick(returnUrl);
     });
 
