@@ -121,7 +121,8 @@ $config = [
                 'targetMinPixel' => 200         // Target image minimum pixel size
             ]
         ],
-        'fitness-workouts' => 'app\fitness\controllers\WorkoutController'
+        'fitness-workouts' => 'app\fitness\controllers\WorkoutController',
+        'fitness-exercises' => 'app\fitness\controllers\ExerciseController'
     ],
 ];
 

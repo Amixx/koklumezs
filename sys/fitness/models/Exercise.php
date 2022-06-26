@@ -3,12 +3,14 @@
 namespace app\fitness\models;
 
 use app\models\Users;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 class Exercise extends \yii\db\ActiveRecord
 {
     public static function tableName()
     {
-        return 'fitness_exercieses';
+        return 'fitness_exercises';
     }
 
     public function rules()
@@ -36,7 +38,12 @@ class Exercise extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::class,
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ]
         ];
     }
 
