@@ -120,7 +120,8 @@ $config = [
                 'targetType'     => IMG_GIF | IMG_JPG | IMG_PNG | IMG_WBMP, // Target image formats ( bit-field )
                 'targetMinPixel' => 200         // Target image minimum pixel size
             ]
-        ]
+        ],
+        'fitness-workouts' => 'app\fitness\controllers\WorkoutController'
     ],
 ];
 
