@@ -93,6 +93,12 @@ class ExerciseController extends Controller
         return $this->redirect(['index']);
     }
 
+    public function actionApiList()
+    {
+        $exercises = Exercise::find()->asArray()->all();
+        return json_encode($exercises);
+    }
+
     protected function findModel($id)
     {
         if (($model = Exercise::findOne($id)) !== null) {

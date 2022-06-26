@@ -3,6 +3,7 @@
 namespace app\fitness\controllers;
 
 use app\fitness\models\Workout;
+use app\fitness\models\WorkoutExercise;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -27,17 +28,38 @@ class WorkoutController extends Controller
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
-                'actions' => [],
+                'actions' => [
+                    'api-create' => ['POST'],
+                ],
             ],
         ];
     }
 
-    public function actionIndex()
+    public function actionIndex($studentId)
     {
+        return $this->render('@app/fitness/views/workout/index', [
+            'studentId' => $studentId,
+        ]);
+    }
+
+    public function actionApiCreate()
+    {
+        $userContext = Yii::$app->user->identity;
+        $post = Yii::$app->request->post();
         $workout = new Workout;
-        var_dump($workout);
-        die();
-        return $this->render('@app/fitness/views/workout/index');
+        $workout->author_id = $userContext->id;
+        $workout->student_id = $post['studentId'];
+
+        if ($workout->save()) {
+            foreach ($post['exercises'] as $ex) {
+                $workoutExercise = new WorkoutExercise;
+                $workoutExercise->workout_id = $workout->id;
+                $workoutExercise->exercise_id = $ex['id'];
+                $workoutExercise->weight = $ex['weight'];
+                $workoutExercise->reps = $ex['reps'];
+                $workoutExercise->save();
+            }
+        }
     }
 
 

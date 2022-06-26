@@ -25,6 +25,7 @@ var urlsForCachingStrategies = {
     cacheOnly: getUrls([
         "/js/select2.js",
         "/js/custom.js",
+        "/js/workouts.js",
         "/js/Youtube.min.js",
         "/css/site.css",
         "/css/select2.css",

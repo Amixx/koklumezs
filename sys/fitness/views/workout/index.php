@@ -9,7 +9,11 @@
 </head>
 
 <body>
-    Tests!!!
+    <h1>Demo skolnieks</h1>
+    <div id="workout-creation"></div>
 </body>
+<script>
+    window.studentId = <?= $studentId ?>
+</script>
 
 </html>
