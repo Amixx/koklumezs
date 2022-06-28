@@ -104,12 +104,12 @@ $(document).ready(function(){
             },
             methods: {
                 loadExercises(){
-                    axios.get('/fitness-exercises/api-list').then(res => {
+                    axios.get(window.getUrl('/fitness-exercises/api-list')).then(res => {
                         this.exercises = res.data
                     })
                 },
                 loadTemplates(){
-                    axios.get('/fitness-templates/api-list').then(res => {
+                    axios.get(window.getUrl('/fitness-templates/api-list')).then(res => {
                         this.templates = res.data
                     })
                 },
@@ -145,12 +145,12 @@ $(document).ready(function(){
                 //     }
                 // },
                 submitWorkout(){
-                    axios.post('/fitness-workouts/api-create', this.workout, {
+                    axios.post(window.getUrl('/fitness-workouts/api-create'), this.workout, {
                         headers: {
                             'X-CSRF-Token': getCsrfToken()
                         }
                     }).then(() => {
-                        window.location.replace('/assign');
+                        window.location.replace(getUrl('/assign'));
                     })
                 }
             },
@@ -276,12 +276,12 @@ $(document).ready(function(){
             },
             methods: {
                 loadExercises(){
-                    axios.get('/fitness-exercises/api-list').then(res => {
+                    axios.get(window.getUrl('/fitness-exercises/api-list')).then(res => {
                         this.exercises = res.data
                     })
                 },
                 loadTemplate(){
-                    axios.get('/fitness-templates/api-get', { params: { id: window.templateId }}).then(res => {
+                    axios.get(window.getUrl('/fitness-templates/api-get'), { params: { id: window.templateId }}).then(res => {
                         this.template.title = res.data.title;
                         this.template.description = res.data.description;
                         this.template.tempExercises = res.data.templateExercises.map(tempEx => ({
@@ -321,18 +321,18 @@ $(document).ready(function(){
                 // },
                 createOrUpdateTemplate(){
                     if(this.templateId) {
-                        axios.patch('/fitness-templates/update?id=' + this.templateId, this.template, {
+                        axios.patch(window.getUrl('/fitness-templates/update?id=' + this.templateId), this.template, {
                             headers: {
                                 'X-CSRF-Token': getCsrfToken()
                             }
                         })
                     } else {
-                        axios.post('/fitness-templates/create', this.template, {
+                        axios.post(window.getUrl('/fitness-templates/create'), this.template, {
                             headers: {
                                 'X-CSRF-Token': getCsrfToken()
                             }
                         }).then(() => {
-                            window.location.replace('/fitness-templates/index');
+                            window.location.replace(getUrl('/fitness-templates/index'));
                         })
                     }
                 },

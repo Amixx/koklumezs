@@ -23,26 +23,6 @@ $this->title = \Yii::t('app', 'Templates');
             'title',
             'description',
             [
-                'attribute' => 'created_at',
-                'value' => 'created_at',
-                'filter' => DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'created_at',
-                    'language' => 'lv',
-                    'dateFormat' => 'yyyy-MM-dd',
-                ]),
-            ],
-            [
-                'attribute' => 'updated_at',
-                'value' => 'updated_at',
-                'filter' => DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'updated_at',
-                    'language' => 'lv',
-                    'dateFormat' => 'yyyy-MM-dd',
-                ]),
-            ],
-            [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => \Yii::t('app', 'Actions'),
                 'template' => '{view} {update} {delete}',

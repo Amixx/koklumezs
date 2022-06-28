@@ -31,8 +31,6 @@ $this->title = $model->name;
             'first_set_video',
             'other_sets_video',
             'technique_video',
-            'created_at',
-            'updated_at',
         ],
     ]) ?>
 

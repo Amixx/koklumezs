@@ -1,21 +1,21 @@
 var localhosts = ["localhost", "127.0.0.1"];
 var origin = window.location.origin;
 
-var IS_LOCAL = false;
+window.IS_LOCAL = false;
 localhosts.forEach(function(host){
     if(origin.indexOf(host) !== -1){
-        IS_LOCAL = true;
+        window.IS_LOCAL = true;
     }
 });
 
-var IS_PROD = !IS_LOCAL;
+window.IS_PROD = !IS_LOCAL;
 
-function getUrl(url) {
+window.getUrl = function(url) {
     var prefix = IS_PROD ? '/sys' : '';
     return prefix + url;
 }
 
-function getFullUrl(url){
+window.getFullUrl = function(url){
     var protocol = IS_LOCAL ? "http" : "https";
     return protocol + "://" + window.location.host + getUrl(url);
 }
@@ -43,9 +43,11 @@ $(document).ready(function() {
     });
 
     if ('serviceWorker' in navigator) {
-        // navigator.serviceWorker.register(getUrl('/sw.js'), {
-        //     scope: getUrl('/')
-        // });
+        if(IS_PROD) {
+            navigator.serviceWorker.register(getUrl('/sw.js'), {
+                scope: getUrl('/')
+            });
+        }
     }
 
 
