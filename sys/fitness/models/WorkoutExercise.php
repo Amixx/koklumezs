@@ -46,4 +46,14 @@ class WorkoutExercise extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Users::class, ['id' => 'student_id']);
     }
+
+    public function getWorkout()
+    {
+        return $this->hasOne(Workout::class, ['id' => 'workout_id']);
+    }
+
+    public function getExercise()
+    {
+        return $this->hasOne(Exercise::class, ['id' => 'exercise_id']);
+    }
 }

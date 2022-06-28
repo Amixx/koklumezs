@@ -24,6 +24,7 @@ use app\models\StartLaterCommitments;
 use app\models\Studentgoals;
 use app\models\StudentSubPlans;
 use app\models\Trials;
+use app\fitness\models\Workout;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\VerbFilter;
@@ -112,24 +113,12 @@ class LekcijasController extends Controller
                 });
             }
 
-            $modelGroups = null;
-
             if ($isFitnessSchool) {
-                $modelGroups = [];
-                foreach ($models as $model) {
-                    $modelGroupDate = date("Y-m-d", strtotime($model->created));
-                    $modelGroups[$modelGroupDate][] = $model;
-                }
-
-                foreach ($modelGroups as &$modelGroup) {
-                    usort($modelGroup, function ($a, $b) {
-                        return $a->id > $b->id;
-                    });
-                }
+                $workouts = Workout::getForCurrentUser();
 
                 return $this->render('index', [
                     'models' => $models,
-                    'modelGroups' => $modelGroups,
+                    'workouts' => $workouts,
                     'type' => $type,
                     'pages' => $pages,
                     'userLectureEvaluations' => $userLectureEvaluations,

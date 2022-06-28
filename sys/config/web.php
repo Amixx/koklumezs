@@ -127,6 +127,7 @@ $config = [
         'fitness-workouts' => 'app\fitness\controllers\WorkoutController',
         'fitness-exercises' => 'app\fitness\controllers\ExerciseController',
         'fitness-templates' => 'app\fitness\controllers\TemplateController',
+        'fitness-student-exercises' => 'app\fitness\controllers\StudentExerciseController',
     ],
 ];
 

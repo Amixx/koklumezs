@@ -43,9 +43,9 @@ $(document).ready(function() {
     });
 
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register(getUrl('/sw.js'), {
-            scope: getUrl('/')
-        });
+        // navigator.serviceWorker.register(getUrl('/sw.js'), {
+        //     scope: getUrl('/')
+        // });
     }
 
 

@@ -5,6 +5,7 @@ namespace app\fitness\models;
 use app\models\Users;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
+use Yii;
 
 class Workout extends \yii\db\ActiveRecord
 {
@@ -57,5 +58,29 @@ class Workout extends \yii\db\ActiveRecord
     public function getStudent()
     {
         return $this->hasOne(Users::class, ['id' => 'student_id']);
+    }
+
+    public function getWorkoutExercises()
+    {
+        return $this->hasMany(WorkoutExercise::class, ['workout_id' => 'id'])->joinWith('exercise');
+    }
+
+    public function getNextWorkoutExercise($workoutExercise)
+    {
+        $takeNext = false;
+        foreach ($this->workoutExercises as $wExercise) {
+            if ($takeNext) return $wExercise;
+            if ($wExercise->id == $workoutExercise->id) $takeNext = true;
+        }
+        return null;
+    }
+
+    public static function getForCurrentUser()
+    {
+        $userContext = Yii::$app->user->identity;
+        return self::find()
+            ->where(['student_id' => $userContext->id])
+            ->orderBy('id', SORT_DESC)
+            ->joinWith('workoutExercises')->asArray()->all();
     }
 }

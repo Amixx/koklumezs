@@ -733,4 +733,7 @@ return [
     'no plan assigned to pupil' => 'skolēnam nav piešķirts plāns',
     'stars' => 'zvaigznes',
     'text' => 'teksts',
+    'Exercise technique' => 'Vingrinājuma tehnika',
+    'Next exercise' => 'Nākamais vingrinājums',
+    'Finish workout' => 'Pabeigt treniņu',
 ];
