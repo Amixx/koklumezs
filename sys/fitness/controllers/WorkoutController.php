@@ -3,6 +3,7 @@
 namespace app\fitness\controllers;
 
 use app\fitness\models\Workout;
+use app\models\Users;
 use app\fitness\models\WorkoutExercise;
 use Yii;
 use yii\filters\VerbFilter;
@@ -37,8 +38,10 @@ class WorkoutController extends Controller
 
     public function actionIndex($studentId)
     {
+        $studentFullName = Users::getFullName(Users::findOne($studentId));
         return $this->render('@app/fitness/views/workout/index', [
             'studentId' => $studentId,
+            'studentFullName' => $studentFullName,
         ]);
     }
 
@@ -51,12 +54,12 @@ class WorkoutController extends Controller
         $workout->student_id = $post['studentId'];
 
         if ($workout->save()) {
-            foreach ($post['exercises'] as $ex) {
+            foreach ($post['workoutExercises'] as $workoutEx) {
                 $workoutExercise = new WorkoutExercise;
                 $workoutExercise->workout_id = $workout->id;
-                $workoutExercise->exercise_id = $ex['id'];
-                $workoutExercise->weight = $ex['weight'];
-                $workoutExercise->reps = $ex['reps'];
+                $workoutExercise->exercise_id = $workoutEx['exercise']['id'];
+                $workoutExercise->weight = $workoutEx['weight'];
+                $workoutExercise->reps = $workoutEx['reps'];
                 $workoutExercise->save();
             }
         }

@@ -95,7 +95,7 @@ $this->title = \Yii::t('app',  'Lesson assigning');
                         ) ?>
                         <?= Html::a(
                             '<span class="glyphicon glyphicon-eye-open"> </span>',
-                            ['/assign/userlectures', 'id' => $id],
+                            $isFitnessSchool ? ['/fitness-workouts/index', 'studentId' => $id] : ['/assign/userlectures', 'id' => $id],
                             [
                                 'title' => \Yii::t('app', 'View'),
                             ]

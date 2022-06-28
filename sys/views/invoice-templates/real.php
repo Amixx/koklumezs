@@ -201,7 +201,7 @@ $usePayer = isset($payer) && $payer && $payer['should_use'];
             </table>
             <div class="lh-2 align-right">
                 <div class="font-s"><?= Yii::t('app', 'Subtotal') . ' ' . $priceWithoutPvn ?></div>
-                <div class="font-xs">PVN (Eur) <?= Yii::t('app', '') . ' ' . $pvnAmount ?></div>
+                <div class="font-xs">PVN (Eur) <?= $pvnAmount ?></div>
                 <div class="font-s"><strong><?= Yii::t('app', 'Total price') . ' (Eur) ' . $payAmount ?></strong></div>
             </div>
             <div class="lh-2">

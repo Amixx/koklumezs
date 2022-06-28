@@ -586,7 +586,7 @@ div.has-experience.active, div.rent.active {
 }
 
 #chat-btn-with-icons.teacher {
-    left: calc(50% - 530px);
+    left: 50px;
 }
 
 .teacher-communication-button {
@@ -1404,4 +1404,14 @@ div.has-experience.active, div.rent.active {
 .equipment-video {
     padding-right: 32px;
     margin-bottom: 32px;
+}
+
+
+
+
+
+
+.limit-height {
+    max-height: 400px;
+    overflow-y: auto;
 }
