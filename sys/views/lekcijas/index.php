@@ -58,7 +58,7 @@ $sortType = $sortType ?? 'DESC';
     <?php } ?>
     <div class="row wrap-overlay" style="padding: 16px 2px; border-radius: 16px; min-height: 100vh;">
         <?php
-        if (count($models) == 0) { ?>
+        if (count($models) == 0 && (!isset($workouts) || !$workouts)) { ?>
             <div class="col-md-6">
                 <h3><?= \Yii::t('app',  'No lessons') ?>!</h3>
             </div>

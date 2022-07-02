@@ -329,6 +329,16 @@ class UserController extends Controller
         return $this->redirect(Yii::$app->request->referrer);
     }
 
+
+
+    public function actionApiGet($id)
+    {
+        $user = Users::find()->where(['id' => $id])->asArray()->one();
+        return json_encode($user);
+    }
+
+
+
     protected function findModel($id)
     {
         if (($model = Users::find()->where(['users.id' => $id, 'users.is_deleted' => false])->joinWith("payer")->one()) !== null) {

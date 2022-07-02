@@ -52,6 +52,7 @@ class WorkoutController extends Controller
         $workout = new Workout;
         $workout->author_id = $userContext->id;
         $workout->student_id = $post['studentId'];
+        $workout->description = $post['description'];
 
         if ($workout->save()) {
             foreach ($post['workoutExercises'] as $workoutEx) {
@@ -63,6 +64,14 @@ class WorkoutController extends Controller
                 $workoutExercise->save();
             }
         }
+    }
+
+
+
+    public function actionApiOfStudent($id)
+    {
+        $studentWorkouts = Workout::find()->where(['student_id' => $id])->orderBy('id', SORT_ASC)->asArray()->all();
+        return json_encode($studentWorkouts);
     }
 
 
