@@ -1,20 +1,8 @@
 <?php
 
-use mihaildev\ckeditor\CKEditor;
-use mihaildev\elfinder\ElFinder;
 use mihaildev\elfinder\InputFile;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\widgets\ActiveForm;
-
-$ckeditorOptions = ElFinder::ckeditorOptions(
-    'elfinder',
-    [
-        'preset' => 'full', //разработанны стандартные настройки basic, standard, full данную возможность не обязательно использовать
-        'inline' => false, //по умолчанию false
-        'filter' => ['image', 'application/pdf', 'text', 'video'],    // фильтр файлов, можно задать массив фильтров https://github.com/Studio-42/elFinder/wiki/Client-configuration-options#wiki-onlyMimes
-    ]
-);
 
 $inputFileOptions = [
     'language' => 'lv',
@@ -31,9 +19,8 @@ $inputFileOptions = [
 
     <?php $form = ActiveForm::begin(); ?>
     <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
-        <?= $form->field($model, 'name')->textInput() ?>
-        <?= $form->field($model, 'description')->textarea() ?>
-        <?= $form->field($model, 'technique_video')->widget(InputFile::class, $inputFileOptions); ?>
+        <?= $form->field($model, 'reps')->textInput() ?>
+        <?= $form->field($model, 'video')->widget(InputFile::class, $inputFileOptions); ?>
     </div>
     <hr />
     <div class="form-group">

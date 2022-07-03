@@ -21,13 +21,12 @@ $this->title = \Yii::t('app', 'Exercises');
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'name',
-            'first_set_video',
-            'other_sets_video',
+            'description',
             'technique_video',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => \Yii::t('app', 'Actions'),
-                'template' => '{update} {delete}',
+                'template' => '{view} {update} {delete}',
             ],
 
         ],

@@ -6,20 +6,19 @@ use app\models\Users;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
-class Template extends \yii\db\ActiveRecord
+class ExerciseSet extends \yii\db\ActiveRecord
 {
     public static function tableName()
     {
-        return 'fitness_templates';
+        return 'fitness_exercisesets';
     }
 
     public function rules()
     {
         return [
-            [['author_id', 'title'], 'required'],
-            [['author_id'], 'integer'],
-            [['title', 'description'], 'string'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['author_id', 'exercise_id', 'reps', 'video'], 'required'],
+            [['author_id', 'exercise_id', 'reps'], 'integer'],
+            [['video'], 'string'],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author_id' => 'id']],
         ];
     }
@@ -29,8 +28,9 @@ class Template extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'author_id' => \Yii::t('app',  'Author ID'),
-            'title' => \Yii::t('app',  'Title'),
-            'description' => \Yii::t('app', 'Description'),
+            'exercise_id' => \Yii::t('app',  'Exercise ID'),
+            'reps' => \Yii::t('app',  'Repetitions'),
+            'video' => \Yii::t('app', 'Video'),
         ];
     }
 
@@ -39,6 +39,8 @@ class Template extends \yii\db\ActiveRecord
         return [
             [
                 'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
                 'value' => new Expression('NOW()'),
             ]
         ];
@@ -50,8 +52,8 @@ class Template extends \yii\db\ActiveRecord
         return $this->hasOne(Users::class, ['id' => 'author_id']);
     }
 
-    public function getTemplateExerciseSets()
+    public function getExercise()
     {
-        return $this->hasMany(TemplateExerciseSet::class, ['template_id' => 'id'])->joinWith('exerciseSet');
+        return $this->hasOne(Exercise::class, ['id' => 'exercise_id']);
     }
 }

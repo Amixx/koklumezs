@@ -60,17 +60,17 @@ class Workout extends \yii\db\ActiveRecord
         return $this->hasOne(Users::class, ['id' => 'student_id']);
     }
 
-    public function getWorkoutExercises()
+    public function getWorkoutExerciseSets()
     {
-        return $this->hasMany(WorkoutExercise::class, ['workout_id' => 'id'])->joinWith('exercise');
+        return $this->hasMany(WorkoutExerciseSet::class, ['workout_id' => 'id'])->joinWith('exerciseSet');
     }
 
     public function getNextWorkoutExercise($workoutExercise)
     {
         $takeNext = false;
-        foreach ($this->workoutExercises as $wExercise) {
-            if ($takeNext) return $wExercise;
-            if ($wExercise->id == $workoutExercise->id) $takeNext = true;
+        foreach ($this->workoutExerciseSets as $wExerciseSet) {
+            if ($takeNext) return $wExerciseSet;
+            if ($wExerciseSet->id == $workoutExercise->id) $takeNext = true;
         }
         return null;
     }
@@ -81,6 +81,6 @@ class Workout extends \yii\db\ActiveRecord
         return self::find()
             ->where(['student_id' => $userContext->id])
             ->orderBy('id', SORT_DESC)
-            ->joinWith('workoutExercises')->asArray()->all();
+            ->joinWith('workoutExerciseSets')->asArray()->all();
     }
 }

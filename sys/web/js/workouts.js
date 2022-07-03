@@ -45,15 +45,12 @@ Vue.component('added-exercise', {
     template: `
     <tr>
         <td>{{ index+1 }}</td>
+        <td>{{ tempExercise.exerciseSet.sequenceNo }}</td>
         <td>{{ tempExercise.exercise.name }}</td>
+        <td>{{ tempExercise.exerciseSet.reps }}</td>
         <td>
             <div class="form-group">
                 <input class="form-control" v-model="tempExercise.weight" style="width:60px;">
-            </div>
-        </td>
-        <td>
-            <div class="form-group">
-                <input type="number" class="form-control" v-model.number="tempExercise.reps" style="width:60px;">
             </div>
         </td>
         <td>
@@ -104,6 +101,77 @@ const getCsrfToken = () => {
 }
 
 
+
+
+class Repository {
+    static get baseUrl(){
+        throw new Error("baseUrl getter must be defined!");
+    }
+    static get postConfig(){
+        return {
+            headers: {
+                'X-CSRF-Token': getCsrfToken()
+            }
+        }
+    }
+}
+
+class ExerciseRepository extends Repository{
+    static get baseUrl(){
+        return window.getUrl(`/${'fitness-exercises'}`)
+    }
+    static async list(){
+        const data = (await axios.get(`${this.baseUrl}/api-list`)).data
+        return data.map(exercise => {
+            exercise.sets = exercise.sets.map((set, i) => ({
+                ...set,
+                sequenceNo: i+1
+            }))
+            return exercise
+        })
+    }
+}
+
+
+class WorkoutRepository extends Repository{
+    static get baseUrl(){
+        return window.getUrl(`/${'fitness-workouts'}`)
+    }
+    static async ofUser(userId){
+        return (await axios.get(`${this.baseUrl}/api-of-student?id=${userId}`)).data
+    }
+
+    static async create(workout){
+        await axios.post(`${this.baseUrl}/api-create`, workout, this.postConfig)
+    }
+}
+
+
+class TemplateRepository extends Repository{
+    static get baseUrl(){
+        return window.getUrl(`/${'fitness-templates'}`)
+    }
+    static async list(){
+        return (await axios.get(`${this.baseUrl}/api-list`)).data
+    }
+
+    static async get(templateId){
+        return (await axios.get(`${this.baseUrl}/api-get`, { params: { id: templateId }})).data
+    }
+
+    static async create(template){
+        return axios.post(`${this.baseUrl}/create`, template, this.postConfig)
+    }
+
+    static async update(templateId, template){
+        return axios.patch(`${this.baseUrl}/update?id=${templateId}`, template, this.postConfig)
+    }
+}
+
+
+
+
+
 $(document).ready(function(){
     var workoutCreationId = "workout-creation";
     var $workoutCreation = document.getElementById(workoutCreationId);
@@ -120,14 +188,9 @@ $(document).ready(function(){
                     templates: null,
                     user: null,
                     userWorkouts: null,
-                    // exerciseToAdd: null,
-                    // addExerciseModal: {
-                    //     weight: null,
-                    //     reps: null,
-                    // },
                     workout: {
                         studentId: null,
-                        workoutExercises: [],
+                        workoutExerciseSets: [],
                         description: null,
                     }
                 }
@@ -140,65 +203,63 @@ $(document).ready(function(){
                 this.workout.studentId = window.studentId;
             },
             methods: {
-                loadExercises(){
-                    axios.get(window.getUrl('/fitness-exercises/api-list')).then(res => {
-                        this.exercises = res.data
-                    })
+                async loadExercises(){
+                    this.exercises = await ExerciseRepository.list()
                 },
-                loadTemplates(){
-                    axios.get(window.getUrl('/fitness-templates/api-list')).then(res => {
-                        this.templates = res.data
-                    })
+                async loadTemplates(){
+                    const templates = (await TemplateRepository.list()).map(template => ({
+                        ...template,
+                        templateExerciseSets: template.templateExerciseSets.map(tempEx => {
+                            let setSequenceNo = 1
+                            template.templateExerciseSets.forEach(tempExSet => {
+                                if(
+                                    tempExSet.exerciseSet.exercise_id === tempEx.exerciseSet.exercise_id &&
+                                    parseInt(tempExSet.exerciseSet.id) < parseInt(tempEx.exerciseSet.id))
+                                {
+                                    setSequenceNo++
+                                }
+                            })
+                            return {
+                                id: tempEx.id,
+                                exerciseSet: {
+                                    ...tempEx.exerciseSet,
+                                    sequenceNo: setSequenceNo,
+                                },
+                                exercise: tempEx.exerciseSet.exercise,
+                                weight: tempEx.weight ? parseFloat(tempEx.weight) : null,
+                            }
+                        })
+                    }))
+
+                    this.templates = templates
                 },
                 loadUser(){
                     axios.get(window.getUrl('/user/api-get?id=' + window.studentId)).then(res => {
                         this.user = res.data
                     })
                 },
-                loadUserWorkouts(){
-                    axios.get(window.getUrl('/fitness-workouts/api-of-student?id=' + window.studentId)).then(res => {
-                        this.userWorkouts = res.data
-                    })
+                async loadUserWorkouts(){
+                    this.userWorkouts = await WorkoutRepository.ofUser(window.studentId)
                 },
-                // initAddToWorkout(exercise){
-                //     this.exerciseToAdd = exercise
-                //     this.$nextTick(() => {
-                //         $('#add-exercise-modal').modal('show')
-                //     })
-                // },
-                // cancelAddingExercise(){
-                //     this.closeAddExerciseModal();
-                // },      
                 addExercise(exercise){
-                    this.workout.workoutExercises.push({
+                    const exerciseSet = exercise.sets.find((set) => {
+                        return !this.workout.workoutExerciseSets.find((workoutExerciseSet) => workoutExerciseSet.exerciseSet.id === set.id)
+                    })
+                    this.workout.workoutExerciseSets.push({
+                        exerciseSet,
                         exercise,
                         weight: null,
-                        reps: null,
                     })
-                    // this.cancelAddingExercise()
                 },
                 removeExercise(index){
-                    this.workout.workoutExercises.splice(index, 1);
+                    this.workout.workoutExerciseSets.splice(index, 1);
                 },
                 addTemplate(template){
-                    this.workout.workoutExercises.push(...template.templateExercises.map(x => ({...x})));
+                    this.workout.workoutExerciseSets.push(...template.templateExerciseSets.map(x => ({...x})));
                 },
-                // closeAddExerciseModal(){
-                //     $('#add-exercise-modal').modal('hide');
-                //     this.exerciseToAdd = null;
-                //     this.addExerciseModal = {
-                //         weight: null,
-                //         reps: null,
-                //     }
-                // },
-                submitWorkout(){
-                    axios.post(window.getUrl('/fitness-workouts/api-create'), this.workout, {
-                        headers: {
-                            'X-CSRF-Token': getCsrfToken()
-                        }
-                    }).then(() => {
-                        window.location.replace(getUrl('/assign'));
-                    })
+                async submitWorkout(){
+                    await WorkoutRepository.create(this.workout)
+                    window.location.replace(getUrl('/assign'));
                 }
             },
             template: `
@@ -265,7 +326,7 @@ $(document).ready(function(){
                                 <div class="tab-pane fade" id="templates" role="tabpanel" aria-labelledby="templates-tab">
                                     <ul v-if="templates" class="list-group">
                                         <li v-for="template in templates" :key="template.id" class="list-group-item">
-                                            <span style="margin-right: 8px;">{{ template.title }} ({{ template.templateExercises.length }})</span>
+                                            <span style="margin-right: 8px;">{{ template.title }} ({{ template.templateExerciseSets.length }})</span>
                                             <button class="btn btn-primary" @click="addTemplate(template)">
                                                 <span class="glyphicon glyphicon-plus" title="Pievienot treniņam"></span>
                                             </button>
@@ -281,21 +342,22 @@ $(document).ready(function(){
                                 <input class="form-control" v-model="workout.description">
                             </label>
 
-                            <table class="table table-striped table-bordered" v-if="workout.workoutExercises.length">
+                            <table class="table table-striped table-bordered" v-if="workout.workoutExerciseSets.length">
                                 <thead>
                                     <tr>
-                                        <th>Nr.</th>
+                                        <th>Piegājiens</th>
+                                        <th>Vingr. pieg.</th>
                                         <th>Vingrinājums</th>
-                                        <th>Svars</th>
                                         <th>Reizes</th>
-                                        <th>Dzēsts</th>
+                                        <th>Svars</th>
+                                        <th>Dzēst</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <added-exercise 
-                                        v-for="(exercise, i) in workout.workoutExercises"
+                                        v-for="(exerciseSet, i) in workout.workoutExerciseSets"
                                         :key="i"
-                                        :temp-exercise="exercise"
+                                        :temp-exercise="exerciseSet"
                                         :index="i"
                                         @remove="removeExercise(i)"
                                     ></added-exercise>
@@ -307,25 +369,10 @@ $(document).ready(function(){
                 </div>
             
                 <div class="row" style="margin-top: 16px;">
-                    <div class="col-sm-12 text-center" v-if="workout.workoutExercises.length">
+                    <div class="col-sm-12 text-center" v-if="workout.workoutExerciseSets.length">
                         <button class="btn btn-primary btn-lg" @click="submitWorkout">Nosūtīt treniņu</button>
                     </div>
                 </div>
-
-                <!-- <modal v-if="exerciseToAdd" id="add-exercise-modal" :title="'Pievienot vingrinājumu ' + exerciseToAdd.name">
-                    <form>
-                        <label class="form-group">
-                            Svars (kg): 
-                            <input v-model="addExerciseModal.weight" class="form-control">
-                        </label>
-                        <label class="form-group">
-                            Reizes: 
-                            <input type="number" v-model.number="addExerciseModal.reps" class="form-control">
-                        </label>
-                        <button type="button" class="btn btn-secondary" @click="cancelAddingExercise">Atcelt</button>
-                        <button type="button" class="btn btn-primary" @click="finishAddingExercise">Pievienot</button>
-                    </form>
-                </modal> -->
             </div>
             `
         }).$mount('#' + workoutCreationId);
@@ -336,16 +383,11 @@ $(document).ready(function(){
             data(){
                 return {
                     exercises: null,
-                    // exerciseToAdd: null,
-                    // addExerciseModal: {
-                    //     weight: null,
-                    //     reps: null,
-                    // },
                     templateId: null,
                     template: {
                         title: null,
                         description: null,
-                        tempExercises: [],
+                        templateExerciseSets: [],
                     }
                 }
             },
@@ -362,65 +404,55 @@ $(document).ready(function(){
                 }
             },
             methods: {
-                loadExercises(){
-                    axios.get(window.getUrl('/fitness-exercises/api-list')).then(res => {
-                        this.exercises = res.data
-                    })
+                async loadExercises(){
+                    this.exercises = await ExerciseRepository.list()
                 },
-                loadTemplate(){
-                    axios.get(window.getUrl('/fitness-templates/api-get'), { params: { id: window.templateId }}).then(res => {
-                        this.template.title = res.data.title;
-                        this.template.description = res.data.description;
-                        this.template.tempExercises = res.data.templateExercises.map(tempEx => ({
-                            ...tempEx,
+                async loadTemplate(){
+                    const template = await TemplateRepository.get(window.templateId)                    
+
+                    this.template.title = template.title
+                    this.template.description = template.description
+                    this.template.templateExerciseSets = template.templateExerciseSets.map(tempEx => {
+                        let setSequenceNo = 1
+                        template.templateExerciseSets.forEach(tempExSet => {
+                            if(
+                                tempExSet.exerciseSet.exercise_id === tempEx.exerciseSet.exercise_id &&
+                                parseInt(tempExSet.exerciseSet.id) < parseInt(tempEx.exerciseSet.id))
+                            {
+                                setSequenceNo++
+                            }
+                        })
+                        return {
+                            id: tempEx.id,
+                            exerciseSet: {
+                                ...tempEx.exerciseSet,
+                                sequenceNo: setSequenceNo,
+                            },
+                            exercise: tempEx.exerciseSet.exercise,
                             weight: tempEx.weight ? parseFloat(tempEx.weight) : null,
-                            reps: tempEx.reps ? parseInt(tempEx.reps) : null,
-                        }))
+                        }
                     })
                 },
-                // initAddToWorkout(exercise){
-                //     this.exerciseToAdd = exercise
-                //     this.$nextTick(() => {
-                //         $('#add-exercise-modal').modal('show')
-                //     })
-                // },
-                // cancelAddingExercise(){
-                //     this.closeAddExerciseModal();
-                // },      
                 addExercise(exercise){
-                    this.template.tempExercises.push({
-                        exercise: exercise,
-                        weight: null,
-                        reps: null,
+                    const exerciseSet = exercise.sets.find((set) => {
+                        return !this.template.templateExerciseSets.find((workoutExerciseSet) => workoutExerciseSet.exerciseSet.id === set.id)
                     })
-                    // this.cancelAddingExercise()
+                    this.template.templateExerciseSets.push({
+                        exerciseSet,
+                        exercise,
+                        weight: null,
+                    })
                 },
                 removeExercise(index){
-                    this.template.tempExercises.splice(index, 1);
+                    this.template.templateExerciseSets.splice(index, 1);
                 },
-                // closeAddExerciseModal(){
-                //     $('#add-exercise-modal').modal('hide');
-                //     this.exerciseToAdd = null;
-                //     this.addExerciseModal = {
-                //         weight: null,
-                //         reps: null,
-                //     }
-                // },
-                createOrUpdateTemplate(){
+                async createOrUpdateTemplate(){
                     if(this.templateId) {
-                        axios.patch(window.getUrl('/fitness-templates/update?id=' + this.templateId), this.template, {
-                            headers: {
-                                'X-CSRF-Token': getCsrfToken()
-                            }
-                        })
+                        await TemplateRepository.update(this.templateId, this.template)
+                        window.location.reload()
                     } else {
-                        axios.post(window.getUrl('/fitness-templates/create'), this.template, {
-                            headers: {
-                                'X-CSRF-Token': getCsrfToken()
-                            }
-                        }).then(() => {
-                            window.location.replace(getUrl('/fitness-templates/index'));
-                        })
+                        await TemplateRepository.create(this.template)
+                        window.location.replace(window.getUrl('/fitness-templates/index'))
                     }
                 },
             },
@@ -451,22 +483,23 @@ $(document).ready(function(){
                         </ul>
                     </div>
 
-                    <div v-if="template.tempExercises.length" class="col-md-6 limit-height">
+                    <div v-if="template.templateExerciseSets.length" class="col-md-6 limit-height">
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Nr.</th>
+                                    <th>Piegājiens</th>
+                                    <th>Vingr. pieg.</th>
                                     <th>Vingrinājums</th>
-                                    <th>Svars</th>
                                     <th>Reizes</th>
+                                    <th>Svars</th>
                                     <th>Dzēst</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <added-exercise 
-                                    v-for="(exercise, i) in template.tempExercises"
+                                    v-for="(exerciseSet, i) in template.templateExerciseSets"
                                     :key="i"
-                                    :temp-exercise="exercise"
+                                    :temp-exercise="exerciseSet"
                                     :index="i"
                                     @remove="removeExercise(i)"
                                 ></added-exercise>
@@ -480,21 +513,6 @@ $(document).ready(function(){
                         <button class="btn btn-primary btn-lg" @click="createOrUpdateTemplate">{{ submitButtonText }}</button>
                     </div>
                 </div>
-
-                <!-- <modal v-if="exerciseToAdd" id="add-exercise-modal" :title="'Pievienot vingrinājumu ' + exerciseToAdd.name">
-                    <form>
-                        <label class="form-group">
-                            Svars (kg): 
-                            <input v-model="addExerciseModal.weight" class="form-control">
-                        </label>
-                        <label class="form-group">
-                            Reizes: 
-                            <input type="number" v-model.number="addExerciseModal.reps" class="form-control">
-                        </label>
-                        <button type="button" class="btn btn-secondary" @click="cancelAddingExercise">Atcelt</button>
-                        <button type="button" class="btn btn-primary" @click="finishAddingExercise">Pievienot</button>
-                    </form>
-                </modal> -->
             </div>
             `
         }).$mount('#' + templateCreationId);

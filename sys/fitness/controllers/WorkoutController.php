@@ -4,11 +4,10 @@ namespace app\fitness\controllers;
 
 use app\fitness\models\Workout;
 use app\models\Users;
-use app\fitness\models\WorkoutExercise;
+use app\fitness\models\WorkoutExerciseSet;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 
 class WorkoutController extends Controller
 {
@@ -55,13 +54,12 @@ class WorkoutController extends Controller
         $workout->description = $post['description'];
 
         if ($workout->save()) {
-            foreach ($post['workoutExercises'] as $workoutEx) {
-                $workoutExercise = new WorkoutExercise;
-                $workoutExercise->workout_id = $workout->id;
-                $workoutExercise->exercise_id = $workoutEx['exercise']['id'];
-                $workoutExercise->weight = $workoutEx['weight'];
-                $workoutExercise->reps = $workoutEx['reps'];
-                $workoutExercise->save();
+            foreach ($post['workoutExerciseSets'] as $workoutExSet) {
+                $workoutExerciseSet = new WorkoutExerciseSet;
+                $workoutExerciseSet->workout_id = $workout->id;
+                $workoutExerciseSet->exerciseset_id = $workoutExSet['exerciseSet']['id'];
+                $workoutExerciseSet->weight = $workoutExSet['weight'];
+                $workoutExerciseSet->save();
             }
         }
     }
@@ -72,23 +70,5 @@ class WorkoutController extends Controller
     {
         $studentWorkouts = Workout::find()->where(['student_id' => $id])->orderBy('id', SORT_ASC)->asArray()->all();
         return json_encode($studentWorkouts);
-    }
-
-
-
-    /**
-     * Finds the Lectures model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Lectures the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        // if (($model = Lectures::findOne($id)) !== null) {
-        //     return $model;
-        // }
-
-        // throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

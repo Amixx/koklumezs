@@ -55,5 +55,4 @@ $this->title = $model->title;
             </tbody>
         </table>
     <?php } ?>
-
 </div>

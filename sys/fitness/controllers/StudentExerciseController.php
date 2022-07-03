@@ -2,24 +2,10 @@
 
 namespace app\fitness\controllers;
 
-use app\models\Difficulties;
 use app\models\Lectures;
-use app\models\LecturesDifficulties;
-use app\models\Lecturesevaluations;
-use app\models\Lecturesfiles;
-use app\models\LectureViews;
-use app\models\RelatedLectures;
-use app\models\RegistrationLesson;
-use app\models\Userlectureevaluations;
 use app\models\UserLectures;
 use app\models\Users;
-use app\models\SchoolTeacher;
-use app\models\Chat;
-use app\models\SchoolAfterEvaluationMessages;
-use app\models\SectionsVisible;
-use app\models\StartLaterCommitments;
-use app\models\Trials;
-use app\fitness\models\WorkoutExercise;
+use app\fitness\models\WorkoutExerciseSet;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -58,9 +44,8 @@ class StudentExerciseController extends Controller
         $videoThumb = $school->video_thumbnail;
         $isFitnessSchool = true;
 
-        $workoutExercise = $this->findModel($id);
-        $nextWorkoutExercise = $workoutExercise->workout->getNextWorkoutExercise($workoutExercise);
-
+        $workoutExerciseSet = $this->findModel($id);
+        $nextWorkoutExercise = $workoutExerciseSet->workout->getNextWorkoutExercise($workoutExerciseSet);
         // $difficultyEvaluation = $force ? null : Userlectureevaluations::getLecturedifficultyEvaluation($userContext->id, $id);
 
         $post = Yii::$app->request->post();
@@ -140,7 +125,7 @@ class StudentExerciseController extends Controller
         // $isRegisteredAndNewLesson = RegistrationLesson::isRegistrationLesson($model->id);
 
         return $this->render('@app/fitness/views/student-exercise/view', [
-            'workoutExercise' => $workoutExercise,
+            'workoutExerciseSet' => $workoutExerciseSet,
             'nextWorkoutExercise' => $nextWorkoutExercise,
             'videoThumb' => $videoThumb,
         ]);
@@ -168,7 +153,8 @@ class StudentExerciseController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = WorkoutExercise::findOne($id)) !== null) {
+        $model = WorkoutExerciseSet::find()->where(['fitness_workoutexercisesets.id' => $id])->joinWith('exerciseSet')->one();
+        if (($model) !== null) {
             return $model;
         }
 

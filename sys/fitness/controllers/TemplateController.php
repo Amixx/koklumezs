@@ -4,7 +4,7 @@ namespace app\fitness\controllers;
 
 use Yii;
 use app\fitness\models\Template;
-use app\fitness\models\TemplateExercise;
+use app\fitness\models\TemplateExerciseSet;
 use app\models\Users;
 use app\fitness\models\TemplateSearch;
 use yii\filters\VerbFilter;
@@ -67,13 +67,12 @@ class TemplateController extends Controller
             $template->title = $post['title'];
             $template->description = $post['description'];
             if ($template->save()) {
-                foreach ($post['tempExercises'] as $tempEx) {
-                    $templateExercise = new TemplateExercise;
-                    $templateExercise->template_id = $template->id;
-                    $templateExercise->exercise_id = $tempEx['exercise']['id'];
-                    $templateExercise->weight = $tempEx['weight'];
-                    $templateExercise->reps = $tempEx['reps'];
-                    $templateExercise->save();
+                foreach ($post['templateExerciseSets'] as $tempEx) {
+                    $templateExerciseSet = new TemplateExerciseSet;
+                    $templateExerciseSet->template_id = $template->id;
+                    $templateExerciseSet->exerciseset_id = $tempEx['exerciseSet']['id'];
+                    $templateExerciseSet->weight = $tempEx['weight'];
+                    $templateExerciseSet->save();
                 }
             }
         }
@@ -91,20 +90,31 @@ class TemplateController extends Controller
             $model->title = $post['title'];
             $model->description = $post['description'];
             $model->update();
-            foreach ($model->templateExercises as $tempEx) {
-                $tempExDeleted = true;
-                $tempExModel = TemplateExercise::findOne($tempEx['id']);
 
-                foreach ($post['tempExercises'] as $postTempEx) {
-                    if ($tempEx['id'] == $postTempEx['id']) {
+            foreach ($post['templateExerciseSets'] as $postTempEx) {
+                if (!isset($postTempEx['id'])) { // new exercise set
+                    $templateExerciseSet = new TemplateExerciseSet;
+                    $templateExerciseSet->template_id = $model->id;
+                    $templateExerciseSet->exerciseset_id = $postTempEx['exerciseSet']['id'];
+                    $templateExerciseSet->weight = $postTempEx['weight'];
+                    $templateExerciseSet->save();
+                }
+            }
+
+            foreach ($model->templateExerciseSets as $tempExSet) {
+                $tempExDeleted = true;
+                $tempExSetModel = TemplateExerciseSet::findOne($tempExSet['id']);
+
+                foreach ($post['templateExerciseSets'] as $postTempEx) {
+                    if (!isset($postTempEx['id'])) {
                         $tempExDeleted = false;
-                        $tempExModel->weight = $postTempEx['weight'];
-                        $tempExModel->reps = $postTempEx['reps'];
-                        $tempExModel->update();
+                    } else if ($tempExSet['id'] == $postTempEx['id']) {
+                        $tempExDeleted = false;
+                        $tempExSetModel->weight = $postTempEx['weight'];
+                        $tempExSetModel->update();
                     }
                 }
-
-                if ($tempExDeleted) $tempExModel->delete();
+                if ($tempExDeleted) $tempExSetModel->delete();
             }
         }
 
@@ -123,13 +133,13 @@ class TemplateController extends Controller
 
     public function actionApiList()
     {
-        $templates = Template::find()->joinWith('templateExercises')->asArray()->all();
+        $templates = Template::find()->joinWith('templateExerciseSets')->asArray()->all();
         return json_encode($templates);
     }
 
     public function actionApiGet($id)
     {
-        $model = Template::find()->where(['fitness_templates.id' => $id])->joinWith('templateExercises')->asArray()->one();
+        $model = Template::find()->where(['fitness_templates.id' => $id])->joinWith('templateExerciseSets')->asArray()->one();
         return json_encode($model);
     }
 

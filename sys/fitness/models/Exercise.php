@@ -18,7 +18,7 @@ class Exercise extends \yii\db\ActiveRecord
         return [
             [['author_id', 'name'], 'required'],
             [['author_id'], 'integer'],
-            [['name', 'first_set_video', 'other_sets_video', 'technique_video'], 'string'],
+            [['name', 'description', 'technique_video'], 'string'],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author_id' => 'id']],
         ];
     }
@@ -29,8 +29,7 @@ class Exercise extends \yii\db\ActiveRecord
             'id' => 'ID',
             'author_id' => \Yii::t('app',  'Author ID'),
             'name' => \Yii::t('app',  'Title'),
-            'first_set_video' => \Yii::t('app', 'Video for first set'),
-            'other_sets_video' => \Yii::t('app', 'Video for other sets'),
+            'description' => \Yii::t('app',  'Apraksts'),
             'technique_video' => \Yii::t('app', 'Technique video'),
         ];
     }
@@ -51,5 +50,10 @@ class Exercise extends \yii\db\ActiveRecord
     public function getAuthor()
     {
         return $this->hasOne(Users::class, ['id' => 'author_id']);
+    }
+
+    public function getSets()
+    {
+        return $this->hasMany(ExerciseSet::class, ['exercise_id' => 'id']);
     }
 }

@@ -73,13 +73,12 @@ $sortType = $sortType ?? 'DESC';
                 <?php }
         } else {
             foreach ($workouts as $workout) {
-                if (isset($workout["workoutExercises"][0])) {
-                    $firstExercise = $workout["workoutExercises"][0]["exercise"];
-                    $thumbStyle = ThumbnailHelper::getThumbnailStyle($firstExercise["first_set_video"], $videoThumb);
-
+                if (isset($workout["workoutExerciseSets"][0])) {
+                    $firstExercise = $workout["workoutExerciseSets"][0]["exerciseSet"];
+                    $thumbStyle = ThumbnailHelper::getThumbnailStyle($firstExercise["video"], $videoThumb);
                 ?>
                     <div class="col-md-6 col-lg-3 text-center lecture-wrap">
-                        <a class="lecture-thumb" href="<?= Url::to(['fitness-student-exercises/view', 'id' => $workout["workoutExercises"][0]["id"]]) ?>" style="<?= $thumbStyle ?>"></a>
+                        <a class="lecture-thumb" href="<?= Url::to(['fitness-student-exercises/view', 'id' => $workout["workoutExerciseSets"][0]["id"]]) ?>" style="<?= $thumbStyle ?>"></a>
                         <p><?= Yii::t('app', 'First exercise') ?>: <?= $firstExercise["name"] ?></p>
                     </div>
         <?php

@@ -16,8 +16,7 @@ class ExerciseSearch extends Exercise
             [[
                 'author_id',
                 'name',
-                'first_set_video',
-                'other_sets_video',
+                'description',
                 'technique_video',
                 'created_at',
                 'updated_at',
@@ -74,8 +73,7 @@ class ExerciseSearch extends Exercise
             ['like', 'u2.email', $this->author]
         );
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'first_set_video', $this->first_set_video])
-            ->andFilterWhere(['like', 'other_sets_video', $this->other_sets_video])
+            ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'technique_video', $this->technique_video])
             ->andFilterWhere(['like', 'created_at', $this->created_at])
             ->andFilterWhere(['like', 'updated_at', $this->updated_at]);

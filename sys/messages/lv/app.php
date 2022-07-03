@@ -736,4 +736,8 @@ return [
     'Exercise technique' => 'Vingrinājuma tehnika',
     'Next exercise' => 'Nākamais vingrinājums',
     'Finish workout' => 'Pabeigt treniņu',
+    'Create exercise set' => 'Izveidot vingrinājuma piegājienu',
+    'Sequence no.' => 'Kārtas nr.',
+    'Exercise set deleted!' => 'Vingrinājuma piegājiens dzēsts!',
+    'Exercise sets' => 'Vingrinājuma piegājieni',
 ];

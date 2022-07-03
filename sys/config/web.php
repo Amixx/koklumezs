@@ -128,6 +128,7 @@ $config = [
         'fitness-exercises' => 'app\fitness\controllers\ExerciseController',
         'fitness-templates' => 'app\fitness\controllers\TemplateController',
         'fitness-student-exercises' => 'app\fitness\controllers\StudentExerciseController',
+        'fitness-exercise-sets' => 'app\fitness\controllers\ExerciseSetController',
     ],
 ];
 

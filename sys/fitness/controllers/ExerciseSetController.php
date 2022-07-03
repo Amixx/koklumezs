@@ -3,15 +3,14 @@
 namespace app\fitness\controllers;
 
 use Yii;
-use app\fitness\models\Exercise;
+use app\fitness\models\ExerciseSet;
 use app\models\Users;
-use app\fitness\models\ExerciseSearch;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-class ExerciseController extends Controller
+class ExerciseSetController extends Controller
 {
     public function behaviors()
     {
@@ -37,36 +36,18 @@ class ExerciseController extends Controller
         ];
     }
 
-    public function actionIndex()
-    {
-        $searchModel = new ExerciseSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('@app/fitness/views/exercise/index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    public function actionView($id)
-    {
-        $model = Exercise::find()->where(['fitness_exercises.id' => $id])->joinWith('sets')->one();
-        return $this->render('@app/fitness/views/exercise/view', [
-            'model' => $model,
-        ]);
-    }
-
-    public function actionCreate()
+    public function actionCreate($exercise_id)
     {
         $post = Yii::$app->request->post();
-        $model = new Exercise();
+        $model = new ExerciseSet;
         $model->author_id = Yii::$app->user->identity->id;
+        $model->exercise_id = $exercise_id;
 
         if ($model->load($post) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(Url::to(['fitness-exercises/view', 'id' => $exercise_id]));
         }
 
-        return $this->render('@app/fitness/views/exercise/create', [
+        return $this->render('@app/fitness/views/exercise-set/create', [
             'model' => $model,
         ]);
     }
@@ -82,27 +63,29 @@ class ExerciseController extends Controller
 
         Url::remember(Yii::$app->request->referrer);
 
-        return $this->render('@app/fitness/views/exercise/update', [
+        return $this->render('@app/fitness/views/exercise-set/update', [
             'model' => $model,
         ]);
     }
 
-    public function actionDelete($id)
+    public function actionDelete($id, $exercise_id)
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        Yii::$app->session->setFlash('success', Yii::t('app', 'Exercise set deleted!'));
+
+        return $this->redirect(Url::to(['fitness-exercises/view', 'id' => $exercise_id]));
     }
 
     public function actionApiList()
     {
-        $exercises = Exercise::find()->joinWith('sets')->asArray()->all();
-        return json_encode($exercises);
+        $exerciseSets = ExerciseSet::find()->asArray()->all();
+        return json_encode($exerciseSets);
     }
 
     protected function findModel($id)
     {
-        if (($model = Exercise::findOne($id)) !== null) {
+        if (($model = ExerciseSet::findOne($id)) !== null) {
             return $model;
         }
 

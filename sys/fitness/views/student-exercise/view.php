@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 
-$this->title = \Yii::t('app',  'Lesson') . ': ' . $workoutExercise->exercise->name;
+$this->title = \Yii::t('app',  'Lesson') . ': ' . $workoutExerciseSet->exerciseSet->exercise->name;
 
 ?>
 <!-- unpkg : use the latest version of Video.js -->
@@ -14,18 +14,18 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $workoutExercise->exercise->na
             <div class="lesson-column lesson-column-middle wrap-overlay">
                 <div class="row">
                     <div class="col-md-12">
-                        <h1><?= \Yii::t('app',  'Exercise') . ': ' . $workoutExercise->exercise->name; ?></h1>
+                        <h1><?= \Yii::t('app',  'Exercise') . ': ' . $workoutExerciseSet->exerciseSet->exercise->name; ?></h1>
                         <!-- description -->
                     </div>
                     <div>
-                        <?php if ($workoutExercise->weight) { ?>
+                        <?php if ($workoutExerciseSet->weight) { ?>
                             <div class="col-md-12" style="font-size: 16px; margin-left: 8px; margin-bottom: 16px;">
-                                <?= Yii::t('app', 'Weight') ?>: <?= $workoutExercise->weight ?> (kg)
+                                <?= Yii::t('app', 'Weight') ?>: <?= $workoutExerciseSet->weight ?> (kg)
                             </div>
                         <?php } ?>
-                        <?php if ($workoutExercise->reps) { ?>
+                        <?php if ($workoutExerciseSet->exerciseSet->reps) { ?>
                             <div class="col-md-12" style="font-size: 16px; margin-left: 8px; margin-bottom: 16px;">
-                                <?= Yii::t('app', 'Repetitions') ?>: <?= $workoutExercise->reps ?>
+                                <?= Yii::t('app', 'Repetitions') ?>: <?= $workoutExerciseSet->exerciseSet->reps ?>
                             </div>
                         <?php } ?>
                     </div>
@@ -69,18 +69,18 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $workoutExercise->exercise->na
                 <?php } ?>
 
 
-                <?php if ($workoutExercise->exercise->first_set_video) { ?>
+                <?php if ($workoutExerciseSet->exerciseSet->video) { ?>
                     <?= $this->render(
                         'video',
                         [
-                            'lectureVideoFiles' => [0 => ['title' => $workoutExercise->exercise->name, 'file' => $workoutExercise->exercise->first_set_video]],
+                            'lectureVideoFiles' => [0 => ['title' => $workoutExerciseSet->exerciseSet->exercise->name, 'file' => $workoutExerciseSet->exerciseSet->video]],
                             'thumbnail' => $videoThumb ?? '',
                             'idPrefix' => 'main',
                         ]
                     ); ?>
                 <?php } ?>
 
-                <?php if ($workoutExercise->exercise->technique_video) {
+                <?php if ($workoutExerciseSet->exerciseSet->exercise->technique_video) {
                     echo $this->render('mob-related-section', [
                         'workoutExercise' => $workoutExercise,
                         'videoThumb' => $videoThumb,
@@ -89,7 +89,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $workoutExercise->exercise->na
             </div>
         </div>
     </div>
-    <?php if ($workoutExercise->exercise->technique_video) { ?>
+    <?php if ($workoutExerciseSet->exerciseSet->exercise->technique_video) { ?>
         <div class="col-md-3 hidden-xs">
             <div class="lesson-column lesson-column-right wrap-overlay">
                 <?= $this->render("right-section.php", [
