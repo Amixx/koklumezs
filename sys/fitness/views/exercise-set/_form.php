@@ -20,6 +20,7 @@ $inputFileOptions = [
     <?php $form = ActiveForm::begin(); ?>
     <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
         <?= $form->field($model, 'reps')->textInput() ?>
+        <?= $form->field($model, 'time_seconds')->textInput() ?>
         <?= $form->field($model, 'video')->widget(InputFile::class, $inputFileOptions); ?>
     </div>
     <hr />

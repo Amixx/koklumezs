@@ -58,7 +58,7 @@ class ExerciseSetController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load($post) && $model->save()) {
-            return $this->redirect(Url::previous());
+            return $this->redirect(Url::to(['fitness-exercises/view', 'id' => $model['exercise_id']]));
         }
 
         Url::remember(Yii::$app->request->referrer);

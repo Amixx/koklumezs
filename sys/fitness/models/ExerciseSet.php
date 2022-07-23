@@ -16,8 +16,8 @@ class ExerciseSet extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['author_id', 'exercise_id', 'reps', 'video'], 'required'],
-            [['author_id', 'exercise_id', 'reps'], 'integer'],
+            [['author_id', 'exercise_id', 'video'], 'required'],
+            [['author_id', 'exercise_id', 'reps', 'time_seconds'], 'integer'],
             [['video'], 'string'],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author_id' => 'id']],
         ];
@@ -30,6 +30,7 @@ class ExerciseSet extends \yii\db\ActiveRecord
             'author_id' => \Yii::t('app',  'Author ID'),
             'exercise_id' => \Yii::t('app',  'Exercise ID'),
             'reps' => \Yii::t('app',  'Repetitions'),
+            'time_seconds' => \Yii::t('app',  'Time (seconds)'),
             'video' => \Yii::t('app', 'Video'),
         ];
     }

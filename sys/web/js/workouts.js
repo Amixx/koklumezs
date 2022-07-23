@@ -48,6 +48,7 @@ Vue.component('added-exercise', {
         <td>{{ tempExercise.exerciseSet.sequenceNo }}</td>
         <td>{{ tempExercise.exercise.name }}</td>
         <td>{{ tempExercise.exerciseSet.reps }}</td>
+        <td>{{ tempExercise.exerciseSet.time_seconds }}</td>
         <td>
             <div class="form-group">
                 <input class="form-control" v-model="tempExercise.weight" style="width:60px;">
@@ -349,6 +350,7 @@ $(document).ready(function(){
                                         <th>Vingr. pieg.</th>
                                         <th>Vingrinājums</th>
                                         <th>Reizes</th>
+                                        <th>Laiks (sekundēs)</th>
                                         <th>Svars</th>
                                         <th>Dzēst</th>
                                     </tr>
@@ -491,6 +493,7 @@ $(document).ready(function(){
                                     <th>Vingr. pieg.</th>
                                     <th>Vingrinājums</th>
                                     <th>Reizes</th>
+                                    <th>Laiks (sekundēs)</th>
                                     <th>Svars</th>
                                     <th>Dzēst</th>
                                 </tr>

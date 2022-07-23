@@ -41,6 +41,7 @@ $this->title = $model->name;
                 <tr>
                     <th><?= Yii::t('app', 'Sequence no.') ?></th>
                     <th><?= Yii::t('app', 'Repetitions') ?></th>
+                    <th><?= Yii::t('app', 'Time (seconds)') ?></th>
                     <th><?= Yii::t('app', 'Video') ?></th>
                 </tr>
             </thead>
@@ -49,9 +50,14 @@ $this->title = $model->name;
                     <tr>
                         <td><?= $key + 1 ?></td>
                         <td><?= $set->reps ?></td>
+                        <td><?= $set->time_seconds ?></td>
                         <td><?= $set->video ?></td>
                         <td>
-                            <form action="<?= Url::to(['fitness-exercise-sets/delete', 'id' => $set->id, 'exercise_id' => $model->id]) ?>" method="POST">
+                            <form action="<?= Url::to(['fitness-exercise-sets/update', 'id' => $set->id]) ?>" method="POST" style="display:inline-block">
+                                <input type="hidden" name="<?= Yii::$app->request->csrfParam; ?>" value="<?= Yii::$app->request->csrfToken; ?>" />
+                                <button class="btn btn-primary">Rediģēt</button>
+                            </form>
+                            <form action="<?= Url::to(['fitness-exercise-sets/delete', 'id' => $set->id, 'exercise_id' => $model->id]) ?>" method="POST" style="display:inline-block">
                                 <input type="hidden" name="<?= Yii::$app->request->csrfParam; ?>" value="<?= Yii::$app->request->csrfToken; ?>" />
                                 <button class="btn btn-danger">Dzēst</button>
                             </form>

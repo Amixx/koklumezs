@@ -28,6 +28,11 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $workoutExerciseSet->exerciseS
                                 <?= Yii::t('app', 'Repetitions') ?>: <?= $workoutExerciseSet->exerciseSet->reps ?>
                             </div>
                         <?php } ?>
+                        <?php if ($workoutExerciseSet->exerciseSet->time_seconds) { ?>
+                            <div class="col-md-12" style="font-size: 16px; margin-left: 8px; margin-bottom: 16px;">
+                                <?= Yii::t('app', 'Repetitions') ?>: <?= $workoutExerciseSet->exerciseSet->time_seconds ?>
+                            </div>
+                        <?php } ?>
                     </div>
                     <?php if ($nextWorkoutExercise) { ?>
                         <div class="col-sm-12" style="margin-bottom: 16px;">

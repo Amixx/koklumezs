@@ -740,4 +740,5 @@ return [
     'Sequence no.' => 'Kārtas nr.',
     'Exercise set deleted!' => 'Vingrinājuma piegājiens dzēsts!',
     'Exercise sets' => 'Vingrinājuma piegājieni',
+    'Time (seconds)' => 'Laiks (sekundēs)',
 ];
