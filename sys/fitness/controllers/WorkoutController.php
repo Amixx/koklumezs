@@ -8,6 +8,7 @@ use app\fitness\models\WorkoutExerciseSet;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
+use yii\web\UnprocessableEntityHttpException;
 
 class WorkoutController extends Controller
 {
@@ -59,6 +60,9 @@ class WorkoutController extends Controller
                 $workoutExerciseSet->workout_id = $workout->id;
                 $workoutExerciseSet->exerciseset_id = $workoutExSet['exerciseSet']['id'];
                 $workoutExerciseSet->weight = $workoutExSet['weight'];
+                if (!$workoutExerciseSet->weight) {
+                    throw new UnprocessableEntityHttpException('Some workout sets do not have a defined', 422);
+                }
                 $workoutExerciseSet->save();
             }
         }

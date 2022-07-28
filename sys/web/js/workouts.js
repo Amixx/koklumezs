@@ -44,6 +44,11 @@ Vue.component('added-exercise', {
         showAddSetButton: {
             type: Boolean,
             required: true,
+        },
+        highlightWeightMissing: {
+            type: Boolean,
+            required: false,
+            default: false,
         }
     },
     template: `
@@ -61,7 +66,7 @@ Vue.component('added-exercise', {
         <td>{{ tempExercise.exerciseSet.reps }}</td>
         <td>{{ tempExercise.exerciseSet.time_seconds }}</td>
         <td>
-            <div class="form-group">
+            <div class="form-group" :class="{'has-error': highlightWeightMissing && !tempExercise.weight}">
                 <input class="form-control" v-model="tempExercise.weight" style="width:60px;">
             </div>
         </td>
@@ -102,6 +107,55 @@ Vue.component('last-workouts-table', {
                 </tr>
             </tbody>
         </table>
+    </div>
+    `
+})
+
+
+Vue.component('loading-button', {
+    name: 'loading-button',
+    props: {
+        loading: {
+            type: Boolean,
+            required: false,
+            default: false,
+        }
+    },
+    template: `
+    <button
+        class="btn btn-primary btn-lg"
+        style='display:flex; gap:8px; margin:auto;'
+        :disabled="loading">
+        <span><slot></slot></span>
+        <div
+            class='loader'
+            :style="{'visibility': loading ? 'visible' : 'hidden'}"
+        ></div>
+    </button>
+    `
+})
+
+
+
+Vue.component('success-flash', {
+    name: 'success-flash',
+    props: {},
+    template: `
+    <div class="alert-success alert fade in">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <slot></slot>
+    </div>
+    `
+})
+
+
+Vue.component('error-flash', {
+    name: 'error-flash',
+    props: {},
+    template: `
+    <div class="alert-danger alert fade in">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <slot></slot>
     </div>
     `
 })
@@ -204,7 +258,9 @@ $(document).ready(function(){
                         studentId: null,
                         workoutExerciseSets: [],
                         description: null,
-                    }
+                    },
+                    workoutSubmitting: false,
+                    highlightWeightMissing: false,
                 }
             },
             created(){
@@ -277,8 +333,17 @@ $(document).ready(function(){
                     this.workout.workoutExerciseSets.push(...template.templateExerciseSets.map(x => ({...x})));
                 },
                 async submitWorkout(){
-                    await WorkoutRepository.create(this.workout)
-                    window.location.replace(getUrl('/assign'));
+                    this.workoutSubmitting = true
+                    this.highlightWeightMissing = false
+                    try {
+                        await WorkoutRepository.create(this.workout)
+                        window.location.replace(getUrl('/assign'));
+                    } catch(e) {
+                        if(e.response?.status === 422) {
+                            this.highlightWeightMissing = true
+                            this.workoutSubmitting = false
+                        }
+                    }
                 }
             },
             template: `
@@ -367,6 +432,8 @@ $(document).ready(function(){
                                 <input class="form-control" v-model="workout.description">
                             </label>
 
+                            <error-flash v-if="highlightWeightMissing">Lai izveidotu treniņu, visiem vingrinājumiem obligāti jānorāda svars!</error-flash>
+
                             <table class="table table-striped table-bordered" v-if="workout.workoutExerciseSets.length">
                                 <thead>
                                     <tr>
@@ -386,6 +453,7 @@ $(document).ready(function(){
                                         :temp-exercise="exerciseSet"
                                         :index="i"
                                         :show-add-set-button="exerciseSet.exercise.sets.length !== addedExercisesOfSet(exerciseSet.exercise).length"
+                                        :highlight-weight-missing="highlightWeightMissing"
                                         @add-set="addExercise(exerciseSet.exercise)"
                                         @remove="removeExercise(i)"
                                     ></added-exercise>
@@ -398,7 +466,9 @@ $(document).ready(function(){
             
                 <div class="row" style="margin-top: 16px;">
                     <div class="col-sm-12 text-center" v-if="workout.workoutExerciseSets.length">
-                        <button class="btn btn-primary btn-lg" @click="submitWorkout">Nosūtīt treniņu</button>
+                        <loading-button :loading="workoutSubmitting" @click.native="submitWorkout">
+                            Nosūtīt treniņu
+                        </loading-button>
                     </div>
                 </div>
             </div>
@@ -416,7 +486,7 @@ $(document).ready(function(){
                         title: null,
                         description: null,
                         templateExerciseSets: [],
-                    }
+                    },
                 }
             },
             computed: {
