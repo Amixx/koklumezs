@@ -96,7 +96,7 @@ class UserLayoutHelper extends LayoutHelper
             [
                 ['label' => Yii::t('app',  'School'), 'url' => ['/assign'], 'active' =>  in_array(Yii::$app->controller->id, ['assign']),],
                 ['label' => '+', 'url' => ['/assign/userlectures'], 'active' =>  in_array(Yii::$app->controller->id, ['assign'])],
-                ['label' => Yii::t('app',  'Students'), 'url' => ['/user'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
+                ['label' => Yii::t('app',  'Clients'), 'url' => ['/user'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
                 ['label' => '+', 'url' => ['/user/create'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
                 ['label' => Yii::t('app',  'Exercises'), 'url' => ['/fitness-exercises'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-exercises']),],
                 ['label' => '+', 'url' => ['/fitness-exercises/create'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-exercises']),],

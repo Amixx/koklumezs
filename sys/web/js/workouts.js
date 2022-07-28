@@ -367,7 +367,7 @@ $(document).ready(function(){
                  <ul class="nav nav-tabs" id="exercise-tabs" role="tablist">
                     <li class="nav-item active">
                         <a class="nav-link" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="false">
-                            Skolēns
+                            Klients
                         </a>
                     </li>
                     <li class="nav-item">
@@ -402,7 +402,7 @@ $(document).ready(function(){
                             <ul class="nav nav-tabs" id="exercise-tabs" role="tablist">
                                 <li class="nav-item active">
                                     <a class="nav-link" id="exercises-tab" data-toggle="tab" href="#exercises" role="tab" aria-controls="exercises" aria-selected="false">
-                                        Vingrinājumi
+                                        Vingrojumi
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -448,7 +448,7 @@ $(document).ready(function(){
                                 <input class="form-control" v-model="workout.description">
                             </label>
 
-                            <error-flash v-if="highlightWeightMissing">Lai izveidotu treniņu, visiem vingrinājumiem obligāti jānorāda svars!</error-flash>
+                            <error-flash v-if="highlightWeightMissing">Lai izveidotu treniņu, visiem vingrojumiem obligāti jānorāda svars!</error-flash>
 
                             <div v-if="workout.workoutExerciseSets.length">
                                 <table class="table table-striped table-bordered" >
@@ -478,7 +478,7 @@ $(document).ready(function(){
                                 </table>
                                 <div style="text-align:center;">
                                     <button class="btn btn-success" @click="tryAddingAnotherLap">Pievienot nākamo "apli"</button>
-                                    <p>Ņem vērā: ja kādam no vingrinājumiem, kuru vajadzētu pievienot, nebūs nākamā piegājiena, tas vienkārši tiks izlaists.</p>
+                                    <p>Ņem vērā: ja kādam no vingrojumiem, kuru vajadzētu pievienot, nebūs nākamā piegājiena, tas vienkārši tiks izlaists.</p>
                                 </div>
                             </div>
                             <p v-else>Treniņam vēl nav pievienots neviens vingrinājums...</p>
