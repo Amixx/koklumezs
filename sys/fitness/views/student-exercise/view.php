@@ -34,8 +34,15 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $workoutExerciseSet->exerciseS
                             </div>
                         <?php } ?>
                     </div>
+                    <div class="col-sm-6" style="margin-bottom:16px;">
+                        <div>
+                            <?= $this->render("amount-evaluation", [
+                                'difficultyEvaluation' => $difficultyEvaluation,
+                            ]) ?>
+                        </div>
+                    </div>
                     <?php if ($nextWorkoutExercise) { ?>
-                        <div class="col-sm-12" style="margin-bottom: 16px;">
+                        <div class="col-sm-6" style="margin-bottom: 16px; text-align:right;">
                             <?= Html::a(
                                 \Yii::t('app', 'Next exercise'),
                                 ["fitness-student-exercises/view?id=$nextWorkoutExercise->id"],
@@ -43,7 +50,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $workoutExerciseSet->exerciseS
                             ); ?>
                         </div>
                     <?php } else { ?>
-                        <div class="col-sm-12" style="margin-bottom: 16px;">
+                        <div class="col-sm-6" style="margin-bottom: 16px; text-align:right;">
                             <?= Html::a(
                                 \Yii::t('app', 'Finish workout'),
                                 ["lekcijas/index"],

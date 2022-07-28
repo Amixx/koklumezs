@@ -6,6 +6,7 @@ use app\models\Lectures;
 use app\models\UserLectures;
 use app\models\Users;
 use app\fitness\models\WorkoutExerciseSet;
+use app\fitness\models\WorkoutExerciseSetEvaluation;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -46,11 +47,26 @@ class StudentExerciseController extends Controller
 
         $workoutExerciseSet = $this->findModel($id);
         $nextWorkoutExercise = $workoutExerciseSet->workout->getNextWorkoutExercise($workoutExerciseSet);
-        // $difficultyEvaluation = $force ? null : Userlectureevaluations::getLecturedifficultyEvaluation($userContext->id, $id);
+        $difficultyEvaluation = WorkoutExerciseSetEvaluation::find()->where([
+            'workoutexerciseset_id' => $id,
+            'user_id' => $userContext->id,
+        ])->one();
 
         $post = Yii::$app->request->post();
         if (isset($post["difficulty-evaluation"])) {
-            // handle workout exercise evaluation
+            if ($difficultyEvaluation) {
+                $difficultyEvaluation->evaluation = (int)$post["difficulty-evaluation"];
+            } else {
+                $evaluation = new WorkoutExerciseSetEvaluation();
+                $evaluation->workoutexerciseset_id = $id;
+                $evaluation->user_id = $userContext->id;
+                $evaluation->evaluation = (int)$post["difficulty-evaluation"];
+                $evaluation->save();
+
+                if ($nextWorkoutExercise) {
+                    return $this->redirect(['', 'id' => $nextWorkoutExercise['id']]);
+                }
+            }
         }
 
         // UserLectures::setSeenByUser($userContext->id, $id);
@@ -128,6 +144,7 @@ class StudentExerciseController extends Controller
             'workoutExerciseSet' => $workoutExerciseSet,
             'nextWorkoutExercise' => $nextWorkoutExercise,
             'videoThumb' => $videoThumb,
+            'difficultyEvaluation' => $difficultyEvaluation,
         ]);
 
 

@@ -81,8 +81,7 @@ $sortType = $sortType ?? 'DESC';
                         <a class="lecture-thumb" href="<?= Url::to(['fitness-student-exercises/view', 'id' => $workout["workoutExerciseSets"][0]["id"]]) ?>" style="<?= $thumbStyle ?>"></a>
                         <p><?= Yii::t('app', 'First exercise') ?>: <?= $firstExercise["name"] ?></p>
                     </div>
-        <?php
-                }
+        <?php }
             }
         } ?>
     </div>
