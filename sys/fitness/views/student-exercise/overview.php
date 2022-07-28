@@ -20,7 +20,6 @@
             'videoThumb' => $videoThumb,
             'nextLessons' => $nextLessons,
             'isNextLesson' => $isNextLesson,
-            'renderRequestButton' => $renderRequestButton,
             'isActive' => $isActive,
             'teacherPortrait' => $teacherPortrait,
             'isStudent' => $isStudent,
@@ -34,7 +33,6 @@
             'type' => 'favourite',
             'emptyText' => 'You have not added any lessons to this section yet. You can do this by marking in any lesson that you want to add it to this section.',
             'videoThumb' => $videoThumb,
-            'renderRequestButton' => false,
             'teacherPortrait' => $teacherPortrait,
             'isStudent' => $isStudent,
         ]) ?>

@@ -423,7 +423,6 @@ class LekcijasController extends Controller
             'videoThumb' => $videoThumb,
             'nextLessons' => $nextLessons,
             'isNextLesson' => $isNextLesson,
-            'renderRequestButton' => !$user->wants_more_lessons,
             'isActive' => $isActive,
             'teacherPortrait' => $teacherPortrait,
             'isStudent' => $isStudent,
