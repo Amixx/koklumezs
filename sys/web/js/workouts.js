@@ -40,11 +40,22 @@ Vue.component('added-exercise', {
         index: {
             type: Number,
             required: true,
+        },
+        showAddSetButton: {
+            type: Boolean,
+            required: true,
         }
     },
     template: `
     <tr>
-        <td>{{ index+1 }}</td>
+        <td>{{ index+1 }}
+            <button
+                v-if="showAddSetButton"
+                class="btn btn-primary"
+                @click="$emit('add-set')">
+                <span class="glyphicon glyphicon-plus" title="Pievienot nākamo piegājienu"></span>
+            </button>
+        </td>
         <td>{{ tempExercise.exerciseSet.sequenceNo }}</td>
         <td>{{ tempExercise.exercise.name }}</td>
         <td>{{ tempExercise.exerciseSet.reps }}</td>
@@ -242,15 +253,22 @@ $(document).ready(function(){
                 async loadUserWorkouts(){
                     this.userWorkouts = await WorkoutRepository.ofUser(window.studentId)
                 },
+                addedExercisesOfSet(exercise){
+                    return this.workout.workoutExerciseSets.filter(x => x.exercise.id === exercise.id)
+                },
                 addExercise(exercise){
+                    const addedSetsOfExercise = this.addedExercisesOfSet(exercise)
                     const exerciseSet = exercise.sets.find((set) => {
-                        return !this.workout.workoutExerciseSets.find((workoutExerciseSet) => workoutExerciseSet.exerciseSet.id === set.id)
+                        return !addedSetsOfExercise.find(x => x.exerciseSet.id === set.id)
                     })
-                    this.workout.workoutExerciseSets.push({
-                        exerciseSet,
-                        exercise,
-                        weight: null,
-                    })
+                    
+                    if(exerciseSet) {
+                        this.workout.workoutExerciseSets.push({
+                            exerciseSet,
+                            exercise,
+                            weight: null,
+                        })
+                    }
                 },
                 removeExercise(index){
                     this.workout.workoutExerciseSets.splice(index, 1);
@@ -317,8 +335,14 @@ $(document).ready(function(){
                                 <div class="tab-pane fade active in" id="exercises" role="tabpanel" aria-labelledby="exercises-tab">
                                     <ul v-if="exercises" class="list-group">
                                         <li v-for="exercise in exercises" :key="exercise.id" class="list-group-item">
-                                            <span style="margin-right: 8px;">{{ exercise.name }}</span>
-                                            <button class="btn btn-primary" @click="addExercise(exercise)">
+                                            <span style="margin-right: 8px;">
+                                                {{ exercise.name }}
+                                                ({{ addedExercisesOfSet(exercise).length }}/{{ exercise.sets.length }})
+                                            </span>
+                                            <button
+                                                v-if="exercise.sets.length !== addedExercisesOfSet(exercise).length"
+                                                class="btn btn-primary"
+                                                @click="addExercise(exercise)">
                                                 <span class="glyphicon glyphicon-plus" title="Pievienot treniņam"></span>
                                             </button>
                                         </li>
@@ -361,6 +385,8 @@ $(document).ready(function(){
                                         :key="i"
                                         :temp-exercise="exerciseSet"
                                         :index="i"
+                                        :show-add-set-button="exerciseSet.exercise.sets.length !== addedExercisesOfSet(exerciseSet.exercise).length"
+                                        @add-set="addExercise(exerciseSet.exercise)"
                                         @remove="removeExercise(i)"
                                     ></added-exercise>
                                 </tbody>
@@ -435,15 +461,22 @@ $(document).ready(function(){
                         }
                     })
                 },
+                addedExercisesOfSet(exercise){
+                    return this.template.templateExerciseSets.filter(x => x.exercise.id === exercise.id)
+                },
                 addExercise(exercise){
+                    const addedSetsOfExercise = this.addedExercisesOfSet(exercise)
                     const exerciseSet = exercise.sets.find((set) => {
-                        return !this.template.templateExerciseSets.find((workoutExerciseSet) => workoutExerciseSet.exerciseSet.id === set.id)
+                        return !addedSetsOfExercise.find(x => x.exerciseSet.id === set.id)
                     })
-                    this.template.templateExerciseSets.push({
-                        exerciseSet,
-                        exercise,
-                        weight: null,
-                    })
+                    
+                    if(exerciseSet) {
+                        this.template.templateExerciseSets.push({
+                            exerciseSet,
+                            exercise,
+                            weight: null,
+                        })
+                    }
                 },
                 removeExercise(index){
                     this.template.templateExerciseSets.splice(index, 1);
@@ -475,11 +508,17 @@ $(document).ready(function(){
 
                 <div class="row">
                     <div class="col-md-6 limit-height">
-                    <ul v-if="exercises" class="list-group">
+                        <ul v-if="exercises" class="list-group">
                             <li v-for="exercise in exercises" :key="exercise.id" class="list-group-item">
-                                <span>{{ exercise.name }}</span>
-                                <button class="btn btn-primary" @click="addExercise(exercise)">
-                                    <span class="glyphicon glyphicon-plus" title="Pievienot šablonam"></span>
+                                <span style="margin-right: 8px;">
+                                    {{ exercise.name }}
+                                    ({{ addedExercisesOfSet(exercise).length }}/{{ exercise.sets.length }})
+                                </span>
+                                <button
+                                    v-if="exercise.sets.length !== addedExercisesOfSet(exercise).length"
+                                    class="btn btn-primary"
+                                    @click="addExercise(exercise)">
+                                    <span class="glyphicon glyphicon-plus" title="Pievienot treniņam"></span>
                                 </button>
                             </li>
                         </ul>
@@ -504,6 +543,8 @@ $(document).ready(function(){
                                     :key="i"
                                     :temp-exercise="exerciseSet"
                                     :index="i"
+                                    :show-add-set-button="exerciseSet.exercise.sets.length !== addedExercisesOfSet(exerciseSet.exercise).length"
+                                    @add-set="addExercise(exerciseSet.exercise)"
                                     @remove="removeExercise(i)"
                                 ></added-exercise>
                             </tbody>
