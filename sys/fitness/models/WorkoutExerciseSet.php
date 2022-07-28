@@ -50,4 +50,9 @@ class WorkoutExerciseSet extends \yii\db\ActiveRecord
     {
         return $this->hasOne(ExerciseSet::class, ['id' => 'exerciseset_id'])->joinWith('exercise');
     }
+
+    public function getEvaluations()
+    {
+        return $this->hasMany(WorkoutExerciseSetEvaluation::class, ['workoutexerciseset_id' => 'id']);
+    }
 }

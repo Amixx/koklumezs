@@ -87,6 +87,11 @@ Vue.component('last-workouts-table', {
             required: true,
         }
     },
+    methods: {
+        shouldShowEvaluation(userId) {
+            return parseInt(userId) === window.studentId;
+        }
+    },
     template: `
      <div class="TableContainer" style="max-height: 243px; overflow-y:auto">
         <table class="table table-striped table-bordered">
@@ -103,7 +108,16 @@ Vue.component('last-workouts-table', {
                     <td class="text-center" style="white-space:nowrap">{{ workout.created_at }}</td>
                     <td>{{ workout.description }}</td>
                     <td class="text-center" style="white-space:nowrap">{{ workout.upened_at ? workout.upened_at : 'Nav atvērts' }}</td>
-                    <td></td>
+                    <td>
+                        <div v-for="(exerciseSet, i) in workout.workoutExerciseSets" :key="i">
+                            <div v-for="(eval, j) in exerciseSet.evaluations" :key="j">
+                                {{ i+1 }}. vingrojums: 
+                                <span v-if="shouldShowEvaluation(eval['user_id'])">
+                                    {{ eval['evaluation'] }}
+                                </span>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -308,6 +322,7 @@ $(document).ready(function(){
                 },
                 async loadUserWorkouts(){
                     this.userWorkouts = await WorkoutRepository.ofUser(window.studentId)
+                    console.log(this.userWorkouts)
                 },
                 addedExercisesOfSet(exercise){
                     return this.workout.workoutExerciseSets.filter(x => x.exercise.id === exercise.id)
@@ -360,7 +375,7 @@ $(document).ready(function(){
                             this.workoutSubmitting = false
                         }
                     }
-                }
+                },
             },
             template: `
             <div>

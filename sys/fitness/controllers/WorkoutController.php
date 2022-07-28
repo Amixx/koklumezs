@@ -72,7 +72,7 @@ class WorkoutController extends Controller
 
     public function actionApiOfStudent($id)
     {
-        $studentWorkouts = Workout::find()->where(['student_id' => $id])->orderBy('id', SORT_ASC)->asArray()->all();
+        $studentWorkouts = Workout::find()->where(['student_id' => $id])->joinWith('workoutExerciseSets')->orderBy('id', SORT_ASC)->asArray()->all();
         return json_encode($studentWorkouts);
     }
 }
