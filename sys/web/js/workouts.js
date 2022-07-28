@@ -332,6 +332,22 @@ $(document).ready(function(){
                 addTemplate(template){
                     this.workout.workoutExerciseSets.push(...template.templateExerciseSets.map(x => ({...x})));
                 },
+                tryAddingAnotherLap(){
+                    const exercisesToAdd = []
+                    for(let i = this.workout.workoutExerciseSets.length-1; i >= 0; i--) {
+                        const item = this.workout.workoutExerciseSets[i];
+                        if(
+                            exercisesToAdd.length > 0
+                            && exercisesToAdd[exercisesToAdd.length-1].id === item.exercise.id
+                        ) {
+                            break;
+                        } else {
+                            exercisesToAdd.unshift(item.exercise)
+                        }
+                    }
+
+                    exercisesToAdd.forEach(this.addExercise)
+                },
                 async submitWorkout(){
                     this.workoutSubmitting = true
                     this.highlightWeightMissing = false
@@ -434,31 +450,37 @@ $(document).ready(function(){
 
                             <error-flash v-if="highlightWeightMissing">Lai izveidotu treniņu, visiem vingrinājumiem obligāti jānorāda svars!</error-flash>
 
-                            <table class="table table-striped table-bordered" v-if="workout.workoutExerciseSets.length">
-                                <thead>
-                                    <tr>
-                                        <th>Piegājiens</th>
-                                        <th>Vingr. pieg.</th>
-                                        <th>Vingrinājums</th>
-                                        <th>Reizes</th>
-                                        <th>Laiks (sekundēs)</th>
-                                        <th>Svars</th>
-                                        <th>Dzēst</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <added-exercise 
-                                        v-for="(exerciseSet, i) in workout.workoutExerciseSets"
-                                        :key="i"
-                                        :temp-exercise="exerciseSet"
-                                        :index="i"
-                                        :show-add-set-button="exerciseSet.exercise.sets.length !== addedExercisesOfSet(exerciseSet.exercise).length"
-                                        :highlight-weight-missing="highlightWeightMissing"
-                                        @add-set="addExercise(exerciseSet.exercise)"
-                                        @remove="removeExercise(i)"
-                                    ></added-exercise>
-                                </tbody>
-                            </table>
+                            <div v-if="workout.workoutExerciseSets.length">
+                                <table class="table table-striped table-bordered" >
+                                    <thead>
+                                        <tr>
+                                            <th>Piegājiens</th>
+                                            <th>Vingr. pieg.</th>
+                                            <th>Vingrinājums</th>
+                                            <th>Reizes</th>
+                                            <th>Laiks (sekundēs)</th>
+                                            <th>Svars</th>
+                                            <th>Dzēst</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <added-exercise 
+                                            v-for="(exerciseSet, i) in workout.workoutExerciseSets"
+                                            :key="i"
+                                            :temp-exercise="exerciseSet"
+                                            :index="i"
+                                            :show-add-set-button="exerciseSet.exercise.sets.length !== addedExercisesOfSet(exerciseSet.exercise).length"
+                                            :highlight-weight-missing="highlightWeightMissing"
+                                            @add-set="addExercise(exerciseSet.exercise)"
+                                            @remove="removeExercise(i)"
+                                        ></added-exercise>
+                                    </tbody>
+                                </table>
+                                <div style="text-align:center;">
+                                    <button class="btn btn-success" @click="tryAddingAnotherLap">Pievienot nākamo "apli"</button>
+                                    <p>Ņem vērā: ja kādam no vingrinājumiem, kuru vajadzētu pievienot, nebūs nākamā piegājiena, tas vienkārši tiks izlaists.</p>
+                                </div>
+                            </div>
                             <p v-else>Treniņam vēl nav pievienots neviens vingrinājums...</p>
                         </div>
                     </div>
