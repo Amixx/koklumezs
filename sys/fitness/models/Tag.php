@@ -2,6 +2,8 @@
 
 namespace app\fitness\models;
 
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 use app\models\Users;
 
 class Tag extends \yii\db\ActiveRecord
@@ -34,7 +36,12 @@ class Tag extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-            TimestampBehavior::class,
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ]
         ];
     }
 

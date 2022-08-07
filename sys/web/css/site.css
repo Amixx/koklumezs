@@ -1437,3 +1437,12 @@ div.has-experience.active, div.rent.active {
     max-height: 400px;
     overflow-y: auto;
 }
+
+.exercise-tag {
+    background: #E8E8E8;
+    padding: 4px 8px;
+    border-radius: 16px;
+    margin: 0 8px;
+    white-space: nowrap;
+    font-size: 12px;
+}

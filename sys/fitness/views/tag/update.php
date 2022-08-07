@@ -5,9 +5,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Lectures */
 
-$this->title = \Yii::t('app', 'Edit exercise') . ': ' . $model->name;
-['label' => \Yii::t('app',  'Exercises'), 'url' => ['index']];
-['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
+$this->title = \Yii::t('app', 'Edit tag') . ': ' . $model->value;
+['label' => \Yii::t('app',  'Tags'), 'url' => ['index']];
+['label' => $model->value, 'url' => ['view', 'id' => $model->id]];
 \Yii::t('app',  'Edit');
 ?>
 <div class="lectures-update">
@@ -15,8 +15,6 @@ $this->title = \Yii::t('app', 'Edit exercise') . ': ' . $model->name;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'tags' => $tags,
-        'selectedTagIds' => $selectedTagIds,
     ]) ?>
 
 </div>

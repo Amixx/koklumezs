@@ -24,34 +24,15 @@ $inputFileOptions = [
     'options' => ['class' => 'form-control'],
     'buttonOptions' => ['class' => 'btn btn-default'],
     'multiple' => false, // возможность выбора нескольких файлов
-];
-
-$selectedTagIds = isset($selectedTagIds) ? $selectedTagIds : null;
-$tagSelected = function ($tagId) use ($selectedTagIds) {
-    if (!$selectedTagIds) return false;
-    return in_array($tagId, $selectedTagIds);
-}
+]
 ?>
 
 <div class="lectures-form">
 
     <?php $form = ActiveForm::begin(); ?>
     <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
-        <?= $form->field($model, 'name')->textInput() ?>
+        <?= $form->field($model, 'value')->textInput() ?>
         <?= $form->field($model, 'description')->textarea() ?>
-        <?= $form->field($model, 'technique_video')->widget(InputFile::class, $inputFileOptions); ?>
-
-        <div class="form-group field-season">
-            <label class="control-label" for="tags"> <?= \Yii::t('app',  'Tags') ?></label>
-            <select id="tags" class="form-control" name="tags[]" aria-required="true" aria-invalid="false" multiple>
-                <option value=""></option>
-
-                <?php foreach ($tags as $tag) { ?>
-                    <option value="<?= $tag['id'] ?>" <?= $tagSelected($tag['id']) ? 'selected' : '' ?>><?= $tag['value'] ?></option>
-                <?php } ?>
-            </select>
-            <div class="help-block"></div>
-        </div>
     </div>
     <hr />
     <div class="form-group">

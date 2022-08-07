@@ -742,4 +742,9 @@ return [
     'Exercise set deleted!' => 'Vingrinājuma piegājiens dzēsts!',
     'Exercise sets' => 'Vingrinājuma piegājieni',
     'Time (seconds)' => 'Laiks (sekundēs)',
+    'Tag' => 'Tags',
+    'Tags' => 'Tagi',
+    'Create tag' => 'Izveidot tagu',
+    'Edit tag' => 'Rediģēt tagu',
+    'Exercise tags' => 'Vingrojuma tagi',
 ];

@@ -6,7 +6,10 @@ use Yii;
 use app\fitness\models\Exercise;
 use app\models\Users;
 use app\fitness\models\ExerciseSearch;
+use app\fitness\models\ExerciseTag;
+use app\fitness\models\Tag;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -62,12 +65,23 @@ class ExerciseController extends Controller
         $model = new Exercise();
         $model->author_id = Yii::$app->user->identity->id;
 
+        $tags = Tag::find()->asArray()->all();
+
         if ($model->load($post) && $model->save()) {
+            if (isset($post['tags'])) {
+                foreach ($post['tags'] as $tagId) {
+                    $exerciseTag = new ExerciseTag;
+                    $exerciseTag->exercise_id = $model->id;
+                    $exerciseTag->tag_id = $tagId;
+                    $exerciseTag->save();
+                }
+            }
             return $this->redirect(['index']);
         }
 
         return $this->render('@app/fitness/views/exercise/create', [
             'model' => $model,
+            'tags' => $tags,
         ]);
     }
 
@@ -75,8 +89,29 @@ class ExerciseController extends Controller
     {
         $post = Yii::$app->request->post();
         $model = $this->findModel($id);
+        $selectedTagIds = ArrayHelper::getColumn($model['exerciseTags'], 'tag_id');
+        $tags = Tag::find()->asArray()->all();
 
         if ($model->load($post) && $model->save()) {
+            if (isset($post['tags'])) {
+                $removedTagIds = array_diff($selectedTagIds, $post['tags']);
+                $addedTagIds = array_diff($post['tags'], $selectedTagIds);
+
+                foreach ($addedTagIds as $tagId) {
+                    $exerciseTag = new ExerciseTag;
+                    $exerciseTag->exercise_id = $model->id;
+                    $exerciseTag->tag_id = $tagId;
+                    $exerciseTag->save();
+                }
+                foreach ($removedTagIds as $tagId) {
+                    ExerciseTag::find()->where(['tag_id' => $tagId])->one()->delete();
+                }
+            } else {
+                foreach ($selectedTagIds as $tagId) {
+                    ExerciseTag::find()->where(['tag_id' => $tagId])->one()->delete();
+                }
+            }
+
             return $this->redirect(Url::previous());
         }
 
@@ -84,6 +119,8 @@ class ExerciseController extends Controller
 
         return $this->render('@app/fitness/views/exercise/update', [
             'model' => $model,
+            'tags' => $tags,
+            'selectedTagIds' => $selectedTagIds,
         ]);
     }
 
@@ -96,13 +133,13 @@ class ExerciseController extends Controller
 
     public function actionApiList()
     {
-        $exercises = Exercise::find()->joinWith('sets')->asArray()->all();
+        $exercises = Exercise::find()->joinWith('sets')->joinWith('exerciseTags')->asArray()->all();
         return json_encode($exercises);
     }
 
     protected function findModel($id)
     {
-        if (($model = Exercise::findOne($id)) !== null) {
+        if (($model = Exercise::find()->where(['fitness_exercises.id' => $id])->joinWith('exerciseTags')->one()) !== null) {
             return $model;
         }
 

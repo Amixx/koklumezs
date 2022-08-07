@@ -24,6 +24,15 @@ $this->title = \Yii::t('app', 'Exercises');
             'description',
             'technique_video',
             [
+                'format' => 'raw',
+                'value' => function ($dataProvider) {
+                    return join(', ', array_map(function ($tag) {
+                        return $tag['tag']['value'];
+                    }, $dataProvider->exerciseTags));
+                },
+                'label' => Yii::t('app', 'Tags')
+            ],
+            [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => \Yii::t('app', 'Actions'),
                 'template' => '{view} {update} {delete}',

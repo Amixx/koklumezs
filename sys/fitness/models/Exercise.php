@@ -56,4 +56,9 @@ class Exercise extends \yii\db\ActiveRecord
     {
         return $this->hasMany(ExerciseSet::class, ['exercise_id' => 'id']);
     }
+
+    public function getExerciseTags()
+    {
+        return $this->hasMany(ExerciseTag::class, ['exercise_id' => 'id'])->joinWith('tag');
+    }
 }

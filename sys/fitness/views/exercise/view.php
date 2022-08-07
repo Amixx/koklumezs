@@ -71,4 +71,12 @@ $this->title = $model->name;
     <a href="<?= Url::to(['fitness-exercise-sets/create', 'exercise_id' => $model->id]) ?>" class="btn btn-primary">
         Pievienot <?= $model->sets ? count($model->sets) + 1 : 1 ?>. piegājienu
     </a>
+
+    <?php if ($model->exerciseTags && !empty($model->exerciseTags)) { ?>
+        <h3><?= Yii::t('app', 'Exercise tags') ?></h3>
+        <p><?= join(', ', array_map(function ($tag) {
+                return $tag['tag']['value'];
+            }, $model->exerciseTags)); ?>
+        </p>
+    <?php } ?>
 </div>

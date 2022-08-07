@@ -1,3 +1,5 @@
+Vue.component('v-select', VueSelect.VueSelect)
+
 Vue.component('modal', {
     name: 'modal',
     props: {
@@ -212,6 +214,16 @@ class ExerciseRepository extends Repository{
     }
 }
 
+class TagRepository extends Repository {
+     static get baseUrl(){
+        return window.getUrl(`/${'fitness-tags'}`)
+    }
+    static async list(){
+        const data = (await axios.get(`${this.baseUrl}/api-list`)).data
+        return data
+    }
+}
+
 
 class WorkoutRepository extends Repository{
     static get baseUrl(){
@@ -275,16 +287,33 @@ $(document).ready(function(){
                     },
                     workoutSubmitting: false,
                     highlightWeightMissing: false,
+                    tags: null,
+                    selectedTags: [],
                 }
+            },
+            computed: {
+                displayedExercises(){
+                    if(!this.exercises || !this.tags) return null
+                    if(!this.selectedTags.length) return this.exercises
+                    return this.exercises.filter(
+                        ex => ex.exerciseTags.some(
+                            exTag => this.selectedTags.some(
+                                selTag => selTag.id === exTag.tag_id)))
+                }  
             },
             created(){
                 this.loadExercises();
                 this.loadTemplates();
                 this.loadUser();
                 this.loadUserWorkouts();
+                this.loadTags();
                 this.workout.studentId = window.studentId;
             },
             methods: {
+                async loadTags(){
+                    this.tags = await TagRepository.list()
+                    console.log(this.tags)
+                },
                 async loadExercises(){
                     this.exercises = await ExerciseRepository.list()
                 },
@@ -322,7 +351,6 @@ $(document).ready(function(){
                 },
                 async loadUserWorkouts(){
                     this.userWorkouts = await WorkoutRepository.ofUser(window.studentId)
-                    console.log(this.userWorkouts)
                 },
                 addedExercisesOfSet(exercise){
                     return this.workout.workoutExerciseSets.filter(x => x.exercise.id === exercise.id)
@@ -429,18 +457,34 @@ $(document).ready(function(){
 
                             <div class="tab-content" id="exercise-tab-content">
                                 <div class="tab-pane fade active in" id="exercises" role="tabpanel" aria-labelledby="exercises-tab">
-                                    <ul v-if="exercises" class="list-group">
-                                        <li v-for="exercise in exercises" :key="exercise.id" class="list-group-item">
-                                            <span style="margin-right: 8px;">
-                                                {{ exercise.name }}
-                                                ({{ addedExercisesOfSet(exercise).length }}/{{ exercise.sets.length }})
+                                    <ul v-if="exercises && tags" class="list-group">
+                                        <li class="list-group-item">
+                                            <v-select
+                                                label="value"
+                                                :options="tags"
+                                                multiple
+                                                v-model="selectedTags"
+                                            ></v-select>
+                                        </li>
+                                        <li v-for="exercise in displayedExercises" :key="exercise.id" class="list-group-item" style="display:flex; justify-content:space-between; flex-wrap: wrap; gap: 8px;">
+                                            <span>
+                                                <span style="margin-right: 8px;">
+                                                    {{ exercise.name }}
+                                                    ({{ addedExercisesOfSet(exercise).length }}/{{ exercise.sets.length }})
+                                                </span>
+                                                <button
+                                                    v-if="exercise.sets.length !== addedExercisesOfSet(exercise).length"
+                                                    class="btn btn-primary"
+                                                    @click="addExercise(exercise)">
+                                                    <span class="glyphicon glyphicon-plus" title="Pievienot treniņam"></span>
+                                                </button>
+                                            </span>   
+                                          
+                                            <span>
+                                                <span v-for="exTag in exercise.exerciseTags" class="exercise-tag">
+                                                    {{ exTag.tag.value }}
+                                                </span>
                                             </span>
-                                            <button
-                                                v-if="exercise.sets.length !== addedExercisesOfSet(exercise).length"
-                                                class="btn btn-primary"
-                                                @click="addExercise(exercise)">
-                                                <span class="glyphicon glyphicon-plus" title="Pievienot treniņam"></span>
-                                            </button>
                                         </li>
                                     </ul>
                                 </div>
