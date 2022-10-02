@@ -94,7 +94,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $workoutExerciseSet->exerciseS
 
                 <?php if ($workoutExerciseSet->exerciseSet->exercise->technique_video) {
                     echo $this->render('mob-related-section', [
-                        'workoutExercise' => $workoutExercise,
+                        'workoutExerciseSet' => $workoutExerciseSet->exerciseSet,
                         'videoThumb' => $videoThumb,
                     ]);
                 } ?>
@@ -106,7 +106,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $workoutExerciseSet->exerciseS
             <div class="lesson-column lesson-column-right wrap-overlay">
                 <?= $this->render("right-section.php", [
                     'videoThumb' => $videoThumb,
-                    'workoutExercise' => $workoutExercise,
+                    'workoutExerciseSet' => $workoutExerciseSet->exerciseSet,
                 ]) ?>
             </div>
         </div>

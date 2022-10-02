@@ -44,6 +44,7 @@ class ExerciseController extends Controller
     {
         $searchModel = new ExerciseSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->pagination->setPageSize(100);
 
         return $this->render('@app/fitness/views/exercise/index', [
             'searchModel' => $searchModel,

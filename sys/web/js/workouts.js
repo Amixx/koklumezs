@@ -288,17 +288,29 @@ $(document).ready(function(){
                     workoutSubmitting: false,
                     highlightWeightMissing: false,
                     tags: null,
-                    selectedTags: [],
+                    selectedTagGroup: [[], [], [], [], []],
                 }
             },
             computed: {
                 displayedExercises(){
                     if(!this.exercises || !this.tags) return null
-                    if(!this.selectedTags.length) return this.exercises
-                    return this.exercises.filter(
-                        ex => ex.exerciseTags.some(
-                            exTag => this.selectedTags.some(
-                                selTag => selTag.id === exTag.tag_id)))
+                    if(!this.selectedTagGroup.flat().length) return this.exercises
+                    return this.exercises.filter(ex => {
+                        if(!ex.exerciseTags.length) return false;
+
+                        return this.selectedTagGroup.some(selectedTags => {
+                            if(!selectedTags.length) return false;
+
+                            return selectedTags.every(selTag =>
+                                {
+                                    console.log(selTag, ex.exerciseTags)
+                                    return ex.exerciseTags.some(exTag => selTag.id === exTag.tag_id);
+
+                                }
+                                
+                            )
+                        })
+                    })
                 }  
             },
             created(){
@@ -441,7 +453,7 @@ $(document).ready(function(){
                     </div>
 
                     <div class="row tab-pane fade" id="workout-creation" role="tabpanel" aria-labelledby="workout-creation-tab">
-                        <div class="col-md-6 limit-height">
+                        <div class="col-md-6">
                             <ul class="nav nav-tabs" id="exercise-tabs" role="tablist">
                                 <li class="nav-item active">
                                     <a class="nav-link" id="exercises-tab" data-toggle="tab" href="#exercises" role="tab" aria-controls="exercises" aria-selected="false">
@@ -459,12 +471,20 @@ $(document).ready(function(){
                                 <div class="tab-pane fade active in" id="exercises" role="tabpanel" aria-labelledby="exercises-tab">
                                     <ul v-if="exercises && tags" class="list-group">
                                         <li class="list-group-item">
-                                            <v-select
-                                                label="value"
-                                                :options="tags"
-                                                multiple
-                                                v-model="selectedTags"
-                                            ></v-select>
+                                            <ul>
+                                                <li class="list-group-item" style="border-top:0; border-bottom:0; text-align:center;" v-for="(selectedTags, i) in selectedTagGroup" :key="i">
+                                                    <v-select
+                                                        label="value"
+                                                        :options="tags"
+                                                        multiple
+                                                        v-model="selectedTagGroup[i]"
+                                                    ></v-select>
+                                                    <div v-if="i !== selectedTagGroup.length-1">
+                                                        VAI
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                           
                                         </li>
                                         <li v-for="exercise in displayedExercises" :key="exercise.id" class="list-group-item" style="display:flex; justify-content:space-between; flex-wrap: wrap; gap: 8px;">
                                             <span>
@@ -658,7 +678,7 @@ $(document).ready(function(){
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6 limit-height">
+                    <div class="col-md-6">
                         <ul v-if="exercises" class="list-group">
                             <li v-for="exercise in exercises" :key="exercise.id" class="list-group-item">
                                 <span style="margin-right: 8px;">

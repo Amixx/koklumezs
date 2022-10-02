@@ -21,7 +21,21 @@ $this->title = \Yii::t('app', 'Exercises');
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'name',
-            'description',
+            [
+                'value' => function ($dataProvider) {
+                    $desc = $dataProvider['description'];
+                    if (!$desc) return '';
+
+                    $maxLength = 50;
+                    if (strlen($desc) < $maxLength) return $desc;
+                    $desc = $desc . " ";
+                    $text = substr($desc, 0, $maxLength);
+                    $desc = substr($text, 0, strrpos($desc, ' '));
+                    $desc = $desc . "...";
+                    return $desc;
+                },
+                'format' => 'raw',
+            ],
             'technique_video',
             [
                 'format' => 'raw',

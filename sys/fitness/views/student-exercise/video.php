@@ -1,15 +1,53 @@
+<?php
+
+if (!function_exists('getYoutubeVideoId')) {
+    function isLongYtVidLink($fileUrl)
+    {
+        return strpos($fileUrl, "youtube") !== false;
+    }
+
+    function isShortYtVidLink($fileUrl)
+    {
+        return  strpos($fileUrl, "youtu.be") !== false;
+    }
+
+    function isYtVidLink($fileUrl)
+    {
+        return isLongYtVidLink($fileUrl) || isShortYtVidLink($fileUrl);
+    }
+
+    function getYoutubeVideoId($fileUrl)
+    {
+        if (isLongYtVidLink($fileUrl)) {
+            return substr(explode("?v=", $fileUrl)[1], 0, 11);
+        }
+
+        if (isShortYtVidLink($fileUrl)) {
+            return substr(explode("youtu.be/", $fileUrl)[1], 0, 11);
+        }
+
+        return null;
+    }
+}
+
+
+
+?>
+
 <?php if (!empty($lectureVideoFiles)) {
     $posters = [];
 ?>
     <div class="row">
         <?php foreach ($lectureVideoFiles as $id => $file) {
-            $path_info = pathinfo($file['file']);
-            $isYoutubeVideo = strpos($file['file'], "youtube") !== false;
             $fileUrl = $file['file'];
+
+            $path_info = pathinfo($fileUrl);
+            $isYoutubeVideo = isYtVidLink($fileUrl);
+
             $fileExt = !$isYoutubeVideo && isset($path_info['extension']) ? strtolower($path_info['extension']) : null;
             $playbackRates = "\"playbackRates\": [0.5, 0.75, 1, 1.25, 1.5, 2]";
 
-            $videoId = $isYoutubeVideo ? substr(explode("?v=", $fileUrl)[1], 0, 11) : null;
+            $videoId = getYoutubeVideoId($fileUrl);
 
             $dataSetup = $isYoutubeVideo
                 ? "{

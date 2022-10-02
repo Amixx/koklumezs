@@ -3,12 +3,12 @@
 
     use app\helpers\ThumbnailHelper;
 
-    $thumbStyle = ThumbnailHelper::getThumbnailStyle($workoutExercise->exercise->technique_video, $videoThumb);
+    $thumbStyle = ThumbnailHelper::getThumbnailStyle($workoutExerciseSet->exercise->technique_video, $videoThumb);
 
-    $width = $workoutExercise->exercise->technique_video ? "38%" : "100%";
-    $marginTop = $workoutExercise->exercise->technique_video ? "60px" : "0px";
+    $width = $workoutExerciseSet->exercise->technique_video ? "38%" : "100%";
+    $marginTop = $workoutExerciseSet->exercise->technique_video ? "60px" : "0px";
     $btnClass = "btn btn-orange dropdown-toggle";
-    if ($workoutExercise->exercise->technique_video) {
+    if ($workoutExerciseSet->exercise->technique_video) {
         $btnClass .= " btn-narrow";
     }
     ?>
@@ -25,17 +25,17 @@
     </div>
 
 
-    <?php if ($workoutExercise->exercise->technique_video) { ?>
+    <?php if ($workoutExerciseSet->exercise->technique_video) { ?>
         <div style="display: inline-block; width:60%;">
             <div>
                 <div class="lecture-wrap">
-                    <a class="lecture-thumb" data-toggle="modal" data-target="#lesson_modal_mob_<?= $workoutExercise->exercise->id ?>" style="<?= $thumbStyle ?>"></a>
+                    <a class="lecture-thumb" data-toggle="modal" data-target="#lesson_modal_mob_<?= $workoutExerciseSet->exercise->id ?>" style="<?= $thumbStyle ?>"></a>
                     <span class="lecture-title"><?= Yii::t('app', 'Exercise technique'); ?></span>
                 </div>
                 <?= $this->render('view-lesson-modal', [
                     'videoThumb' => $videoThumb,
-                    'lecturefiles' => [0 => ['title' => $workoutExercise->exercise->name . " tehnika", 'file' => $workoutExercise->exercise->technique_video]],
-                    'id' => "mob_" . $workoutExercise->exercise->id,
+                    'lecturefiles' => [0 => ['title' => $workoutExerciseSet->exercise->name . " tehnika", 'file' => $workoutExerciseSet->exercise->technique_video]],
+                    'id' => "mob_" . $workoutExerciseSet->exercise->id,
                 ]) ?>
             </div>
         </div>
