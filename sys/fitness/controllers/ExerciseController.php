@@ -8,6 +8,7 @@ use app\models\Users;
 use app\fitness\models\ExerciseSearch;
 use app\fitness\models\ExerciseTag;
 use app\fitness\models\Tag;
+use Exception;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
@@ -134,7 +135,30 @@ class ExerciseController extends Controller
 
     public function actionApiList()
     {
-        $exercises = Exercise::find()->joinWith('sets')->joinWith('exerciseTags')->asArray()->all();
+        $get = Yii::$app->request->get();
+        if (!isset($get['tagIdGroups'])) {
+            throw new Exception("tagIdGroups param must be supplied!");
+        }
+
+        $tagIdGroups = array_map(function ($tagIdGroup) {
+            return json_decode($tagIdGroup);
+        }, $get['tagIdGroups']);
+
+        $query = Exercise::find()->joinWith('sets')->joinWith('exerciseTags');
+
+        foreach ($tagIdGroups as $tagIdGroup) {
+            if (!empty($tagIdGroup)) {
+                $cond = [];
+
+                foreach ($tagIdGroup as $tagId) {
+                    $cond[] = "fitness_exercisetags.tag_id=$tagId";
+                }
+
+                $query->orWhere(join(" AND ", $cond));
+            }
+        }
+
+        $exercises = $query->asArray()->all();
         return json_encode($exercises);
     }
 

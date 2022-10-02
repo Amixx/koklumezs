@@ -202,8 +202,8 @@ class ExerciseRepository extends Repository{
     static get baseUrl(){
         return window.getUrl(`/${'fitness-exercises'}`)
     }
-    static async list(){
-        const data = (await axios.get(`${this.baseUrl}/api-list`)).data
+    static async list(tagIdGroups){
+        const data = (await axios.get(`${this.baseUrl}/api-list`, {params: { tagIdGroups }})).data
         return data.map(exercise => {
             exercise.sets = exercise.sets.map((set, i) => ({
                 ...set,
@@ -277,6 +277,7 @@ $(document).ready(function(){
             data: function(){
                 return {
                     exercises: null,
+                    exercisesLoading: false,
                     templates: null,
                     user: null,
                     userWorkouts: null,
@@ -288,46 +289,38 @@ $(document).ready(function(){
                     workoutSubmitting: false,
                     highlightWeightMissing: false,
                     tags: null,
-                    selectedTagGroup: [[], [], [], [], []],
+                    selectedTagGroups: [[], [], [], [], []],
                 }
             },
             computed: {
-                displayedExercises(){
-                    if(!this.exercises || !this.tags) return null
-                    if(!this.selectedTagGroup.flat().length) return this.exercises
-                    return this.exercises.filter(ex => {
-                        if(!ex.exerciseTags.length) return false;
-
-                        return this.selectedTagGroup.some(selectedTags => {
-                            if(!selectedTags.length) return false;
-
-                            return selectedTags.every(selTag =>
-                                {
-                                    console.log(selTag, ex.exerciseTags)
-                                    return ex.exerciseTags.some(exTag => selTag.id === exTag.tag_id);
-
-                                }
-                                
-                            )
-                        })
-                    })
-                }  
+                selectedTagGroupsFlat(){
+                    return this.selectedTagGroups.flat();
+                }
             },
             created(){
-                this.loadExercises();
                 this.loadTemplates();
                 this.loadUser();
                 this.loadUserWorkouts();
                 this.loadTags();
                 this.workout.studentId = window.studentId;
             },
+            watch: {
+                selectedTagGroupsFlat(n){
+                    if(n.length >= 3) {
+                        this.loadExercises()
+                    } else {
+                        this.exercises = null
+                    }
+                }
+            },
             methods: {
                 async loadTags(){
                     this.tags = await TagRepository.list()
-                    console.log(this.tags)
                 },
                 async loadExercises(){
-                    this.exercises = await ExerciseRepository.list()
+                    this.exercisesLoading = true
+                    this.exercises = await ExerciseRepository.list(this.selectedTagGroups.map(x => x.map(y => y.id)))
+                    this.exercisesLoading = false
                 },
                 async loadTemplates(){
                     const templates = (await TemplateRepository.list()).map(template => ({
@@ -469,24 +462,26 @@ $(document).ready(function(){
 
                             <div class="tab-content" id="exercise-tab-content">
                                 <div class="tab-pane fade active in" id="exercises" role="tabpanel" aria-labelledby="exercises-tab">
-                                    <ul v-if="exercises && tags" class="list-group">
-                                        <li class="list-group-item">
-                                            <ul>
-                                                <li class="list-group-item" style="border-top:0; border-bottom:0; text-align:center;" v-for="(selectedTags, i) in selectedTagGroup" :key="i">
+                                    <ul v-if="tags" class="list-group" style="position:relative">
+                                        <li v-show="exercisesLoading" class="list-group-item disabled-overlay">
+                                            <div class="loader" style="height:80px;width:80px;margin:auto;margin-top:25%;border-color:green;border-width:8px;border-top-color:gainsboro"></div>
+                                        </li>
+                                        <li class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                            <ul style="padding-left:0;">
+                                                <li class="list-group-item" style="border-top:0; border-bottom:0; text-align:center;" v-for="(selectedTags, i) in selectedTagGroups" :key="i">
                                                     <v-select
                                                         label="value"
                                                         :options="tags"
                                                         multiple
-                                                        v-model="selectedTagGroup[i]"
+                                                        v-model="selectedTagGroups[i]"
                                                     ></v-select>
-                                                    <div v-if="i !== selectedTagGroup.length-1">
+                                                    <div v-if="i !== selectedTagGroups.length-1">
                                                         VAI
                                                     </div>
                                                 </li>
                                             </ul>
-                                           
                                         </li>
-                                        <li v-for="exercise in displayedExercises" :key="exercise.id" class="list-group-item" style="display:flex; justify-content:space-between; flex-wrap: wrap; gap: 8px;">
+                                        <li v-for="exercise in exercises" :key="exercise.id" class="list-group-item" style="display:flex; justify-content:space-between; flex-wrap: wrap; gap: 8px;" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
                                             <span>
                                                 <span style="margin-right: 8px;">
                                                     {{ exercise.name }}
@@ -500,12 +495,14 @@ $(document).ready(function(){
                                                 </button>
                                             </span>   
                                           
-                                            <span>
+                                            <span class="exercise-tags-container">
                                                 <span v-for="exTag in exercise.exerciseTags" class="exercise-tag">
                                                     {{ exTag.tag.value }}
                                                 </span>
                                             </span>
                                         </li>
+                                        <li class="list-group-item" v-if="selectedTagGroupsFlat.length < 3">Lai ielādētu vingrinājumus, atlasiet vismaz 3 tagus! (kopā)</li>
+                                        <li class="list-group-item" v-else-if="exercises && !exercises.length">Nav atrasts neviens vingrinājums ar šādu tagu atlasi! Mainiet izvēlētos tagus!</li>
                                     </ul>
                                 </div>
                                 <div class="tab-pane fade" id="templates" role="tabpanel" aria-labelledby="templates-tab">
@@ -521,7 +518,7 @@ $(document).ready(function(){
                             </div>
                         </div>
 
-                        <div class="col-md-6 limit-height">
+                        <div class="col-md-6">
                             <label class="form-group">
                                 Apraksts:
                                 <input class="form-control" v-model="workout.description">
@@ -604,7 +601,7 @@ $(document).ready(function(){
             },
             methods: {
                 async loadExercises(){
-                    this.exercises = await ExerciseRepository.list()
+                    this.exercises = await ExerciseRepository.list(this.selectedTagGroups.map(x => x.map(y => y.id)))
                 },
                 async loadTemplate(){
                     const template = await TemplateRepository.get(window.templateId)                    
