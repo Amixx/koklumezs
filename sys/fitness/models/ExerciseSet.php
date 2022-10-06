@@ -55,6 +55,6 @@ class ExerciseSet extends \yii\db\ActiveRecord
 
     public function getExercise()
     {
-        return $this->hasOne(Exercise::class, ['id' => 'exercise_id']);
+        return $this->hasOne(Exercise::class, ['id' => 'exercise_id'])->joinWith('exerciseTags');
     }
 }

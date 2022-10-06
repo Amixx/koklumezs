@@ -144,21 +144,37 @@ class ExerciseController extends Controller
             return json_decode($tagIdGroup);
         }, $get['tagIdGroups']);
 
-        $query = Exercise::find()->joinWith('sets')->joinWith('exerciseTags');
+        $exercises = [];
 
         foreach ($tagIdGroups as $tagIdGroup) {
             if (!empty($tagIdGroup)) {
-                $cond = [];
+                $tagIdsJoined = join(", ", $tagIdGroup);
+                $count = count($tagIdGroup);
 
-                foreach ($tagIdGroup as $tagId) {
-                    $cond[] = "fitness_exercisetags.tag_id=$tagId";
+                $query = Exercise::find()
+                    ->joinWith('sets')
+                    ->joinWith('exerciseTags')
+                    ->where(
+                        [
+                            'in',
+                            'fitness_exercises.id',
+                            ExerciseTag::find()
+                                ->select('fitness_exercisetags.exercise_id')
+                                ->where("tag_id in ($tagIdsJoined)")
+                                ->groupBy('fitness_exercisetags.exercise_id')
+                                ->having("COUNT(*) = $count")
+                        ]
+
+                    );
+
+                foreach ($query->asArray()->all() as $exercise) {
+                    if (!in_array($exercise['id'], array_column($exercises, 'id'))) {
+                        $exercises[] = $exercise;
+                    }
                 }
-
-                $query->orWhere(join(" AND ", $cond));
             }
         }
 
-        $exercises = $query->asArray()->all();
         return json_encode($exercises);
     }
 

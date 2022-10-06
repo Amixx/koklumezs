@@ -262,6 +262,37 @@ class TemplateRepository extends Repository{
 
 
 
+function calcTagBalanceScore(workoutExerciseSets){
+    const score = {}
+    workoutExerciseSets.forEach((x) => {
+        if(x.exercise.exerciseTags) {
+            x.exercise.exerciseTags.forEach((y) => {
+                if(!(score.hasOwnProperty(y.tag.value))) {
+                    score[y.tag.value] = 0
+                }
+                score[y.tag.value] += 1
+            })
+        }
+    })
+    return score
+}
+
+
+function calcPrevWorkoutTagBalanceScore(workoutExerciseSets){
+    const score = {}
+    workoutExerciseSets.forEach((x) => {
+        if(x.exerciseSet.exercise) {
+            x.exerciseSet.exercise.exerciseTags.forEach((y) => {
+                if(!(score.hasOwnProperty(y.tag.value))) {
+                    score[y.tag.value] = 0
+                }
+                score[y.tag.value] += 1
+            })
+        }
+    })
+    return score
+}
+
 
 
 $(document).ready(function(){
@@ -295,6 +326,29 @@ $(document).ready(function(){
             computed: {
                 selectedTagGroupsFlat(){
                     return this.selectedTagGroups.flat();
+                },
+                thisWorkoutTagBalanceScore(){
+                    return calcTagBalanceScore(this.workout.workoutExerciseSets)
+                },
+                prevWorkoutTagBalanceScores(){
+                    if(!this.userWorkouts) return {}
+                    const scores = {}
+                    this.userWorkouts.forEach((x) => {
+                        scores[x.created_at] = calcPrevWorkoutTagBalanceScore(x.workoutExerciseSets)
+                    })
+                    return scores
+                },
+                prevWorkoutTotalBalanceScore(){
+                    const score = {}
+                    for(key in this.prevWorkoutTagBalanceScores) {
+                        for(key2 in this.prevWorkoutTagBalanceScores[key]) {
+                            if(!score.hasOwnProperty(key2)) {
+                                score[key2] = 0
+                            }
+                            score[key2] += this.prevWorkoutTagBalanceScores[key][key2]
+                        }
+                    }
+                    return score
                 }
             },
             created(){
@@ -519,6 +573,15 @@ $(document).ready(function(){
                         </div>
 
                         <div class="col-md-6">
+                            <h4>Tagu "balance score"</h4>
+                            <p>(<em>šajā treniņā</em> | <em>šajā + visos iepriekšējos treniņos</em>)</p>
+                            <ul class="list-group">
+                                <li class="list-group-item" v-for="(score, key) in thisWorkoutTagBalanceScore" :key="key">
+                                    {{ key }}: {{ score }} | {{  prevWorkoutTotalBalanceScore[key] ? score + prevWorkoutTotalBalanceScore[key] : score }}
+                                </li>
+                                <li class="list-group-item" v-if="!workout.workoutExerciseSets.length">Vēl nav pievienots neviens vingrinājums...</li>
+                            </ul>
+
                             <label class="form-group">
                                 Apraksts:
                                 <input class="form-control" v-model="workout.description">
@@ -558,6 +621,27 @@ $(document).ready(function(){
                                 </div>
                             </div>
                             <p v-else>Treniņam vēl nav pievienots neviens vingrinājums...</p>
+
+                            <h4>Iepriekšējo treniņu tagu "balance score"</h4>
+                            <ul class="list-group">
+                                <li class="list-group-item" style="margin-bottom: 8px;">
+                                    <strong>Iepriekšējo treniņu kopējais "balance score"</strong>
+                                    <ul class="list-group">
+                                        <li class="list-group-item" v-for="(score, key) in prevWorkoutTotalBalanceScore" :key="key">
+                                            {{ key }}: {{ score }}
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="list-group-item" v-for="(scores, createdAt) in prevWorkoutTagBalanceScores" :key="createdAt">
+                                    Treniņš, kurš izveidots {{ createdAt }}:
+                                    <ul class="list-group">
+                                        <li class="list-group-item" v-for="(score, key) in scores" :key="key">
+                                            {{ key }}: {{ score }}
+                                        </li>
+                                        <li class="list-group-item" v-if="Object.entries(scores).length === 0">Šajā treniņā nav neviena vingrinājuma ar tagiem</li>
+                                    </ul>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
