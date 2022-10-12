@@ -6,23 +6,23 @@ use yii\helpers\Html;
 $evaluations = [
     [
         'value' => 2,
-        'emoji-name' => "sleepy"
+        'text' => "Garlaicīgi"
     ],
     [
         'value' => 4,
-        'emoji-name' => "wink"
+        'text' => "Viegli"
     ],
     [
         'value' => 6,
-        'emoji-name' => "smile"
+        'text' => "Nedaudz grūti"
     ],
     [
         'value' => 8,
-        'emoji-name' => "surprise"
+        'text' => "Ļoti grūti"
     ],
     [
         'value' => 10,
-        'emoji-name' => "fatigue"
+        'text' => "Neiespējami"
     ],
 ];
 
@@ -31,38 +31,31 @@ $isEmojiActive = function ($name) use ($evaluations, $difficultyEvaluation) {
         return false;
     }
 
-    $evalIndex = array_search($name, array_column($evaluations, 'emoji-name'));
+    $evalIndex = array_search($name, array_column($evaluations, 'text'));
 
     return $evaluations[$evalIndex]['value'] === intval($difficultyEvaluation->evaluation);
 };
 
 ?>
 
-<p><?= \Yii::t('app', 'How well did you do with this task?'); ?></p>
+<p style="font-size: 18px; font-weight: bold">Kā Tev veicās ar šo uzdevumu?</p>
 <div>
     <?php $form = ActiveForm::begin(); ?>
     <?= Html::hiddenInput("difficulty-evaluation", null) ?>
 
-    <div class="form-group" style="margin: 0;">
+    <div class="form-group" style="margin: 0; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center">
         <?php foreach ($evaluations as $evaluation) {
-            $name = $evaluation['emoji-name'];
+            $name = $evaluation['text'];
             $emojiClass = "emoji emoji-$name";
-            if ($isEmojiActive($name)) {
-                $emojiClass .= " active";
-            }
         ?>
-
-            <span data-role="evaluation-emoji" data-value="<?= $evaluation['value'] ?>" class="<?= $emojiClass ?>"></span>
+            <button
+                    data-role="evaluation-emoji"
+                    data-value="<?= $evaluation['value'] ?>"
+                    class="btn <?= $isEmojiActive($name) ? 'btn-primary' : '' ?>"
+                    <?php  ?>>
+                <?= $evaluation['text'] ?>
+            </button>
         <?php } ?>
     </div>
-    <p>
-        <span style="padding-left: 10px;"><?= \Yii::t('app', 'easy'); ?></span>
-        <span class="glyphicon glyphicon-arrow-left" style="padding-left: 8px;"></span>
-        <span class="glyphicon glyphicon-minus"></span>
-        <span class="glyphicon glyphicon-minus"></span>
-        <span class="glyphicon glyphicon-minus"></span>
-        <span class="glyphicon glyphicon-arrow-right"></span>
-        <span style="padding: 5px;"><?= \Yii::t('app', 'hard'); ?></span>
-    </p>
     <?php ActiveForm::end(); ?>
 </div>

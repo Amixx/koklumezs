@@ -17,6 +17,7 @@ class TagSearch extends Tag
                 'author_id',
                 'value',
                 'description',
+                'type',
                 'created_at',
                 'updated_at',
             ], 'safe'],
@@ -73,6 +74,7 @@ class TagSearch extends Tag
         );
         $query->andFilterWhere(['like', 'value', $this->value])
             ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'type', $this->type])
             ->andFilterWhere(['like', 'created_at', $this->created_at])
             ->andFilterWhere(['like', 'updated_at', $this->updated_at]);
 

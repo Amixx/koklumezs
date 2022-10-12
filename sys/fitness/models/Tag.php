@@ -8,6 +8,28 @@ use app\models\Users;
 
 class Tag extends \yii\db\ActiveRecord
 {
+    public const TAG_TYPE_MUSCLE_GROUP = 'MUSCLE_GROUP';
+    public const TAG_TYPE_MUSCLE = 'MUSCLE';
+    public const TAG_TYPE_EQUIPMENT = 'EQUIPMENT';
+    public const TAG_TYPE_EXERCISE_TYPE = 'EXERCISE_TYPE';
+    public const TAG_TYPE_LOAD_TYPE = 'LOAD_TYPE';
+    public const TAG_TYPE_PAUSE = 'PAUSE';
+
+    public const TAG_TYPE_SELECT_OPTIONS = [
+        null => '',
+        self::TAG_TYPE_MUSCLE_GROUP => 'Muskuļu grupa',
+        self::TAG_TYPE_MUSCLE => 'Muskulis',
+        self::TAG_TYPE_EQUIPMENT => 'Piederums',
+        self::TAG_TYPE_EXERCISE_TYPE => 'Vingrojuma tips',
+        self::TAG_TYPE_LOAD_TYPE => 'Slodzes veids',
+        self::TAG_TYPE_PAUSE => 'Pauze',
+    ];
+
+    public static function getTagTypeLabel($tagType){
+        if(!$tagType) return '';
+        return self::TAG_TYPE_SELECT_OPTIONS[$tagType];
+    }
+
     public static function tableName()
     {
         return 'fitness_tags';
@@ -18,7 +40,7 @@ class Tag extends \yii\db\ActiveRecord
         return [
             [['author_id', 'value'], 'required'],
             [['author_id'], 'integer'],
-            [['value', 'description'], 'string'],
+            [['value', 'description', 'type'], 'string'],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author_id' => 'id']],
         ];
     }
@@ -30,6 +52,7 @@ class Tag extends \yii\db\ActiveRecord
             'author_id' => \Yii::t('app',  'Author ID'),
             'value' => \Yii::t('app',  'Value'),
             'description' => \Yii::t('app', 'Description'),
+            'type' => \Yii::t('app', 'Tips'),
         ];
     }
 

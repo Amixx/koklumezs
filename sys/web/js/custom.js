@@ -876,9 +876,15 @@ function setupVideoPlayers(){
         autopause: true,
     }
 
-
     Array.from(document.querySelectorAll("[data-role='player']")).forEach(function(video) {
-        players[video.id] = new Plyr(video, options);
+        var opts = options
+        if(video.id.includes('fitness_main')) {
+            opts.autoplay = true
+            opts.youtube = {
+                autoplay: true,
+            }
+        }
+        players[video.id] = new Plyr(video, opts);
         players[video.id].poster = posters[video.id];
     });
 }

@@ -136,44 +136,57 @@ class ExerciseController extends Controller
     public function actionApiList()
     {
         $get = Yii::$app->request->get();
-        if (!isset($get['tagIdGroups'])) {
-            throw new Exception("tagIdGroups param must be supplied!");
-        }
 
-        $tagIdGroups = array_map(function ($tagIdGroup) {
-            return json_decode($tagIdGroup);
-        }, $get['tagIdGroups']);
+        $query = Exercise::find()
+            ->joinWith('sets')
+            ->joinWith('exerciseTags')
+            ->groupBy('name')
+            ->limit(20);
 
-        $exercises = [];
+        if (isset($get['tagIdGroups']) && $get['tagIdGroups']) {
+            $tagIdGroups = array_map(function ($tagIdGroup) {
+                return json_decode($tagIdGroup);
+            }, $get['tagIdGroups']);
 
-        foreach ($tagIdGroups as $tagIdGroup) {
-            if (!empty($tagIdGroup)) {
-                $tagIdsJoined = join(", ", $tagIdGroup);
-                $count = count($tagIdGroup);
 
-                $query = Exercise::find()
-                    ->joinWith('sets')
-                    ->joinWith('exerciseTags')
-                    ->where(
+            foreach ($tagIdGroups as $tagIdGroup) {
+                if (!empty($tagIdGroup)) {
+                    $count = count($tagIdGroup);
+
+                    $query->orWhere(
                         [
                             'in',
                             'fitness_exercises.id',
                             ExerciseTag::find()
                                 ->select('fitness_exercisetags.exercise_id')
-                                ->where("tag_id in ($tagIdsJoined)")
+                                ->where(['in', 'tag_id', $tagIdGroup])
                                 ->groupBy('fitness_exercisetags.exercise_id')
                                 ->having("COUNT(*) = $count")
-                        ]
-
-                    );
-
-                foreach ($query->asArray()->all() as $exercise) {
-                    if (!in_array($exercise['id'], array_column($exercises, 'id'))) {
-                        $exercises[] = $exercise;
-                    }
+                        ]);
+//                    var_dump($query->createCommand()->getRawSql());
+//                    die();
                 }
             }
         }
+
+        if (isset($get['exerciseName']) && $get['exerciseName'] && $get['exerciseName'] != '') {
+            $query->andFilterWhere(['like', 'fitness_exercises.name', $get['exerciseName']]);
+
+//                var_dump($query->createCommand()->getRawSql());
+//                die();
+        }
+        if (isset($get['tagTypes']) && $get['tagTypes']) {
+            $query->andFilterWhere([
+                'in',
+                'fitness_exercises.id',
+                ExerciseTag::find()
+                    ->joinWith('tag')
+                    ->select('fitness_exercisetags.exercise_id')
+                    ->where(['in', 'type', $get['tagTypes']])
+            ]);
+        }
+
+        $exercises = $query->asArray()->all();
 
         return json_encode($exercises);
     }

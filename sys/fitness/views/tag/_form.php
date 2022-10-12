@@ -33,6 +33,7 @@ $inputFileOptions = [
     <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
         <?= $form->field($model, 'value')->textInput() ?>
         <?= $form->field($model, 'description')->textarea() ?>
+        <?= $form->field($model, 'type')->dropDownList($tagTypeSelectOptions, ['prompt' => '']) ?>
     </div>
     <hr />
     <div class="form-group">

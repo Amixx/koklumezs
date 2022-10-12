@@ -68,6 +68,7 @@ class TagController extends Controller
 
         return $this->render('@app/fitness/views/tag/create', [
             'model' => $model,
+            'tagTypeSelectOptions' => Tag::TAG_TYPE_SELECT_OPTIONS
         ]);
     }
 
@@ -84,6 +85,7 @@ class TagController extends Controller
 
         return $this->render('@app/fitness/views/tag/update', [
             'model' => $model,
+            'tagTypeSelectOptions' => Tag::TAG_TYPE_SELECT_OPTIONS
         ]);
     }
 
@@ -98,6 +100,11 @@ class TagController extends Controller
     {
         $tags = Tag::find()->asArray()->all();
         return json_encode($tags);
+    }
+
+    public function actionApiListTypeSelectOptions()
+    {
+        return json_encode(Tag::TAG_TYPE_SELECT_OPTIONS);
     }
 
     protected function findModel($id)

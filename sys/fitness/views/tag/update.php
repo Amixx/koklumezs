@@ -15,6 +15,7 @@ $this->title = \Yii::t('app', 'Edit tag') . ': ' . $model->value;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'tagTypeSelectOptions' => $tagTypeSelectOptions,
     ]) ?>
 
 </div>

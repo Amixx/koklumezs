@@ -1,8 +1,8 @@
 <?php
 
+use app\fitness\models\Tag;
 use yii\helpers\Html;
 use yii\grid\GridView;
-use  yii\jui\DatePicker;
 
 $this->title = \Yii::t('app', 'Tags');
 
@@ -22,6 +22,12 @@ $this->title = \Yii::t('app', 'Tags');
             ['class' => 'yii\grid\SerialColumn'],
             'value',
             'description',
+            [
+                'label' => 'Tips',
+                'value' => function($dataProvider) {
+                    return Tag::getTagTypeLabel($dataProvider['type']);
+                }
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => \Yii::t('app', 'Actions'),

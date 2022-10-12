@@ -152,7 +152,6 @@ Vue.component('loading-button', {
 })
 
 
-
 Vue.component('success-flash', {
     name: 'success-flash',
     props: {},
@@ -177,19 +176,17 @@ Vue.component('error-flash', {
 })
 
 
-
 const getCsrfToken = () => {
     return document.querySelector("meta[name=csrf-token]").content
 }
 
 
-
-
 class Repository {
-    static get baseUrl(){
+    static get baseUrl() {
         throw new Error("baseUrl getter must be defined!");
     }
-    static get postConfig(){
+
+    static get postConfig() {
         return {
             headers: {
                 'X-CSRF-Token': getCsrfToken()
@@ -198,16 +195,17 @@ class Repository {
     }
 }
 
-class ExerciseRepository extends Repository{
-    static get baseUrl(){
+class ExerciseRepository extends Repository {
+    static get baseUrl() {
         return window.getUrl(`/${'fitness-exercises'}`)
     }
-    static async list(tagIdGroups){
-        const data = (await axios.get(`${this.baseUrl}/api-list`, {params: { tagIdGroups }})).data
+
+    static async list(tagIdGroups, tagTypes, exerciseName) {
+        const data = (await axios.get(`${this.baseUrl}/api-list`, {params: {tagIdGroups, tagTypes, exerciseName}})).data
         return data.map(exercise => {
             exercise.sets = exercise.sets.map((set, i) => ({
                 ...set,
-                sequenceNo: i+1
+                sequenceNo: i + 1
             }))
             return exercise
         })
@@ -215,59 +213,66 @@ class ExerciseRepository extends Repository{
 }
 
 class TagRepository extends Repository {
-     static get baseUrl(){
+    static get baseUrl() {
         return window.getUrl(`/${'fitness-tags'}`)
     }
-    static async list(){
+
+    static async list() {
         const data = (await axios.get(`${this.baseUrl}/api-list`)).data
+        return data
+    }
+
+    static async listTypeSelectOptions() {
+        const data = (await axios.get(`${this.baseUrl}/api-list-type-select-options`)).data
         return data
     }
 }
 
 
-class WorkoutRepository extends Repository{
-    static get baseUrl(){
+class WorkoutRepository extends Repository {
+    static get baseUrl() {
         return window.getUrl(`/${'fitness-workouts'}`)
     }
-    static async ofUser(userId){
+
+    static async ofUser(userId) {
         return (await axios.get(`${this.baseUrl}/api-of-student?id=${userId}`)).data
     }
 
-    static async create(workout){
+    static async create(workout) {
         await axios.post(`${this.baseUrl}/api-create`, workout, this.postConfig)
     }
 }
 
 
-class TemplateRepository extends Repository{
-    static get baseUrl(){
+class TemplateRepository extends Repository {
+    static get baseUrl() {
         return window.getUrl(`/${'fitness-templates'}`)
     }
-    static async list(){
+
+    static async list() {
         return (await axios.get(`${this.baseUrl}/api-list`)).data
     }
 
-    static async get(templateId){
-        return (await axios.get(`${this.baseUrl}/api-get`, { params: { id: templateId }})).data
+    static async get(templateId) {
+        return (await axios.get(`${this.baseUrl}/api-get`, {params: {id: templateId}})).data
     }
 
-    static async create(template){
+    static async create(template) {
         return axios.post(`${this.baseUrl}/create`, template, this.postConfig)
     }
 
-    static async update(templateId, template){
+    static async update(templateId, template) {
         return axios.patch(`${this.baseUrl}/update?id=${templateId}`, template, this.postConfig)
     }
 }
 
 
-
-function calcTagBalanceScore(workoutExerciseSets){
+function calcTagBalanceScore(workoutExerciseSets) {
     const score = {}
     workoutExerciseSets.forEach((x) => {
-        if(x.exercise.exerciseTags) {
+        if (x.exercise.exerciseTags) {
             x.exercise.exerciseTags.forEach((y) => {
-                if(!(score.hasOwnProperty(y.tag.value))) {
+                if (!(score.hasOwnProperty(y.tag.value))) {
                     score[y.tag.value] = 0
                 }
                 score[y.tag.value] += 1
@@ -278,12 +283,12 @@ function calcTagBalanceScore(workoutExerciseSets){
 }
 
 
-function calcPrevWorkoutTagBalanceScore(workoutExerciseSets){
+function calcPrevWorkoutTagBalanceScore(workoutExerciseSets) {
     const score = {}
     workoutExerciseSets.forEach((x) => {
-        if(x.exerciseSet.exercise) {
+        if (x.exerciseSet.exercise) {
             x.exerciseSet.exercise.exerciseTags.forEach((y) => {
-                if(!(score.hasOwnProperty(y.tag.value))) {
+                if (!(score.hasOwnProperty(y.tag.value))) {
                     score[y.tag.value] = 0
                 }
                 score[y.tag.value] += 1
@@ -294,8 +299,7 @@ function calcPrevWorkoutTagBalanceScore(workoutExerciseSets){
 }
 
 
-
-$(document).ready(function(){
+$(document).ready(function () {
     var workoutCreationId = "workout-creation";
     var $workoutCreation = document.getElementById(workoutCreationId);
 
@@ -303,9 +307,9 @@ $(document).ready(function(){
     var $templateCreation = document.getElementById(templateCreationId);
 
 
-    if($workoutCreation) {
+    if ($workoutCreation) {
         new Vue({
-            data: function(){
+            data: function () {
                 return {
                     exercises: null,
                     exercisesLoading: false,
@@ -320,29 +324,32 @@ $(document).ready(function(){
                     workoutSubmitting: false,
                     highlightWeightMissing: false,
                     tags: null,
+                    tagTypeSelectOptions: null,
+                    selectedTagTypes: [],
                     selectedTagGroups: [[], [], [], [], []],
+                    exerciseNameFilter: '',
                 }
             },
             computed: {
-                selectedTagGroupsFlat(){
+                selectedTagGroupsFlat() {
                     return this.selectedTagGroups.flat();
                 },
-                thisWorkoutTagBalanceScore(){
+                thisWorkoutTagBalanceScore() {
                     return calcTagBalanceScore(this.workout.workoutExerciseSets)
                 },
-                prevWorkoutTagBalanceScores(){
-                    if(!this.userWorkouts) return {}
+                prevWorkoutTagBalanceScores() {
+                    if (!this.userWorkouts) return {}
                     const scores = {}
                     this.userWorkouts.forEach((x) => {
                         scores[x.created_at] = calcPrevWorkoutTagBalanceScore(x.workoutExerciseSets)
                     })
                     return scores
                 },
-                prevWorkoutTotalBalanceScore(){
+                prevWorkoutTotalBalanceScore() {
                     const score = {}
-                    for(key in this.prevWorkoutTagBalanceScores) {
-                        for(key2 in this.prevWorkoutTagBalanceScores[key]) {
-                            if(!score.hasOwnProperty(key2)) {
+                    for (key in this.prevWorkoutTagBalanceScores) {
+                        for (key2 in this.prevWorkoutTagBalanceScores[key]) {
+                            if (!score.hasOwnProperty(key2)) {
                                 score[key2] = 0
                             }
                             score[key2] += this.prevWorkoutTagBalanceScores[key][key2]
@@ -351,41 +358,51 @@ $(document).ready(function(){
                     return score
                 }
             },
-            created(){
+            created() {
                 this.loadTemplates();
                 this.loadUser();
                 this.loadUserWorkouts();
                 this.loadTags();
+                this.loadTagTypeSelectOptions()
                 this.workout.studentId = window.studentId;
             },
             watch: {
-                selectedTagGroupsFlat(n){
-                    if(n.length >= 3) {
-                        this.loadExercises()
-                    } else {
-                        this.exercises = null
-                    }
+                selectedTagGroupsFlat() {
+                    this.loadExercises()
+                },
+                selectedTagTypes() {
+                    this.loadExercises()
                 }
             },
             methods: {
-                async loadTags(){
+                async loadTags() {
                     this.tags = await TagRepository.list()
                 },
-                async loadExercises(){
+                async loadTagTypeSelectOptions() {
+                    const opts = await TagRepository.listTypeSelectOptions()
+                    this.tagTypeSelectOptions = Object.keys(opts).map(key => ({
+                        value: key,
+                        label: opts[key],
+                    }))
+                },
+                async loadExercises() {
                     this.exercisesLoading = true
-                    this.exercises = await ExerciseRepository.list(this.selectedTagGroups.map(x => x.map(y => y.id)))
+                    this.exercises = await ExerciseRepository.list(
+                        this.selectedTagGroupsFlat.length ? this.selectedTagGroups.map(x => x.map(y => y.id)) : null,
+                        this.selectedTagTypes.length ? this.selectedTagTypes.map(x => x.value) : null,
+                        this.exerciseNameFilter,
+                    )
                     this.exercisesLoading = false
                 },
-                async loadTemplates(){
+                async loadTemplates() {
                     const templates = (await TemplateRepository.list()).map(template => ({
                         ...template,
                         templateExerciseSets: template.templateExerciseSets.map(tempEx => {
                             let setSequenceNo = 1
                             template.templateExerciseSets.forEach(tempExSet => {
-                                if(
+                                if (
                                     tempExSet.exerciseSet.exercise_id === tempEx.exerciseSet.exercise_id &&
-                                    parseInt(tempExSet.exerciseSet.id) < parseInt(tempEx.exerciseSet.id))
-                                {
+                                    parseInt(tempExSet.exerciseSet.id) < parseInt(tempEx.exerciseSet.id)) {
                                     setSequenceNo++
                                 }
                             })
@@ -403,24 +420,24 @@ $(document).ready(function(){
 
                     this.templates = templates
                 },
-                loadUser(){
+                loadUser() {
                     axios.get(window.getUrl('/user/api-get?id=' + window.studentId)).then(res => {
                         this.user = res.data
                     })
                 },
-                async loadUserWorkouts(){
+                async loadUserWorkouts() {
                     this.userWorkouts = await WorkoutRepository.ofUser(window.studentId)
                 },
-                addedExercisesOfSet(exercise){
+                addedExercisesOfSet(exercise) {
                     return this.workout.workoutExerciseSets.filter(x => x.exercise.id === exercise.id)
                 },
-                addExercise(exercise){
+                addExercise(exercise) {
                     const addedSetsOfExercise = this.addedExercisesOfSet(exercise)
                     const exerciseSet = exercise.sets.find((set) => {
                         return !addedSetsOfExercise.find(x => x.exerciseSet.id === set.id)
                     })
-                    
-                    if(exerciseSet) {
+
+                    if (exerciseSet) {
                         this.workout.workoutExerciseSets.push({
                             exerciseSet,
                             exercise,
@@ -428,19 +445,19 @@ $(document).ready(function(){
                         })
                     }
                 },
-                removeExercise(index){
+                removeExercise(index) {
                     this.workout.workoutExerciseSets.splice(index, 1);
                 },
-                addTemplate(template){
+                addTemplate(template) {
                     this.workout.workoutExerciseSets.push(...template.templateExerciseSets.map(x => ({...x})));
                 },
-                tryAddingAnotherLap(){
+                tryAddingAnotherLap() {
                     const exercisesToAdd = []
-                    for(let i = this.workout.workoutExerciseSets.length-1; i >= 0; i--) {
+                    for (let i = this.workout.workoutExerciseSets.length - 1; i >= 0; i--) {
                         const item = this.workout.workoutExerciseSets[i];
-                        if(
+                        if (
                             exercisesToAdd.length > 0
-                            && exercisesToAdd[exercisesToAdd.length-1].id === item.exercise.id
+                            && exercisesToAdd[exercisesToAdd.length - 1].id === item.exercise.id
                         ) {
                             break;
                         } else {
@@ -450,19 +467,24 @@ $(document).ready(function(){
 
                     exercisesToAdd.forEach(this.addExercise)
                 },
-                async submitWorkout(){
+                async submitWorkout() {
                     this.workoutSubmitting = true
                     this.highlightWeightMissing = false
                     try {
                         await WorkoutRepository.create(this.workout)
                         window.location.replace(getUrl('/assign'));
-                    } catch(e) {
-                        if(e.response?.status === 422) {
+                    } catch (e) {
+                        if (e.response?.status === 422) {
                             this.highlightWeightMissing = true
                             this.workoutSubmitting = false
                         }
                     }
                 },
+                getTagTypeLabel(tagTypeValue){
+                    if(!this.tagTypeSelectOptions) return ''
+                    const tag = this.tagTypeSelectOptions.find(x => x.value === tagTypeValue)
+                    return tag?.label ?? ''
+                }
             },
             template: `
             <div>
@@ -521,6 +543,7 @@ $(document).ready(function(){
                                             <div class="loader" style="height:80px;width:80px;margin:auto;margin-top:25%;border-color:green;border-width:8px;border-top-color:gainsboro"></div>
                                         </li>
                                         <li class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                            <h4>Tagu atlase</h4>
                                             <ul style="padding-left:0;">
                                                 <li class="list-group-item" style="border-top:0; border-bottom:0; text-align:center;" v-for="(selectedTags, i) in selectedTagGroups" :key="i">
                                                     <v-select
@@ -534,6 +557,22 @@ $(document).ready(function(){
                                                     </div>
                                                 </li>
                                             </ul>
+                                        </li>
+                                         <li v-if="tagTypeSelectOptions" class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                             <h4>Tagu tipu atlase</h4>
+                                             <v-select
+                                                label="label"
+                                                :options="tagTypeSelectOptions"
+                                                multiple
+                                                v-model="selectedTagTypes"
+                                             ></v-select>
+                                        </li>
+                                        <li class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                            Vingrojuma nosaukums:
+                                            <div style="display:flex; gap:8px;">
+                                                <input type="text" class="form-control" v-model="exerciseNameFilter">
+                                                <button class="btn btn-primary" type="button" @click="loadExercises">Ielādēt vingrojumus</button>
+                                            </div>
                                         </li>
                                         <li v-for="exercise in exercises" :key="exercise.id" class="list-group-item" style="display:flex; justify-content:space-between; flex-wrap: wrap; gap: 8px;" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
                                             <span>
@@ -551,12 +590,17 @@ $(document).ready(function(){
                                           
                                             <span class="exercise-tags-container">
                                                 <span v-for="exTag in exercise.exerciseTags" class="exercise-tag">
-                                                    {{ exTag.tag.value }}
+                                                    <span>{{ exTag.tag.value }}</span>
+                                                    <span v-if="exTag.tag && exTag.tag.type"> ({{ getTagTypeLabel(exTag.tag.type) }})</span>
                                                 </span>
                                             </span>
                                         </li>
-                                        <li class="list-group-item" v-if="selectedTagGroupsFlat.length < 3">Lai ielādētu vingrinājumus, atlasiet vismaz 3 tagus! (kopā)</li>
-                                        <li class="list-group-item" v-else-if="exercises && !exercises.length">Nav atrasts neviens vingrinājums ar šādu tagu atlasi! Mainiet izvēlētos tagus!</li>
+                                        <li class="list-group-item" v-if="exercises && exercises.length === 20">
+                                            Ielādēti pirmie 20 vingrinājumi, kas atbilst atlasei.
+                                        </li>
+                                        <li class="list-group-item" v-else-if="exercises && !exercises.length">
+                                            Nav atrasts neviens vingrinājums ar šādu tagu atlasi! Mainiet izvēlētos tagus!
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="tab-pane fade" id="templates" role="tabpanel" aria-labelledby="templates-tab">
@@ -658,9 +702,9 @@ $(document).ready(function(){
         }).$mount('#' + workoutCreationId);
     }
 
-    if($templateCreation) {
+    if ($templateCreation) {
         new Vue({
-            data(){
+            data() {
                 return {
                     exercises: null,
                     templateId: null,
@@ -672,33 +716,32 @@ $(document).ready(function(){
                 }
             },
             computed: {
-                submitButtonText(){
+                submitButtonText() {
                     return this.templateId ? 'Saglabāt izmaiņas' : 'Izveidot šablonu';
                 }
             },
-            created(){
+            created() {
                 this.loadExercises();
-                if(window.templateId) {
+                if (window.templateId) {
                     this.templateId = window.templateId;
                     this.loadTemplate();
                 }
             },
             methods: {
-                async loadExercises(){
+                async loadExercises() {
                     this.exercises = await ExerciseRepository.list(this.selectedTagGroups.map(x => x.map(y => y.id)))
                 },
-                async loadTemplate(){
-                    const template = await TemplateRepository.get(window.templateId)                    
+                async loadTemplate() {
+                    const template = await TemplateRepository.get(window.templateId)
 
                     this.template.title = template.title
                     this.template.description = template.description
                     this.template.templateExerciseSets = template.templateExerciseSets.map(tempEx => {
                         let setSequenceNo = 1
                         template.templateExerciseSets.forEach(tempExSet => {
-                            if(
+                            if (
                                 tempExSet.exerciseSet.exercise_id === tempEx.exerciseSet.exercise_id &&
-                                parseInt(tempExSet.exerciseSet.id) < parseInt(tempEx.exerciseSet.id))
-                            {
+                                parseInt(tempExSet.exerciseSet.id) < parseInt(tempEx.exerciseSet.id)) {
                                 setSequenceNo++
                             }
                         })
@@ -713,16 +756,16 @@ $(document).ready(function(){
                         }
                     })
                 },
-                addedExercisesOfSet(exercise){
+                addedExercisesOfSet(exercise) {
                     return this.template.templateExerciseSets.filter(x => x.exercise.id === exercise.id)
                 },
-                addExercise(exercise){
+                addExercise(exercise) {
                     const addedSetsOfExercise = this.addedExercisesOfSet(exercise)
                     const exerciseSet = exercise.sets.find((set) => {
                         return !addedSetsOfExercise.find(x => x.exerciseSet.id === set.id)
                     })
-                    
-                    if(exerciseSet) {
+
+                    if (exerciseSet) {
                         this.template.templateExerciseSets.push({
                             exerciseSet,
                             exercise,
@@ -730,11 +773,11 @@ $(document).ready(function(){
                         })
                     }
                 },
-                removeExercise(index){
+                removeExercise(index) {
                     this.template.templateExerciseSets.splice(index, 1);
                 },
-                async createOrUpdateTemplate(){
-                    if(this.templateId) {
+                async createOrUpdateTemplate() {
+                    if (this.templateId) {
                         await TemplateRepository.update(this.templateId, this.template)
                         window.location.reload()
                     } else {

@@ -14,8 +14,10 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $workoutExerciseSet->exerciseS
             <div class="lesson-column lesson-column-middle wrap-overlay">
                 <div class="row">
                     <div class="col-md-12">
-                        <h1><?= \Yii::t('app',  'Exercise') . ': ' . $workoutExerciseSet->exerciseSet->exercise->name; ?></h1>
-                        <!-- description -->
+                        <h1><?= $workoutExerciseSet->exerciseSet->exercise->name; ?></h1>
+                        <?php if($workoutExerciseSet->exerciseSet->exercise->description) {?>
+                            <p><?= $workoutExerciseSet->exerciseSet->exercise->description ?></p>
+                        <?php } ?>
                     </div>
                     <div>
                         <?php if ($workoutExerciseSet->weight) { ?>
@@ -30,27 +32,19 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $workoutExerciseSet->exerciseS
                         <?php } ?>
                         <?php if ($workoutExerciseSet->exerciseSet->time_seconds) { ?>
                             <div class="col-md-12" style="font-size: 16px; margin-left: 8px; margin-bottom: 16px;">
-                                <?= Yii::t('app', 'Repetitions') ?>: <?= $workoutExerciseSet->exerciseSet->time_seconds ?>
+                                <?= Yii::t('app', 'Time (seconds)') ?>: <?= $workoutExerciseSet->exerciseSet->time_seconds ?>
                             </div>
                         <?php } ?>
                     </div>
-                    <div class="col-sm-6" style="margin-bottom:16px;">
+                    <div class="col-md-12" style="margin-bottom:16px; text-align:center">
                         <div>
                             <?= $this->render("amount-evaluation", [
                                 'difficultyEvaluation' => $difficultyEvaluation,
                             ]) ?>
                         </div>
                     </div>
-                    <?php if ($nextWorkoutExercise) { ?>
-                        <div class="col-sm-6" style="margin-bottom: 16px; text-align:right;">
-                            <?= Html::a(
-                                \Yii::t('app', 'Next exercise'),
-                                ["fitness-student-exercises/view?id=$nextWorkoutExercise->id"],
-                                ['class' => 'btn btn-orange']
-                            ); ?>
-                        </div>
-                    <?php } else { ?>
-                        <div class="col-sm-6" style="margin-bottom: 16px; text-align:right;">
+                    <?php if (!$nextWorkoutExercise) { ?>
+                        <div class="col-md-12" style="margin-bottom: 16px; text-align:right;">
                             <?= Html::a(
                                 \Yii::t('app', 'Finish workout'),
                                 ["lekcijas/index"],
@@ -63,7 +57,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $workoutExerciseSet->exerciseS
                 <?php if (!empty($equipmentVideos)) { ?>
                     <div class="row">
                         <div class="col-md-12">
-                            <h4 class='text-center'><?= Yii::t('app', 'How to use the equipment for next exercises') ?></h3>
+                            <h4 class='text-center'><?= Yii::t('app', 'How to use the equipment for next exercises') ?></h4>
                                 <ul class='equipment-video'>
                                     <?php foreach ($equipmentVideos as $key => $video) { ?>
                                         <?= $this->render(
@@ -87,7 +81,7 @@ $this->title = \Yii::t('app',  'Lesson') . ': ' . $workoutExerciseSet->exerciseS
                         [
                             'lectureVideoFiles' => [0 => ['title' => $workoutExerciseSet->exerciseSet->exercise->name, 'file' => $workoutExerciseSet->exerciseSet->video]],
                             'thumbnail' => $videoThumb ?? '',
-                            'idPrefix' => 'main',
+                            'idPrefix' => 'fitness_main',
                         ]
                     ); ?>
                 <?php } ?>
