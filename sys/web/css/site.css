@@ -1466,3 +1466,7 @@ div.has-experience.active, div.rent.active {
     opacity: 0.3;
     pointer-events: none;
 }
+
+.workout-creation-container .row {
+    background: rgba(255, 255, 255, 0.75);
+}

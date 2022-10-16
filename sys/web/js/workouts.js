@@ -95,7 +95,7 @@ Vue.component('last-workouts-table', {
         }
     },
     template: `
-     <div class="TableContainer" style="max-height: 243px; overflow-y:auto">
+     <div class="TableContainer">
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
@@ -267,36 +267,36 @@ class TemplateRepository extends Repository {
 }
 
 
-function calcTagBalanceScore(workoutExerciseSets) {
-    const score = {}
-    workoutExerciseSets.forEach((x) => {
-        if (x.exercise.exerciseTags) {
-            x.exercise.exerciseTags.forEach((y) => {
-                if (!(score.hasOwnProperty(y.tag.value))) {
-                    score[y.tag.value] = 0
-                }
-                score[y.tag.value] += 1
-            })
-        }
-    })
-    return score
-}
+// function calcTagBalanceScore(workoutExerciseSets) {
+//     const score = {}
+//     workoutExerciseSets.forEach((x) => {
+//         if (x.exercise.exerciseTags) {
+//             x.exercise.exerciseTags.forEach((y) => {
+//                 if (!(score.hasOwnProperty(y.tag.value))) {
+//                     score[y.tag.value] = 0
+//                 }
+//                 score[y.tag.value] += 1
+//             })
+//         }
+//     })
+//     return score
+// }
 
-
-function calcPrevWorkoutTagBalanceScore(workoutExerciseSets) {
-    const score = {}
-    workoutExerciseSets.forEach((x) => {
-        if (x.exerciseSet.exercise) {
-            x.exerciseSet.exercise.exerciseTags.forEach((y) => {
-                if (!(score.hasOwnProperty(y.tag.value))) {
-                    score[y.tag.value] = 0
-                }
-                score[y.tag.value] += 1
-            })
-        }
-    })
-    return score
-}
+//
+// function calcPrevWorkoutTagBalanceScore(workoutExerciseSets) {
+//     const score = {}
+//     workoutExerciseSets.forEach((x) => {
+//         if (x.exerciseSet.exercise) {
+//             x.exerciseSet.exercise.exerciseTags.forEach((y) => {
+//                 if (!(score.hasOwnProperty(y.tag.value))) {
+//                     score[y.tag.value] = 0
+//                 }
+//                 score[y.tag.value] += 1
+//             })
+//         }
+//     })
+//     return score
+// }
 
 
 $(document).ready(function () {
@@ -334,29 +334,29 @@ $(document).ready(function () {
                 selectedTagGroupsFlat() {
                     return this.selectedTagGroups.flat();
                 },
-                thisWorkoutTagBalanceScore() {
-                    return calcTagBalanceScore(this.workout.workoutExerciseSets)
-                },
-                prevWorkoutTagBalanceScores() {
-                    if (!this.userWorkouts) return {}
-                    const scores = {}
-                    this.userWorkouts.forEach((x) => {
-                        scores[x.created_at] = calcPrevWorkoutTagBalanceScore(x.workoutExerciseSets)
-                    })
-                    return scores
-                },
-                prevWorkoutTotalBalanceScore() {
-                    const score = {}
-                    for (key in this.prevWorkoutTagBalanceScores) {
-                        for (key2 in this.prevWorkoutTagBalanceScores[key]) {
-                            if (!score.hasOwnProperty(key2)) {
-                                score[key2] = 0
-                            }
-                            score[key2] += this.prevWorkoutTagBalanceScores[key][key2]
-                        }
-                    }
-                    return score
-                }
+                // thisWorkoutTagBalanceScore() {
+                //     return calcTagBalanceScore(this.workout.workoutExerciseSets)
+                // },
+                // prevWorkoutTagBalanceScores() {
+                //     if (!this.userWorkouts) return {}
+                //     const scores = {}
+                //     this.userWorkouts.forEach((x) => {
+                //         scores[x.created_at] = calcPrevWorkoutTagBalanceScore(x.workoutExerciseSets)
+                //     })
+                //     return scores
+                // },
+                // prevWorkoutTotalBalanceScore() {
+                //     const score = {}
+                //     for (key in this.prevWorkoutTagBalanceScores) {
+                //         for (key2 in this.prevWorkoutTagBalanceScores[key]) {
+                //             if (!score.hasOwnProperty(key2)) {
+                //                 score[key2] = 0
+                //             }
+                //             score[key2] += this.prevWorkoutTagBalanceScores[key][key2]
+                //         }
+                //     }
+                //     return score
+                // }
             },
             created() {
                 this.loadTemplates();
@@ -367,8 +367,10 @@ $(document).ready(function () {
                 this.workout.studentId = window.studentId;
             },
             watch: {
-                selectedTagGroupsFlat() {
-                    this.loadExercises()
+                selectedTagGroupsFlat(n, o) {
+                    if (!o || n.length > o.length) {
+                        this.loadExercises()
+                    }
                 },
                 selectedTagTypes() {
                     this.loadExercises()
@@ -480,34 +482,36 @@ $(document).ready(function () {
                         }
                     }
                 },
-                getTagTypeLabel(tagTypeValue){
-                    if(!this.tagTypeSelectOptions) return ''
+                getTagTypeLabel(tagTypeValue) {
+                    if (!this.tagTypeSelectOptions) return ''
                     const tag = this.tagTypeSelectOptions.find(x => x.value === tagTypeValue)
                     return tag?.label ?? ''
                 }
             },
             template: `
-            <div>
-                 <ul class="nav nav-tabs" id="exercise-tabs" role="tablist">
-                    <li class="nav-item active">
-                        <a class="nav-link" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="false">
-                            Klients
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="previous-workouts-tab" data-toggle="tab" href="#previous-workouts" role="tab" aria-controls="previous-workouts" aria-selected="false">
-                            Iepriekšējie treniņi
-                        </a>
-                    </li>
-                     <li class="nav-item">
-                        <a class="nav-link" id="workout-creation-tab" data-toggle="tab" href="#workout-creation" role="tab" aria-controls="workout-creation" aria-selected="false">
-                            Treniņa izveidošana
-                        </a>
-                    </li>
-                </ul>
+            <div class="workout-creation-container">
+                <div class="row">
+                    <ul class="nav nav-tabs" id="exercise-tabs" role="tablist">
+                        <li class="nav-item active">
+                            <a class="nav-link" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="false">
+                                Klients
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="previous-workouts-tab" data-toggle="tab" href="#previous-workouts" role="tab" aria-controls="previous-workouts" aria-selected="false">
+                                Iepriekšējie treniņi
+                            </a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link" id="workout-creation-tab" data-toggle="tab" href="#workout-creation" role="tab" aria-controls="workout-creation" aria-selected="false">
+                                Treniņa izveidošana
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
-                <div class="tab-content">
-                     <div class="row tab-pane fade active in" id="student" role="tabpanel" aria-labelledby="student-tab">
+                <div class="row tab-content">
+                     <div class="tab-pane fade active in" id="student" role="tabpanel" aria-labelledby="student-tab">
                         <div class="col-md-12" v-if="user">
                             <p>Vārds: {{ user.first_name }} {{ user.last_name }}</p>
                             <p>E-pasts: {{ user.email }}</p>
@@ -515,13 +519,13 @@ $(document).ready(function () {
                         </div>
                     </div>
 
-                    <div class="row tab-pane fade" id="previous-workouts" role="tabpanel" aria-labelledby="previous-workouts-tab">
+                    <div class="tab-pane fade" id="previous-workouts" role="tabpanel" aria-labelledby="previous-workouts-tab">
                         <div class="col-md-12">
                             <last-workouts-table v-if="userWorkouts" :workouts="userWorkouts"></last-workouts-table>
                         </div>
                     </div>
 
-                    <div class="row tab-pane fade" id="workout-creation" role="tabpanel" aria-labelledby="workout-creation-tab">
+                    <div class="tab-pane fade" id="workout-creation" role="tabpanel" aria-labelledby="workout-creation-tab">
                         <div class="col-md-6">
                             <ul class="nav nav-tabs" id="exercise-tabs" role="tablist">
                                 <li class="nav-item active">
@@ -571,7 +575,7 @@ $(document).ready(function () {
                                             Vingrojuma nosaukums:
                                             <div style="display:flex; gap:8px;">
                                                 <input type="text" class="form-control" v-model="exerciseNameFilter">
-                                                <button class="btn btn-primary" type="button" @click="loadExercises">Ielādēt vingrojumus</button>
+                                                <button class="btn btn-primary" type="button" @click="loadExercises">Meklēt</button>
                                             </div>
                                         </li>
                                         <li v-for="exercise in exercises" :key="exercise.id" class="list-group-item" style="display:flex; justify-content:space-between; flex-wrap: wrap; gap: 8px;" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
@@ -617,14 +621,14 @@ $(document).ready(function () {
                         </div>
 
                         <div class="col-md-6">
-                            <h4>Tagu "balance score"</h4>
-                            <p>(<em>šajā treniņā</em> | <em>šajā + visos iepriekšējos treniņos</em>)</p>
-                            <ul class="list-group">
-                                <li class="list-group-item" v-for="(score, key) in thisWorkoutTagBalanceScore" :key="key">
-                                    {{ key }}: {{ score }} | {{  prevWorkoutTotalBalanceScore[key] ? score + prevWorkoutTotalBalanceScore[key] : score }}
-                                </li>
-                                <li class="list-group-item" v-if="!workout.workoutExerciseSets.length">Vēl nav pievienots neviens vingrinājums...</li>
-                            </ul>
+<!--                            <h4>Tagu "balance score"</h4>-->
+<!--                            <p>(<em>šajā treniņā</em> | <em>šajā + visos iepriekšējos treniņos</em>)</p>-->
+<!--                            <ul class="list-group">-->
+<!--                                <li class="list-group-item" v-for="(score, key) in thisWorkoutTagBalanceScore" :key="key">-->
+<!--                                    {{ key }}: {{ score }} | {{  prevWorkoutTotalBalanceScore[key] ? score + prevWorkoutTotalBalanceScore[key] : score }}-->
+<!--                                </li>-->
+<!--                                <li class="list-group-item" v-if="!workout.workoutExerciseSets.length">Vēl nav pievienots neviens vingrinājums...</li>-->
+<!--                            </ul>-->
 
                             <label class="form-group">
                                 Apraksts:
@@ -659,42 +663,41 @@ $(document).ready(function () {
                                         ></added-exercise>
                                     </tbody>
                                 </table>
-                                <div style="text-align:center;">
+                                <div style="text-align:center; background: white;">
                                     <button class="btn btn-success" @click="tryAddingAnotherLap">Pievienot nākamo "apli"</button>
                                     <p>Ņem vērā: ja kādam no vingrojumiem, kuru vajadzētu pievienot, nebūs nākamā piegājiena, tas vienkārši tiks izlaists.</p>
                                 </div>
-                            </div>
+                                     <div style="margin-top: 16px;"">
+                                        <div class="col-sm-12 text-center">
+                                            <loading-button :loading="workoutSubmitting" @click.native="submitWorkout">
+                                                Nosūtīt treniņu
+                                            </loading-button>
+                                        </div>
+                                    </div>
+                                </div>
                             <p v-else>Treniņam vēl nav pievienots neviens vingrinājums...</p>
 
-                            <h4>Iepriekšējo treniņu tagu "balance score"</h4>
-                            <ul class="list-group">
-                                <li class="list-group-item" style="margin-bottom: 8px;">
-                                    <strong>Iepriekšējo treniņu kopējais "balance score"</strong>
-                                    <ul class="list-group">
-                                        <li class="list-group-item" v-for="(score, key) in prevWorkoutTotalBalanceScore" :key="key">
-                                            {{ key }}: {{ score }}
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="list-group-item" v-for="(scores, createdAt) in prevWorkoutTagBalanceScores" :key="createdAt">
-                                    Treniņš, kurš izveidots {{ createdAt }}:
-                                    <ul class="list-group">
-                                        <li class="list-group-item" v-for="(score, key) in scores" :key="key">
-                                            {{ key }}: {{ score }}
-                                        </li>
-                                        <li class="list-group-item" v-if="Object.entries(scores).length === 0">Šajā treniņā nav neviena vingrinājuma ar tagiem</li>
-                                    </ul>
-                                </li>
-                            </ul>
+<!--                            <h4>Iepriekšējo treniņu tagu "balance score"</h4>-->
+<!--                            <ul class="list-group">-->
+<!--                                <li class="list-group-item" style="margin-bottom: 8px;">-->
+<!--                                    <strong>Iepriekšējo treniņu kopējais "balance score"</strong>-->
+<!--                                    <ul class="list-group">-->
+<!--                                        <li class="list-group-item" v-for="(score, key) in prevWorkoutTotalBalanceScore" :key="key">-->
+<!--                                            {{ key }}: {{ score }}-->
+<!--                                        </li>-->
+<!--                                    </ul>-->
+<!--                                </li>-->
+<!--                                <li class="list-group-item" v-for="(scores, createdAt) in prevWorkoutTagBalanceScores" :key="createdAt">-->
+<!--                                    Treniņš, kurš izveidots {{ createdAt }}:-->
+<!--                                    <ul class="list-group">-->
+<!--                                        <li class="list-group-item" v-for="(score, key) in scores" :key="key">-->
+<!--                                            {{ key }}: {{ score }}-->
+<!--                                        </li>-->
+<!--                                        <li class="list-group-item" v-if="Object.entries(scores).length === 0">Šajā treniņā nav neviena vingrinājuma ar tagiem</li>-->
+<!--                                    </ul>-->
+<!--                                </li>-->
+<!--                            </ul>-->
                         </div>
-                    </div>
-                </div>
-            
-                <div class="row" style="margin-top: 16px;">
-                    <div class="col-sm-12 text-center" v-if="workout.workoutExerciseSets.length">
-                        <loading-button :loading="workoutSubmitting" @click.native="submitWorkout">
-                            Nosūtīt treniņu
-                        </loading-button>
                     </div>
                 </div>
             </div>
