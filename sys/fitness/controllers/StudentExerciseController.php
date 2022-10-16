@@ -52,6 +52,8 @@ class StudentExerciseController extends Controller
             'user_id' => $userContext->id,
         ])->one();
 
+        self::setWorkoutAsOpened($workoutExerciseSet->workout);
+
         $post = Yii::$app->request->post();
         if (isset($post["difficulty-evaluation"])) {
             if ($difficultyEvaluation) {
@@ -150,6 +152,13 @@ class StudentExerciseController extends Controller
 
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    private static function setWorkoutAsOpened($workout){
+        if(!$workout->opened_at) {
+            $workout->opened_at = date('Y-m-d H:i:s', time());
+            $workout->update();
+        }
     }
 
     public function actionToggleIsFavourite($lectureId)
