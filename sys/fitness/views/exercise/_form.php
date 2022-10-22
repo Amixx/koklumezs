@@ -39,13 +39,20 @@ $tagSelected = function ($tagId) use ($selectedTagIds) {
     <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
         <?= $form->field($model, 'name')->textInput() ?>
         <?= $form->field($model, 'description')->textarea() ?>
+        <?= $form->field($model, 'is_pause')->checkbox() ?>
+        <?= $form->field($model, 'popularity_type')->dropDownList(
+            [
+                'POPULAR' => Yii::t('app', 'Popular'),
+                'AVERAGE' => Yii::t('app', 'Average popularity'),
+                'RARE' => Yii::t('app', 'Rare'),
+            ],
+            ['prompt' => '']) ?>
         <?= $form->field($model, 'technique_video')->widget(InputFile::class, $inputFileOptions); ?>
 
         <div class="form-group field-season">
-            <label class="control-label" for="tags"> <?= \Yii::t('app',  'Tags') ?></label>
+            <label class="control-label" for="tags"> <?= \Yii::t('app', 'Tags') ?></label>
             <select id="tags" class="form-control" name="tags[]" aria-required="true" aria-invalid="false" multiple>
                 <option value=""></option>
-
                 <?php foreach ($tags as $tag) { ?>
                     <option value="<?= $tag['id'] ?>" <?= $tagSelected($tag['id']) ? 'selected' : '' ?>><?= $tag['value'] ?></option>
                 <?php } ?>
@@ -53,9 +60,9 @@ $tagSelected = function ($tagId) use ($selectedTagIds) {
             <div class="help-block"></div>
         </div>
     </div>
-    <hr />
+    <hr/>
     <div class="form-group">
-        <?= Html::submitButton(\Yii::t('app',  'Save'), ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(\Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

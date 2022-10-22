@@ -8,18 +8,21 @@ use yii\data\ActiveDataProvider;
 
 class ExerciseSearch extends Exercise
 {
-    public $author;
+    public $exerciseTag;
     public function rules()
     {
         return [
-            [['id', 'author_id'], 'integer'],
+            [['id', 'author_id', 'exerciseTag'], 'integer'],
             [[
                 'author_id',
                 'name',
                 'description',
+                'is_pause',
+                'popularity_type',
                 'technique_video',
                 'created_at',
                 'updated_at',
+                'exerciseTag',
             ], 'safe'],
         ];
     }
@@ -48,14 +51,6 @@ class ExerciseSearch extends Exercise
             'query' => $query,
         ]);
 
-        $query->joinWith(['author']);
-
-        $dataProvider->sort->attributes['author'] = [
-            // The tables are the ones our relation are configured to
-            'asc' => ['u2.email' => SORT_ASC],
-            'desc' => ['u2.email' => SORT_DESC],
-        ];
-
         $this->load($params);
 
         if (!$this->validate()) {
@@ -63,20 +58,22 @@ class ExerciseSearch extends Exercise
             // $query->where('0=1');
             return $dataProvider;
         }
+        if($this->exerciseTag) {
+            $query->andFilterWhere(['in', 'id', ExerciseTag::find()->select('exercise_id')->where(['tag_id' => $this->exerciseTag])]);
+        }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'author_id' => $this->author_id,
-        ]);
-        $query->andFilterWhere(
-            ['like', 'u2.email', $this->author]
-        );
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'technique_video', $this->technique_video])
             ->andFilterWhere(['like', 'created_at', $this->created_at])
             ->andFilterWhere(['like', 'updated_at', $this->updated_at]);
+
+        if($this->is_pause !== null) {
+            $query->andFilterWhere(['is_pause' => $this->is_pause]);
+        }
+        if($this->popularity_type !== null) {
+            $query->andFilterWhere(['popularity_type' => $this->popularity_type]);
+        }
 
         return $dataProvider;
     }

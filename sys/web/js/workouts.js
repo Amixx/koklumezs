@@ -68,7 +68,7 @@ Vue.component('added-exercise', {
         <td>{{ tempExercise.exerciseSet.reps }}</td>
         <td>{{ tempExercise.exerciseSet.time_seconds }}</td>
         <td>
-            <div class="form-group" :class="{'has-error': highlightWeightMissing && !tempExercise.weight}">
+            <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group" :class="{'has-error': highlightWeightMissing && !tempExercise.weight}">
                 <input class="form-control" v-model="tempExercise.weight" style="width:60px;">
             </div>
         </td>
@@ -81,6 +81,14 @@ Vue.component('added-exercise', {
     `
 })
 
+var evalValueToText = {
+    2: 'Garlaicīgi',
+    4: "Viegli",
+    6: 'Nedaudz grūti',
+    8: 'Ļoti grūti',
+    10: 'Neiespējami',
+};
+
 Vue.component('last-workouts-table', {
     name: 'last-workouts-table',
     props: {
@@ -92,6 +100,13 @@ Vue.component('last-workouts-table', {
     methods: {
         shouldShowEvaluation(userId) {
             return parseInt(userId) === window.studentId;
+        },
+        getUserEvalText(evaluations) {
+            if (!evaluations || !evaluations.length) return '';
+            if (!window.studentId) return '';
+            var userEval = evaluations.find(e => (parseInt(e.user_id) === window.studentId));
+            if (!userEval) return '';
+            return evalValueToText[userEval.evaluation];
         }
     },
     template: `
@@ -101,24 +116,38 @@ Vue.component('last-workouts-table', {
                 <tr>
                     <th scope="col">Izveidošanas datums</th>
                     <th scope="col">Apraksts</th>
-                    <th scope="col">Atvēršanas datums</th>
-                    <th scope="col">Novērtējums</th>
+                    <th scope="col">Kad atvērts</th>
+                    <th scope="col">Vingrinājumi un novērtējumi</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="workout in workouts">
                     <td class="text-center" style="white-space:nowrap">{{ workout.created_at }}</td>
                     <td>{{ workout.description }}</td>
-                    <td class="text-center" style="white-space:nowrap">{{ workout.upened_at ? workout.upened_at : 'Nav atvērts' }}</td>
+                    <td class="text-center" style="white-space:nowrap">{{ workout.opened_at ? workout.opened_at : 'Nav atvērts' }}</td>
                     <td>
-                        <div v-for="(exerciseSet, i) in workout.workoutExerciseSets" :key="i">
-                            <div v-for="(eval, j) in exerciseSet.evaluations" :key="j">
-                                {{ i+1 }}. vingrojums: 
-                                <span v-if="shouldShowEvaluation(eval['user_id'])">
-                                    {{ eval['evaluation'] }}
-                                </span>
-                            </div>
-                        </div>
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nr.</th>
+                                    <th>Vingrojums</th>
+                                    <th>Reizes</th>
+                                    <th>Laiks (sekundēs)</th>
+                                    <th>Svars</th>
+                                    <th>Novērtējums</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                 <tr v-for="(workoutExerciseSet, i) in workout.workoutExerciseSets" :key="i">
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ workoutExerciseSet.exerciseSet.exercise.name }}</td>
+                                    <td>{{ workoutExerciseSet.exerciseSet.reps }}</td>
+                                    <td>{{ workoutExerciseSet.exerciseSet.time_seconds }}</td>
+                                    <td>{{ workoutExerciseSet.weight }}</td>
+                                    <td>{{ getUserEvalText(workoutExerciseSet.evaluations) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </td>
                 </tr>
             </tbody>
@@ -200,8 +229,19 @@ class ExerciseRepository extends Repository {
         return window.getUrl(`/${'fitness-exercises'}`)
     }
 
-    static async list(tagIdGroups, tagTypes, exerciseName) {
-        const data = (await axios.get(`${this.baseUrl}/api-list`, {params: {tagIdGroups, tagTypes, exerciseName}})).data
+    static async list(tagIdGroups, tagTypes, exerciseName, exercisePopularity) {
+        const data = (await axios.get(`${this.baseUrl}/api-list`, {params: {tagIdGroups, tagTypes, exerciseName, exercisePopularity}})).data
+        return data.map(exercise => {
+            exercise.sets = exercise.sets.map((set, i) => ({
+                ...set,
+                sequenceNo: i + 1
+            }))
+            return exercise
+        })
+    }
+
+    static async listPauses() {
+        const data = (await axios.get(`${this.baseUrl}/api-list`, {params: {onlyPauses: true}})).data;
         return data.map(exercise => {
             exercise.sets = exercise.sets.map((set, i) => ({
                 ...set,
@@ -312,6 +352,7 @@ $(document).ready(function () {
             data: function () {
                 return {
                     exercises: null,
+                    pauses: null,
                     exercisesLoading: false,
                     templates: null,
                     user: null,
@@ -328,6 +369,21 @@ $(document).ready(function () {
                     selectedTagTypes: [],
                     selectedTagGroups: [[], [], [], [], []],
                     exerciseNameFilter: '',
+                    exercisePopularitySelectOptions: [
+                        {
+                            value: 'POPULAR',
+                            label: 'Populārs'
+                        },
+                        {
+                            value: 'AVERAGE',
+                            label: 'Vidēji populārs'
+                        },
+                        {
+                            value: 'RARE',
+                            label: 'Rets'
+                        },
+                    ],
+                    selectedExercisePopularity: null,
                 }
             },
             computed: {
@@ -364,6 +420,7 @@ $(document).ready(function () {
                 this.loadUserWorkouts();
                 this.loadTags();
                 this.loadTagTypeSelectOptions()
+                this.loadPauses()
                 this.workout.studentId = window.studentId;
             },
             watch: {
@@ -373,6 +430,9 @@ $(document).ready(function () {
                     }
                 },
                 selectedTagTypes() {
+                    this.loadExercises()
+                },
+                selectedExercisePopularity() {
                     this.loadExercises()
                 }
             },
@@ -389,12 +449,14 @@ $(document).ready(function () {
                 },
                 async loadExercises() {
                     this.exercisesLoading = true
-                    this.exercises = await ExerciseRepository.list(
-                        this.selectedTagGroupsFlat.length ? this.selectedTagGroups.map(x => x.map(y => y.id)) : null,
-                        this.selectedTagTypes.length ? this.selectedTagTypes.map(x => x.value) : null,
-                        this.exerciseNameFilter,
-                    )
+                    const tagIdGroups = this.selectedTagGroupsFlat.length ? this.selectedTagGroups.map(x => x.map(y => y.id)) : null
+                    const tagTypes = this.selectedTagTypes.length ? this.selectedTagTypes.map(x => x.value) : null
+                    const exercisePopularity = this.selectedExercisePopularity ? this.selectedExercisePopularity.value : null
+                    this.exercises = await ExerciseRepository.list(tagIdGroups, tagTypes, this.exerciseNameFilter, exercisePopularity)
                     this.exercisesLoading = false
+                },
+                async loadPauses() {
+                    this.pauses = await ExerciseRepository.listPauses()
                 },
                 async loadTemplates() {
                     const templates = (await TemplateRepository.list()).map(template => ({
@@ -434,17 +496,31 @@ $(document).ready(function () {
                     return this.workout.workoutExerciseSets.filter(x => x.exercise.id === exercise.id)
                 },
                 addExercise(exercise) {
-                    const addedSetsOfExercise = this.addedExercisesOfSet(exercise)
-                    const exerciseSet = exercise.sets.find((set) => {
-                        return !addedSetsOfExercise.find(x => x.exerciseSet.id === set.id)
-                    })
+                    const isPause = exercise.is_pause === '1'
 
-                    if (exerciseSet) {
-                        this.workout.workoutExerciseSets.push({
-                            exerciseSet,
-                            exercise,
-                            weight: null,
+                    if (isPause) {
+                        if (exercise.sets.length) {
+                            this.workout.workoutExerciseSets.push({
+                                exerciseSet: exercise.sets[0],
+                                exercise,
+                                weight: null,
+                            })
+                        } else {
+                            console.error('pause ', exercise, ' has no sets!')
+                        }
+                    } else {
+                        const addedSetsOfExercise = this.addedExercisesOfSet(exercise)
+                        const exerciseSet = exercise.sets.find((set) => {
+                            return !addedSetsOfExercise.find(x => x.exerciseSet.id === set.id)
                         })
+
+                        if (exerciseSet) {
+                            this.workout.workoutExerciseSets.push({
+                                exerciseSet,
+                                exercise,
+                                weight: null,
+                            })
+                        }
                     }
                 },
                 removeExercise(index) {
@@ -562,7 +638,7 @@ $(document).ready(function () {
                                                 </li>
                                             </ul>
                                         </li>
-                                         <li v-if="tagTypeSelectOptions" class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                        <li v-if="tagTypeSelectOptions" class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
                                              <h4>Tagu tipu atlase</h4>
                                              <v-select
                                                 label="label"
@@ -572,12 +648,21 @@ $(document).ready(function () {
                                              ></v-select>
                                         </li>
                                         <li class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                             <h4>Vingrojumu popularitātes atlase</h4>
+                                             <v-select
+                                                label="label"
+                                                :options="exercisePopularitySelectOptions"
+                                                v-model="selectedExercisePopularity"
+                                             ></v-select>
+                                        </li>
+                                        <li class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
                                             Vingrojuma nosaukums:
                                             <div style="display:flex; gap:8px;">
                                                 <input type="text" class="form-control" v-model="exerciseNameFilter">
                                                 <button class="btn btn-primary" type="button" @click="loadExercises">Meklēt</button>
                                             </div>
                                         </li>
+                                        <li v-if="exercises" class="list-group-item"><p style="text-align: center;font-size: 18px;margin-bottom: 0;">Vingrinājumi</p></li>
                                         <li v-for="exercise in exercises" :key="exercise.id" class="list-group-item" style="display:flex; justify-content:space-between; flex-wrap: wrap; gap: 8px;" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
                                             <span>
                                                 <span style="margin-right: 8px;">
@@ -599,11 +684,22 @@ $(document).ready(function () {
                                                 </span>
                                             </span>
                                         </li>
-                                        <li class="list-group-item" v-if="exercises && exercises.length === 20">
-                                            Ielādēti pirmie 20 vingrinājumi, kas atbilst atlasei.
+                                        <li class="list-group-item" v-if="exercises && exercises.length === 10">
+                                            Ielādēti pirmie 10 vingrinājumi, kas atbilst atlasei.
                                         </li>
                                         <li class="list-group-item" v-else-if="exercises && !exercises.length">
                                             Nav atrasts neviens vingrinājums ar šādu tagu atlasi! Mainiet izvēlētos tagus!
+                                        </li>
+                                         <li class="list-group-item" v-if="pauses">
+                                            <p style="text-align: center;font-size: 18px;margin-bottom: 0;">Pauzes</p>
+                                            <p v-for="(pause, i) in pauses" :key="i">
+                                                <span>{{ pause.name }}</span>
+                                                <button
+                                                    class="btn btn-primary"
+                                                    @click="addExercise(pause)">
+                                                    <span class="glyphicon glyphicon-plus" title="Pievienot treniņam"></span>
+                                                </button>
+                                            </p>
                                         </li>
                                     </ul>
                                 </div>

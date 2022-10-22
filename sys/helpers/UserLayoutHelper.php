@@ -87,9 +87,7 @@ class UserLayoutHelper extends LayoutHelper
     private function getUserTypeNavItems()
     {
         $userContext = Yii::$app->user->identity;
-        $hasStudents = $userContext->isTeacher()
-            ? count(Users::getStudentsWithoutPausesForSchool()) > 0
-            : false;
+        $hasStudents = $userContext->isTeacher() && count(Users::getStudentsWithoutPausesForSchool()) > 0;
         $isFitnessSchool = !$this->isAdmin && $userContext->getSchool()->is_fitness_school;
 
         $fitnessTeacherMenu =
@@ -104,28 +102,6 @@ class UserLayoutHelper extends LayoutHelper
                 ['label' => '+', 'url' => ['/fitness-templates/create'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-templates']),],
                 ['label' => Yii::t('app',  'Tags'), 'url' => ['/fitness-tags'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-tags']),],
                 ['label' => '+', 'url' => ['/fitness-tags/create'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-tags']),],
-                [
-                    'label' => Yii::t('app',  'Subscription plans'),
-                    'url' => ['/school-sub-plans'],
-                    'active' =>  in_array(Yii::$app->controller->id, ['school-sub-plans']),
-                    'items' => [
-                        ['label' => Yii::t('app',  'Subscription plans'), 'url' => ['/school-sub-plans']],
-                        ['label' => Yii::t('app',  'Plan parts'), 'url' => ['/plan-parts']],
-                        ['label' => Yii::t('app',  'Plan pauses'), 'url' => ['/student-subplan-pauses']],
-                    ],
-                    'options' => ['class' => 'nav-item dropdown']
-                ],
-                ['label' => '+', 'url' => ['/school-sub-plans/create'], 'active' =>  in_array(Yii::$app->controller->id, ['school-sub-plans']),],
-                [
-                    'label' => Yii::t('app',  'Metrics'),
-                    'active' =>  in_array(Yii::$app->controller->id, ['user-lecture-evaluations']) && Yii::$app->controller->action->actionMethod != "actionComments",
-                    'items' => [
-                        ['label' => Yii::t('app',  'Student evaluations'), 'url' => ['/user-lecture-evaluations']],
-                        ['label' => Yii::t('app',  'Sent invoices'), 'url' => ['/sent-invoices']],
-                    ],
-                    'options' => ['class' => 'nav-item dropdown']
-                ],
-                ['label' => Yii::t('app',  'Settings'), 'url' => ['/school-settings'], 'active' =>  in_array(Yii::$app->controller->id, ['school-settings'])],
             ];
 
         $instrumentTeacherMenu =

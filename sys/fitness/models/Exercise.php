@@ -16,9 +16,10 @@ class Exercise extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['author_id', 'name'], 'required'],
+            [['author_id', 'name', 'popularity_type'], 'required'],
             [['author_id'], 'integer'],
-            [['name', 'description', 'technique_video'], 'string'],
+            [['is_pause'], 'boolean'],
+            [['name', 'description', 'technique_video', 'popularity_type'], 'string'],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author_id' => 'id']],
         ];
     }
@@ -31,6 +32,8 @@ class Exercise extends \yii\db\ActiveRecord
             'name' => \Yii::t('app',  'Title'),
             'description' => \Yii::t('app',  'Apraksts'),
             'technique_video' => \Yii::t('app', 'Technique video'),
+            'is_pause' => \Yii::t('app', 'Is pause'),
+            'popularity_type' => \Yii::t('app', 'Popularity type'),
         ];
     }
 

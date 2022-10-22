@@ -73,4 +73,13 @@ class Tag extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Users::class, ['id' => 'author_id']);
     }
+
+    public static function getForSelect(){
+        $tags = self::find()->asArray()->all();
+        $res = [];
+        foreach($tags as $tag) {
+            $res[$tag['id']] = $tag['value'];
+        }
+        return $res;
+    }
 }

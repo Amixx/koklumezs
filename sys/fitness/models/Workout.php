@@ -62,7 +62,10 @@ class Workout extends \yii\db\ActiveRecord
 
     public function getWorkoutExerciseSets()
     {
-        return $this->hasMany(WorkoutExerciseSet::class, ['workout_id' => 'id'])->joinWith('exerciseSet')->joinWith('evaluations')->orderBy('fitness_workoutexercisesets.id', SORT_ASC);
+        return $this->hasMany(WorkoutExerciseSet::class, ['workout_id' => 'id'])
+            ->joinWith('exerciseSet')
+            ->joinWith('evaluations')
+            ->orderBy(['fitness_workoutexercisesets.id' => SORT_ASC]);
     }
 
     public function getNextWorkoutExercise($workoutExercise)
@@ -75,12 +78,24 @@ class Workout extends \yii\db\ActiveRecord
         return null;
     }
 
-    public static function getForCurrentUser()
+    public static function getUnopenedForCurrentUser()
     {
+        return self::getForCurrentUser(false);
+    }
+
+    public static function getOpenedForCurrentUser()
+    {
+        return self::getForCurrentUser(true);
+    }
+
+    private static function getForCurrentUser($opened) {
         $userContext = Yii::$app->user->identity;
-        return self::find()
+        $openedAtCond = $opened ? ['IS NOT', 'opened_at', null] : ['opened_at' => null];
+        $query = self::find()
             ->where(['student_id' => $userContext->id])
-            ->orderBy('id', SORT_DESC)
-            ->joinWith('workoutExerciseSets')->asArray()->all();
+            ->andWhere($openedAtCond)
+            ->orderBy(['id' => SORT_DESC])
+            ->joinWith('workoutExerciseSets');
+        return $query->asArray()->all();
     }
 }

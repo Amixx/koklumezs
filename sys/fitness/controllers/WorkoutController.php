@@ -60,19 +60,21 @@ class WorkoutController extends Controller
                 $workoutExerciseSet->workout_id = $workout->id;
                 $workoutExerciseSet->exerciseset_id = $workoutExSet['exerciseSet']['id'];
                 $workoutExerciseSet->weight = $workoutExSet['weight'];
-                if (!$workoutExerciseSet->weight) {
-                    throw new UnprocessableEntityHttpException('Some workout sets do not have a defined', 422);
-                }
                 $workoutExerciseSet->save();
             }
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Workout successfully created') . '!');
+        } else {
+            Yii::$app->session->setFlash('error', Yii::t('app', 'Something went wrong while creating workout') . '!');
         }
     }
 
-
-
     public function actionApiOfStudent($id)
     {
-        $studentWorkouts = Workout::find()->where(['student_id' => $id])->joinWith('workoutExerciseSets')->orderBy('id', SORT_ASC)->asArray()->all();
+        $query = Workout::find()
+            ->where(['student_id' => $id])
+            ->joinWith('workoutExerciseSets')
+            ->orderBy(['id' => SORT_DESC]);
+        $studentWorkouts = $query->asArray()->all();
         return json_encode($studentWorkouts);
     }
 }

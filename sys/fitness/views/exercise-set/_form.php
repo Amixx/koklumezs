@@ -16,7 +16,6 @@ $inputFileOptions = [
 ?>
 
 <div class="lectures-form">
-
     <?php $form = ActiveForm::begin(); ?>
     <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
         <?= $form->field($model, 'reps')->textInput() ?>
@@ -29,5 +28,4 @@ $inputFileOptions = [
     </div>
 
     <?php ActiveForm::end(); ?>
-
 </div>

@@ -5,7 +5,7 @@ use yii\helpers\Url;
 use yii\widgets\DetailView;
 
 $this->title = $model->name;
-['label' => \Yii::t('app',  'Exercises'), 'url' => ['index']];
+['label' => \Yii::t('app', 'Exercises'), 'url' => ['index']];
 
 \yii\web\YiiAsset::register($this);
 ?>
@@ -14,7 +14,7 @@ $this->title = $model->name;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(\Yii::t('app',  'Edit'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(\Yii::t('app', 'Edit'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(\Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -27,9 +27,24 @@ $this->title = $model->name;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'name',
             'description',
+            [
+                'attribute' => 'is_pause',
+                'value' => function ($dataProvider) {
+                    return Yii::t('app', $dataProvider['is_pause'] ? 'Yes' : 'No');
+                }
+            ],
+            [
+                'attribute' => 'popularity_type',
+                'value' => function ($dataProvider) {
+                    return Yii::t('app',
+                        $dataProvider['popularity_type'] === 'POPULAR'
+                            ? 'Popular'
+                            : ($dataProvider['popularity_type'] === 'AVERAGE' ? 'Average popularity' : 'Rare')
+                    );
+                }
+            ],
             'technique_video',
         ],
     ]) ?>
@@ -38,32 +53,36 @@ $this->title = $model->name;
         <h3><?= Yii::t('app', 'Exercise sets') ?></h3>
         <table class="table table-striped table-bordered">
             <thead>
-                <tr>
-                    <th><?= Yii::t('app', 'Sequence no.') ?></th>
-                    <th><?= Yii::t('app', 'Repetitions') ?></th>
-                    <th><?= Yii::t('app', 'Time (seconds)') ?></th>
-                    <th><?= Yii::t('app', 'Video') ?></th>
-                </tr>
+            <tr>
+                <th><?= Yii::t('app', 'Sequence no.') ?></th>
+                <th><?= Yii::t('app', 'Repetitions') ?></th>
+                <th><?= Yii::t('app', 'Time (seconds)') ?></th>
+                <th><?= Yii::t('app', 'Video') ?></th>
+            </tr>
             </thead>
             <tbody>
-                <?php foreach ($model->sets as $key => $set) { ?>
-                    <tr>
-                        <td><?= $key + 1 ?></td>
-                        <td><?= $set->reps ?></td>
-                        <td><?= $set->time_seconds ?></td>
-                        <td><?= $set->video ?></td>
-                        <td>
-                            <form action="<?= Url::to(['fitness-exercise-sets/update', 'id' => $set->id]) ?>" method="POST" style="display:inline-block">
-                                <input type="hidden" name="<?= Yii::$app->request->csrfParam; ?>" value="<?= Yii::$app->request->csrfToken; ?>" />
-                                <button class="btn btn-primary">Rediģēt</button>
-                            </form>
-                            <form action="<?= Url::to(['fitness-exercise-sets/delete', 'id' => $set->id, 'exercise_id' => $model->id]) ?>" method="POST" style="display:inline-block">
-                                <input type="hidden" name="<?= Yii::$app->request->csrfParam; ?>" value="<?= Yii::$app->request->csrfToken; ?>" />
-                                <button class="btn btn-danger">Dzēst</button>
-                            </form>
-                        </td>
-                    </tr>
-                <?php } ?>
+            <?php foreach ($model->sets as $key => $set) { ?>
+                <tr>
+                    <td><?= $key + 1 ?></td>
+                    <td><?= $set->reps ?></td>
+                    <td><?= $set->time_seconds ?></td>
+                    <td><?= $set->video ?></td>
+                    <td>
+                        <form action="<?= Url::to(['fitness-exercise-sets/update', 'id' => $set->id]) ?>" method="POST"
+                              style="display:inline-block">
+                            <input type="hidden" name="<?= Yii::$app->request->csrfParam; ?>"
+                                   value="<?= Yii::$app->request->csrfToken; ?>"/>
+                            <button class="btn btn-primary">Rediģēt</button>
+                        </form>
+                        <form action="<?= Url::to(['fitness-exercise-sets/delete', 'id' => $set->id, 'exercise_id' => $model->id]) ?>"
+                              method="POST" style="display:inline-block">
+                            <input type="hidden" name="<?= Yii::$app->request->csrfParam; ?>"
+                                   value="<?= Yii::$app->request->csrfToken; ?>"/>
+                            <button class="btn btn-danger">Dzēst</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php } ?>
             </tbody>
         </table>
     <?php } ?>

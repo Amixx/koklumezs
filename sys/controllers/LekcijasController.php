@@ -114,7 +114,7 @@ class LekcijasController extends Controller
             }
 
             if ($isFitnessSchool) {
-                $workouts = Workout::getForCurrentUser();
+                $workouts = Workout::getUnopenedForCurrentUser();
 
                 return $this->render('index', [
                     'models' => $models,

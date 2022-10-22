@@ -747,4 +747,11 @@ return [
     'Create tag' => 'Izveidot tagu',
     'Edit tag' => 'Rediģēt tagu',
     'Exercise tags' => 'Vingrojuma tagi',
+    'Is pause' => 'Vai ir pauze',
+    'Something went wrong while creating workout' => 'Treniņa izveidošanas laikā kaut kas nogāja greizi',
+    'Workout successfully created' => 'Treniņš veiksmīgi izveidots',
+    'Popular' => 'Populārs',
+    'Average popularity' => 'Vidēji populārs',
+    'Rare' => 'Rets',
+    'Popularity type' => 'Popularitāte',
 ];

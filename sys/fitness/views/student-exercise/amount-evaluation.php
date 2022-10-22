@@ -38,7 +38,7 @@ $isEmojiActive = function ($name) use ($evaluations, $difficultyEvaluation) {
 
 ?>
 
-<p style="font-size: 18px; font-weight: bold">Kā Tev veicās ar šo uzdevumu?</p>
+<p style="font-size: 18px; font-weight: bold">Kā gāja?</p>
 <div>
     <?php $form = ActiveForm::begin(); ?>
     <?= Html::hiddenInput("difficulty-evaluation", null) ?>

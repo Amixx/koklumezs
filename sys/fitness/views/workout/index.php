@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <h1 style="margin-top: 40px;"><?= $studentFullName ?></h1>
+    <h1><?= $studentFullName ?></h1>
     <div id="workout-creation"></div>
 </body>
 <script>

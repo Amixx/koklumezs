@@ -46,10 +46,12 @@ class ExerciseController extends Controller
         $searchModel = new ExerciseSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->pagination->setPageSize(100);
+        $get = Yii::$app->request->queryParams;
 
         return $this->render('@app/fitness/views/exercise/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'get' => $get,
         ]);
     }
 
@@ -141,7 +143,7 @@ class ExerciseController extends Controller
             ->joinWith('sets')
             ->joinWith('exerciseTags')
             ->groupBy('name')
-            ->limit(20);
+            ->limit(10);
 
         if (isset($get['tagIdGroups']) && $get['tagIdGroups']) {
             $tagIdGroups = array_map(function ($tagIdGroup) {
@@ -163,17 +165,12 @@ class ExerciseController extends Controller
                                 ->groupBy('fitness_exercisetags.exercise_id')
                                 ->having("COUNT(*) = $count")
                         ]);
-//                    var_dump($query->createCommand()->getRawSql());
-//                    die();
                 }
             }
         }
 
         if (isset($get['exerciseName']) && $get['exerciseName'] && $get['exerciseName'] != '') {
             $query->andFilterWhere(['like', 'fitness_exercises.name', $get['exerciseName']]);
-
-//                var_dump($query->createCommand()->getRawSql());
-//                die();
         }
         if (isset($get['tagTypes']) && $get['tagTypes']) {
             $query->andFilterWhere([
@@ -184,6 +181,11 @@ class ExerciseController extends Controller
                     ->select('fitness_exercisetags.exercise_id')
                     ->where(['in', 'type', $get['tagTypes']])
             ]);
+        }
+
+        $query->andFilterWhere(['is_pause' => !!(isset($get['onlyPauses']) && $get['onlyPauses'])]);
+        if(isset($get['exercisePopularity']) && $get['exercisePopularity']) {
+            $query->andFilterWhere(['popularity_type' => $get['exercisePopularity']]);
         }
 
         $exercises = $query->asArray()->all();

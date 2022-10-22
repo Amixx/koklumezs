@@ -65,9 +65,9 @@ class StudentExerciseController extends Controller
                 $evaluation->evaluation = (int)$post["difficulty-evaluation"];
                 $evaluation->save();
 
-                if ($nextWorkoutExercise) {
-                    return $this->redirect(['', 'id' => $nextWorkoutExercise['id']]);
-                }
+                $nextWorkoutExercise
+                    ? $this->redirect(['', 'id' => $nextWorkoutExercise['id']])
+                    : $this->redirect(['lekcijas/index']);
             }
         }
 
