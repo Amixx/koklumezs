@@ -32,12 +32,47 @@ $evaluations = [
         <?php if (!$messageModel->id) { ?>
             <?php $form = ActiveForm::begin(); ?>
             <?= $form->field($messageModel, 'text')->textarea() ?>
+            <div style="display: flex; flex-wrap: wrap;">
+                <?= $form->field($messageModel, 'video')->fileInput([
+                    'accept' => "video/mp4,video/x-m4v,video/*"
+                ]) ?>
+                <?= $form->field($messageModel, 'audio')->fileInput([
+                    'accept' => "audio/*"
+                ]) ?>
+            </div>
             <div class="form-group" style="text-align:center;">
                 <?= Html::submitButton(\Yii::t('app', 'Send'), ['class' => 'btn btn-success']) ?>
             </div>
             <?php ActiveForm::end(); ?>
-        <?php } else if ($messageModel->text) { ?>
-            <p><?= Yii::t('app', 'Message for the coach') ?>: <?= $messageModel->text ?></p>
+        <?php } else { ?>
+            <p><?= Yii::t('app', 'Messages for the coach') ?>: </p>
+            <?php if ($messageModel->text) { ?>
+                <p><?= $messageModel->text ?></p>
+            <?php } ?>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                <?php if ($messageModel->video) { ?>
+                    <?php
+                    $exploded = explode(".", $messageModel->video);
+                    $ext = end($exploded);
+                    ?>
+                    <div style="max-width: 300px">
+                        <video id="post-workout-message-video" playsinline controls data-role="player">
+                            <source src="<?= '/sys/files/' . $messageModel->video ?>" type="video/<?= $ext ?>"/>
+                        </video>
+                    </div>
+                <?php } ?>
+                <?php if ($messageModel->audio) { ?>
+                    <?php
+                    $exploded = explode(".", $messageModel->audio);
+                    $ext = end($exploded);
+                    ?>
+                    <div style="max-width: 300px;">
+                        <video id="post-workout-message-audio" playsinline controls data-role="player">
+                            <source src="<?= '/sys/files/' . $messageModel->audio ?>" type="audio/<?= $ext ?>"/>
+                        </video>
+                    </div>
+                <?php } ?>
+            </div>
         <?php } ?>
     </div>
     <div class="col-sm-12" style="margin-top: 16px; overflow-x:scroll">

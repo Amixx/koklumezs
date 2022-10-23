@@ -20,6 +20,8 @@ class PostWorkoutMessage extends \yii\db\ActiveRecord
             [['workout_id'], 'required'],
             [['workout_id'], 'integer'],
             [['text'], 'string'],
+            [['video'], 'file', 'extensions' => 'mp4'],
+            [['audio'], 'file', 'extensions' => 'mp3'],
             [['created_at'], 'safe'],
         ];
     }
@@ -41,6 +43,8 @@ class PostWorkoutMessage extends \yii\db\ActiveRecord
             'id' => 'ID',
             'workout_id' => \Yii::t('app',  'Workout ID'),
             'text' => \Yii::t('app', 'Do you want to say something to the coach?'),
+            'video' => \Yii::t('app', 'Film video message') . '!',
+            'audio' => \Yii::t('app', 'Record audio message') . '!',
             'created_at' => \Yii::t('app',  'Created at'),
         ];
     }

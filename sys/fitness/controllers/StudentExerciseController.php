@@ -14,6 +14,7 @@ use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 
 class StudentExerciseController extends Controller
 {
@@ -153,8 +154,9 @@ class StudentExerciseController extends Controller
         ]);
     }
 
-    private static function setWorkoutAsOpened($workout){
-        if(!$workout->opened_at) {
+    private static function setWorkoutAsOpened($workout)
+    {
+        if (!$workout->opened_at) {
             $workout->opened_at = date('Y-m-d H:i:s', time());
             $workout->update();
         }
@@ -168,21 +170,39 @@ class StudentExerciseController extends Controller
         return $this->redirect(Yii::$app->request->referrer);
     }
 
-    public function actionWorkoutSummary($workoutId){
+    public function actionWorkoutSummary($workoutId)
+    {
         $post = Yii::$app->request->post();
 
         $workout = Workout::findOne(['id' => $workoutId]);
         $messageModel = $workout->postWorkoutMessage;
-        if(!$messageModel) {
+        if (!$messageModel) {
             $messageModel = new PostWorkoutMessage;
             $messageModel->workout_id = $workoutId;
         }
 
-        if($post && $messageModel->load($post)) {
-            if($messageModel['text']) {
-                $messageModel->save();
-                Yii::$app->session->setFlash('success', Yii::t('app', 'Message sent') . '!');
+        if ($post && $messageModel->load($post)) {
+            $video = UploadedFile::getInstance($messageModel, 'video');
+            if (!is_null($video)) {
+                $exploded = explode(".", $video->name);
+                $ext = end($exploded);
+                $messageModel->video = Yii::$app->security->generateRandomString() . ".{$ext}";
+                Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/files/';
+                $path = Yii::$app->params['uploadPath'] . $messageModel->video;
+                $video->saveAs($path);
             }
+            $audio = UploadedFile::getInstance($messageModel, 'audio');
+            if (!is_null($audio)) {
+                $exploded = explode(".", $audio->name);
+                $ext = end($exploded);
+                $messageModel->audio = Yii::$app->security->generateRandomString() . ".{$ext}";
+                Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/files/';
+                $path = Yii::$app->params['uploadPath'] . $messageModel->audio;
+                $audio->saveAs($path);
+            }
+
+            $messageModel->save();
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Message sent') . '!');
         }
 
         if (isset($post["difficulty-evaluation"])) {

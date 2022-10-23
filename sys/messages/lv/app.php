@@ -757,4 +757,7 @@ return [
     'Do you want to say something to the coach?' => 'Vai vēlies kaut ko pateikt trenerim?',
     'Message sent' => 'Ziņa nosūtīta',
     'Message for the coach' => 'Ziņa trenerim',
+    'Film video message' => 'Iefilmē video ziņu',
+    'Record audio message' => 'Ieraksti audio ziņu',
+    'Messages for the coach' => 'Ziņas trenerim',
 ];
