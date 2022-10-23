@@ -26,10 +26,8 @@ $evaluations = [
     ],
 ];
 
-$isEmojiActive = function ($name) use ($evaluations, $difficultyEvaluation) {
-    if (!$difficultyEvaluation) {
-        return false;
-    }
+$isButtonACtive = function ($name) use ($evaluations, $difficultyEvaluation) {
+    if (!$difficultyEvaluation) return false;
 
     $evalIndex = array_search($name, array_column($evaluations, 'text'));
 
@@ -38,21 +36,22 @@ $isEmojiActive = function ($name) use ($evaluations, $difficultyEvaluation) {
 
 ?>
 
-<p style="font-size: 18px; font-weight: bold">Kā gāja?</p>
+<p style="font-size: 18px; <?= $readonly ? '' : 'font-weight: bold' ?>">Kā gāja?</p>
 <div>
     <?php $form = ActiveForm::begin(); ?>
     <?= Html::hiddenInput("difficulty-evaluation", null) ?>
 
-    <div class="form-group" style="margin: 0; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center">
+    <div class="btn-group">
         <?php foreach ($evaluations as $evaluation) {
             $name = $evaluation['text'];
             $emojiClass = "emoji emoji-$name";
-        ?>
+            ?>
             <button
-                    data-role="evaluation-emoji"
-                    data-value="<?= $evaluation['value'] ?>"
-                    class="btn <?= $isEmojiActive($name) ? 'btn-primary' : '' ?>"
-                    <?php  ?>>
+                data-role="evaluation-emoji"
+                data-value="<?= $evaluation['value'] ?>"
+                class="btn <?= $isButtonACtive($name) ? 'btn-primary' : '' ?>"
+                <?= $readonly ? 'disabled' : '' ?>
+            >
                 <?= $evaluation['text'] ?>
             </button>
         <?php } ?>

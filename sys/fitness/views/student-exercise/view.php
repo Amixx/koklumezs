@@ -55,7 +55,7 @@ if($hasWeight) {
                             <?php } else { ?>
                                 <?= Html::a(
                                     \Yii::t('app', 'Finish workout'),
-                                    ["lekcijas/index"],
+                                    ["fitness-student-exercises/workout-summary", 'workoutId' => $workoutExerciseSet->workout_id],
                                     ['class' => 'btn btn-orange', 'style' => 'margin-top:8px;']
                                 ); ?>
                             <?php } ?>

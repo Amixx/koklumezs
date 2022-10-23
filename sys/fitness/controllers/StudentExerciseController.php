@@ -2,6 +2,9 @@
 
 namespace app\fitness\controllers;
 
+use app\fitness\models\Workout;
+use app\fitness\models\PostWorkoutMessage;
+use app\fitness\models\WorkoutEvaluation;
 use app\models\Lectures;
 use app\models\UserLectures;
 use app\models\Users;
@@ -148,10 +151,6 @@ class StudentExerciseController extends Controller
             'videoThumb' => $videoThumb,
             'difficultyEvaluation' => $difficultyEvaluation,
         ]);
-
-
-
-        throw new NotFoundHttpException('The requested page does not exist.');
     }
 
     private static function setWorkoutAsOpened($workout){
@@ -167,6 +166,38 @@ class StudentExerciseController extends Controller
         $model->is_favourite = !$model->is_favourite;
         $model->update();
         return $this->redirect(Yii::$app->request->referrer);
+    }
+
+    public function actionWorkoutSummary($workoutId){
+        $post = Yii::$app->request->post();
+
+        $workout = Workout::findOne(['id' => $workoutId]);
+        $messageModel = $workout->postWorkoutMessage;
+        if(!$messageModel) {
+            $messageModel = new PostWorkoutMessage;
+            $messageModel->workout_id = $workoutId;
+        }
+
+        if($post && $messageModel->load($post)) {
+            if($messageModel['text']) {
+                $messageModel->save();
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Message sent') . '!');
+            }
+        }
+
+        if (isset($post["difficulty-evaluation"])) {
+            $evaluation = new WorkoutEvaluation;
+            $evaluation->workout_id = $workoutId;
+            $evaluation->evaluation = (int)$post["difficulty-evaluation"];
+            $evaluation->save();
+        }
+
+        return $this->render('@app/fitness/views/student-exercise/workout-summary', [
+            'workout' => $workout,
+            'messageModel' => $messageModel,
+            'workoutEvaluation' => $workout->evaluation,
+            'hasBeenEvaluated' => !!$workout->evaluation,
+        ]);
     }
 
 

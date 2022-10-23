@@ -754,4 +754,7 @@ return [
     'Average popularity' => 'Vidēji populārs',
     'Rare' => 'Rets',
     'Popularity type' => 'Popularitāte',
+    'Do you want to say something to the coach?' => 'Vai vēlies kaut ko pateikt trenerim?',
+    'Message sent' => 'Ziņa nosūtīta',
+    'Message for the coach' => 'Ziņa trenerim',
 ];

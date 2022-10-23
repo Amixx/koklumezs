@@ -64,8 +64,16 @@ class Workout extends \yii\db\ActiveRecord
     {
         return $this->hasMany(WorkoutExerciseSet::class, ['workout_id' => 'id'])
             ->joinWith('exerciseSet')
-            ->joinWith('evaluations')
+            ->joinWith('evaluation')
             ->orderBy(['fitness_workoutexercisesets.id' => SORT_ASC]);
+    }
+
+    public function getPostWorkoutMessage(){
+        return $this->hasOne(PostWorkoutMessage::class, ['workout_id' => 'id']);
+    }
+
+    public function getEvaluation(){
+        return $this->hasOne(WorkoutEvaluation::class, ['workout_id' => 'id']);
     }
 
     public function getNextWorkoutExercise($workoutExercise)

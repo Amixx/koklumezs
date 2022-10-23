@@ -101,13 +101,6 @@ Vue.component('last-workouts-table', {
         shouldShowEvaluation(userId) {
             return parseInt(userId) === window.studentId;
         },
-        getUserEvalText(evaluations) {
-            if (!evaluations || !evaluations.length) return '';
-            if (!window.studentId) return '';
-            var userEval = evaluations.find(e => (parseInt(e.user_id) === window.studentId));
-            if (!userEval) return '';
-            return evalValueToText[userEval.evaluation];
-        }
     },
     template: `
      <div class="TableContainer">
@@ -144,7 +137,7 @@ Vue.component('last-workouts-table', {
                                     <td>{{ workoutExerciseSet.exerciseSet.reps }}</td>
                                     <td>{{ workoutExerciseSet.exerciseSet.time_seconds }}</td>
                                     <td>{{ workoutExerciseSet.weight }}</td>
-                                    <td>{{ getUserEvalText(workoutExerciseSet.evaluations) }}</td>
+                                    <td>{{ workoutExerciseSet.evaluation ? evalValueToText[workoutExerciseSet.evaluation.evaluation] : "" }}</td>
                                 </tr>
                             </tbody>
                         </table>
