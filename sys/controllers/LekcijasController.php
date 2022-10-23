@@ -60,7 +60,7 @@ class LekcijasController extends Controller
 
     /**
      * Lists all user Lectures models.
-     * @return mixed    
+     * @return mixed
      */
     public function actionIndex($type = null)
     {
@@ -84,13 +84,10 @@ class LekcijasController extends Controller
         $pages = [];
         $user = Yii::$app->user->identity;
         $school = $user->getSchool();
-        $isFitnessSchool = $school->is_fitness_school;
         $videoThumb = $school->video_thumbnail;
 
-        //fitnesa skolām uzreiz rādam jaunās nodarbības
-        if ($isFitnessSchool && !$type) {
-            return $this->redirect("?type=new");
-        }
+        //fitnesa skolām uzreiz pārmetam uz StudentExerciseController
+        if ($school->is_fitness_school) return $this->redirect("fitness-student-exercises/index");
 
         if ($type) {
             $title_filter = Yii::$app->request->get('title_filter');
@@ -113,21 +110,6 @@ class LekcijasController extends Controller
                 });
             }
 
-            if ($isFitnessSchool) {
-                $workouts = Workout::getUnopenedForCurrentUser();
-
-                return $this->render('index', [
-                    'models' => $models,
-                    'workouts' => $workouts,
-                    'type' => $type,
-                    'pages' => $pages,
-                    'userLectureEvaluations' => $userLectureEvaluations,
-                    'videoThumb' => $videoThumb,
-                    'title_filter' => $title_filter,
-                    'isFitnessSchool' => $isFitnessSchool,
-                ]);
-            }
-
             return $this->render('index', [
                 'models' => $models,
                 'type' => $type,
@@ -136,17 +118,8 @@ class LekcijasController extends Controller
                 'videoThumb' => $videoThumb,
                 'sortType' => $sortingConfig['type'],
                 'title_filter' => $title_filter,
-                'isFitnessSchool' => $isFitnessSchool,
             ]);
-        } else {
-            return $this->renderOverview($user, $models, $pages, $videoThumb);
-        }
-
-        return $this->render('index', [
-            'models' => $models,
-            'pages' => $pages,
-            'isFitnessSchool' => $isFitnessSchool,
-        ]);
+        } else return $this->renderOverview($user, $models, $pages, $videoThumb);
     }
 
     public function actionLekcija($id)
@@ -407,7 +380,7 @@ class LekcijasController extends Controller
 
         $nextLessons = UserLectures::getNextLessons($userId);
         $isNextLesson = UserLectures::getIsNextLesson($userId);
-        $isActive =  Users::isActive($userId);
+        $isActive = Users::isActive($userId);
 
         $userContext = Yii::$app->user->identity;
         $school = $userContext->getSchool();
@@ -473,7 +446,6 @@ class LekcijasController extends Controller
             'orderBy' => $orderBy,
         ];
     }
-
 
 
     /**

@@ -4,6 +4,11 @@ namespace app\fitness\models;
 
 use app\models\Users;
 
+function wrapInBold($str)
+{
+    return "<strong>$str</strong>";
+}
+
 class WorkoutExerciseSet extends \yii\db\ActiveRecord
 {
     public static function tableName()
@@ -29,8 +34,8 @@ class WorkoutExerciseSet extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'workout_id' => \Yii::t('app',  'Workout ID'),
-            'exerciseset_id' => \Yii::t('app',  'Exercise ID'),
+            'workout_id' => \Yii::t('app', 'Workout ID'),
+            'exerciseset_id' => \Yii::t('app', 'Exercise ID'),
             'weight' => \Yii::t('app', 'Weight'),
         ];
     }
@@ -54,5 +59,24 @@ class WorkoutExerciseSet extends \yii\db\ActiveRecord
     public function getEvaluation()
     {
         return $this->hasOne(WorkoutExerciseSetEvaluation::class, ['workoutexerciseset_id' => 'id']);
+    }
+
+    public function repsWeightTimeFormatted()
+    {
+        $hasWeight = !!$this->weight;
+        $hasReps = !!$this->exerciseSet->reps;
+        $hasTime = !!$this->exerciseSet->time_seconds;
+
+        $res = '';
+        if ($hasReps) {
+            $res = wrapInBold($this->exerciseSet->reps) . ' reizes';
+        } else if ($hasTime) {
+            $res = wrapInBold($this->exerciseSet->time_seconds) . ' sekundes';
+        }
+        if ($hasWeight) {
+            $res .= ' ar ' . wrapInBold($this->weight) . ' kg svaru';
+        }
+
+        return $res;
     }
 }

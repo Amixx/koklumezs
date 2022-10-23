@@ -241,6 +241,15 @@ a.desc:after {
     border-radius: 10px;
 }
 
+.lecture-thumb.unfinished {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 0;
+}
+
 .lecture-wrap {
     transition: all .2s ease-in-out;
     box-sizing: border-box;

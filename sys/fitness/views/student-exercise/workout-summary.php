@@ -45,7 +45,7 @@ $evaluations = [
             </div>
             <?php ActiveForm::end(); ?>
         <?php } else { ?>
-            <p><?= Yii::t('app', 'Messages for the coach') ?>: </p>
+            <p style="font-size: 18px;"><?= Yii::t('app', 'Messages for the coach') ?>: </p>
             <?php if ($messageModel->text) { ?>
                 <p><?= $messageModel->text ?></p>
             <?php } ?>
@@ -67,23 +67,21 @@ $evaluations = [
                     $ext = end($exploded);
                     ?>
                     <div style="max-width: 300px;">
-                        <video id="post-workout-message-audio" playsinline controls data-role="player">
+                        <audio id="post-workout-message-audio" controls data-role="player">
                             <source src="<?= '/sys/files/' . $messageModel->audio ?>" type="audio/<?= $ext ?>"/>
-                        </video>
+                        </audio>
                     </div>
                 <?php } ?>
             </div>
         <?php } ?>
     </div>
-    <div class="col-sm-12" style="margin-top: 16px; overflow-x:scroll">
+    <div class="col-sm-12" style="margin-top: 16px;">
         <h4 class="text-center">Vingrojumi un novērtējumi</h4>
         <table class="table table-striped table-bordered">
             <thead>
             <tr>
                 <th>Vingrojums</th>
-                <th>Reizes</th>
-                <th>Laiks (sekundes)</th>
-                <th>Svars (kg)</th>
+                <th>Reizes, laiks un svars</th>
                 <th>Novērtējums</th>
             </tr>
             </thead>
@@ -91,13 +89,16 @@ $evaluations = [
             <?php foreach ($workout->workoutExerciseSets as $wes) { ?>
                 <tr>
                     <td><?= $wes->exerciseSet->exercise->name ?></td>
-                    <td><?= $wes->exerciseSet->reps ?></td>
-                    <td><?= $wes->exerciseSet->time_seconds ?></td>
-                    <td><?= $wes->weight ?></td>
+                    <td><?= $wes->repsWeightTimeFormatted() ?></td>
                     <td><?= $wes->evaluation ? $evaluations[$wes->evaluation->evaluation] : '' ?></td>
                 </tr>
             <?php } ?>
             </tbody>
         </table>
+        <div class="text-center">
+            <?= Html::a(Yii::t('app', 'Return'), ['lekcijas/index'], [
+                    'class'=> 'btn btn-primary'
+            ]) ?>
+        </div>
     </div>
 </div>

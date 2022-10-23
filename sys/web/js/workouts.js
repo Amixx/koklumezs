@@ -98,9 +98,9 @@ Vue.component('last-workouts-table', {
         }
     },
     methods: {
-        shouldShowEvaluation(userId) {
-            return parseInt(userId) === window.studentId;
-        },
+        getFileExtension(fileString) {
+            return fileString.split('.').pop();
+        }
     },
     template: `
      <div class="TableContainer">
@@ -110,7 +110,7 @@ Vue.component('last-workouts-table', {
                     <th scope="col">Izveidošanas datums</th>
                     <th scope="col">Apraksts</th>
                     <th scope="col">Kad atvērts</th>
-                    <th scope="col">Vingrinājumi un novērtējumi</th>
+                    <th scope="col">Vingrojumi un novērtējumi</th>
                 </tr>
             </thead>
             <tbody>
@@ -141,6 +141,27 @@ Vue.component('last-workouts-table', {
                                 </tr>
                             </tbody>
                         </table>
+                        <div>
+                            <h4>Ziņa trenerim:</h4>
+                            <div v-if="workout.messageForCoach">
+                              
+                                <div style="display:flex; flex-wrap:wrap; gap: 16px;">
+                                     <div v-if="workout.messageForCoach.video" style="max-width: 300px">
+                                        <video id="post-workout-message-video" playsinline controls data-role="player">
+                                            <source :src="'/sys/files/' + workout.messageForCoach.video" :type="'video/' + getFileExtension(workout.messageForCoach.video)"/>
+                                        </video>
+                                    </div>
+                                    <div>
+                                        <p v-if="workout.messageForCoach.text">{{ workout.messageForCoach.text }}</p>
+                                        <div v-if="workout.messageForCoach.audio" style="max-width: 300px">
+                                            <audio id="post-workout-message-video" controls data-role="player">
+                                                <source :src="'/sys/files/' + workout.messageForCoach.audio" :type="'audio/' + getFileExtension(workout.messageForCoach.video)"/>
+                                            </audio>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -223,7 +244,14 @@ class ExerciseRepository extends Repository {
     }
 
     static async list(tagIdGroups, tagTypes, exerciseName, exercisePopularity) {
-        const data = (await axios.get(`${this.baseUrl}/api-list`, {params: {tagIdGroups, tagTypes, exerciseName, exercisePopularity}})).data
+        const data = (await axios.get(`${this.baseUrl}/api-list`, {
+            params: {
+                tagIdGroups,
+                tagTypes,
+                exerciseName,
+                exercisePopularity
+            }
+        })).data
         return data.map(exercise => {
             exercise.sets = exercise.sets.map((set, i) => ({
                 ...set,
@@ -561,12 +589,12 @@ $(document).ready(function () {
             <div class="workout-creation-container">
                 <div class="row">
                     <ul class="nav nav-tabs" id="exercise-tabs" role="tablist">
-                        <li class="nav-item active">
+                        <li class="nav-item">
                             <a class="nav-link" id="student-tab" data-toggle="tab" href="#student" role="tab" aria-controls="student" aria-selected="false">
                                 Klients
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item active">
                             <a class="nav-link" id="previous-workouts-tab" data-toggle="tab" href="#previous-workouts" role="tab" aria-controls="previous-workouts" aria-selected="false">
                                 Iepriekšējie treniņi
                             </a>
@@ -580,7 +608,7 @@ $(document).ready(function () {
                 </div>
 
                 <div class="row tab-content">
-                     <div class="tab-pane fade active in" id="student" role="tabpanel" aria-labelledby="student-tab">
+                     <div class="tab-pane fade" id="student" role="tabpanel" aria-labelledby="student-tab">
                         <div class="col-md-12" v-if="user">
                             <p>Vārds: {{ user.first_name }} {{ user.last_name }}</p>
                             <p>E-pasts: {{ user.email }}</p>
@@ -588,7 +616,7 @@ $(document).ready(function () {
                         </div>
                     </div>
 
-                    <div class="tab-pane fade" id="previous-workouts" role="tabpanel" aria-labelledby="previous-workouts-tab">
+                    <div class="tab-pane fade active in" id="previous-workouts" role="tabpanel" aria-labelledby="previous-workouts-tab">
                         <div class="col-md-12">
                             <last-workouts-table v-if="userWorkouts" :workouts="userWorkouts"></last-workouts-table>
                         </div>
@@ -655,7 +683,7 @@ $(document).ready(function () {
                                                 <button class="btn btn-primary" type="button" @click="loadExercises">Meklēt</button>
                                             </div>
                                         </li>
-                                        <li v-if="exercises" class="list-group-item"><p style="text-align: center;font-size: 18px;margin-bottom: 0;">Vingrinājumi</p></li>
+                                        <li v-if="exercises" class="list-group-item"><p style="text-align: center;font-size: 18px;margin-bottom: 0;">Vingrojumi</p></li>
                                         <li v-for="exercise in exercises" :key="exercise.id" class="list-group-item" style="display:flex; justify-content:space-between; flex-wrap: wrap; gap: 8px;" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
                                             <span>
                                                 <span style="margin-right: 8px;">
@@ -678,10 +706,10 @@ $(document).ready(function () {
                                             </span>
                                         </li>
                                         <li class="list-group-item" v-if="exercises && exercises.length === 10">
-                                            Ielādēti pirmie 10 vingrinājumi, kas atbilst atlasei.
+                                            Ielādēti pirmie 10 vingrojumi, kas atbilst atlasei.
                                         </li>
                                         <li class="list-group-item" v-else-if="exercises && !exercises.length">
-                                            Nav atrasts neviens vingrinājums ar šādu tagu atlasi! Mainiet izvēlētos tagus!
+                                            Nav atrasts neviens vingrojums ar šādu tagu atlasi! Mainiet izvēlētos tagus!
                                         </li>
                                          <li class="list-group-item" v-if="pauses">
                                             <p style="text-align: center;font-size: 18px;margin-bottom: 0;">Pauzes</p>
@@ -716,7 +744,7 @@ $(document).ready(function () {
 <!--                                <li class="list-group-item" v-for="(score, key) in thisWorkoutTagBalanceScore" :key="key">-->
 <!--                                    {{ key }}: {{ score }} | {{  prevWorkoutTotalBalanceScore[key] ? score + prevWorkoutTotalBalanceScore[key] : score }}-->
 <!--                                </li>-->
-<!--                                <li class="list-group-item" v-if="!workout.workoutExerciseSets.length">Vēl nav pievienots neviens vingrinājums...</li>-->
+<!--                                <li class="list-group-item" v-if="!workout.workoutExerciseSets.length">Vēl nav pievienots neviens vingrojums...</li>-->
 <!--                            </ul>-->
 
                             <label class="form-group">
@@ -732,7 +760,7 @@ $(document).ready(function () {
                                         <tr>
                                             <th>Piegājiens</th>
                                             <th>Vingr. pieg.</th>
-                                            <th>Vingrinājums</th>
+                                            <th>Vingrojums</th>
                                             <th>Reizes</th>
                                             <th>Laiks (sekundēs)</th>
                                             <th>Svars</th>
@@ -764,7 +792,7 @@ $(document).ready(function () {
                                         </div>
                                     </div>
                                 </div>
-                            <p v-else>Treniņam vēl nav pievienots neviens vingrinājums...</p>
+                            <p v-else>Treniņam vēl nav pievienots neviens vingrojums...</p>
 
 <!--                            <h4>Iepriekšējo treniņu tagu "balance score"</h4>-->
 <!--                            <ul class="list-group">-->
@@ -782,7 +810,7 @@ $(document).ready(function () {
 <!--                                        <li class="list-group-item" v-for="(score, key) in scores" :key="key">-->
 <!--                                            {{ key }}: {{ score }}-->
 <!--                                        </li>-->
-<!--                                        <li class="list-group-item" v-if="Object.entries(scores).length === 0">Šajā treniņā nav neviena vingrinājuma ar tagiem</li>-->
+<!--                                        <li class="list-group-item" v-if="Object.entries(scores).length === 0">Šajā treniņā nav neviena vingrojuma ar tagiem</li>-->
 <!--                                    </ul>-->
 <!--                                </li>-->
 <!--                            </ul>-->
@@ -917,7 +945,7 @@ $(document).ready(function () {
                                 <tr>
                                     <th>Piegājiens</th>
                                     <th>Vingr. pieg.</th>
-                                    <th>Vingrinājums</th>
+                                    <th>Vingrojums</th>
                                     <th>Reizes</th>
                                     <th>Laiks (sekundēs)</th>
                                     <th>Svars</th>

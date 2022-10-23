@@ -3,24 +3,6 @@
 use yii\helpers\Html;
 
 $this->title = \Yii::t('app', 'Lesson') . ': ' . $workoutExerciseSet->exerciseSet->exercise->name;
-
-$hasWeight = !!$workoutExerciseSet->weight;
-$hasReps = !!$workoutExerciseSet->exerciseSet->reps;
-$hasTime = !!$workoutExerciseSet->exerciseSet->time_seconds;
-
-function wrapInBold($str) {
-    return "<strong>$str</strong>";
-}
-
-$repsWeightTimeFormatted = '';
-if($hasReps) {
-    $repsWeightTimeFormatted = wrapInBold($workoutExerciseSet->exerciseSet->reps) . ' reizes';
-} else if($hasTime) {
-    $repsWeightTimeFormatted = wrapInBold($workoutExerciseSet->exerciseSet->time_seconds) . ' sekundes';
-}
-if($hasWeight) {
-    $repsWeightTimeFormatted .= ' ar ' . wrapInBold($workoutExerciseSet->weight) . ' kg svaru';
-}
 ?>
 <!-- unpkg : use the latest version of Video.js -->
 <link href="https://unpkg.com/video.js/dist/video-js.min.css" rel="stylesheet">
@@ -38,7 +20,7 @@ if($hasWeight) {
                     </div>
                     <div>
                         <div class="col-md-12" style="font-size: 16px; margin-left: 8px; margin-bottom: 16px;">
-                            <?= $repsWeightTimeFormatted ?>
+                            <?= $workoutExerciseSet->repsWeightTimeFormatted() ?>
                         </div>
                     </div>
                     <div class="col-md-12" style="margin-bottom:16px; text-align:center">

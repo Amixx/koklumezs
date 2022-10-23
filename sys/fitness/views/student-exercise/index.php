@@ -1,92 +1,61 @@
 <?php
 
+use app\fitness\models\Workout;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
 use app\helpers\ThumbnailHelper;
 
-$titleText = '';
-if (isset($type)) {
-    if ($type == "new") {
-        if ($isFitnessSchool) {
-            $titleText = 'New workouts';
-        } else {
-            $titleText = 'New lessons';
-        }
-    } else if ($type == "favourite") {
-        if ($isFitnessSchool) {
-            $titleText = 'Favourite workouts';
-        } else {
-            $titleText = 'Favourite lessons';
-        }
-    }
-}
-
-$this->title = \Yii::t('app', $titleText);
-
-$sortType = $sortType ?? 'DESC';
-
+$this->title = \Yii::t('app', 'My workouts');
 ?>
 <div class="lectures-index ">
     <h3><?= $this->title ?></h3>
-    <?php if (count($models) > 1 || isset($title_filter)) { ?>
-        <div class="row search-section">
-            <div class="col-md-7 col-xs-12">
-                <?= Html::beginForm(['/lekcijas/?type=' . $type . '&sortType=' . $sortType], 'get') ?>
-                <div class="display-flex">
-                    <?= Html::input('text', 'title_filter', $title_filter, ['class' => 'content-input']) ?>
-                    <?= Html::submitButton(\Yii::t('app', 'Search'), ['class' => 'btn btn-orange']) ?>
-                    <?= Html::a(
-                        \Yii::t('app', 'Show all'),
-                        '?type=' . $type . '&sortType=' . $sortType . '&title_filter=',
-                        ['class' => 'btn btn-orange']
-                    ) ?>
-                </div>
-                <?= Html::endForm() ?>
-            </div>
-            <div class="col-md-5 col-xs-12">
-                <?= Html::label(Yii::t('app', 'Sorting of lessons') . ': ') ?>
-                <?= Html::dropDownList("sortType", $sortType, [
-                    0 => Yii::t('app',  'From hardest to easiest'),
-                    1 => Yii::t('app',  'From easiest to hardest'),
-                    2 => Yii::t('app',  'By assignment date'),
-                ], [
-                    'id' => 'lessons-sorting-select'
-                ]) ?>
-            </div>
-        </div>
-    <?php } ?>
     <div class="row wrap-overlay" style="padding: 16px 2px; border-radius: 16px; min-height: 100vh;">
         <?php
-        if (count($models) == 0) { ?>
+        if (empty($unfinishedWorkouts)) { ?>
             <div class="col-md-6">
-                <h3><?= \Yii::t('app',  'No lessons') ?>!</h3>
+                <h3><?= \Yii::t('app', "You don't have any workouts yet") ?>!</h3>
             </div>
-        <?php } else if (!isset($workouts) || !$workouts) { ?>
-            <?php foreach ($models as $model) {
-                $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->lecture->file, $videoThumb);
-            ?>
-                <div class="col-md-6 col-lg-3 text-center lecture-wrap">
-                    <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
-                    <?= $model->lecture->title ?>
-                </div>
-                <?php }
-        } else {
-            foreach ($workouts as $workout) {
+        <?php } else {
+            foreach ($unfinishedWorkouts as $workout) {
                 if (isset($workout["workoutExerciseSets"][0])) {
-                    $firstExercise = $workout["workoutExerciseSets"][0]["exerciseSet"];
-                    $thumbStyle = ThumbnailHelper::getThumbnailStyle($firstExercise["video"], $videoThumb);
-                ?>
+                    $firstExerciseSet = $workout["workoutExerciseSets"][0]["exerciseSet"];
+                    $thumbStyle = ThumbnailHelper::getThumbnailStyle($firstExerciseSet["video"], $videoThumb);
+                    ?>
                     <div class="col-md-6 col-lg-3 text-center lecture-wrap">
-                        <a class="lecture-thumb" href="<?= Url::to(['fitness-student-exercises/view', 'id' => $workout["workoutExerciseSets"][0]["id"]]) ?>" style="<?= $thumbStyle ?>"></a>
-                        <p><?= Yii::t('app', 'First exercise') ?>: <?= $firstExercise["name"] ?></p>
+                        <!-- new workouts -->
+                        <?php if (!$workout['opened_at']) { ?>
+                            <a class="lecture-thumb"
+                               href="<?= Url::to(['fitness-student-exercises/view', 'id' => $workout["workoutExerciseSets"][0]["id"]]) ?>"
+                               style="<?= $thumbStyle ?>"
+                            ></a>
+                            <!-- unfinished workouts -->
+                        <?php } else if (!$workout['evaluation']) { ?>
+                            <span class="lecture-thumb unfinished" style="<?= $thumbStyle ?>">
+                                 <?= Html::a(Yii::t('app', 'Continue workout'), [
+                                     'fitness-student-exercises/view',
+                                     'id' => Workout::getFirstUnopenedExerciseSet($workout)->id,
+                                 ], [
+                                     'class' => 'btn btn-success'
+                                 ]) ?>
+                                 <?= Html::a(Yii::t('app', 'Abandon workout'), [
+                                     'fitness-workouts/abandon',
+                                     'id' => $workout['id'],
+                                 ], [
+                                     'class' => 'btn btn-danger',
+                                 ]) ?>
+                            </span>
+                        <?php } ?>
+
+                        <p><?= Yii::t('app', 'First exercise') ?>: <?= $firstExerciseSet["exercise"]["name"] ?></p>
                     </div>
-        <?php }
+                    <?php
+                }
             }
         } ?>
     </div>
     <?php
-    if ($pages) {
+    if (isset($pages) && $pages) {
         echo LinkPager::widget([
             'pagination' => $pages,
         ]);

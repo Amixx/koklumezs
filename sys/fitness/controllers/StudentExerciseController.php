@@ -6,8 +6,6 @@ use app\fitness\models\Workout;
 use app\fitness\models\PostWorkoutMessage;
 use app\fitness\models\WorkoutEvaluation;
 use app\models\Lectures;
-use app\models\UserLectures;
-use app\models\Users;
 use app\fitness\models\WorkoutExerciseSet;
 use app\fitness\models\WorkoutExerciseSetEvaluation;
 use Yii;
@@ -40,14 +38,34 @@ class StudentExerciseController extends Controller
         ];
     }
 
+    public function actionIndex(){
+        $user = Yii::$app->user->identity;
+        $school = $user->getSchool();
+        $videoThumb = $school->video_thumbnail;
+
+//        $userLessonsQuery = UserLectures::getLessonsOfType($user->id, $type, $sortingConfig['orderBy']);
+//        $countQuery = clone $userLessonsQuery;
+//        $pages = new Pagination(['totalCount' => $countQuery->count()]);
+//
+//        $models = $userLessonsQuery->offset($pages->offset)
+//            ->limit($pages->limit)
+//            ->all();
+
+        $unfinishedWorkouts = Workout::getUnfinishedForCurrentUser();
+//        $unfinishedWorkoutsQuery = Workout::getForCurrentUserQuery();
+
+        return $this->render('@app/fitness/views/student-exercise/index', [
+            'unfinishedWorkouts' => $unfinishedWorkouts,
+//            'pages' => $pages,
+            'videoThumb' => $videoThumb,
+        ]);
+    }
+
     public function actionView($id)
     {
         $userContext = Yii::$app->user->identity;
-        $dbUser = Users::findOne([$id => $userContext->id]);
         $school = $userContext->getSchool();
-        $schoolId = $school->id;
         $videoThumb = $school->video_thumbnail;
-        $isFitnessSchool = true;
 
         $workoutExerciseSet = $this->findModel($id);
         $nextWorkoutExercise = $workoutExerciseSet->workout->getNextWorkoutExercise($workoutExerciseSet);
@@ -56,7 +74,7 @@ class StudentExerciseController extends Controller
             'user_id' => $userContext->id,
         ])->one();
 
-        self::setWorkoutAsOpened($workoutExerciseSet->workout);
+        $workoutExerciseSet->workout->setAsOpened();
 
         $post = Yii::$app->request->post();
         if (isset($post["difficulty-evaluation"])) {
@@ -75,77 +93,6 @@ class StudentExerciseController extends Controller
             }
         }
 
-        // UserLectures::setSeenByUser($userContext->id, $id);
-
-        // $difficulties = Difficulties::getDifficulties();
-        // $lectureDifficulties = LecturesDifficulties::getLectureDifficulties($id);
-        // $lectureEvaluations = Lecturesevaluations::getLectureEvaluations($id);
-        // $lecturefiles = Lecturesfiles::getLectureFiles($id);
-        // $hasEvaluatedLesson = $difficultyEvaluation !== null;
-        // $relatedLessonIds = RelatedLectures::getRelations($id);
-
-        // $userCanDownloadFiles = $dbUser->allowed_to_download_files;
-        // $relatedLectures = Lectures::getLecturesByIds($relatedLessonIds);
-        // $difficultiesVisible = SectionsVisible::isVisible("Nodarbības sarežģītība");
-
-        // $latestNewUserLessons = UserLectures::getLatestLessonsOfType($userContext->id, "new");
-        // $latestFavouriteUserLessons = UserLectures::getLatestLessonsOfType($userContext->id, "favourite");
-
-        // $isStudent = Yii::$app->user->identity->user_level == 'Student';
-        // $previousUrl = Yii::$app->request->referrer;
-        // if ($isStudent && $previousUrl) {
-        //     if (strpos($previousUrl, "?") !== false) {
-        //         $previousUrl = strstr($previousUrl, '?', true); // noņem query params
-        //     }
-
-        //     $previousUrlSplit = explode("/", $previousUrl);
-        //     $lastUrlPart = end($previousUrlSplit);
-        //     $isDifferentLesson = $lastUrlPart !== $id;
-
-        //     if ($isDifferentLesson) {
-        //         $lectureView = new LectureViews;
-        //         $lectureView->user_id = $userContext->id;
-        //         $lectureView->lecture_id = $id;
-        //         $lectureView->save();
-        //     }
-        // }
-
-        // if ($model->complexity > 5) {
-        //     $startLaterCommitment = StartLaterCommitments::findOne(['user_id' => $userContext['id']]);
-        //     if ($startLaterCommitment && !$startLaterCommitment['commitment_fulfilled']) {
-        //         $startLaterCommitment['commitment_fulfilled'] = true;
-        //         $startLaterCommitment->update();
-        //     }
-        // }
-
-        // $nextRoundLessonsEquipmentVideos = [];
-
-        // if ($isFitnessSchool && $userLecture->lecture->is_pause) {
-        //     $matchDate = date("Y-m-d", strtotime($userLecture->created));
-        //     $userLessons = UserLectures::getLessonsOfType($userContext->id, $type, ['id' => SORT_ASC])->all();
-
-        //     $userLessonsForDate = [];
-        //     foreach ($userLessons as $userLesson) {
-        //         if (date("Y-m-d", strtotime($userLesson->created)) == $matchDate) {
-        //             $userLessonsForDate[] = $userLesson;
-        //         }
-        //     }
-
-        //     $useLessons = false;
-        //     foreach ($userLessonsForDate as $userLesson) {
-        //         if ($userLesson->id == $userLecture->id) $useLessons = true;
-        //         else if ($useLessons) {
-        //             if ($userLesson->lecture->is_pause) {
-        //                 $useLessons = false;
-        //             } else if ($userLesson->lecture->play_along_file) {
-        //                 $nextRoundLessonsEquipmentVideos[] = $userLesson->lecture->play_along_file;
-        //             }
-        //         }
-        //     }
-        // }
-
-        // $isRegisteredAndNewLesson = RegistrationLesson::isRegistrationLesson($model->id);
-
         return $this->render('@app/fitness/views/student-exercise/view', [
             'workoutExerciseSet' => $workoutExerciseSet,
             'nextWorkoutExercise' => $nextWorkoutExercise,
@@ -154,28 +101,12 @@ class StudentExerciseController extends Controller
         ]);
     }
 
-    private static function setWorkoutAsOpened($workout)
-    {
-        if (!$workout->opened_at) {
-            $workout->opened_at = date('Y-m-d H:i:s', time());
-            $workout->update();
-        }
-    }
-
-    public function actionToggleIsFavourite($lectureId)
-    {
-        $model = UserLectures::findOne(['lecture_id' => $lectureId, 'user_id' => Yii::$app->user->identity->id]);
-        $model->is_favourite = !$model->is_favourite;
-        $model->update();
-        return $this->redirect(Yii::$app->request->referrer);
-    }
-
     public function actionWorkoutSummary($workoutId)
     {
         $post = Yii::$app->request->post();
 
         $workout = Workout::findOne(['id' => $workoutId]);
-        $messageModel = $workout->postWorkoutMessage;
+        $messageModel = $workout->messageForCoach;
         if (!$messageModel) {
             $messageModel = new PostWorkoutMessage;
             $messageModel->workout_id = $workoutId;

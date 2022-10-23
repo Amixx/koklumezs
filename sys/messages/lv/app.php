@@ -760,4 +760,9 @@ return [
     'Film video message' => 'Iefilmē video ziņu',
     'Record audio message' => 'Ieraksti audio ziņu',
     'Messages for the coach' => 'Ziņas trenerim',
+    'Return' => 'Atgriezties',
+    'You don\'t have any workouts yet' => 'Tev vēl nav neviena treniņa',
+    'Continue workout' => 'Turpināt treniņu',
+    'Abandon workout' => 'Pamest treniņu',
+    'My workouts' => 'Mani treniņi',
 ];

@@ -73,8 +73,16 @@ class WorkoutController extends Controller
         $query = Workout::find()
             ->where(['student_id' => $id])
             ->joinWith('workoutExerciseSets')
+            ->joinWith('evaluation')
+            ->joinWith('messageForCoach')
             ->orderBy(['id' => SORT_DESC]);
         $studentWorkouts = $query->asArray()->all();
         return json_encode($studentWorkouts);
+    }
+
+    public function actionAbandon($id) {
+        $workout = Workout::findOne(['id' => $id]);
+        var_dump($workout);
+        die();
     }
 }

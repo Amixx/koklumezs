@@ -36,7 +36,7 @@ $isButtonACtive = function ($name) use ($evaluations, $difficultyEvaluation) {
 
 ?>
 
-<p style="font-size: 18px; <?= $readonly ? '' : 'font-weight: bold' ?>">Kā gāja?</p>
+<p style="font-size: 18px; <?= isset($readonly) && $readonly ? '' : 'font-weight: bold' ?>">Kā gāja?</p>
 <div>
     <?php $form = ActiveForm::begin(); ?>
     <?= Html::hiddenInput("difficulty-evaluation", null) ?>
@@ -50,7 +50,7 @@ $isButtonACtive = function ($name) use ($evaluations, $difficultyEvaluation) {
                 data-role="evaluation-emoji"
                 data-value="<?= $evaluation['value'] ?>"
                 class="btn <?= $isButtonACtive($name) ? 'btn-primary' : '' ?>"
-                <?= $readonly ? 'disabled' : '' ?>
+                <?= isset($readonly) && $readonly ? 'disabled' : '' ?>
             >
                 <?= $evaluation['text'] ?>
             </button>

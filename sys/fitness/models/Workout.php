@@ -41,11 +41,11 @@ class Workout extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'author_id' => \Yii::t('app',  'Author ID'),
-            'student_id' => \Yii::t('app',  'Student ID'),
+            'author_id' => \Yii::t('app', 'Author ID'),
+            'student_id' => \Yii::t('app', 'Student ID'),
             'description' => \Yii::t('app', 'Notes'),
-            'created_at' => \Yii::t('app',  'Created at'),
-            'opened_at' => \Yii::t('app',  'Opened at'),
+            'created_at' => \Yii::t('app', 'Created at'),
+            'opened_at' => \Yii::t('app', 'Opened at'),
         ];
     }
 
@@ -68,12 +68,19 @@ class Workout extends \yii\db\ActiveRecord
             ->orderBy(['fitness_workoutexercisesets.id' => SORT_ASC]);
     }
 
-    public function getPostWorkoutMessage(){
+    public function getMessageForCoach()
+    {
         return $this->hasOne(PostWorkoutMessage::class, ['workout_id' => 'id']);
     }
 
-    public function getEvaluation(){
+    public function getEvaluation()
+    {
         return $this->hasOne(WorkoutEvaluation::class, ['workout_id' => 'id']);
+    }
+
+    public function hasEvaluation()
+    {
+        return !!$this->evaluation;
     }
 
     public function getNextWorkoutExercise($workoutExercise)
@@ -86,24 +93,46 @@ class Workout extends \yii\db\ActiveRecord
         return null;
     }
 
-    public static function getUnopenedForCurrentUser()
+    public static function getUnfinishedForCurrentUser()
     {
-        return self::getForCurrentUser(false);
-    }
-
-    public static function getOpenedForCurrentUser()
-    {
-        return self::getForCurrentUser(true);
-    }
-
-    private static function getForCurrentUser($opened) {
-        $userContext = Yii::$app->user->identity;
-        $openedAtCond = $opened ? ['IS NOT', 'opened_at', null] : ['opened_at' => null];
-        $query = self::find()
-            ->where(['student_id' => $userContext->id])
-            ->andWhere($openedAtCond)
-            ->orderBy(['id' => SORT_DESC])
-            ->joinWith('workoutExerciseSets');
+        $query = self::getForCurrentUserQuery(false);
         return $query->asArray()->all();
+    }
+
+    public static function getFinishedForCurrentUser()
+    {
+        $query = self::getForCurrentUserQuery(true);
+        return $query->asArray()->all();
+    }
+
+    public static function getForCurrentUserQuery($finished)
+    {
+        $userContext = Yii::$app->user->identity;
+        return self::find()
+            ->where(['student_id' => $userContext->id])
+            ->orderBy(['id' => SORT_DESC])
+            ->joinWith('workoutExerciseSets')
+            ->joinWith('evaluation')
+            ->andWhere([$finished ? 'IS NOT' : 'IS', 'fitness_workout_evaluations.id', null]);
+    }
+
+    public function setAsOpened()
+    {
+        if (!$this->opened_at) {
+            $this->opened_at = date('Y-m-d H:i:s', time());
+            $this->update();
+        }
+    }
+
+    public static function getFirstUnopenedExerciseSet($workout)
+    {
+        return WorkoutExerciseSet::find()
+            ->where(['workout_id' => $workout['id']])
+            ->joinWith('exerciseSet')
+            ->andWhere(['fitness_exercises.is_pause' => false])
+            ->joinWith('evaluation')
+            ->andWhere(['fitness_workoutexercisesetevaluation.id' => null])
+            ->orderBy(['fitness_workoutexercisesets.id' => SORT_ASC])
+            ->one();
     }
 }
