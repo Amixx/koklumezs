@@ -761,8 +761,12 @@ return [
     'Record audio message' => 'Ieraksti audio ziņu',
     'Messages for the coach' => 'Ziņas trenerim',
     'Return' => 'Atgriezties',
-    'You don\'t have any workouts yet' => 'Tev vēl nav neviena treniņa',
+    'You don\'t have any workouts at the moment' => 'Tev šobrīd nav neviena treniņa',
     'Continue workout' => 'Turpināt treniņu',
     'Abandon workout' => 'Pamest treniņu',
     'My workouts' => 'Mani treniņi',
+    'Has been abandoned' => 'Vai ir ticis pamests',
+    'Workout has been abandoned' => 'Treniņš veiksmīgi pamests',
+    'Evaluate workout' => 'Novērtēt treniņu',
+    'Workout summary' => 'Treniņa kopsavilkums'
 ];

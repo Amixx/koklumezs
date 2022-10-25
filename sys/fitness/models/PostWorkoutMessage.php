@@ -21,7 +21,7 @@ class PostWorkoutMessage extends \yii\db\ActiveRecord
             [['workout_id'], 'integer'],
             [['text'], 'string'],
             [['video'], 'file', 'extensions' => 'mp4'],
-            [['audio'], 'file', 'extensions' => 'mp3'],
+            [['audio'], 'file', 'extensions' => 'mp3, aac'],
             [['created_at'], 'safe'],
         ];
     }

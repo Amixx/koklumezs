@@ -3,6 +3,7 @@
 namespace app\fitness\models;
 
 use app\models\Users;
+use Symfony\Component\Console\Exception\InvalidOptionException;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 use Yii;
@@ -20,6 +21,7 @@ class Workout extends \yii\db\ActiveRecord
             [['author_id', 'student_id'], 'required'],
             [['author_id', 'student_id'], 'integer'],
             [['description'], 'string'],
+            [['abandoned'], 'boolean'],
             [['created_at', 'opened_at'], 'safe'],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['student_id' => 'id']],
@@ -44,6 +46,7 @@ class Workout extends \yii\db\ActiveRecord
             'author_id' => \Yii::t('app', 'Author ID'),
             'student_id' => \Yii::t('app', 'Student ID'),
             'description' => \Yii::t('app', 'Notes'),
+            'abandoned' => \Yii::t('app', 'Has been abandoned'),
             'created_at' => \Yii::t('app', 'Created at'),
             'opened_at' => \Yii::t('app', 'Opened at'),
         ];
@@ -108,12 +111,31 @@ class Workout extends \yii\db\ActiveRecord
     public static function getForCurrentUserQuery($finished)
     {
         $userContext = Yii::$app->user->identity;
-        return self::find()
+        $query = self::find()
             ->where(['student_id' => $userContext->id])
             ->orderBy(['id' => SORT_DESC])
             ->joinWith('workoutExerciseSets')
-            ->joinWith('evaluation')
-            ->andWhere([$finished ? 'IS NOT' : 'IS', 'fitness_workout_evaluations.id', null]);
+            ->joinWith('evaluation');
+
+        if ($finished) {
+            $query->andWhere([
+                'OR',
+                ['IS NOT', 'fitness_workout_evaluations.id', null],
+                ['abandoned' => true],
+            ]);
+        } else {
+            $query->andWhere(['OR',
+                    ['opened_at' => null],
+                    [
+                        'AND',
+                        ['IS', 'fitness_workout_evaluations.id', null],
+                        ['abandoned' => false],
+                    ]
+                ]
+            );
+        }
+
+        return $query;
     }
 
     public function setAsOpened()
@@ -122,6 +144,15 @@ class Workout extends \yii\db\ActiveRecord
             $this->opened_at = date('Y-m-d H:i:s', time());
             $this->update();
         }
+    }
+
+    public function setAsAbandoned()
+    {
+        if (!$this->opened_at) {
+            throw new InvalidOptionException('Cannot abandon a workout that has not been started (opened)');
+        }
+        $this->abandoned = true;
+        $this->update();
     }
 
     public static function getFirstUnopenedExerciseSet($workout)

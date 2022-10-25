@@ -34,7 +34,8 @@ $evaluations = [
             <?= $form->field($messageModel, 'text')->textarea() ?>
             <div style="display: flex; flex-wrap: wrap;">
                 <?= $form->field($messageModel, 'video')->fileInput([
-                    'accept' => "video/mp4,video/x-m4v,video/*"
+                    'accept' => "video/mp4,video/x-m4v,video/*",
+                    'capture' => 'camcoder',
                 ]) ?>
                 <?= $form->field($messageModel, 'audio')->fileInput([
                     'accept' => "audio/*"
@@ -56,7 +57,7 @@ $evaluations = [
                     $ext = end($exploded);
                     ?>
                     <div style="max-width: 300px">
-                        <video id="post-workout-message-video" playsinline controls data-role="player">
+                        <video id="post-workout-message-video" playsinline controls data-role="player" style="width:100%;">
                             <source src="<?= '/sys/files/' . $messageModel->video ?>" type="video/<?= $ext ?>"/>
                         </video>
                     </div>
@@ -67,7 +68,7 @@ $evaluations = [
                     $ext = end($exploded);
                     ?>
                     <div style="max-width: 300px;">
-                        <audio id="post-workout-message-audio" controls data-role="player">
+                        <audio id="post-workout-message-audio" controls data-role="player" style="width:100%;">
                             <source src="<?= '/sys/files/' . $messageModel->audio ?>" type="audio/<?= $ext ?>"/>
                         </audio>
                     </div>

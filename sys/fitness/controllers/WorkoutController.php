@@ -82,7 +82,8 @@ class WorkoutController extends Controller
 
     public function actionAbandon($id) {
         $workout = Workout::findOne(['id' => $id]);
-        var_dump($workout);
-        die();
+        $workout->setAsAbandoned();
+        Yii::$app->session->setFlash('success', Yii::t('app', 'Workout has been abandoned') . '!');
+        return $this->redirect(['fitness-student-exercises/index']);
     }
 }

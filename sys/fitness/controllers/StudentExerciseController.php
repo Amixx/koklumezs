@@ -118,7 +118,7 @@ class StudentExerciseController extends Controller
                 $exploded = explode(".", $video->name);
                 $ext = end($exploded);
                 $messageModel->video = Yii::$app->security->generateRandomString() . ".{$ext}";
-                Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/files/';
+                Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/files/';
                 $path = Yii::$app->params['uploadPath'] . $messageModel->video;
                 $video->saveAs($path);
             }
@@ -127,7 +127,7 @@ class StudentExerciseController extends Controller
                 $exploded = explode(".", $audio->name);
                 $ext = end($exploded);
                 $messageModel->audio = Yii::$app->security->generateRandomString() . ".{$ext}";
-                Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/files/';
+                Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/files/';
                 $path = Yii::$app->params['uploadPath'] . $messageModel->audio;
                 $audio->saveAs($path);
             }

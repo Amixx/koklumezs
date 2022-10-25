@@ -87,7 +87,7 @@ class LekcijasController extends Controller
         $videoThumb = $school->video_thumbnail;
 
         //fitnesa skolām uzreiz pārmetam uz StudentExerciseController
-        if ($school->is_fitness_school) return $this->redirect("fitness-student-exercises/index");
+        if ($school->is_fitness_school) return $this->redirect(["fitness-student-exercises/index"]);
 
         if ($type) {
             $title_filter = Yii::$app->request->get('title_filter');

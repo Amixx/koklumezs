@@ -119,6 +119,7 @@ Vue.component('last-workouts-table', {
                     <td>{{ workout.description }}</td>
                     <td class="text-center" style="white-space:nowrap">{{ workout.opened_at ? workout.opened_at : 'Nav atvērts' }}</td>
                     <td>
+                        <span v-if="workout.abandoned === '1'" class="text-danger" style="line-height: 2.5; font-weight: bold;">Šis treniņš tika pamests!</span>
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
@@ -126,7 +127,7 @@ Vue.component('last-workouts-table', {
                                     <th>Vingrojums</th>
                                     <th>Reizes</th>
                                     <th>Laiks (sekundēs)</th>
-                                    <th>Svars</th>
+                                    <th>Svars (kg)</th>
                                     <th>Novērtējums</th>
                                 </tr>
                             </thead>
@@ -141,20 +142,21 @@ Vue.component('last-workouts-table', {
                                 </tr>
                             </tbody>
                         </table>
-                        <div>
+                        <div v-if="workout.abandoned === '0'">
+                            <h4>Treniņa novērtējums: <span v-if="workout.evaluation">{{ evalValueToText[workout.evaluation.evaluation] }}</span></h4>
+                            
                             <h4>Ziņa trenerim:</h4>
                             <div v-if="workout.messageForCoach">
-                              
                                 <div style="display:flex; flex-wrap:wrap; gap: 16px;">
                                      <div v-if="workout.messageForCoach.video" style="max-width: 300px">
-                                        <video id="post-workout-message-video" playsinline controls data-role="player">
+                                        <video id="post-workout-message-video" playsinline controls data-role="player" style="width:100%">
                                             <source :src="'/sys/files/' + workout.messageForCoach.video" :type="'video/' + getFileExtension(workout.messageForCoach.video)"/>
                                         </video>
                                     </div>
                                     <div>
                                         <p v-if="workout.messageForCoach.text">{{ workout.messageForCoach.text }}</p>
                                         <div v-if="workout.messageForCoach.audio" style="max-width: 300px">
-                                            <audio id="post-workout-message-video" controls data-role="player">
+                                            <audio id="post-workout-message-video" controls data-role="player" style="width:100%">
                                                 <source :src="'/sys/files/' + workout.messageForCoach.audio" :type="'audio/' + getFileExtension(workout.messageForCoach.video)"/>
                                             </audio>
                                         </div>
@@ -686,6 +688,9 @@ $(document).ready(function () {
                                         <li v-if="exercises" class="list-group-item"><p style="text-align: center;font-size: 18px;margin-bottom: 0;">Vingrojumi</p></li>
                                         <li v-for="exercise in exercises" :key="exercise.id" class="list-group-item" style="display:flex; justify-content:space-between; flex-wrap: wrap; gap: 8px;" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
                                             <span>
+                                                <a :href="'/sys/fitness-exercises/view?id=' + exercise.id" title="Apskatīt vingrojumu" target="_blank">
+                                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                                </a>
                                                 <span style="margin-right: 8px;">
                                                     {{ exercise.name }}
                                                     ({{ addedExercisesOfSet(exercise).length }}/{{ exercise.sets.length }})
@@ -714,6 +719,9 @@ $(document).ready(function () {
                                          <li class="list-group-item" v-if="pauses">
                                             <p style="text-align: center;font-size: 18px;margin-bottom: 0;">Pauzes</p>
                                             <p v-for="(pause, i) in pauses" :key="i">
+                                                <a :href="'/sys/fitness-exercises/view?id=' + pause.id" title="Apskatīt pauzi" target="_blank">
+                                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                                </a>
                                                 <span>{{ pause.name }}</span>
                                                 <button
                                                     class="btn btn-primary"
