@@ -7,9 +7,7 @@
     </div>
     <div class="row">
         <?php
-        $emptyText = $isFitnessSchool
-            ? 'Congratulations! You\'ve seen all new workouts'
-            : 'Congratulations! You\'ve seen all new lessons';
+        $emptyText = 'Congratulations! You\'ve seen all new lessons';
 
         echo $this->render('favouriteANDnew', [
             'userLessons' => $newLessons,
@@ -23,7 +21,6 @@
             'isActive' => $isActive,
             'teacherPortrait' => $teacherPortrait,
             'isStudent' => $isStudent,
-            'isFitnessSchool' => $isFitnessSchool,
         ]) ?>
         <?=
         $this->render('favouriteANDnew', [

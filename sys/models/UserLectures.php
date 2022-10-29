@@ -260,27 +260,12 @@ class UserLectures extends \yii\db\ActiveRecord
     public static function getNextLessonId($studentId, $currentUserLecture, $type)
     {
         $userContext = Yii::$app->user->identity;
-        $isFitnessSchool = $userContext->getSchool()->is_fitness_school;
         $userLectures = self::getLessonsOfType($studentId, $type, ['id' => SORT_ASC])->all();
         if (empty($userLectures)) {
             return null;
         }
 
-        if (!$isFitnessSchool) {
-            $nextLessonSource = $userLectures;
-        } else {
-            $nextLessonSource = [];
-            $matchDate = date("Y-m-d", strtotime($currentUserLecture["created"]));
-
-            foreach ($userLectures as $model) {
-                $modelDate = date("Y-m-d", strtotime($model["created"]));
-                if ($modelDate == $matchDate) $nextLessonSource[] = $model;
-            }
-
-            usort($nextLessonSource, function ($a, $b) {
-                return $a->id > $b->id;
-            });
-        }
+        $nextLessonSource = $userLectures;
 
         $takeNext = false;
         foreach ($nextLessonSource as $userLecture) {
@@ -293,15 +278,11 @@ class UserLectures extends \yii\db\ActiveRecord
             }
         }
 
-        if (!$isFitnessSchool) {
-            if (
-                count($nextLessonSource) > 1 && $takeNext
-                || $nextLessonSource[0]['lecture_id'] !== $currentUserLecture["lecture_id"]
-            ) {
-                return $nextLessonSource[0]['lecture_id'];
-            }
-        } else {
-            return null;
+        if (
+            count($nextLessonSource) > 1 && $takeNext
+            || $nextLessonSource[0]['lecture_id'] !== $currentUserLecture["lecture_id"]
+        ) {
+            return $nextLessonSource[0]['lecture_id'];
         }
     }
 

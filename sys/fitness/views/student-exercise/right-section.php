@@ -20,6 +20,5 @@ $thumbStyle = ThumbnailHelper::getThumbnailStyle($workoutExerciseSet->exercise->
                 ]) ?>
             </div>
         <?php } ?>
-
     </div>
 </div>

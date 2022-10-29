@@ -158,6 +158,13 @@ $(document).ready(function() {
 
     $planSuggestionModal = $("#plan-suggestion-modal");
     if($planSuggestionModal) $planSuggestionModal.modal("show");
+
+
+
+
+    $('.fitness-toggle-technique-vid').on('click', function(){
+        $(this).parent().next().toggleClass('hidden')
+    });
 });
 
 
@@ -835,6 +842,14 @@ function leadingZero(string){
     return ('0' + String(string)).slice(-2);
 }
 
+$("[data-role=fitness-eval-btn]").on("click", submitFitnessEvaluation);
+
+function submitFitnessEvaluation(){
+    var $hiddenInput = $(this).parent().parent().siblings("[name=difficulty-evaluation]");
+    $hiddenInput.val(this.dataset.value);
+    $(this).closest("form").submit();
+}
+
 $("[data-role=evaluation-emoji]").on("click", submitLessonEvaluation);
 
 function submitLessonEvaluation(){
@@ -877,7 +892,7 @@ function setupVideoPlayers(){
     }
 
     Array.from(document.querySelectorAll("[data-role='player']")).forEach(function(video) {
-        var opts = options
+        var opts = JSON.parse(JSON.stringify(options))
         if(video.id.includes('fitness_main')) {
             opts.autoplay = true
             opts.youtube = {
@@ -887,6 +902,8 @@ function setupVideoPlayers(){
         players[video.id] = new Plyr(video, opts);
         players[video.id].poster = posters[video.id];
     });
+
+    window.players = players;
 }
 
 

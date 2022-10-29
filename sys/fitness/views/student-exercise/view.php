@@ -2,98 +2,100 @@
 
 use yii\helpers\Html;
 
-$this->title = \Yii::t('app', 'Lesson') . ': ' . $workoutExerciseSet->exerciseSet->exercise->name;
+$this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExerciseSet->exerciseSet->exercise->name;
 ?>
 <!-- unpkg : use the latest version of Video.js -->
 <link href="https://unpkg.com/video.js/dist/video-js.min.css" rel="stylesheet">
 <script src="https://unpkg.com/video.js/dist/video.min.js"></script>
+
 <div class="row">
-    <div class="top-and-left-section">
-        <div class="border-left col-md-7">
-            <div class="lesson-column lesson-column-middle wrap-overlay">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h1><?= $workoutExerciseSet->exerciseSet->exercise->name; ?></h1>
-                        <?php if ($workoutExerciseSet->exerciseSet->exercise->description) { ?>
-                            <p><?= $workoutExerciseSet->exerciseSet->exercise->description ?></p>
-                        <?php } ?>
-                    </div>
-                    <div>
-                        <div class="col-md-12" style="font-size: 16px; margin-left: 8px; margin-bottom: 16px;">
-                            <?= $workoutExerciseSet->repsWeightTimeFormatted() ?>
-                        </div>
-                    </div>
-                    <div class="col-md-12" style="margin-bottom:16px; text-align:center">
-                        <?php if (!$workoutExerciseSet->exerciseSet->exercise->is_pause) { ?>
-                            <div><?= $this->render("amount-evaluation", ['difficultyEvaluation' => $difficultyEvaluation]) ?></div>
-                        <?php } ?>
-                        <?php if ($difficultyEvaluation || $workoutExerciseSet->exerciseSet->exercise->is_pause) { ?>
-                            <?php if ($nextWorkoutExercise) { ?>
-                                <?= Html::a(
-                                    \Yii::t('app', 'Next exercise'),
-                                    ["fitness-student-exercises/view?id=$nextWorkoutExercise->id"],
-                                    ['class' => 'btn btn-orange', 'style' => 'margin-top:8px;']
-                                ); ?>
-                            <?php } else { ?>
-                                <?= Html::a(
-                                    \Yii::t('app', 'Finish workout'),
-                                    ["fitness-student-exercises/workout-summary", 'workoutId' => $workoutExerciseSet->workout_id],
-                                    ['class' => 'btn btn-orange', 'style' => 'margin-top:8px;']
-                                ); ?>
-                            <?php } ?>
-                        <?php } ?>
-                    </div>
-                </div>
-
-                <?php if (!empty($equipmentVideos)) { ?>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h4 class='text-center'><?= Yii::t('app', 'How to use the equipment for next exercises') ?></h4>
-                            <ul class='equipment-video'>
-                                <?php foreach ($equipmentVideos as $key => $video) { ?>
-                                    <?= $this->render(
-                                        'video',
-                                        [
-                                            'lectureVideoFiles' => [0 => ['title' => Yii::t('app', 'How to use equipment'), 'file' => $video]],
-                                            'thumbnail' => $videoThumb ?? '',
-                                            'idPrefix' => 'equipment-vid-' . $key,
-                                        ]
-                                    ); ?>
-                                <?php } ?>
-                            </ul>
-                        </div>
-                    </div>
-                <?php } ?>
-
-
+    <div class="col-sm-12 view-workout">
+        <div class="view-workout__main-info">
+            <h1><?= $workoutExerciseSet->exerciseSet->exercise->name; ?></h1>
+            <p class="description"><?= $workoutExerciseSet->repsWeightTimeFormatted() ?></p>
+            <div>
                 <?php if ($workoutExerciseSet->exerciseSet->video) { ?>
                     <?= $this->render(
                         'video',
                         [
-                            'lectureVideoFiles' => [0 => ['title' => $workoutExerciseSet->exerciseSet->exercise->name, 'file' => $workoutExerciseSet->exerciseSet->video]],
-                            'thumbnail' => $videoThumb ?? '',
-                            'idPrefix' => 'fitness_main',
+                            'fileUrl' => $workoutExerciseSet->exerciseSet->video,
+                            'thumbnail' => $videoThumb,
+                            'id' => 'fitness_main',
                         ]
                     ); ?>
                 <?php } ?>
-
-                <?php if ($workoutExerciseSet->exerciseSet->exercise->technique_video) {
-                    echo $this->render('mob-related-section', [
-                        'workoutExerciseSet' => $workoutExerciseSet->exerciseSet,
-                        'videoThumb' => $videoThumb,
-                    ]);
-                } ?>
+            </div>
+            <div class="view-workout__actions">
+                <?php if (!$workoutExerciseSet->exerciseSet->exercise->is_pause) { ?>
+                    <div><?= $this->render(
+                            "amount-evaluation",
+                            ['difficultyEvaluation' => $difficultyEvaluation]) ?>
+                    </div>
+                <?php } ?>
+                <?php if ($difficultyEvaluation || $workoutExerciseSet->exerciseSet->exercise->is_pause) { ?>
+                    <?php
+                    $btnText = \Yii::t('app', $nextWorkoutExercise ? 'Next exercise' : 'Finish workout');
+                    $btnLink = $nextWorkoutExercise
+                        ? ["fitness-student-exercises/view", 'id' => $nextWorkoutExercise->id]
+                        : ["fitness-student-exercises/workout-summary", 'workoutId' => $workoutExerciseSet->workout_id];
+                    echo Html::a(
+                        $btnText,
+                        $btnLink,
+                        ['class' => 'btn btn-success exercise-action-btn']
+                    ); ?>
+                <?php } ?>
             </div>
         </div>
+        <div class="view-workout__helpful-content">
+            <?php if ($workoutExerciseSet->exerciseSet->exercise->description) { ?>
+                <p><?= $workoutExerciseSet->exerciseSet->exercise->description ?></p>
+            <?php } ?>
+            <?php if ($workoutExerciseSet->exerciseSet->exercise->technique_video) { ?>
+                <?= $this->render(
+                    'video',
+                    [
+                        'fileUrl' => $workoutExerciseSet->exerciseSet->exercise->technique_video,
+                        'thumbnail' => $videoThumb,
+                        'id' => 'fitness_technique',
+                    ]
+                ); ?>
+            <?php } ?>
+        </div>
+        <ul class="view-workout__exercise-list">
+            <?php
+            $passedCurrentExercise = false;
+            foreach($workoutExerciseSet->workout->workoutExerciseSets as $wes) {
+                $class = '';
+                if($passedCurrentExercise) {
+                    $class = 'future';
+                } else if($wes->id === $workoutExerciseSet->id) {
+                    $passedCurrentExercise = true;
+                    $class = 'current';
+                } else {
+                    $class = 'past';
+                }
+                ?>
+                <li class="<?= $class ?>">
+                    <div class="view-workout__other-exercise-item">
+                        <span><?= $wes->exerciseSet->exercise->name ?></span>
+                        <?php if($class === 'future' && $wes->exerciseSet->exercise->technique_video) { ?>
+                            <button class="btn btn-primary fitness-toggle-technique-vid">
+                                <span class="glyphicon glyphicon-menu-down"></span>
+                            </button>
+                        <?php } ?>
+                    </div>
+                    <div class="hidden">
+                        <?= $this->render(
+                            'video',
+                            [
+                                'fileUrl' => $wes->exerciseSet->exercise->technique_video,
+                                'thumbnail' => $videoThumb,
+                                'id' => 'fitness_other_ex_technique_' . $wes->id,
+                            ]
+                        ); ?>
+                    </div>
+                </li>
+            <?php } ?>
+        </ul>
     </div>
-    <?php if ($workoutExerciseSet->exerciseSet->exercise->technique_video) { ?>
-        <div class="col-md-3 hidden-xs">
-            <div class="lesson-column lesson-column-right wrap-overlay">
-                <?= $this->render("right-section.php", [
-                    'videoThumb' => $videoThumb,
-                    'workoutExerciseSet' => $workoutExerciseSet->exerciseSet,
-                ]) ?>
-            </div>
-        </div>
-    <?php } ?>
 </div>

@@ -130,7 +130,6 @@ class LekcijasController extends Controller
         $school = $userContext->getSchool();
         $schoolId = $school->id;
         $videoThumb = $school->video_thumbnail;
-        $isFitnessSchool = $school->is_fitness_school;
 
         $sortingConfig = $this->getSortingConfig();
 
@@ -198,11 +197,7 @@ class LekcijasController extends Controller
                     return $this->redirect(["lekcijas/lekcija/$redirectLessonId"]);
                 }
 
-                if ($isFitnessSchool) {
-                    $this->redirect(["lekcijas/lekcija/$nextLessonId"]);
-                } else {
-                    $this->refresh();
-                }
+                $this->refresh();
             }
 
             if (!$force) {
@@ -250,32 +245,6 @@ class LekcijasController extends Controller
                 }
             }
 
-            $nextRoundLessonsEquipmentVideos = [];
-
-            if ($isFitnessSchool && $userLecture->lecture->is_pause) {
-                $matchDate = date("Y-m-d", strtotime($userLecture->created));
-                $userLessons = UserLectures::getLessonsOfType($userContext->id, $type, ['id' => SORT_ASC])->all();
-
-                $userLessonsForDate = [];
-                foreach ($userLessons as $userLesson) {
-                    if (date("Y-m-d", strtotime($userLesson->created)) == $matchDate) {
-                        $userLessonsForDate[] = $userLesson;
-                    }
-                }
-
-                $useLessons = false;
-                foreach ($userLessonsForDate as $userLesson) {
-                    if ($userLesson->id == $userLecture->id) $useLessons = true;
-                    else if ($useLessons) {
-                        if ($userLesson->lecture->is_pause) {
-                            $useLessons = false;
-                        } else if ($userLesson->lecture->play_along_file) {
-                            $nextRoundLessonsEquipmentVideos[] = $userLesson->lecture->play_along_file;
-                        }
-                    }
-                }
-            }
-
             $isRegisteredAndNewLesson = RegistrationLesson::isRegistrationLesson($model->id);
 
             return $this->render('lekcija', [
@@ -300,8 +269,6 @@ class LekcijasController extends Controller
                 'sortType' => $sortingConfig['type'],
                 'isRegisteredAndNewLesson' => $isRegisteredAndNewLesson,
                 'showChangeTaskButton' => $model->complexity > 5 && !$difficultyEvaluation,
-                'isFitnessSchool' => $isFitnessSchool,
-                'equipmentVideos' => $nextRoundLessonsEquipmentVideos,
             ]);
         }
         throw new NotFoundHttpException('The requested page does not exist.');
@@ -384,7 +351,6 @@ class LekcijasController extends Controller
 
         $userContext = Yii::$app->user->identity;
         $school = $userContext->getSchool();
-        $isFitnessSchool = $school->is_fitness_school;
 
         return $this->render('overview', [
             'models' => $models,
@@ -401,7 +367,6 @@ class LekcijasController extends Controller
             'isStudent' => $isStudent,
             'renderPlanSuggestions' => $renderPlanSuggestions,
             'planRecommendations' => $planRecommendations,
-            'isFitnessSchool' => $isFitnessSchool,
         ]);
     }
 

@@ -200,11 +200,6 @@ $this->title = $user['first_name'] . ' ' . $user['last_name'];
     </label>
     <label for="teacherMessage"><?= Yii::t('app', 'Message for student') ?></label>
     <textarea name="teacherMessage" style="width: 100%" rows="5"></textarea>
-    <?php if ($isFitnessSchool) { ?>
-        <label for="weight"><?= Yii::t('app', 'Weight') ?> (kg)
-            <input type="number" name="weight" class="form-control">
-        </label>
-    <?php } ?>
 </div>
 <?= $manualLectures ? $form->field($model, 'user_id')->hiddenInput(['value' => $id])->label(false) : ''; ?>
 <div class="form-group">

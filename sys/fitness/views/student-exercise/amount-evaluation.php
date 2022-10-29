@@ -26,7 +26,7 @@ $evaluations = [
     ],
 ];
 
-$isButtonACtive = function ($name) use ($evaluations, $difficultyEvaluation) {
+$isButtonActive = function ($name) use ($evaluations, $difficultyEvaluation) {
     if (!$difficultyEvaluation) return false;
 
     $evalIndex = array_search($name, array_column($evaluations, 'text'));
@@ -41,20 +41,31 @@ $isButtonACtive = function ($name) use ($evaluations, $difficultyEvaluation) {
     <?php $form = ActiveForm::begin(); ?>
     <?= Html::hiddenInput("difficulty-evaluation", null) ?>
 
-    <div class="btn-group">
-        <?php foreach ($evaluations as $evaluation) {
-            $name = $evaluation['text'];
-            $emojiClass = "emoji emoji-$name";
-            ?>
-            <button
-                data-role="evaluation-emoji"
-                data-value="<?= $evaluation['value'] ?>"
-                class="btn <?= $isButtonACtive($name) ? 'btn-primary' : '' ?>"
-                <?= isset($readonly) && $readonly ? 'disabled' : '' ?>
-            >
-                <?= $evaluation['text'] ?>
-            </button>
-        <?php } ?>
+    <div class="fitness-difficulty-eval">
+        <div class="btn-group">
+            <?php foreach ($evaluations as $evaluation) {
+                $name = $evaluation['text'];
+                $emojiClass = "emoji emoji-$name";
+                ?>
+                <button
+                        type="button"
+                        data-role="fitness-eval-btn"
+                        data-value="<?= $evaluation['value'] ?>"
+                        class="btn <?= $isButtonActive($name) ? 'active' : '' ?>"
+                        title="<?= $evaluation['text'] ?>"
+                    <?= isset($readonly) && $readonly ? 'disabled' : '' ?>
+                >
+                    &nbsp;
+                </button>
+            <?php } ?>
+        </div>
+        <div class="fitness-difficulty-eval__description">
+            <span>Pārāk viegli</span>
+            <span>Ideāli</span>
+            <span>Pārāk grūti</span>
+        </div>
     </div>
+
+
     <?php ActiveForm::end(); ?>
 </div>

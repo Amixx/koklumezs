@@ -4,7 +4,7 @@ use app\helpers\ThumbnailHelper;
 
 $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->play_along_file, $videoThumb);
 
-$playAlongTitle = $isFitnessSchool ? 'How to use equipment' : 'Let\'s play together'
+$playAlongTitle = 'Let\'s play together';
 ?>
 
 <div>
