@@ -12,12 +12,25 @@ Vue.component('modal', {
             required: false,
         }
     },
+    created(){
+        this.$nextTick(() => {
+            $(this.$refs.modal).modal('show');
+        })
+    },
+    beforeDestroy(){
+        $(this.$refs.modal).modal('hide');
+    },
+    methods: {
+        close(){
+            this.$emit('close')
+        }
+    },
     template: `
-    <div class="modal fade" :id="id" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal fade" :id="id" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true" ref="modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h3 class="modal-title" id="modal-title" v-if="title">{{ title }}</h3>
@@ -220,6 +233,73 @@ Vue.component('error-flash', {
     `
 })
 
+Vue.component('exercise-creation-modal', {
+    name: 'exercise-creation-modal',
+    props: {
+        initialName: {
+            type: String,
+            required: false,
+            default: ''
+        }
+    },
+    data(){
+        return {
+            name: '',
+            description: '',
+            isLoading: false,
+        }
+    },
+    created(){
+        this.name = this.initialName;
+    },
+    methods: {
+        async submit(){
+            this.isLoading = true;
+            try {
+                return await ExerciseRepository.create({name: this.name, description: this.description});
+            } catch(e) {
+                console.log(e);
+            } finally {
+                this.isLoading = false;
+            }
+        },
+        async submitAndAddToWorkout(){
+            var x = await this.submit();
+            console.log(x);
+        }
+    },
+    template: `
+    <modal id="exercise-creation-modal" title="Vingrojuma izveidošana" @close="$emit('close')">
+        <div>
+            <div class="form-group required">
+                <label class="control-label" for="exercise-name">Nosaukums</label>
+                <input
+                    v-model="name"
+                    type="text"
+                    id="exercise-name"
+                    class="form-control"
+                    name="Exercise[name]"
+                    aria-required="true">
+            </div>
+            <div class="form-group field-exercise-description">
+                <label class="control-label" for="exercise-description">Apraksts</label>
+                <textarea
+                    v-model="description"
+                    id="exercise-description"
+                    class="form-control"
+                    name="Exercise[description]"
+                ></textarea>
+            </div>
+        </div>
+        <div style="display:flex; gap: 8px; justify-content: center;">
+            <button type="button" class="btn" @click="$emit('close')">Atcelt</button>        
+            <button class="btn btn-primary" :disabled="!title.length" @click="submit">Izveidot</button>        
+            <button class="btn btn btn-success" :disabled="!title.length" @click="submitAndAddToWorkout">Izveidot un piešķirt treniņam</button>        
+        </div>
+    </modal>      
+    `
+})
+
 
 const getCsrfToken = () => {
     return document.querySelector("meta[name=csrf-token]").content
@@ -272,6 +352,10 @@ class ExerciseRepository extends Repository {
             }))
             return exercise
         })
+    }
+
+    static async create(exercise){
+        return (await axios.post(`${this.baseUrl}/api-create`, exercise, this.postConfig)).data
     }
 }
 
@@ -407,6 +491,7 @@ $(document).ready(function () {
                         },
                     ],
                     selectedExercisePopularity: null,
+                    showCreateExerciseModal: false,
                 }
             },
             computed: {
@@ -581,10 +666,9 @@ $(document).ready(function () {
                         }
                     }
                 },
-                getTagTypeLabel(tagTypeValue) {
-                    if (!this.tagTypeSelectOptions) return ''
-                    const tag = this.tagTypeSelectOptions.find(x => x.value === tagTypeValue)
-                    return tag?.label ?? ''
+                async createAndAddSearchValueExercise(){
+                    const res = await ExerciseRepository.create({ name: this.exerciseNameFilter });
+                    // TODO: pievienot treniņam atgriezto vingrojumu
                 }
             },
             template: `
@@ -641,51 +725,92 @@ $(document).ready(function () {
 
                             <div class="tab-content" id="exercise-tab-content">
                                 <div class="tab-pane fade active in" id="exercises" role="tabpanel" aria-labelledby="exercises-tab">
+                                     <h4>Vingrojumu meklēšana</h4>
+                                     <ul class="nav nav-tabs" id="exercise-tabs" role="tablist">
+                                        <li class="nav-item active">
+                                            <a class="nav-link" id="exercises-tab" data-toggle="tab" href="#by-name" role="tab" aria-controls="exercises" aria-selected="true">
+                                                Pēc nosaukuma
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="templates-tab" data-toggle="tab" href="#by-tags" role="tab" aria-controls="templates" aria-selected="false">
+                                                Pēc tagiem un popularitātes
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    
+                                   
+                                
                                     <ul v-if="tags" class="list-group" style="position:relative">
+                                         <div class="tab-content" id="by-name-tab-content">
+                                            <div class="tab-pane fade active in" id="by-name" role="tabpanel" aria-labelledby="exercises-tab">
+                                                <div class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                                    <div style="display:flex; gap:8px;">
+                                                        <input
+                                                            type="text"
+                                                            class="form-control"
+                                                            v-model="exerciseNameFilter"
+                                                            @keydown.enter="() => {
+                                                                if(!(exerciseNameFilter.length < 3)) loadExercises()
+                                                            }">
+                                                        <button
+                                                            class="btn btn-primary"
+                                                            type="button"
+                                                            :disabled="exerciseNameFilter.length < 3"
+                                                            :title="exerciseNameFilter.length < 3 ? 'Ievadiet vismaz 3 simbolus!' : ''"
+                                                            @click="loadExercises">
+                                                            Meklēt
+                                                        </button>
+                                                    </div>
+                                                    <div style="display:flex; gap:8px; align-items: center; justify-content: end; margin-top:8px;">
+                                                        <span>Vajadzīgais vingrojums neeksistē?</span>
+                                                        <button class="btn btn-primary" @click="showCreateExerciseModal = true">Izveidot jaunu</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="by-tags" role="tabpanel" aria-labelledby="exercises-tab">
+                                                <li class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                                    <h4>Tagu atlase</h4>
+                                                    <ul style="padding-left:0;">
+                                                        <li class="list-group-item" style="border-top:0; border-bottom:0; text-align:center;" v-for="(selectedTags, i) in selectedTagGroups" :key="i">
+                                                            <v-select
+                                                                label="value"
+                                                                :options="tags"
+                                                                multiple
+                                                                v-model="selectedTagGroups[i]"
+                                                            ></v-select>
+                                                            <div v-if="i !== selectedTagGroups.length-1">
+                                                                VAI
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li v-if="tagTypeSelectOptions" class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                                     <h4>Tagu tipu atlase</h4>
+                                                     <v-select
+                                                        label="label"
+                                                        :options="tagTypeSelectOptions"
+                                                        multiple
+                                                        v-model="selectedTagTypes"
+                                                     ></v-select>
+                                                </li>
+                                                <li class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                                     <h4>Vingrojumu popularitātes atlase</h4>
+                                                     <v-select
+                                                        label="label"
+                                                        :options="exercisePopularitySelectOptions"
+                                                        v-model="selectedExercisePopularity"
+                                                     ></v-select>
+                                                </li>
+                                            </div>
+                                        </div>
+                                    
                                         <li v-show="exercisesLoading" class="list-group-item disabled-overlay">
                                             <div class="loader" style="height:80px;width:80px;margin:auto;margin-top:25%;border-color:green;border-width:8px;border-top-color:gainsboro"></div>
+                                        </li>                                       
+                                        <li v-if="exercises" class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                            <p style="text-align: center;font-size: 18px;margin-bottom: 0;">Vingrojumi</p>
                                         </li>
-                                        <li class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
-                                            <h4>Tagu atlase</h4>
-                                            <ul style="padding-left:0;">
-                                                <li class="list-group-item" style="border-top:0; border-bottom:0; text-align:center;" v-for="(selectedTags, i) in selectedTagGroups" :key="i">
-                                                    <v-select
-                                                        label="value"
-                                                        :options="tags"
-                                                        multiple
-                                                        v-model="selectedTagGroups[i]"
-                                                    ></v-select>
-                                                    <div v-if="i !== selectedTagGroups.length-1">
-                                                        VAI
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li v-if="tagTypeSelectOptions" class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
-                                             <h4>Tagu tipu atlase</h4>
-                                             <v-select
-                                                label="label"
-                                                :options="tagTypeSelectOptions"
-                                                multiple
-                                                v-model="selectedTagTypes"
-                                             ></v-select>
-                                        </li>
-                                        <li class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
-                                             <h4>Vingrojumu popularitātes atlase</h4>
-                                             <v-select
-                                                label="label"
-                                                :options="exercisePopularitySelectOptions"
-                                                v-model="selectedExercisePopularity"
-                                             ></v-select>
-                                        </li>
-                                        <li class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
-                                            Vingrojuma nosaukums:
-                                            <div style="display:flex; gap:8px;">
-                                                <input type="text" class="form-control" v-model="exerciseNameFilter">
-                                                <button class="btn btn-primary" type="button" @click="loadExercises">Meklēt</button>
-                                            </div>
-                                        </li>
-                                        <li v-if="exercises" class="list-group-item"><p style="text-align: center;font-size: 18px;margin-bottom: 0;">Vingrojumi</p></li>
                                         <li v-for="exercise in exercises" :key="exercise.id" class="list-group-item" style="display:flex; justify-content:space-between; flex-wrap: wrap; gap: 8px;" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
                                             <span>
                                                 <a :href="'/sys/fitness-exercises/view?id=' + exercise.id" title="Apskatīt vingrojumu" target="_blank">
@@ -702,21 +827,17 @@ $(document).ready(function () {
                                                     <span class="glyphicon glyphicon-plus" title="Pievienot treniņam"></span>
                                                 </button>
                                             </span>   
-                                          
-                                            <span class="exercise-tags-container">
-                                                <span v-for="exTag in exercise.exerciseTags" class="exercise-tag">
-                                                    <span>{{ exTag.tag.value }}</span>
-                                                    <span v-if="exTag.tag && exTag.tag.type"> ({{ getTagTypeLabel(exTag.tag.type) }})</span>
-                                                </span>
-                                            </span>
                                         </li>
-                                        <li class="list-group-item" v-if="exercises && exercises.length === 10">
-                                            Ielādēti pirmie 10 vingrojumi, kas atbilst atlasei.
+                                        <li class="list-group-item" v-if="exercises && exercises.length === 20" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                            Ielādēti pirmie 20 vingrojumi, kas atbilst atlasei.
                                         </li>
-                                        <li class="list-group-item" v-else-if="exercises && !exercises.length">
-                                            Nav atrasts neviens vingrojums ar šādu tagu atlasi! Mainiet izvēlētos tagus!
+                                        <li class="list-group-item" v-else-if="exercises && !exercises.length" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                            <span>Nav atrasts neviens vingrojums!</span>
+                                            <button v-if="exerciseNameFilter" class="btn btn-primary" @click="createAndAddSearchValueExercise">
+                                                Izveidot un piešķirt <strong>{{ exerciseNameFilter }}</strong>
+                                            </button>
                                         </li>
-                                         <li class="list-group-item" v-if="pauses">
+                                         <li class="list-group-item" v-if="pauses" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
                                             <p style="text-align: center;font-size: 18px;margin-bottom: 0;">Pauzes</p>
                                             <p v-for="(pause, i) in pauses" :key="i">
                                                 <a :href="'/sys/fitness-exercises/view?id=' + pause.id" title="Apskatīt pauzi" target="_blank">
@@ -825,6 +946,12 @@ $(document).ready(function () {
                         </div>
                     </div>
                 </div>
+                
+                <exercise-creation-modal
+                    v-if="showCreateExerciseModal"
+                    :initial-name="exerciseNameFilter"
+                    @close="showCreateExerciseModal = false"
+                    @add-to-workout=""/>
             </div>
             `
         }).$mount('#' + workoutCreationId);

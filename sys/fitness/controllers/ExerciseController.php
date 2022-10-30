@@ -139,11 +139,12 @@ class ExerciseController extends Controller
     {
         $get = Yii::$app->request->get();
 
+        $limit = 20;
+
         $query = Exercise::find()
             ->joinWith('sets')
-            ->joinWith('exerciseTags')
             ->groupBy('name')
-            ->limit(10);
+            ->limit($limit);
 
         if (isset($get['tagIdGroups']) && $get['tagIdGroups']) {
             $tagIdGroups = array_map(function ($tagIdGroup) {
@@ -191,6 +192,22 @@ class ExerciseController extends Controller
         $exercises = $query->asArray()->all();
 
         return json_encode($exercises);
+    }
+
+    public function actionApiCreate(){
+        $post = Yii::$app->request->post();
+        $exercise = new Exercise;
+        $exercise->author_id = Yii::$app->user->identity->id;
+        $exercise->name = $post['name'];
+        if(isset($post['description']) && $post['description']) {
+            $exercise->description = $post['description'];
+        }
+        $exercise->popularity_type = 'AVERAGE';
+
+        if($exercise->save()) {
+            return json_encode(ArrayHelper::toArray($exercise));
+        }
+        return null;
     }
 
     protected function findModel($id)
