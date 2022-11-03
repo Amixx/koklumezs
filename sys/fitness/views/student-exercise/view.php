@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 
-$this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExerciseSet->exerciseSet->exercise->name;
+$this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExercise->exercise->name;
 ?>
 <!-- unpkg : use the latest version of Video.js -->
 <link href="https://unpkg.com/video.js/dist/video-js.min.css" rel="stylesheet">
@@ -11,14 +11,16 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExerciseSet->exercise
 <div class="row">
     <div class="col-sm-12 view-workout">
         <div class="view-workout__main-info">
-            <h1><?= $workoutExerciseSet->exerciseSet->exercise->name; ?></h1>
-            <p class="description"><?= $workoutExerciseSet->repsWeightTimeFormatted() ?></p>
+            <h1><?= $workoutExercise->exercise->name; ?></h1>
+            <p class="description"><?= $workoutExercise->repsWeightTimeFormatted() ?></p>
             <div>
-                <?php if ($workoutExerciseSet->exerciseSet->video) { ?>
+                <?php
+                $vid = $workoutExercise->videoToDisplay();
+                if ($vid) { ?>
                     <?= $this->render(
                         'video',
                         [
-                            'fileUrl' => $workoutExerciseSet->exerciseSet->video,
+                            'fileUrl' => $vid,
                             'thumbnail' => $videoThumb,
                             'id' => 'fitness_main',
                         ]
@@ -26,18 +28,18 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExerciseSet->exercise
                 <?php } ?>
             </div>
             <div class="view-workout__actions">
-                <?php if (!$workoutExerciseSet->exerciseSet->exercise->is_pause) { ?>
+                <?php if (!$workoutExercise->exercise->is_pause) { ?>
                     <div><?= $this->render(
                             "amount-evaluation",
                             ['difficultyEvaluation' => $difficultyEvaluation]) ?>
                     </div>
                 <?php } ?>
-                <?php if ($difficultyEvaluation || $workoutExerciseSet->exerciseSet->exercise->is_pause) { ?>
+                <?php if ($difficultyEvaluation || $workoutExercise->exercise->is_pause) { ?>
                     <?php
                     $btnText = \Yii::t('app', $nextWorkoutExercise ? 'Next exercise' : 'Finish workout');
                     $btnLink = $nextWorkoutExercise
                         ? ["fitness-student-exercises/view", 'id' => $nextWorkoutExercise->id]
-                        : ["fitness-student-exercises/workout-summary", 'workoutId' => $workoutExerciseSet->workout_id];
+                        : ["fitness-student-exercises/workout-summary", 'workoutId' => $workoutExercise->workout_id];
                     echo Html::a(
                         $btnText,
                         $btnLink,
@@ -47,14 +49,14 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExerciseSet->exercise
             </div>
         </div>
         <div class="view-workout__helpful-content">
-            <?php if ($workoutExerciseSet->exerciseSet->exercise->description) { ?>
-                <p><?= $workoutExerciseSet->exerciseSet->exercise->description ?></p>
+            <?php if ($workoutExercise->exercise->description) { ?>
+                <p><?= $workoutExercise->exercise->description ?></p>
             <?php } ?>
-            <?php if ($workoutExerciseSet->exerciseSet->exercise->technique_video) { ?>
+            <?php if ($workoutExercise->exercise->technique_video) { ?>
                 <?= $this->render(
                     'video',
                     [
-                        'fileUrl' => $workoutExerciseSet->exerciseSet->exercise->technique_video,
+                        'fileUrl' => $workoutExercise->exercise->technique_video,
                         'thumbnail' => $videoThumb,
                         'id' => 'fitness_technique',
                     ]
@@ -64,11 +66,11 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExerciseSet->exercise
         <ul class="view-workout__exercise-list">
             <?php
             $passedCurrentExercise = false;
-            foreach($workoutExerciseSet->workout->workoutExerciseSets as $wes) {
+            foreach($workoutExercise->workout->workoutExercises as $wExercise) {
                 $class = '';
                 if($passedCurrentExercise) {
                     $class = 'future';
-                } else if($wes->id === $workoutExerciseSet->id) {
+                } else if($wExercise->id === $workoutExercise->id) {
                     $passedCurrentExercise = true;
                     $class = 'current';
                 } else {
@@ -77,8 +79,8 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExerciseSet->exercise
                 ?>
                 <li class="<?= $class ?>">
                     <div class="view-workout__other-exercise-item">
-                        <span><?= $wes->exerciseSet->exercise->name ?></span>
-                        <?php if($class === 'future' && $wes->exerciseSet->exercise->technique_video) { ?>
+                        <span><?= $wExercise->exercise->name ?></span>
+                        <?php if($class === 'future' && $wExercise->exercise->technique_video) { ?>
                             <button class="btn btn-primary fitness-toggle-technique-vid">
                                 <span class="glyphicon glyphicon-menu-down"></span>
                             </button>
@@ -88,9 +90,9 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExerciseSet->exercise
                         <?= $this->render(
                             'video',
                             [
-                                'fileUrl' => $wes->exerciseSet->exercise->technique_video,
+                                'fileUrl' => $wExercise->exercise->technique_video,
                                 'thumbnail' => $videoThumb,
-                                'id' => 'fitness_other_ex_technique_' . $wes->id,
+                                'id' => 'fitness_other_ex_technique_' . $wExercise->id,
                             ]
                         ); ?>
                     </div>

@@ -12,16 +12,16 @@ Vue.component('modal', {
             required: false,
         }
     },
-    created(){
+    created() {
         this.$nextTick(() => {
             $(this.$refs.modal).modal('show');
         })
     },
-    beforeDestroy(){
+    beforeDestroy() {
         $(this.$refs.modal).modal('hide');
     },
     methods: {
-        close(){
+        close() {
             this.$emit('close')
         }
     },
@@ -56,33 +56,79 @@ Vue.component('added-exercise', {
             type: Number,
             required: true,
         },
-        showAddSetButton: {
-            type: Boolean,
-            required: true,
-        },
-        highlightWeightMissing: {
-            type: Boolean,
-            required: false,
-            default: false,
+    },
+    computed: {
+        specialVideoShownMessage() {
+            if (!this.tempExercise.exercise.videos) return null;
+
+            var resForReps = false;
+            var resForTime = false;
+            var resForBoth = false;
+            var specialVideoToShow = this.tempExercise.exercise.videos.find(v => {
+                var repsMatch = v.reps && this.tempExercise.reps && this.tempExercise.reps == v.reps;
+                var timeMatches = v.time_seconds && this.tempExercise.time_seconds && this.tempExercise.time_seconds == v.time_seconds;
+
+                var forReps = v.reps && !v.time_seconds && repsMatch;
+                var forTime = v.time_seconds && !v.reps && timeMatches;
+                var forBoth = v.reps && v.time_seconds && repsMatch && timeMatches;
+
+                if(forReps || forTime || forBoth) {
+                    resForReps = forReps;
+                    resForTime = forTime;
+                    resForBoth = forBoth;
+                    return true;
+                }
+            });
+
+            if (specialVideoToShow) {
+                if(resForReps) {
+                    return 'Tiks rādīts īpašais video <strong>' + this.tempExercise.reps + ' reizēm</strong>';
+                }
+                if(resForTime) {
+                    return 'Tiks rādīts īpašais video <strong>' + this.tempExercise.time_seconds + ' sekundēm</strong>';
+                }
+                if(resForBoth) {
+                    return 'Tiks rādīts īpašais video <strong>' + this.tempExercise.reps + ' reizēm</strong> un <strong>' + this.tempExercise.time_seconds + ' sekundēm</strong>';
+                }
+            }
+
+            return null;
         }
     },
     template: `
     <tr>
         <td>{{ index+1 }}
             <button
-                v-if="showAddSetButton"
                 class="btn btn-primary"
                 @click="$emit('add-set')">
                 <span class="glyphicon glyphicon-plus" title="Pievienot nākamo piegājienu"></span>
             </button>
         </td>
-        <td>{{ tempExercise.exerciseSet.sequenceNo }}</td>
-        <td>{{ tempExercise.exercise.name }}</td>
-        <td>{{ tempExercise.exerciseSet.reps }}</td>
-        <td>{{ tempExercise.exerciseSet.time_seconds }}</td>
         <td>
-            <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group" :class="{'has-error': highlightWeightMissing && !tempExercise.weight}">
-                <input class="form-control" v-model="tempExercise.weight" style="width:60px;">
+            <span>{{ tempExercise.sequenceNo }}</span>
+            <span 
+                v-if="specialVideoShownMessage" 
+                class="text-info" 
+                style="display:inline-block;font-size:12px;" 
+                v-html="specialVideoShownMessage">
+            </span>
+        </td>
+        <td>
+            <span>{{ tempExercise.exercise.name }}</span>
+        </td>
+        <td>
+            <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
+                <input class="form-control" v-model="tempExercise.reps" style="width:60px;">
+            </div>
+        </td>
+        <td>
+            <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
+                <input class="form-control" v-model="tempExercise.time_seconds" style="width:60px;">
+            </div>
+        </td>
+        <td>
+            <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
+                <input class="form-control" v-model="tempExercise.weight" style="width:45px;">
             </div>
         </td>
         <td>
@@ -145,13 +191,13 @@ Vue.component('last-workouts-table', {
                                 </tr>
                             </thead>
                             <tbody>
-                                 <tr v-for="(workoutExerciseSet, i) in workout.workoutExerciseSets" :key="i">
+                                 <tr v-for="(workoutExercise, i) in workout.workoutExercises" :key="i">
                                     <td>{{ i+1 }}</td>
-                                    <td>{{ workoutExerciseSet.exerciseSet.exercise.name }}</td>
-                                    <td>{{ workoutExerciseSet.exerciseSet.reps }}</td>
-                                    <td>{{ workoutExerciseSet.exerciseSet.time_seconds }}</td>
-                                    <td>{{ workoutExerciseSet.weight }}</td>
-                                    <td>{{ workoutExerciseSet.evaluation ? evalValueToText[workoutExerciseSet.evaluation.evaluation] : "" }}</td>
+                                    <td>{{ workoutExercise.exercise.name }}</td>
+                                    <td>{{ workoutExercise.reps }}</td>
+                                    <td>{{ workoutExercise.time_seconds }}</td>
+                                    <td>{{ workoutExercise.weight }}</td>
+                                    <td>{{ workoutExercise.evaluation ? evalValueToText[workoutExercise.evaluation.evaluation] : "" }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -197,8 +243,8 @@ Vue.component('loading-button', {
     },
     template: `
     <button
-        class="btn btn-primary btn-lg"
-        style='display:flex; gap:8px; margin:auto;'
+        class="btn btn-primary"
+        style='display:flex; gap:8px; margin:auto;justify-content:center;'
         :disabled="loading">
         <span><slot></slot></span>
         <div
@@ -242,30 +288,35 @@ Vue.component('exercise-creation-modal', {
             default: ''
         }
     },
-    data(){
+    data() {
         return {
             name: '',
             description: '',
             isLoading: false,
         }
     },
-    created(){
+    created() {
         this.name = this.initialName;
     },
     methods: {
-        async submit(){
+        async submit() {
             this.isLoading = true;
             try {
                 return await ExerciseRepository.create({name: this.name, description: this.description});
-            } catch(e) {
+            } catch (e) {
                 console.log(e);
             } finally {
                 this.isLoading = false;
             }
         },
-        async submitAndAddToWorkout(){
-            var x = await this.submit();
-            console.log(x);
+        async submitWithoutAdding() {
+            this.submit();
+            this.$emit('close');
+        },
+        async submitAndAddToWorkout() {
+            var exercise = await this.submit();
+            this.$emit('add-to-workout', exercise);
+            this.$emit('close');
         }
     },
     template: `
@@ -293,8 +344,8 @@ Vue.component('exercise-creation-modal', {
         </div>
         <div style="display:flex; gap: 8px; justify-content: center;">
             <button type="button" class="btn" @click="$emit('close')">Atcelt</button>        
-            <button class="btn btn-primary" :disabled="!title.length" @click="submit">Izveidot</button>        
-            <button class="btn btn btn-success" :disabled="!title.length" @click="submitAndAddToWorkout">Izveidot un piešķirt treniņam</button>        
+            <button class="btn btn-primary" :disabled="!name.length || isLoading" @click="submitWithoutAdding">Izveidot</button>        
+            <button class="btn btn btn-success" :disabled="!name.length || isLoading" @click="submitAndAddToWorkout">Izveidot un piešķirt treniņam</button>        
         </div>
     </modal>      
     `
@@ -326,7 +377,7 @@ class ExerciseRepository extends Repository {
     }
 
     static async list(tagIdGroups, tagTypes, exerciseName, exercisePopularity) {
-        const data = (await axios.get(`${this.baseUrl}/api-list`, {
+        return (await axios.get(`${this.baseUrl}/api-list`, {
             params: {
                 tagIdGroups,
                 tagTypes,
@@ -334,13 +385,6 @@ class ExerciseRepository extends Repository {
                 exercisePopularity
             }
         })).data
-        return data.map(exercise => {
-            exercise.sets = exercise.sets.map((set, i) => ({
-                ...set,
-                sequenceNo: i + 1
-            }))
-            return exercise
-        })
     }
 
     static async listPauses() {
@@ -354,7 +398,7 @@ class ExerciseRepository extends Repository {
         })
     }
 
-    static async create(exercise){
+    static async create(exercise) {
         return (await axios.post(`${this.baseUrl}/api-create`, exercise, this.postConfig)).data
     }
 }
@@ -414,9 +458,9 @@ class TemplateRepository extends Repository {
 }
 
 
-// function calcTagBalanceScore(workoutExerciseSets) {
+// function calcTagBalanceScore(workoutExercises) {
 //     const score = {}
-//     workoutExerciseSets.forEach((x) => {
+//     workoutExercises.forEach((x) => {
 //         if (x.exercise.exerciseTags) {
 //             x.exercise.exerciseTags.forEach((y) => {
 //                 if (!(score.hasOwnProperty(y.tag.value))) {
@@ -430,11 +474,11 @@ class TemplateRepository extends Repository {
 // }
 
 //
-// function calcPrevWorkoutTagBalanceScore(workoutExerciseSets) {
+// function calcPrevWorkoutTagBalanceScore(workoutExercises) {
 //     const score = {}
-//     workoutExerciseSets.forEach((x) => {
-//         if (x.exerciseSet.exercise) {
-//             x.exerciseSet.exercise.exerciseTags.forEach((y) => {
+//     workoutExercises.forEach((x) => {
+//         if (x.exercise) {
+//             x.exercise.exerciseTags.forEach((y) => {
 //                 if (!(score.hasOwnProperty(y.tag.value))) {
 //                     score[y.tag.value] = 0
 //                 }
@@ -466,11 +510,10 @@ $(document).ready(function () {
                     userWorkouts: null,
                     workout: {
                         studentId: null,
-                        workoutExerciseSets: [],
+                        workoutExercises: [],
                         description: null,
                     },
                     workoutSubmitting: false,
-                    highlightWeightMissing: false,
                     tags: null,
                     tagTypeSelectOptions: null,
                     selectedTagTypes: [],
@@ -492,6 +535,7 @@ $(document).ready(function () {
                     ],
                     selectedExercisePopularity: null,
                     showCreateExerciseModal: false,
+                    creatingExercise: false,
                 }
             },
             computed: {
@@ -499,13 +543,13 @@ $(document).ready(function () {
                     return this.selectedTagGroups.flat();
                 },
                 // thisWorkoutTagBalanceScore() {
-                //     return calcTagBalanceScore(this.workout.workoutExerciseSets)
+                //     return calcTagBalanceScore(this.workout.workoutExercises)
                 // },
                 // prevWorkoutTagBalanceScores() {
                 //     if (!this.userWorkouts) return {}
                 //     const scores = {}
                 //     this.userWorkouts.forEach((x) => {
-                //         scores[x.created_at] = calcPrevWorkoutTagBalanceScore(x.workoutExerciseSets)
+                //         scores[x.created_at] = calcPrevWorkoutTagBalanceScore(x.workoutExercises)
                 //     })
                 //     return scores
                 // },
@@ -569,22 +613,19 @@ $(document).ready(function () {
                 async loadTemplates() {
                     const templates = (await TemplateRepository.list()).map(template => ({
                         ...template,
-                        templateExerciseSets: template.templateExerciseSets.map(tempEx => {
+                        templateExercises: template.templateExercises.map(tempEx => {
                             let setSequenceNo = 1
-                            template.templateExerciseSets.forEach(tempExSet => {
+                            template.templateExercises.forEach(tempExSet => {
                                 if (
-                                    tempExSet.exerciseSet.exercise_id === tempEx.exerciseSet.exercise_id &&
-                                    parseInt(tempExSet.exerciseSet.id) < parseInt(tempEx.exerciseSet.id)) {
+                                    tempExSet.exercise_id === tempEx.exercise_id &&
+                                    parseInt(tempExSet.id) < parseInt(tempEx.id)) {
                                     setSequenceNo++
                                 }
                             })
                             return {
                                 id: tempEx.id,
-                                exerciseSet: {
-                                    ...tempEx.exerciseSet,
-                                    sequenceNo: setSequenceNo,
-                                },
-                                exercise: tempEx.exerciseSet.exercise,
+                                sequenceNo: setSequenceNo,
+                                exercise: tempEx.exercise,
                                 weight: tempEx.weight ? parseFloat(tempEx.weight) : null,
                             }
                         })
@@ -601,46 +642,33 @@ $(document).ready(function () {
                     this.userWorkouts = await WorkoutRepository.ofUser(window.studentId)
                 },
                 addedExercisesOfSet(exercise) {
-                    return this.workout.workoutExerciseSets.filter(x => x.exercise.id === exercise.id)
+                    return this.workout.workoutExercises.filter(x => x.exercise.id === exercise.id)
                 },
                 addExercise(exercise) {
-                    const isPause = exercise.is_pause === '1'
-
-                    if (isPause) {
-                        if (exercise.sets.length) {
-                            this.workout.workoutExerciseSets.push({
-                                exerciseSet: exercise.sets[0],
-                                exercise,
-                                weight: null,
-                            })
-                        } else {
-                            console.error('pause ', exercise, ' has no sets!')
-                        }
-                    } else {
-                        const addedSetsOfExercise = this.addedExercisesOfSet(exercise)
-                        const exerciseSet = exercise.sets.find((set) => {
-                            return !addedSetsOfExercise.find(x => x.exerciseSet.id === set.id)
-                        })
-
-                        if (exerciseSet) {
-                            this.workout.workoutExerciseSets.push({
-                                exerciseSet,
-                                exercise,
-                                weight: null,
-                            })
-                        }
-                    }
+                    this.workout.workoutExercises.push({
+                        exercise,
+                        sequenceNo: this.addedExercisesOfSet(exercise).length + 1,
+                        reps: null,
+                        time_seconds: null,
+                        weight: null,
+                    })
                 },
                 removeExercise(index) {
-                    this.workout.workoutExerciseSets.splice(index, 1);
+                    const removed = this.workout.workoutExercises.splice(index, 1)
+                    this.lowerAddedExerciseSetNumbers(removed[0])
+                },
+                lowerAddedExerciseSetNumbers(removedExercise) {
+                    this.workout.workoutExercises.forEach(x => {
+                        if (removedExercise.exercise.id === x.exercise.id) x.sequenceNo--
+                    })
                 },
                 addTemplate(template) {
-                    this.workout.workoutExerciseSets.push(...template.templateExerciseSets.map(x => ({...x})));
+                    this.workout.workoutExercises.push(...template.templateExercises.map(x => ({...x})));
                 },
-                tryAddingAnotherLap() {
+                addAnotherLap() {
                     const exercisesToAdd = []
-                    for (let i = this.workout.workoutExerciseSets.length - 1; i >= 0; i--) {
-                        const item = this.workout.workoutExerciseSets[i];
+                    for (let i = this.workout.workoutExercises.length - 1; i >= 0; i--) {
+                        const item = this.workout.workoutExercises[i];
                         if (
                             exercisesToAdd.length > 0
                             && exercisesToAdd[exercisesToAdd.length - 1].id === item.exercise.id
@@ -655,20 +683,26 @@ $(document).ready(function () {
                 },
                 async submitWorkout() {
                     this.workoutSubmitting = true
-                    this.highlightWeightMissing = false
                     try {
                         await WorkoutRepository.create(this.workout)
                         window.location.replace(getUrl('/assign'));
                     } catch (e) {
                         if (e.response?.status === 422) {
-                            this.highlightWeightMissing = true
+                            console.error(e.response)
                             this.workoutSubmitting = false
                         }
                     }
                 },
-                async createAndAddSearchValueExercise(){
-                    const res = await ExerciseRepository.create({ name: this.exerciseNameFilter });
-                    // TODO: pievienot treniņam atgriezto vingrojumu
+                async createAndAddSearchValueExercise() {
+                    this.creatingExercise = true
+                    const exercise = await ExerciseRepository.create({name: this.exerciseNameFilter});
+                    this.creatingExercise = false
+
+                    this.addJustCreated(exercise)
+                },
+                async addJustCreated(exercise) {
+                    this.addExercise(exercise)
+                    if (this.exerciseNameFilter.length >= 3) this.loadExercises()
                 }
             },
             template: `
@@ -745,6 +779,14 @@ $(document).ready(function () {
                                          <div class="tab-content" id="by-name-tab-content">
                                             <div class="tab-pane fade active in" id="by-name" role="tabpanel" aria-labelledby="exercises-tab">
                                                 <div class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                                    <div class="text-right">
+                                                        <button
+                                                            class="btn btn-default"
+                                                            style="margin-bottom:8px;"
+                                                            @click="showCreateExerciseModal = true">
+                                                            Izveidot vingrojumu
+                                                        </button>
+                                                    </div>
                                                     <div style="display:flex; gap:8px;">
                                                         <input
                                                             type="text"
@@ -761,11 +803,7 @@ $(document).ready(function () {
                                                             @click="loadExercises">
                                                             Meklēt
                                                         </button>
-                                                    </div>
-                                                    <div style="display:flex; gap:8px; align-items: center; justify-content: end; margin-top:8px;">
-                                                        <span>Vajadzīgais vingrojums neeksistē?</span>
-                                                        <button class="btn btn-primary" @click="showCreateExerciseModal = true">Izveidot jaunu</button>
-                                                    </div>
+                                                    </div>                                                   
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="by-tags" role="tabpanel" aria-labelledby="exercises-tab">
@@ -816,12 +854,8 @@ $(document).ready(function () {
                                                 <a :href="'/sys/fitness-exercises/view?id=' + exercise.id" title="Apskatīt vingrojumu" target="_blank">
                                                     <span class="glyphicon glyphicon-eye-open"></span>
                                                 </a>
-                                                <span style="margin-right: 8px;">
-                                                    {{ exercise.name }}
-                                                    ({{ addedExercisesOfSet(exercise).length }}/{{ exercise.sets.length }})
-                                                </span>
+                                                <span style="margin-right: 8px;">{{ exercise.name }}</span>
                                                 <button
-                                                    v-if="exercise.sets.length !== addedExercisesOfSet(exercise).length"
                                                     class="btn btn-primary"
                                                     @click="addExercise(exercise)">
                                                     <span class="glyphicon glyphicon-plus" title="Pievienot treniņam"></span>
@@ -833,7 +867,11 @@ $(document).ready(function () {
                                         </li>
                                         <li class="list-group-item" v-else-if="exercises && !exercises.length" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
                                             <span>Nav atrasts neviens vingrojums!</span>
-                                            <button v-if="exerciseNameFilter" class="btn btn-primary" @click="createAndAddSearchValueExercise">
+                                            <button
+                                                v-if="exerciseNameFilter"
+                                                class="btn btn-success"
+                                                :disabled="creatingExercise"
+                                                @click="createAndAddSearchValueExercise">
                                                 Izveidot un piešķirt <strong>{{ exerciseNameFilter }}</strong>
                                             </button>
                                         </li>
@@ -856,7 +894,7 @@ $(document).ready(function () {
                                 <div class="tab-pane fade" id="templates" role="tabpanel" aria-labelledby="templates-tab">
                                     <ul v-if="templates" class="list-group">
                                         <li v-for="template in templates" :key="template.id" class="list-group-item">
-                                            <span style="margin-right: 8px;">{{ template.title }} ({{ template.templateExerciseSets.length }})</span>
+                                            <span style="margin-right: 8px;">{{ template.title }} ({{ template.templateExercises.length }})</span>
                                             <button class="btn btn-primary" @click="addTemplate(template)">
                                                 <span class="glyphicon glyphicon-plus" title="Pievienot treniņam"></span>
                                             </button>
@@ -873,7 +911,7 @@ $(document).ready(function () {
 <!--                                <li class="list-group-item" v-for="(score, key) in thisWorkoutTagBalanceScore" :key="key">-->
 <!--                                    {{ key }}: {{ score }} | {{  prevWorkoutTotalBalanceScore[key] ? score + prevWorkoutTotalBalanceScore[key] : score }}-->
 <!--                                </li>-->
-<!--                                <li class="list-group-item" v-if="!workout.workoutExerciseSets.length">Vēl nav pievienots neviens vingrojums...</li>-->
+<!--                                <li class="list-group-item" v-if="!workout.workoutExercises.length">Vēl nav pievienots neviens vingrojums...</li>-->
 <!--                            </ul>-->
 
                             <label class="form-group">
@@ -881,13 +919,11 @@ $(document).ready(function () {
                                 <input class="form-control" v-model="workout.description">
                             </label>
 
-                            <error-flash v-if="highlightWeightMissing">Lai izveidotu treniņu, visiem vingrojumiem obligāti jānorāda svars!</error-flash>
-
-                            <div v-if="workout.workoutExerciseSets.length">
+                            <div v-if="workout.workoutExercises.length">
                                 <table class="table table-striped table-bordered" >
                                     <thead>
                                         <tr>
-                                            <th>Piegājiens</th>
+                                            <th>#</th>
                                             <th>Vingr. pieg.</th>
                                             <th>Vingrojums</th>
                                             <th>Reizes</th>
@@ -898,29 +934,25 @@ $(document).ready(function () {
                                     </thead>
                                     <tbody>
                                         <added-exercise 
-                                            v-for="(exerciseSet, i) in workout.workoutExerciseSets"
+                                            v-for="(workoutExercise, i) in workout.workoutExercises"
                                             :key="i"
-                                            :temp-exercise="exerciseSet"
+                                            :temp-exercise="workoutExercise"
                                             :index="i"
-                                            :show-add-set-button="exerciseSet.exercise.sets.length !== addedExercisesOfSet(exerciseSet.exercise).length"
-                                            :highlight-weight-missing="highlightWeightMissing"
-                                            @add-set="addExercise(exerciseSet.exercise)"
+                                            @add-set="addExercise(workoutExercise.exercise)"
                                             @remove="removeExercise(i)"
                                         ></added-exercise>
                                     </tbody>
                                 </table>
-                                <div style="text-align:center; background: white;">
-                                    <button class="btn btn-success" @click="tryAddingAnotherLap">Pievienot nākamo "apli"</button>
-                                    <p>Ņem vērā: ja kādam no vingrojumiem, kuru vajadzētu pievienot, nebūs nākamā piegājiena, tas vienkārši tiks izlaists.</p>
+                                <div style="margin-top: 16px; display: flex;gap:16px;">
+                                    <button class="btn btn-default w-100" style="width:100%;" @click="addAnotherLap">
+                                        Pievienot nākamo "apli"
+                                    </button>
+                                    <loading-button :loading="workoutSubmitting" @click.native="submitWorkout" style="width:100%;">
+                                        Nosūtīt treniņu
+                                    </loading-button>
                                 </div>
-                                     <div style="margin-top: 16px;"">
-                                        <div class="col-sm-12 text-center">
-                                            <loading-button :loading="workoutSubmitting" @click.native="submitWorkout">
-                                                Nosūtīt treniņu
-                                            </loading-button>
-                                        </div>
-                                    </div>
-                                </div>
+                              
+                            </div>
                             <p v-else>Treniņam vēl nav pievienots neviens vingrojums...</p>
 
 <!--                            <h4>Iepriekšējo treniņu tagu "balance score"</h4>-->
@@ -951,7 +983,7 @@ $(document).ready(function () {
                     v-if="showCreateExerciseModal"
                     :initial-name="exerciseNameFilter"
                     @close="showCreateExerciseModal = false"
-                    @add-to-workout=""/>
+                    @add-to-workout="addJustCreated"/>
             </div>
             `
         }).$mount('#' + workoutCreationId);
@@ -966,7 +998,7 @@ $(document).ready(function () {
                     template: {
                         title: null,
                         description: null,
-                        templateExerciseSets: [],
+                        templateExercises: [],
                     },
                 }
             },
@@ -991,45 +1023,21 @@ $(document).ready(function () {
 
                     this.template.title = template.title
                     this.template.description = template.description
-                    this.template.templateExerciseSets = template.templateExerciseSets.map(tempEx => {
-                        let setSequenceNo = 1
-                        template.templateExerciseSets.forEach(tempExSet => {
-                            if (
-                                tempExSet.exerciseSet.exercise_id === tempEx.exerciseSet.exercise_id &&
-                                parseInt(tempExSet.exerciseSet.id) < parseInt(tempEx.exerciseSet.id)) {
-                                setSequenceNo++
-                            }
-                        })
-                        return {
-                            id: tempEx.id,
-                            exerciseSet: {
-                                ...tempEx.exerciseSet,
-                                sequenceNo: setSequenceNo,
-                            },
-                            exercise: tempEx.exerciseSet.exercise,
-                            weight: tempEx.weight ? parseFloat(tempEx.weight) : null,
-                        }
-                    })
-                },
-                addedExercisesOfSet(exercise) {
-                    return this.template.templateExerciseSets.filter(x => x.exercise.id === exercise.id)
+                    this.template.templateExercises = template.templateExercises.map(tempEx => ({
+                        id: tempEx.id,
+                        exercise: tempEx.exercise,
+                        weight: tempEx.weight ? parseFloat(tempEx.weight) : null,
+                    }))
                 },
                 addExercise(exercise) {
-                    const addedSetsOfExercise = this.addedExercisesOfSet(exercise)
-                    const exerciseSet = exercise.sets.find((set) => {
-                        return !addedSetsOfExercise.find(x => x.exerciseSet.id === set.id)
+                    console.log(exercise)
+                    this.template.templateExercises.push({
+                        exercise,
+                        weight: null,
                     })
-
-                    if (exerciseSet) {
-                        this.template.templateExerciseSets.push({
-                            exerciseSet,
-                            exercise,
-                            weight: null,
-                        })
-                    }
                 },
                 removeExercise(index) {
-                    this.template.templateExerciseSets.splice(index, 1);
+                    this.template.templateExercises.splice(index, 1);
                 },
                 async createOrUpdateTemplate() {
                     if (this.templateId) {
@@ -1074,7 +1082,7 @@ $(document).ready(function () {
                         </ul>
                     </div>
 
-                    <div v-if="template.templateExerciseSets.length" class="col-md-6 limit-height">
+                    <div v-if="template.templateExercises.length" class="col-md-6 limit-height">
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
@@ -1089,12 +1097,11 @@ $(document).ready(function () {
                             </thead>
                             <tbody>
                                 <added-exercise 
-                                    v-for="(exerciseSet, i) in template.templateExerciseSets"
+                                    v-for="(templateExercise, i) in template.templateExercises"
                                     :key="i"
-                                    :temp-exercise="exerciseSet"
+                                    :temp-exercise="templateExercise"
                                     :index="i"
-                                    :show-add-set-button="exerciseSet.exercise.sets.length !== addedExercisesOfSet(exerciseSet.exercise).length"
-                                    @add-set="addExercise(exerciseSet.exercise)"
+                                    @add-set="addExercise(templateExercise.exercise)"
                                     @remove="removeExercise(i)"
                                 ></added-exercise>
                             </tbody>

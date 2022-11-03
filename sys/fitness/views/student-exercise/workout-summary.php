@@ -57,7 +57,8 @@ $evaluations = [
                     $ext = end($exploded);
                     ?>
                     <div style="max-width: 300px">
-                        <video id="post-workout-message-video" playsinline controls data-role="player" style="width:100%;">
+                        <video id="post-workout-message-video" playsinline controls data-role="player"
+                               style="width:100%;">
                             <source src="<?= '/sys/files/' . $messageModel->video ?>" type="video/<?= $ext ?>"/>
                         </video>
                     </div>
@@ -87,19 +88,20 @@ $evaluations = [
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($workout->workoutExerciseSets as $wes) { ?>
+            <?php foreach ($workout->workoutExercises as $workoutExercise) { ?>
                 <tr>
-                    <td><?= $wes->exerciseSet->exercise->name ?></td>
-                    <td><?= $wes->repsWeightTimeFormatted() ?></td>
-                    <td><?= $wes->evaluation ? $evaluations[$wes->evaluation->evaluation] : '' ?></td>
+                    <td><?= $workoutExercise->exercise->name ?></td>
+                    <td><?= $workoutExercise->repsWeightTimeFormatted() ?></td>
+                    <td><?= $workoutExercise->evaluation ? $evaluations[$workoutExercise->evaluation->evaluation] : '' ?></td>
                 </tr>
             <?php } ?>
             </tbody>
         </table>
         <div class="text-center">
-            <?= Html::a(Yii::t('app', 'Return'), ['lekcijas/index'], [
-                    'class'=> 'btn btn-primary'
-            ]) ?>
+            <?= Html::a(
+                Yii::t('app', 'Return'),
+                ['lekcijas/index'],
+                ['class' => 'btn btn-primary']) ?>
         </div>
     </div>
 </div>

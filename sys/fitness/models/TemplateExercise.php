@@ -4,24 +4,25 @@ namespace app\fitness\models;
 
 use app\models\Users;
 
-class TemplateExerciseSet extends \yii\db\ActiveRecord
+class TemplateExercise extends \yii\db\ActiveRecord
 {
     public static function tableName()
     {
-        return 'fitness_templateexercisesets';
+        return 'fitness_templateexercises';
     }
 
     public function rules()
     {
         return [
-            [['template_id', 'exerciseset_id'], 'required'],
-            [['template_id', 'exerciseset_id'], 'integer'],
+            [['template_id', 'exercise_id'], 'required'],
+            [['template_id', 'exercise_id'], 'integer'],
             [
                 ['weight'], 'number',
                 'numberPattern' => '/^\d+(.\d{1,2})?$/'
             ],
+            [['reps', 'time_seconds'], 'integer'],
             [['template_id'], 'exist', 'skipOnError' => true, 'targetClass' => Template::class, 'targetAttribute' => ['template_id' => 'id']],
-            [['exerciseset_id'], 'exist', 'skipOnError' => true, 'targetClass' => ExerciseSet::class, 'targetAttribute' => ['exerciseset_id' => 'id']],
+            [['exercise_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exercise::class, 'targetAttribute' => ['exercise_id' => 'id']],
         ];
     }
 
@@ -30,8 +31,10 @@ class TemplateExerciseSet extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'template_id' => \Yii::t('app',  'Template ID'),
-            'exerciseset_id' => \Yii::t('app',  'Exercise ID'),
+            'exercise_id' => \Yii::t('app',  'Exercise ID'),
             'weight' => \Yii::t('app', 'Weight'),
+            'reps' => \Yii::t('app', 'Repetitions'),
+            'time_seconds' => \Yii::t('app', 'Time (seconds)'),
         ];
     }
 
@@ -46,8 +49,8 @@ class TemplateExerciseSet extends \yii\db\ActiveRecord
         return $this->hasOne(Template::class, ['id' => 'template_id']);
     }
 
-    public function getExerciseSet()
+    public function getExercise()
     {
-        return $this->hasOne(ExerciseSet::class, ['id' => 'exerciseset_id'])->joinWith('exercise');
+        return $this->hasOne(Exercise::class, ['id' => 'exercise_id'])->joinWith('videos');
     }
 }

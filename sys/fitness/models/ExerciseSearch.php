@@ -19,6 +19,7 @@ class ExerciseSearch extends Exercise
                 'description',
                 'is_pause',
                 'popularity_type',
+                'video',
                 'technique_video',
                 'created_at',
                 'updated_at',
@@ -64,6 +65,7 @@ class ExerciseSearch extends Exercise
 
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'description', $this->description])
+            ->andFilterWhere(['like', 'video', $this->video])
             ->andFilterWhere(['like', 'technique_video', $this->technique_video])
             ->andFilterWhere(['like', 'created_at', $this->created_at])
             ->andFilterWhere(['like', 'updated_at', $this->updated_at]);

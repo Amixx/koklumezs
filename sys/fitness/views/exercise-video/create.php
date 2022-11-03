@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 
-$this->title = \Yii::t('app',  'Create exercise set');
+$this->title = \Yii::t('app',  'Create exercise video');
 
 ?>
 <div class="lectures-create">

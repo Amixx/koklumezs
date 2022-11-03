@@ -4,11 +4,10 @@ namespace app\fitness\controllers;
 
 use app\fitness\models\Workout;
 use app\models\Users;
-use app\fitness\models\WorkoutExerciseSet;
+use app\fitness\models\WorkoutExercise;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-use yii\web\UnprocessableEntityHttpException;
 
 class WorkoutController extends Controller
 {
@@ -55,12 +54,14 @@ class WorkoutController extends Controller
         $workout->description = $post['description'];
 
         if ($workout->save()) {
-            foreach ($post['workoutExerciseSets'] as $workoutExSet) {
-                $workoutExerciseSet = new WorkoutExerciseSet;
-                $workoutExerciseSet->workout_id = $workout->id;
-                $workoutExerciseSet->exerciseset_id = $workoutExSet['exerciseSet']['id'];
-                $workoutExerciseSet->weight = $workoutExSet['weight'];
-                $workoutExerciseSet->save();
+            foreach ($post['workoutExercises'] as $workoutExSet) {
+                $workoutExercise = new WorkoutExercise;
+                $workoutExercise->workout_id = $workout->id;
+                $workoutExercise->exercise_id = $workoutExSet['exercise']['id'];
+                $workoutExercise->weight = $workoutExSet['weight'];
+                $workoutExercise->reps = $workoutExSet['reps'];
+                $workoutExercise->time_seconds = $workoutExSet['time_seconds'];
+                $workoutExercise->save();
             }
             Yii::$app->session->setFlash('success', Yii::t('app', 'Workout successfully created') . '!');
         } else {
@@ -72,7 +73,7 @@ class WorkoutController extends Controller
     {
         $query = Workout::find()
             ->where(['student_id' => $id])
-            ->joinWith('workoutExerciseSets')
+            ->joinWith('workoutExercises')
             ->joinWith('evaluation')
             ->joinWith('messageForCoach')
             ->orderBy(['id' => SORT_DESC]);

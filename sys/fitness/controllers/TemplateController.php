@@ -4,11 +4,10 @@ namespace app\fitness\controllers;
 
 use Yii;
 use app\fitness\models\Template;
-use app\fitness\models\TemplateExerciseSet;
+use app\fitness\models\TemplateExercise;
 use app\models\Users;
 use app\fitness\models\TemplateSearch;
 use yii\filters\VerbFilter;
-use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -67,12 +66,14 @@ class TemplateController extends Controller
             $template->title = $post['title'];
             $template->description = $post['description'];
             if ($template->save()) {
-                foreach ($post['templateExerciseSets'] as $tempEx) {
-                    $templateExerciseSet = new TemplateExerciseSet;
-                    $templateExerciseSet->template_id = $template->id;
-                    $templateExerciseSet->exerciseset_id = $tempEx['exerciseSet']['id'];
-                    $templateExerciseSet->weight = $tempEx['weight'];
-                    $templateExerciseSet->save();
+                foreach ($post['templateExercises'] as $tempEx) {
+                    $templateExercise = new TemplateExercise;
+                    $templateExercise->template_id = $template->id;
+                    $templateExercise->exercise_id = $tempEx['exercise'];
+                    $templateExercise->weight = $tempEx['weight'];
+                    $templateExercise->reps = $tempEx['reps'];
+                    $templateExercise->time_seconds = $tempEx['time_seconds'];
+                    $templateExercise->save();
                 }
             }
         }
@@ -91,30 +92,34 @@ class TemplateController extends Controller
             $model->description = $post['description'];
             $model->update();
 
-            foreach ($post['templateExerciseSets'] as $postTempEx) {
-                if (!isset($postTempEx['id'])) { // new exercise set
-                    $templateExerciseSet = new TemplateExerciseSet;
-                    $templateExerciseSet->template_id = $model->id;
-                    $templateExerciseSet->exerciseset_id = $postTempEx['exerciseSet']['id'];
-                    $templateExerciseSet->weight = $postTempEx['weight'];
-                    $templateExerciseSet->save();
+            foreach ($post['templateExercises'] as $postTempEx) {
+                if (!isset($postTempEx['id'])) { // new template exercise
+                    $templateExercise = new TemplateExercise;
+                    $templateExercise->template_id = $model->id;
+                    $templateExercise->exercise_id = $postTempEx['exercise']['id'];
+                    $templateExercise->weight = $postTempEx['weight'];
+                    $templateExercise->reps = $postTempEx['reps'];
+                    $templateExercise->time_seconds = $postTempEx['time_seconds'];
+                    $templateExercise->save();
                 }
             }
 
-            foreach ($model->templateExerciseSets as $tempExSet) {
+            foreach ($model->templateExercises as $tempEx) {
                 $tempExDeleted = true;
-                $tempExSetModel = TemplateExerciseSet::findOne($tempExSet['id']);
+                $tempExModel = TemplateExercise::findOne($tempEx['id']);
 
-                foreach ($post['templateExerciseSets'] as $postTempEx) {
+                foreach ($post['templateExercises'] as $postTempEx) {
                     if (!isset($postTempEx['id'])) {
                         $tempExDeleted = false;
-                    } else if ($tempExSet['id'] == $postTempEx['id']) {
+                    } else if ($tempEx['id'] == $postTempEx['id']) {
                         $tempExDeleted = false;
-                        $tempExSetModel->weight = $postTempEx['weight'];
-                        $tempExSetModel->update();
+                        $tempExModel->weight = $postTempEx['weight'];
+                        $tempExModel->reps = $postTempEx['reps'];
+                        $tempExModel->time_seconds = $postTempEx['time_seconds'];
+                        $tempExModel->update();
                     }
                 }
-                if ($tempExDeleted) $tempExSetModel->delete();
+                if ($tempExDeleted) $tempExModel->delete();
             }
         }
 
@@ -133,13 +138,13 @@ class TemplateController extends Controller
 
     public function actionApiList()
     {
-        $templates = Template::find()->joinWith('templateExerciseSets')->asArray()->all();
+        $templates = Template::find()->joinWith('templateExercises')->asArray()->all();
         return json_encode($templates);
     }
 
     public function actionApiGet($id)
     {
-        $model = Template::find()->where(['fitness_templates.id' => $id])->joinWith('templateExerciseSets')->asArray()->one();
+        $model = Template::find()->where(['fitness_templates.id' => $id])->joinWith('templateExercises')->asArray()->one();
         return json_encode($model);
     }
 

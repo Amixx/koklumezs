@@ -45,57 +45,62 @@ $this->title = $model->name;
                     );
                 }
             ],
+            'video',
             'technique_video',
+            [
+                'attribute' => 'exerciseTags',
+                'label' => Yii::t('app', 'Exercise tags'),
+                'value' => function ($dataProvider) {
+                    if (empty($dataProvider->exerciseTags)) return '';
+                    return join(', ', array_map(function ($tag) {
+                        return $tag['tag']['value'];
+                    }, $dataProvider->exerciseTags));
+                }
+            ]
         ],
     ]) ?>
 
-    <?php if ($model->sets && !empty($model->sets)) { ?>
-        <h3><?= Yii::t('app', 'Exercise sets') ?></h3>
-        <table class="table table-striped table-bordered">
-            <thead>
+    <div style="display:flex; flex-wrap:wrap; justify-content: space-between; align-items:center">
+        <h3><?= Yii::t('app', 'Exercise videos') ?></h3>
+
+        <div>
+            <a href="<?= Url::to(['fitness-exercise-videos/create', 'exercise_id' => $model->id]) ?>"
+               class="btn btn-primary">
+                Pievienot video
+            </a>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th><?= Yii::t('app', 'Repetitions') ?></th>
+            <th><?= Yii::t('app', 'Time (seconds)') ?></th>
+            <th><?= Yii::t('app', 'Video') ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($model->videos as $key => $video) { ?>
             <tr>
-                <th><?= Yii::t('app', 'Sequence no.') ?></th>
-                <th><?= Yii::t('app', 'Repetitions') ?></th>
-                <th><?= Yii::t('app', 'Time (seconds)') ?></th>
-                <th><?= Yii::t('app', 'Video') ?></th>
+                <td><?= $video->reps ?></td>
+                <td><?= $video->time_seconds ?></td>
+                <td><?= $video->value ?></td>
+                <td>
+                    <form action="<?= Url::to(['fitness-exercise-videos/update', 'id' => $video->id]) ?>"
+                          method="POST"
+                          style="display:inline-block">
+                        <input type="hidden" name="<?= Yii::$app->request->csrfParam; ?>"
+                               value="<?= Yii::$app->request->csrfToken; ?>"/>
+                        <button class="btn btn-primary">Rediģēt</button>
+                    </form>
+                    <form action="<?= Url::to(['fitness-exercise-videos/delete', 'id' => $video->id, 'exercise_id' => $model->id]) ?>"
+                          method="POST" style="display:inline-block">
+                        <input type="hidden" name="<?= Yii::$app->request->csrfParam; ?>"
+                               value="<?= Yii::$app->request->csrfToken; ?>"/>
+                        <button class="btn btn-danger">Dzēst</button>
+                    </form>
+                </td>
             </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($model->sets as $key => $set) { ?>
-                <tr>
-                    <td><?= $key + 1 ?></td>
-                    <td><?= $set->reps ?></td>
-                    <td><?= $set->time_seconds ?></td>
-                    <td><?= $set->video ?></td>
-                    <td>
-                        <form action="<?= Url::to(['fitness-exercise-sets/update', 'id' => $set->id]) ?>" method="POST"
-                              style="display:inline-block">
-                            <input type="hidden" name="<?= Yii::$app->request->csrfParam; ?>"
-                                   value="<?= Yii::$app->request->csrfToken; ?>"/>
-                            <button class="btn btn-primary">Rediģēt</button>
-                        </form>
-                        <form action="<?= Url::to(['fitness-exercise-sets/delete', 'id' => $set->id, 'exercise_id' => $model->id]) ?>"
-                              method="POST" style="display:inline-block">
-                            <input type="hidden" name="<?= Yii::$app->request->csrfParam; ?>"
-                                   value="<?= Yii::$app->request->csrfToken; ?>"/>
-                            <button class="btn btn-danger">Dzēst</button>
-                        </form>
-                    </td>
-                </tr>
-            <?php } ?>
-            </tbody>
-        </table>
-    <?php } ?>
-
-    <a href="<?= Url::to(['fitness-exercise-sets/create', 'exercise_id' => $model->id]) ?>" class="btn btn-primary">
-        Pievienot <?= $model->sets ? count($model->sets) + 1 : 1 ?>. piegājienu
-    </a>
-
-    <?php if ($model->exerciseTags && !empty($model->exerciseTags)) { ?>
-        <h3><?= Yii::t('app', 'Exercise tags') ?></h3>
-        <p><?= join(', ', array_map(function ($tag) {
-                return $tag['tag']['value'];
-            }, $model->exerciseTags)); ?>
-        </p>
-    <?php } ?>
+        <?php } ?>
+        </tbody>
+    </table>
 </div>

@@ -189,7 +189,7 @@ class ExerciseController extends Controller
             $query->andFilterWhere(['popularity_type' => $get['exercisePopularity']]);
         }
 
-        $exercises = $query->asArray()->all();
+        $exercises = $query->joinWith('videos')->asArray()->all();
 
         return json_encode($exercises);
     }

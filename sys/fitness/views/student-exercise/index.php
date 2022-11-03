@@ -1,6 +1,7 @@
 <?php
 
 use app\fitness\models\Workout;
+use app\fitness\models\WorkoutExercise;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
@@ -18,9 +19,11 @@ $this->title = \Yii::t('app', 'My workouts');
             </div>
         <?php } else {
             foreach ($unfinishedWorkouts as $workout) {
-                if (isset($workout["workoutExerciseSets"][0])) {
-                    $firstExerciseSet = $workout["workoutExerciseSets"][0]["exerciseSet"];
-                    $thumbStyle = ThumbnailHelper::getThumbnailStyle($firstExerciseSet["video"], $videoThumb);
+                if (isset($workout["workoutExercises"][0])) {
+                    $firstWorkoutExercise = $workout["workoutExercises"][0];
+                    $firstExercise = $firstWorkoutExercise["exercise"];
+                    $vid = WorkoutExercise::getVideoToDisplay($firstWorkoutExercise['id']);
+                    $thumbStyle = ThumbnailHelper::getThumbnailStyle($vid, $videoThumb);
 
                     $isNew = !$workout['opened_at'];
                     $isUnfinished = !$workout['evaluation'] && !$workout['abandoned'];
@@ -30,17 +33,17 @@ $this->title = \Yii::t('app', 'My workouts');
                             <!-- new workouts -->
                             <?php if ($isNew) { ?>
                                 <a class="lecture-thumb"
-                                   href="<?= Url::to(['fitness-student-exercises/view', 'id' => $workout["workoutExerciseSets"][0]["id"]]) ?>"
+                                   href="<?= Url::to(['fitness-student-exercises/view', 'id' => $workout["workoutExercises"][0]["id"]]) ?>"
                                    style="<?= $thumbStyle ?>"
                                 ></a>
                                 <!-- unfinished workouts -->
                             <?php } else if ($isUnfinished) {
-                                $firstUnopenedExerciseSet = Workout::getFirstUnopenedExerciseSet($workout);
+                                $firstUnopenedexercise = Workout::getFirstUnopenedExercise($workout);
                                 ?>
                                 <span class="lecture-thumb unfinished" style="<?= $thumbStyle ?>">
-                                 <?= Html::a(Yii::t('app', $firstUnopenedExerciseSet ? 'Continue workout' : 'Evaluate workout'), $firstUnopenedExerciseSet ? [
+                                 <?= Html::a(Yii::t('app', $firstUnopenedexercise ? 'Continue workout' : 'Evaluate workout'), $firstUnopenedexercise ? [
                                      'fitness-student-exercises/view',
-                                     'id' => $firstUnopenedExerciseSet->id,
+                                     'id' => $firstUnopenedexercise->id,
                                  ] : [
                                      'fitness-student-exercises/workout-summary',
                                      'workoutId' => $workout['id'],
@@ -55,8 +58,7 @@ $this->title = \Yii::t('app', 'My workouts');
                                  ]) ?>
                             </span>
                             <?php } ?>
-
-                            <p><?= Yii::t('app', 'First exercise') ?>: <?= $firstExerciseSet["exercise"]["name"] ?></p>
+                            <p><?= Yii::t('app', 'First exercise') ?>: <?= $firstExercise["name"] ?></p>
                         </div>
                     <?php }
                 }

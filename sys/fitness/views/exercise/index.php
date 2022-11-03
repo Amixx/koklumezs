@@ -67,6 +67,7 @@ $this->title = \Yii::t('app', 'Exercises');
                     ['prompt' => '-- Visi --', 'class' => 'form-control']
                 ),
             ],
+            'video',
             'technique_video',
             [
                 'attribute' => 'exerciseTag',

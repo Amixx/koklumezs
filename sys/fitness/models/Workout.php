@@ -63,12 +63,12 @@ class Workout extends \yii\db\ActiveRecord
         return $this->hasOne(Users::class, ['id' => 'student_id']);
     }
 
-    public function getWorkoutExerciseSets()
+    public function getWorkoutExercises()
     {
-        return $this->hasMany(WorkoutExerciseSet::class, ['workout_id' => 'id'])
-            ->joinWith('exerciseSet')
+        return $this->hasMany(WorkoutExercise::class, ['workout_id' => 'id'])
+            ->joinWith('exercise')
             ->joinWith('evaluation')
-            ->orderBy(['fitness_workoutexercisesets.id' => SORT_ASC]);
+            ->orderBy(['fitness_workoutexercises.id' => SORT_ASC]);
     }
 
     public function getMessageForCoach()
@@ -89,9 +89,9 @@ class Workout extends \yii\db\ActiveRecord
     public function getNextWorkoutExercise($workoutExercise)
     {
         $takeNext = false;
-        foreach ($this->workoutExerciseSets as $wExerciseSet) {
-            if ($takeNext) return $wExerciseSet;
-            if ($wExerciseSet->id == $workoutExercise->id) $takeNext = true;
+        foreach ($this->workoutExercises as $wExercise) {
+            if ($takeNext) return $wExercise;
+            if ($wExercise->id == $workoutExercise->id) $takeNext = true;
         }
         return null;
     }
@@ -114,7 +114,7 @@ class Workout extends \yii\db\ActiveRecord
         $query = self::find()
             ->where(['student_id' => $userContext->id])
             ->orderBy(['id' => SORT_DESC])
-            ->joinWith('workoutExerciseSets')
+            ->joinWith('workoutExercises')
             ->joinWith('evaluation');
 
         if ($finished) {
@@ -155,15 +155,15 @@ class Workout extends \yii\db\ActiveRecord
         $this->update();
     }
 
-    public static function getFirstUnopenedExerciseSet($workout)
+    public static function getFirstUnopenedExercise($workout)
     {
-        return WorkoutExerciseSet::find()
+        return WorkoutExercise::find()
             ->where(['workout_id' => $workout['id']])
-            ->joinWith('exerciseSet')
+            ->joinWith('exercise')
             ->andWhere(['fitness_exercises.is_pause' => false])
             ->joinWith('evaluation')
-            ->andWhere(['fitness_workoutexercisesetevaluation.id' => null])
-            ->orderBy(['fitness_workoutexercisesets.id' => SORT_ASC])
+            ->andWhere(['fitness_workoutexerciseevaluations.id' => null])
+            ->orderBy(['fitness_workoutexercises.id' => SORT_ASC])
             ->one();
     }
 }

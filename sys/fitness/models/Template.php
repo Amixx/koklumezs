@@ -50,8 +50,8 @@ class Template extends \yii\db\ActiveRecord
         return $this->hasOne(Users::class, ['id' => 'author_id']);
     }
 
-    public function getTemplateExerciseSets()
+    public function getTemplateExercises()
     {
-        return $this->hasMany(TemplateExerciseSet::class, ['template_id' => 'id'])->joinWith('exerciseSet');
+        return $this->hasMany(TemplateExercise::class, ['template_id' => 'id'])->joinWith('exercise');
     }
 }

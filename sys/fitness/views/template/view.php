@@ -32,7 +32,7 @@ $this->title = $model->title;
         ],
     ]) ?>
 
-    <?php if ($model->templateExerciseSets && !empty($model->templateExerciseSets)) { ?>
+    <?php if ($model->templateExercises && !empty($model->templateExercises)) { ?>
         <h3><?= Yii::t('app', 'Added exercises') ?></h3>
         <table class="table table-striped table-bordered">
             <thead>
@@ -45,13 +45,13 @@ $this->title = $model->title;
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($model->templateExerciseSets as $key => $tempExSet) { ?>
+                <?php foreach ($model->templateExercises as $key => $templateExercise) { ?>
                     <tr>
                         <td><?= $key + 1 ?></td>
-                        <td><?= $tempExSet->exerciseSet->exercise['name'] ?></td>
-                        <td><?= $tempExSet->weight ?></td>
-                        <td><?= $tempExSet->exerciseSet->reps ?></td>
-                        <td><?= $tempExSet->exerciseSet->time_seconds ?></td>
+                        <td><?= $templateExercise->exercise['name'] ?></td>
+                        <td><?= $templateExercise->weight ?></td>
+                        <td><?= $templateExercise->reps ?></td>
+                        <td><?= $templateExercise->time_seconds ?></td>
                     </tr>
                 <?php } ?>
             </tbody>

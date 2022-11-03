@@ -3,14 +3,14 @@
 namespace app\fitness\controllers;
 
 use Yii;
-use app\fitness\models\ExerciseSet;
+use app\fitness\models\ExerciseVideo;
 use app\models\Users;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-class ExerciseSetController extends Controller
+class ExerciseVideoController extends Controller
 {
     public function behaviors()
     {
@@ -39,15 +39,19 @@ class ExerciseSetController extends Controller
     public function actionCreate($exercise_id)
     {
         $post = Yii::$app->request->post();
-        $model = new ExerciseSet;
+        $model = new ExerciseVideo;
         $model->author_id = Yii::$app->user->identity->id;
         $model->exercise_id = $exercise_id;
 
-        if ($model->load($post) && $model->save()) {
-            return $this->redirect(Url::to(['fitness-exercises/view', 'id' => $exercise_id]));
+        if ($model->load($post)) {
+            if($model->save()) {
+                return $this->redirect(Url::to(['fitness-exercises/view', 'id' => $exercise_id]));
+            } else {
+//                var_dump($model);
+            }
         }
 
-        return $this->render('@app/fitness/views/exercise-set/create', [
+        return $this->render('@app/fitness/views/exercise-video/create', [
             'model' => $model,
         ]);
     }
@@ -63,7 +67,7 @@ class ExerciseSetController extends Controller
 
         Url::remember(Yii::$app->request->referrer);
 
-        return $this->render('@app/fitness/views/exercise-set/update', [
+        return $this->render('@app/fitness/views/exercise-video/update', [
             'model' => $model,
         ]);
     }
@@ -72,20 +76,20 @@ class ExerciseSetController extends Controller
     {
         $this->findModel($id)->delete();
 
-        Yii::$app->session->setFlash('success', Yii::t('app', 'Exercise set deleted!'));
+        Yii::$app->session->setFlash('success', Yii::t('app', 'Exercise video deleted!'));
 
         return $this->redirect(Url::to(['fitness-exercises/view', 'id' => $exercise_id]));
     }
 
     public function actionApiList()
     {
-        $exerciseSets = ExerciseSet::find()->asArray()->all();
-        return json_encode($exerciseSets);
+        $exerciseVideos = ExerciseVideo::find()->asArray()->all();
+        return json_encode($exerciseVideos);
     }
 
     protected function findModel($id)
     {
-        if (($model = ExerciseSet::findOne($id)) !== null) {
+        if (($model = ExerciseVideo::findOne($id)) !== null) {
             return $model;
         }
 

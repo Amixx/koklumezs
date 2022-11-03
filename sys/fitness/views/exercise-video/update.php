@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 
-$this->title = \Yii::t('app', 'Edit exercise set');
+$this->title = \Yii::t('app', 'Edit exercise video');
 ?>
 <div class="lectures-update">
     <h1><?= Html::encode($this->title) ?></h1>

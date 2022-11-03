@@ -47,6 +47,7 @@ $tagSelected = function ($tagId) use ($selectedTagIds) {
                 'RARE' => Yii::t('app', 'Rare'),
             ],
             ['prompt' => '']) ?>
+        <?= $form->field($model, 'video')->widget(InputFile::class, $inputFileOptions); ?>
         <?= $form->field($model, 'technique_video')->widget(InputFile::class, $inputFileOptions); ?>
 
         <div class="form-group field-season">

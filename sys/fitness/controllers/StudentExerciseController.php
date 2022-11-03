@@ -6,8 +6,8 @@ use app\fitness\models\Workout;
 use app\fitness\models\PostWorkoutMessage;
 use app\fitness\models\WorkoutEvaluation;
 use app\models\Lectures;
-use app\fitness\models\WorkoutExerciseSet;
-use app\fitness\models\WorkoutExerciseSetEvaluation;
+use app\fitness\models\WorkoutExercise;
+use app\fitness\models\WorkoutExerciseEvaluation;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -67,22 +67,19 @@ class StudentExerciseController extends Controller
         $school = $userContext->getSchool();
         $videoThumb = $school->video_thumbnail;
 
-        $workoutExerciseSet = $this->findModel($id);
-        $nextWorkoutExercise = $workoutExerciseSet->workout->getNextWorkoutExercise($workoutExerciseSet);
-        $difficultyEvaluation = WorkoutExerciseSetEvaluation::find()->where([
-            'workoutexerciseset_id' => $id,
-            'user_id' => $userContext->id,
-        ])->one();
+        $workoutExercise = $this->findModel($id);
+        $nextWorkoutExercise = $workoutExercise->workout->getNextWorkoutExercise($workoutExercise);
+        $difficultyEvaluation = WorkoutExerciseEvaluation::find()->where(['workoutexercise_id' => $id])->one();
 
-        $workoutExerciseSet->workout->setAsOpened();
+        $workoutExercise->workout->setAsOpened();
 
         $post = Yii::$app->request->post();
         if (isset($post["difficulty-evaluation"])) {
             if ($difficultyEvaluation) {
                 $difficultyEvaluation->evaluation = (int)$post["difficulty-evaluation"];
             } else {
-                $evaluation = new WorkoutExerciseSetEvaluation();
-                $evaluation->workoutexerciseset_id = $id;
+                $evaluation = new WorkoutExerciseEvaluation();
+                $evaluation->workoutexercise_id = $id;
                 $evaluation->user_id = $userContext->id;
                 $evaluation->evaluation = (int)$post["difficulty-evaluation"];
                 $evaluation->save();
@@ -94,7 +91,7 @@ class StudentExerciseController extends Controller
         }
 
         return $this->render('@app/fitness/views/student-exercise/view', [
-            'workoutExerciseSet' => $workoutExerciseSet,
+            'workoutExercise' => $workoutExercise,
             'nextWorkoutExercise' => $nextWorkoutExercise,
             'videoThumb' => $videoThumb,
             'difficultyEvaluation' => $difficultyEvaluation,
@@ -161,7 +158,7 @@ class StudentExerciseController extends Controller
      */
     protected function findModel($id)
     {
-        $model = WorkoutExerciseSet::find()->where(['fitness_workoutexercisesets.id' => $id])->joinWith('exerciseSet')->one();
+        $model = WorkoutExercise::find()->where(['fitness_workoutexercises.id' => $id])->joinWith('exercise')->one();
         if (($model) !== null) {
             return $model;
         }

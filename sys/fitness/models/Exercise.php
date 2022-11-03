@@ -19,7 +19,7 @@ class Exercise extends \yii\db\ActiveRecord
             [['author_id', 'name', 'popularity_type'], 'required'],
             [['author_id'], 'integer'],
             [['is_pause'], 'boolean'],
-            [['name', 'description', 'technique_video', 'popularity_type'], 'string'],
+            [['name', 'description', 'video', 'technique_video', 'popularity_type'], 'string'],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author_id' => 'id']],
         ];
     }
@@ -31,6 +31,7 @@ class Exercise extends \yii\db\ActiveRecord
             'author_id' => \Yii::t('app',  'Author ID'),
             'name' => \Yii::t('app',  'Title'),
             'description' => \Yii::t('app',  'Apraksts'),
+            'video' => \Yii::t('app', 'Video'),
             'technique_video' => \Yii::t('app', 'Technique video'),
             'is_pause' => \Yii::t('app', 'Is pause'),
             'popularity_type' => \Yii::t('app', 'Popularity type'),
@@ -57,11 +58,15 @@ class Exercise extends \yii\db\ActiveRecord
 
     public function getSets()
     {
-        return $this->hasMany(ExerciseSet::class, ['exercise_id' => 'id']);
+        return $this->hasMany(ExerciseVideo::class, ['exercise_id' => 'id']);
     }
 
     public function getExerciseTags()
     {
         return $this->hasMany(ExerciseTag::class, ['exercise_id' => 'id'])->joinWith('tag');
+    }
+
+    public function getVideos(){
+        return $this->hasMany(ExerciseVideo::class, ['exercise_id' => 'id']);
     }
 }

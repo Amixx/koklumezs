@@ -737,10 +737,10 @@ return [
     'Exercise technique' => 'Vingrojuma tehnika',
     'Next exercise' => 'Nākamais vingrojums',
     'Finish workout' => 'Pabeigt treniņu',
-    'Create exercise set' => 'Izveidot vingrojuma piegājienu',
+    'Create exercise video' => 'Izveidot vingrojuma video',
     'Sequence no.' => 'Kārtas nr.',
-    'Exercise set deleted!' => 'Vingrojuma piegājiens dzēsts!',
-    'Exercise sets' => 'Vingrojuma piegājieni',
+    'Exercise video deleted!' => 'Vingrojuma video dzēsts!',
+    'Exercise videos' => 'Vingrojuma video',
     'Time (seconds)' => 'Laiks (sekundēs)',
     'Tag' => 'Tags',
     'Tags' => 'Tagi',
@@ -768,5 +768,6 @@ return [
     'Has been abandoned' => 'Vai ir ticis pamests',
     'Workout has been abandoned' => 'Treniņš veiksmīgi pamests',
     'Evaluate workout' => 'Novērtēt treniņu',
-    'Workout summary' => 'Treniņa kopsavilkums'
+    'Workout summary' => 'Treniņa kopsavilkums',
+    'Edit exercise video' => 'Rediģēt treniņa video',
 ];

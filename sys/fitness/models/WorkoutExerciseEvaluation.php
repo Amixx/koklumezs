@@ -5,11 +5,11 @@ namespace app\fitness\models;
 use Yii;
 use app\models\Users;
 
-class WorkoutExerciseSetEvaluation extends \yii\db\ActiveRecord
+class WorkoutExerciseEvaluation extends \yii\db\ActiveRecord
 {
     public static function tableName()
     {
-        return 'fitness_workoutexercisesetevaluation';
+        return 'fitness_workoutexerciseevaluations';
     }
 
     /**
@@ -18,11 +18,11 @@ class WorkoutExerciseSetEvaluation extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['workoutexerciseset_id', 'user_id', 'evaluation'], 'required'],
-            [['workoutexerciseset_id', 'user_id', 'evaluation'], 'integer'],
+            [['workoutexercise_id', 'user_id', 'evaluation'], 'required'],
+            [['workoutexercise_id', 'user_id', 'evaluation'], 'integer'],
             [['created'], 'safe'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['user_id' => 'id']],
-            [['workoutexerciseset_id'], 'exist', 'skipOnError' => true, 'targetClass' => WorkoutExerciseSet::class, 'targetAttribute' => ['workoutexerciseset_id' => 'id']],
+            [['workoutexercise_id'], 'exist', 'skipOnError' => true, 'targetClass' => WorkoutExercise::class, 'targetAttribute' => ['workoutexercise_id' => 'id']],
         ];
     }
 
@@ -33,7 +33,7 @@ class WorkoutExerciseSetEvaluation extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'workoutexerciseset_id' => \Yii::t('app',  'Workout exercise set'),
+            'workoutexercise_id' => \Yii::t('app',  'Workout exercise'),
             'user_id' => \Yii::t('app',  'Client'),
             'evaluation' => \Yii::t('app',  'Evaluation'),
             'created' => \Yii::t('app',  'Created'),
@@ -51,8 +51,8 @@ class WorkoutExerciseSetEvaluation extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getWorkoutExerciseSet()
+    public function getWorkoutExercise()
     {
-        return $this->hasOne(WorkoutExerciseSet::class, ['id' => 'workoutexerciseset_id']);
+        return $this->hasOne(WorkoutExercise::class, ['id' => 'workoutexercise_id']);
     }
 }

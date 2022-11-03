@@ -102,6 +102,7 @@ class UserLayoutHelper extends LayoutHelper
                 ['label' => '+', 'url' => ['/fitness-templates/create'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-templates']),],
                 ['label' => Yii::t('app',  'Tags'), 'url' => ['/fitness-tags'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-tags']),],
                 ['label' => '+', 'url' => ['/fitness-tags/create'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-tags']),],
+                ['label' => Yii::t('app',  'Settings'), 'url' => ['/school-settings'], 'active' =>  in_array(Yii::$app->controller->id, ['school-settings'])],
             ];
 
         $instrumentTeacherMenu =

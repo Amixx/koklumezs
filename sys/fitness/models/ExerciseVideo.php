@@ -6,19 +6,19 @@ use app\models\Users;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
-class ExerciseSet extends \yii\db\ActiveRecord
+class ExerciseVideo extends \yii\db\ActiveRecord
 {
     public static function tableName()
     {
-        return 'fitness_exercisesets';
+        return 'fitness_exercisevideos';
     }
 
     public function rules()
     {
         return [
-            [['author_id', 'exercise_id', 'video'], 'required'],
+            [['author_id', 'exercise_id', 'value'], 'required'],
             [['author_id', 'exercise_id', 'reps', 'time_seconds'], 'integer'],
-            [['video'], 'string'],
+            [['value'], 'string'],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author_id' => 'id']],
         ];
     }
@@ -31,7 +31,7 @@ class ExerciseSet extends \yii\db\ActiveRecord
             'exercise_id' => \Yii::t('app',  'Exercise ID'),
             'reps' => \Yii::t('app',  'Repetitions'),
             'time_seconds' => \Yii::t('app',  'Time (seconds)'),
-            'video' => \Yii::t('app', 'Video'),
+            'value' => \Yii::t('app', 'Video'),
         ];
     }
 
