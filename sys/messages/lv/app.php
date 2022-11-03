@@ -770,4 +770,5 @@ return [
     'Evaluate workout' => 'Novērtēt treniņu',
     'Workout summary' => 'Treniņa kopsavilkums',
     'Edit exercise video' => 'Rediģēt treniņa video',
+    'To next exercise' => 'Uz nākamo vingrojumu',
 ];

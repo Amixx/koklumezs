@@ -29,14 +29,15 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExercise->exercise->n
             </div>
             <div class="view-workout__actions">
                 <?php if (!$workoutExercise->exercise->is_pause) { ?>
-                    <div><?= $this->render(
+                    <div>
+                        <?= $this->render(
                             "amount-evaluation",
                             ['difficultyEvaluation' => $difficultyEvaluation]) ?>
                     </div>
                 <?php } ?>
                 <?php if ($difficultyEvaluation || $workoutExercise->exercise->is_pause) { ?>
                     <?php
-                    $btnText = \Yii::t('app', $nextWorkoutExercise ? 'Next exercise' : 'Finish workout');
+                    $btnText = \Yii::t('app', $nextWorkoutExercise ? 'To next exercise' : 'Finish workout');
                     $btnLink = $nextWorkoutExercise
                         ? ["fitness-student-exercises/view", 'id' => $nextWorkoutExercise->id]
                         : ["fitness-student-exercises/workout-summary", 'workoutId' => $workoutExercise->workout_id];
@@ -45,6 +46,13 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExercise->exercise->n
                         $btnLink,
                         ['class' => 'btn btn-success exercise-action-btn']
                     ); ?>
+                <?php } ?>
+
+                <?php if($nextWorkoutExercise && !$nextWorkoutExercise->exercise->is_pause) { ?>
+                    <div style="margin-top: 24px;">
+                        <h4 style="margin-bottom: 8px;">Nākamais vingrojums</h4>
+                        <p><?= $nextWorkoutExercise->exercise->name ?> - <?= $nextWorkoutExercise->repsWeightTimeFormatted() ?></p>
+                    </div>
                 <?php } ?>
             </div>
         </div>
@@ -66,11 +74,11 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExercise->exercise->n
         <ul class="view-workout__exercise-list">
             <?php
             $passedCurrentExercise = false;
-            foreach($workoutExercise->workout->workoutExercises as $wExercise) {
+            foreach ($workoutExercise->workout->workoutExercises as $wExercise) {
                 $class = '';
-                if($passedCurrentExercise) {
+                if ($passedCurrentExercise) {
                     $class = 'future';
-                } else if($wExercise->id === $workoutExercise->id) {
+                } else if ($wExercise->id === $workoutExercise->id) {
                     $passedCurrentExercise = true;
                     $class = 'current';
                 } else {
@@ -79,8 +87,13 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExercise->exercise->n
                 ?>
                 <li class="<?= $class ?>">
                     <div class="view-workout__other-exercise-item">
-                        <span><?= $wExercise->exercise->name ?></span>
-                        <?php if($class === 'future' && $wExercise->exercise->technique_video) { ?>
+                        <span>
+                            <span><?= $wExercise->exercise->name ?></span>
+                            <?php if ($wExercise->weight) { ?>
+                                <span>(<strong><?= $wExercise->weight ?></strong> kg)</span>
+                            <?php } ?>
+                        </span>
+                        <?php if ($class === 'future' && $wExercise->exercise->technique_video) { ?>
                             <button class="btn btn-primary fitness-toggle-technique-vid">
                                 <span class="glyphicon glyphicon-menu-down"></span>
                             </button>
