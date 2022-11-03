@@ -645,13 +645,23 @@ $(document).ready(function () {
                     return this.workout.workoutExercises.filter(x => x.exercise.id === exercise.id)
                 },
                 addExercise(exercise) {
-                    this.workout.workoutExercises.push({
+                    const setsOfExercise = this.workout.workoutExercises.filter(we => we.exercise.id === exercise.id)
+                    const lastSetOfExercise = setsOfExercise.length ? setsOfExercise.pop() : null
+
+                    const newWorkoutExercise = {
                         exercise,
                         sequenceNo: this.addedExercisesOfSet(exercise).length + 1,
                         reps: null,
                         time_seconds: null,
                         weight: null,
-                    })
+                    }
+                    if(lastSetOfExercise) {
+                        newWorkoutExercise.reps = lastSetOfExercise.reps
+                        newWorkoutExercise.time_seconds = lastSetOfExercise.time_seconds
+                        newWorkoutExercise.weight = lastSetOfExercise.weight
+                    }
+
+                    this.workout.workoutExercises.push(newWorkoutExercise)
                 },
                 removeExercise(index) {
                     const removed = this.workout.workoutExercises.splice(index, 1)
@@ -1030,7 +1040,6 @@ $(document).ready(function () {
                     }))
                 },
                 addExercise(exercise) {
-                    console.log(exercise)
                     this.template.templateExercises.push({
                         exercise,
                         weight: null,
