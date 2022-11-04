@@ -28,9 +28,9 @@ class Exercise extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'author_id' => \Yii::t('app',  'Author ID'),
-            'name' => \Yii::t('app',  'Title'),
-            'description' => \Yii::t('app',  'Apraksts'),
+            'author_id' => \Yii::t('app', 'Author ID'),
+            'name' => \Yii::t('app', 'Title'),
+            'description' => \Yii::t('app', 'Apraksts'),
             'video' => \Yii::t('app', 'Video'),
             'technique_video' => \Yii::t('app', 'Technique video'),
             'is_pause' => \Yii::t('app', 'Is pause'),
@@ -66,7 +66,49 @@ class Exercise extends \yii\db\ActiveRecord
         return $this->hasMany(ExerciseTag::class, ['exercise_id' => 'id'])->joinWith('tag');
     }
 
-    public function getVideos(){
+    public function getVideos()
+    {
         return $this->hasMany(ExerciseVideo::class, ['exercise_id' => 'id']);
+    }
+
+    public function getInterchangeableExercises($joinWithExercises = false)
+    {
+        $query = InterchangeableExercise::find()->where(['or', ['exercise_id_1' => $this->id], ['exercise_id_2' => $this->id]]);
+        if ($joinWithExercises) {
+            $query->joinWith('exercise1');
+            $query->joinWith('exercise2');
+        }
+        return $query->asArray()->all();
+    }
+
+    public function getInterchangeableExerciseIds()
+    {
+        $interchangeableExercises = $this->getInterchangeableExercises();
+        $ids = [];
+        foreach ($interchangeableExercises as $ie) {
+            if ($ie['exercise_id_1'] != $this->id) $ids[] = $ie['exercise_id_1'];
+            else if ($ie['exercise_id_2'] != $this->id) $ids[] = $ie['exercise_id_2'];
+        }
+        return $ids;
+    }
+
+    public function getInterchangeableOtherExercises(){
+        $interchangeableExercises = $this->getInterchangeableExercises(true);
+        return array_map(function($interchangeableExercise){
+            return $interchangeableExercise['exercise_id_1'] == $this->id
+                ? $interchangeableExercise['exercise2']
+                : $interchangeableExercise['exercise1'];
+        }, $interchangeableExercises);
+    }
+
+    public function getInterchangeableExercisesSelect2Options()
+    {
+        $otherExercises = $this->getInterchangeableOtherExercises();
+        return array_map(function($otherExercise){
+           return [
+                'id' => $otherExercise['id'],
+                'text' => $otherExercise['name'],
+            ];
+        }, $otherExercises);
     }
 }

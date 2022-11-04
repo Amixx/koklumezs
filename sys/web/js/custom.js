@@ -165,6 +165,15 @@ $(document).ready(function() {
     $('.fitness-toggle-technique-vid').on('click', function(){
         $(this).parent().next().toggleClass('hidden')
     });
+
+    $('select#interchangeable-exercises').select2({
+        minimumInputLength: 3,
+        ajax: {
+            url: getUrl('/fitness-exercises/for-select'),
+            delay: 250,
+            dataType: 'json',
+        }
+    })
 });
 
 

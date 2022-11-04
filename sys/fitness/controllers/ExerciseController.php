@@ -2,13 +2,13 @@
 
 namespace app\fitness\controllers;
 
+use app\fitness\models\InterchangeableExercise;
 use Yii;
 use app\fitness\models\Exercise;
 use app\models\Users;
 use app\fitness\models\ExerciseSearch;
 use app\fitness\models\ExerciseTag;
 use app\fitness\models\Tag;
-use Exception;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
@@ -94,6 +94,8 @@ class ExerciseController extends Controller
         $post = Yii::$app->request->post();
         $model = $this->findModel($id);
         $selectedTagIds = ArrayHelper::getColumn($model['exerciseTags'], 'tag_id');
+        $interchangeableExerciseIds = $model->getInterchangeableExerciseIds();
+        $interchangeableExerciseSelectedOptions = $model->getInterchangeableExercisesSelect2Options();
         $tags = Tag::find()->asArray()->all();
 
         if ($model->load($post) && $model->save()) {
@@ -116,7 +118,32 @@ class ExerciseController extends Controller
                 }
             }
 
-            return $this->redirect(Url::previous());
+
+            if (isset($post['interchangeableExercises'])) {
+                $removedInterchangeableExerciseIds = array_diff($interchangeableExerciseIds, $post['interchangeableExercises']);
+                $addedInterchangeableExerciseIds = array_diff($post['interchangeableExercises'], $interchangeableExerciseIds);
+
+                foreach ($addedInterchangeableExerciseIds as $ieid) {
+                    if($ieid == $model->id) continue;
+                    $interchangeableExercise = new InterchangeableExercise;
+                    $interchangeableExercise->exercise_id_1 = $model->id;
+                    $interchangeableExercise->exercise_id_2 = $ieid;
+                    $interchangeableExercise->save();
+                }
+
+                InterchangeableExercise::deleteAll(['or',
+                    ['in', 'exercise_id_1', $removedInterchangeableExerciseIds],
+                    ['in', 'exercise_id_2', $removedInterchangeableExerciseIds]
+                ]);
+            } else {
+                InterchangeableExercise::deleteAll(['or',
+                    ['in', 'exercise_id_1', $interchangeableExerciseIds],
+                    ['in', 'exercise_id_2', $interchangeableExerciseIds]
+                ]);
+            }
+
+
+            return $this->redirect(['fitness-exercises/view', 'id' => $id]);
         }
 
         Url::remember(Yii::$app->request->referrer);
@@ -125,6 +152,7 @@ class ExerciseController extends Controller
             'model' => $model,
             'tags' => $tags,
             'selectedTagIds' => $selectedTagIds,
+            'interchangeableExerciseSelectedOptions' => $interchangeableExerciseSelectedOptions,
         ]);
     }
 
@@ -185,7 +213,7 @@ class ExerciseController extends Controller
         }
 
         $query->andFilterWhere(['is_pause' => !!(isset($get['onlyPauses']) && $get['onlyPauses'])]);
-        if(isset($get['exercisePopularity']) && $get['exercisePopularity']) {
+        if (isset($get['exercisePopularity']) && $get['exercisePopularity']) {
             $query->andFilterWhere(['popularity_type' => $get['exercisePopularity']]);
         }
 
@@ -194,20 +222,41 @@ class ExerciseController extends Controller
         return json_encode($exercises);
     }
 
-    public function actionApiCreate(){
+    public function actionApiCreate()
+    {
         $post = Yii::$app->request->post();
         $exercise = new Exercise;
         $exercise->author_id = Yii::$app->user->identity->id;
         $exercise->name = $post['name'];
-        if(isset($post['description']) && $post['description']) {
+        if (isset($post['description']) && $post['description']) {
             $exercise->description = $post['description'];
         }
         $exercise->popularity_type = 'AVERAGE';
 
-        if($exercise->save()) {
+        if ($exercise->save()) {
             return json_encode(ArrayHelper::toArray($exercise));
         }
         return null;
+    }
+
+    public function actionForSelect()
+    {
+        $get = Yii::$app->request->get();
+        $exerciseNameSearchTerm = $get['term'];
+
+        $exercises = Exercise::find()->where(['like', 'name', $exerciseNameSearchTerm])->limit(50)->asArray()->all();
+        $select2Options = array_map(function ($exercise) {
+            return [
+                'id' => $exercise['id'],
+                'text' => $exercise['name'],
+            ];
+        }, $exercises);
+
+        $response = [
+            'results' => $select2Options
+        ];
+
+        return json_encode($response);
     }
 
     protected function findModel($id)

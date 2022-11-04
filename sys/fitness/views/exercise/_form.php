@@ -50,12 +50,24 @@ $tagSelected = function ($tagId) use ($selectedTagIds) {
         <?= $form->field($model, 'video')->widget(InputFile::class, $inputFileOptions); ?>
         <?= $form->field($model, 'technique_video')->widget(InputFile::class, $inputFileOptions); ?>
 
-        <div class="form-group field-season">
+        <div class="form-group">
             <label class="control-label" for="tags"> <?= \Yii::t('app', 'Tags') ?></label>
             <select id="tags" class="form-control" name="tags[]" aria-required="true" aria-invalid="false" multiple>
                 <option value=""></option>
                 <?php foreach ($tags as $tag) { ?>
                     <option value="<?= $tag['id'] ?>" <?= $tagSelected($tag['id']) ? 'selected' : '' ?>><?= $tag['value'] ?></option>
+                <?php } ?>
+            </select>
+            <div class="help-block"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="interchangeable-exercises"> <?= \Yii::t('app', 'Interchangeable exercises') ?></label>
+            <select id="interchangeable-exercises" class="form-control" name="interchangeableExercises[]" aria-required="true" aria-invalid="false" multiple>
+                <option value=""></option>
+
+                <?php foreach ($interchangeableExerciseSelectedOptions as $option) { ?>
+                    <option value="<?= $option['id'] ?>" selected><?= $option['text'] ?></option>
                 <?php } ?>
             </select>
             <div class="help-block"></div>

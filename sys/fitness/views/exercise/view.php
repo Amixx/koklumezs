@@ -103,4 +103,13 @@ $this->title = $model->name;
         <?php } ?>
         </tbody>
     </table>
+
+    <div>
+        <h3><?= Yii::t('app', 'Interchangeable exercises') ?></h3>
+        <div>
+            <?php foreach($model->getInterchangeableOtherExercises() as $exercise) { ?>
+                <span><?= $exercise['name'] ?></span>,
+            <?php } ?>
+        </div>
+    </div>
 </div>

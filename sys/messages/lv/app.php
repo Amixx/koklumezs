@@ -771,4 +771,5 @@ return [
     'Workout summary' => 'Treniņa kopsavilkums',
     'Edit exercise video' => 'Rediģēt treniņa video',
     'To next exercise' => 'Uz nākamo vingrojumu',
+    'Interchangeable exercises' => 'Aizvietojami vingrojumi'
 ];

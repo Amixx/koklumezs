@@ -18,6 +18,7 @@ $this->title = \Yii::t('app', 'Exercises');
             ['class' => 'yii\grid\SerialColumn'],
             'name',
             [
+                'attribute' => 'description',
                 'value' => function ($dataProvider) {
                     $desc = $dataProvider['description'];
                     if (!$desc) return '';
