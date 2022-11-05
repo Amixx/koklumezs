@@ -100,6 +100,15 @@ class WorkoutExercise extends \yii\db\ActiveRecord
         return $this->exercise->video;
     }
 
+    public function timeFormatted()
+    {
+        if (!$this->time_seconds) return '0:00';
+        $seconds = $this->time_seconds % 60;
+        $min = floor($this->time_seconds / 60);
+        if ($min == 0) return "0:{$seconds}";
+        else return "{$min}:{$seconds}";
+    }
+
     public static function getVideoToDisplay($workoutExerciseId)
     {
         $workoutExercise = self::findOne(['id' => $workoutExerciseId]);

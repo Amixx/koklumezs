@@ -57,6 +57,30 @@ Vue.component('added-exercise', {
             required: true,
         },
     },
+    data(){
+        const pauseLengths = [
+            15,
+            30,
+            45,
+            60,
+            90,
+            120,
+            150,
+            180,
+            240,
+            300,
+            360,
+        ];
+        const pauseLengthOptions =  pauseLengths.map(seconds => ({ value: seconds, label: seconds }));
+        const selectedPauseLength = this.tempExercise.time_seconds
+            ? pauseLengthOptions.find(x => x.value === this.tempExercise.time_seconds)
+            : pauseLengthOptions[1];
+
+      return {
+          pauseLengthOptions: pauseLengthOptions,
+          selectedPauseLength: selectedPauseLength,
+      };
+    },
     computed: {
         specialVideoShownMessage() {
             if (!this.tempExercise.exercise.videos) return null;
@@ -95,6 +119,14 @@ Vue.component('added-exercise', {
             return null;
         }
     },
+    watch: {
+        selectedPauseLength: {
+            handler(n){
+                if(n) this.tempExercise.time_seconds = n.value;
+            },
+            immediate: true
+        }
+    },
     template: `
     <tr>
         <td>{{ index+1 }}
@@ -122,8 +154,12 @@ Vue.component('added-exercise', {
             </div>
         </td>
         <td>
-            <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
-                <input class="form-control" v-model="tempExercise.time_seconds" style="width:60px;">
+            <div class="form-group">
+                 <v-select
+                    label="label"
+                    :options="pauseLengthOptions"
+                    v-model="selectedPauseLength"
+                 ></v-select>
             </div>
         </td>
         <td>
@@ -193,7 +229,7 @@ Vue.component('last-workouts-table', {
                             <tbody>
                                  <tr v-for="(workoutExercise, i) in workout.workoutExercises" :key="i">
                                     <td>{{ i+1 }}</td>
-                                    <td>{{ workoutExercise.exercise.name }}</td>
+                                    <td>{{ workoutExercise.exercise ? workoutExercise.exercise.name : 'Dzēsts vingrojums' }}</td>
                                     <td>{{ workoutExercise.reps }}</td>
                                     <td>{{ workoutExercise.time_seconds }}</td>
                                     <td>{{ workoutExercise.weight }}</td>

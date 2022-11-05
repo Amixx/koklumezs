@@ -1643,3 +1643,48 @@ div.has-experience.active, div.rent.active {
         flex-basis: calc(50% - 8px);
     }
 }
+
+
+/* Sets the containers height and width */
+.base-timer {
+    position: relative;
+    height: 50%;
+    width: 50%;
+    margin: auto;
+}
+
+/* Removes SVG styling that would hide the time label */
+.base-timer__circle {
+    fill: none;
+    stroke: none;
+}
+
+/* The SVG path that displays the timer's progress */
+.base-timer__path-elapsed {
+    stroke-width: 7px;
+    stroke: grey;
+}
+
+.base-timer__label {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+}
+
+.base-timer__path-remaining {
+    stroke-width: 7px;
+    stroke-linecap: round;
+    transform: rotate(90deg);
+    transform-origin: center;
+    transition: 1s linear all;
+    stroke: #28a745;
+}
+
+.base-timer__svg {
+    transform: scaleX(-1);
+}
