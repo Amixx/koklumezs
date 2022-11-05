@@ -35,4 +35,13 @@ class OneRepMaxCalculator
             'max' => $maxOneRepMax,
         ];
     }
+
+    public static function oneRepMaxRangeToAverage($oneRepMaxRange)
+    {
+        if (is_null($oneRepMaxRange)) return null;
+        if (is_null($oneRepMaxRange['min'])) return $oneRepMaxRange['max'];
+        if (is_null($oneRepMaxRange['max'])) return $oneRepMaxRange['min'];
+
+        return ($oneRepMaxRange['min'] + $oneRepMaxRange['max']) / 2;
+    }
 }

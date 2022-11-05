@@ -20,13 +20,14 @@ class WorkoutExercise extends \yii\db\ActiveRecord
     {
         return [
             [['workout_id', 'exercise_id'], 'required'],
-            [['workout_id', 'exercise_id', 'reps', 'time_seconds'], 'integer'],
+            [['workout_id', 'exercise_id', 'replaced_by_exercise_id', 'reps', 'time_seconds'], 'integer'],
             [
                 ['weight'], 'number',
                 'numberPattern' => '/^\d+(.\d{1,2})?$/'
             ],
             [['workout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workout::class, 'targetAttribute' => ['workout_id' => 'id']],
             [['exercise_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exercise::class, 'targetAttribute' => ['exercise_id' => 'id']],
+            [['replaced_by_exercise_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exercise::class, 'targetAttribute' => ['replaced_by_exercise_id' => 'id']],
         ];
     }
 
@@ -36,6 +37,7 @@ class WorkoutExercise extends \yii\db\ActiveRecord
             'id' => 'ID',
             'workout_id' => \Yii::t('app', 'Workout ID'),
             'exercise_id' => \Yii::t('app', 'Exercise ID'),
+            'replaced_by_exercise_id' => \Yii::t('app', 'Replaced by exercise ID'),
             'weight' => \Yii::t('app', 'Weight'),
             'reps' => \Yii::t('app', 'Repetitions'),
             'time_seconds' => \Yii::t('app', 'Time (seconds)'),
@@ -58,9 +60,41 @@ class WorkoutExercise extends \yii\db\ActiveRecord
         return $this->hasOne(Exercise::class, ['id' => 'exercise_id'])->joinWith('videos');
     }
 
+    public function getReplacementExercise()
+    {
+        return $this->hasOne(Exercise::class, ['id' => 'replaced_by_exercise_id'])->joinWith('videos');
+    }
+
     public function getEvaluation()
     {
         return $this->hasOne(WorkoutExerciseEvaluation::class, ['workoutexercise_id' => 'id']);
+    }
+
+    public function isReplaced()
+    {
+        return !!$this->replaced_by_exercise_id;
+    }
+
+    public function getExerciseForStudent()
+    {
+        return $this->isReplaced() ? $this->replacementExercise : $this->exercise;
+    }
+
+    private function getWeightRatio()
+    {
+        if (!$this->isReplaced()) return 1;
+
+        $lastTwoWeeksOneRepMaxAverages = [
+            'original' => $this->exercise->lastTwoWeeksAvgOneRepMax(),
+            'replacement' => $this->replacementExercise->lastTwoWeeksAvgOneRepMax()
+        ];
+
+        if(is_null($lastTwoWeeksOneRepMaxAverages['original']) || is_null($lastTwoWeeksOneRepMaxAverages['replacement'])){
+            // TODO: what to do in this situation?
+            return 1;
+        }
+
+        return $lastTwoWeeksOneRepMaxAverages['replacement'] / $lastTwoWeeksOneRepMaxAverages['original'];
     }
 
     public function repsWeightTimeFormatted()
@@ -69,6 +103,9 @@ class WorkoutExercise extends \yii\db\ActiveRecord
         $hasReps = !!$this->reps;
         $hasTime = !!$this->time_seconds;
 
+        $weightRatio = $this->getWeightRatio();
+        $computedWeight = round($this->weight * $weightRatio, 1);
+
         $res = '';
         if ($hasReps) {
             $res = wrapInBold($this->reps) . ' reizes';
@@ -76,7 +113,7 @@ class WorkoutExercise extends \yii\db\ActiveRecord
             $res = wrapInBold($this->time_seconds) . ' sekundes';
         }
         if ($hasWeight) {
-            $res .= ' ar ' . wrapInBold($this->weight) . ' kg svaru';
+            $res .= ' ar ' . wrapInBold($computedWeight) . ' kg svaru';
         }
 
         return $res;
@@ -113,5 +150,12 @@ class WorkoutExercise extends \yii\db\ActiveRecord
     {
         $workoutExercise = self::findOne(['id' => $workoutExerciseId]);
         return $workoutExercise->videoToDisplay();
+    }
+
+    public function replaceByExercise($replacementExerciseId)
+    {
+        $this->replaced_by_exercise_id = $replacementExerciseId;
+        $this->update();
+        return $this;
     }
 }

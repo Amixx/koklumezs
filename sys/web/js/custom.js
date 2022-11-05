@@ -174,7 +174,21 @@ $(document).ready(function () {
     });
 
     setUpTimer();
+    setupNextReplacementExerciseButton();
 });
+
+
+
+function setupNextReplacementExerciseButton(){
+    var $nextReplacementeExerciseBtn = $('.btn-next-replacement-exercise');
+    if(!$nextReplacementeExerciseBtn) return;
+
+    $nextReplacementeExerciseBtn.on('click', function(){
+        var $replacementOptionContainer = $(this).closest('.exercise-replacement-option-container');
+        $replacementOptionContainer.attr('hidden', true);
+        $replacementOptionContainer.next().attr('hidden', false);
+    })
+}
 
 
 function formatTimeLeft(time) {

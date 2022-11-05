@@ -93,9 +93,10 @@ class Exercise extends \yii\db\ActiveRecord
         return $ids;
     }
 
-    public function getInterchangeableOtherExercises(){
+    public function getInterchangeableOtherExercises()
+    {
         $interchangeableExercises = $this->getInterchangeableExercises(true);
-        return array_map(function($interchangeableExercise){
+        return array_map(function ($interchangeableExercise) {
             return $interchangeableExercise['exercise_id_1'] == $this->id
                 ? $interchangeableExercise['exercise2']
                 : $interchangeableExercise['exercise1'];
@@ -105,15 +106,56 @@ class Exercise extends \yii\db\ActiveRecord
     public function getInterchangeableExercisesSelect2Options()
     {
         $otherExercises = $this->getInterchangeableOtherExercises();
-        return array_map(function($otherExercise){
-           return [
+        return array_map(function ($otherExercise) {
+            return [
                 'id' => $otherExercise['id'],
                 'text' => $otherExercise['name'],
             ];
         }, $otherExercises);
     }
 
-    public function renderEvaluation(){
+    public function renderEvaluation()
+    {
         return !$this->is_pause && $this->needs_evaluation;
+    }
+
+    public function lastTwoWeeksEvaluations()
+    {
+        $evaluations = WorkoutExerciseEvaluation::find()
+            ->joinWith('workoutExercise')
+            ->where([
+                'or',
+                ['exercise_id' => $this->id],
+                ['replaced_by_exercise_id' => $this->id],
+            ])->all();
+
+        $timeOffset = '+2 weeks';
+        $lastTwoWeeksEvaluations = array_filter(
+            $evaluations,
+            function ($workoutExerciseEvaluation) use ($timeOffset) {
+                $evaluationCreatedPlusTwoWeeks = new \DateTime($workoutExerciseEvaluation->created);
+                $evaluationCreatedPlusTwoWeeks->modify($timeOffset);
+
+                $now = new \DateTime();
+
+                return $evaluationCreatedPlusTwoWeeks > $now;
+            });
+
+        return $lastTwoWeeksEvaluations;
+    }
+
+    public function lastTwoWeeksAvgOneRepMax(){
+        $averageOneRepMax = null;
+
+        foreach ($this->lastTwoWeeksEvaluations() as $workoutExerciseEvaluation) {
+            $oneRepMaxRangeAverage = OneRepMaxCalculator::oneRepMaxRangeToAverage($workoutExerciseEvaluation->getOneRepMaxRange());
+            if ($oneRepMaxRangeAverage) {
+                $averageOneRepMax === null
+                    ? $averageOneRepMax = $oneRepMaxRangeAverage
+                    : $averageOneRepMax += $oneRepMaxRangeAverage;
+            }
+        }
+
+        return $averageOneRepMax;
     }
 }

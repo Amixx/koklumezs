@@ -773,4 +773,8 @@ return [
     'To next exercise' => 'Uz nākamo vingrojumu',
     'Interchangeable exercises' => 'Aizvietojami vingrojumi',
     'Needs evaluation' => 'Jānovērtē',
+    'Exercise substitution' => 'Vingrojuma aizstāšana',
+    'Substitute exercise' => 'Aizvietot vingrojumu',
+    'The given exercise can be replaced with' => 'Doto vingrojumu iespējams aizstāt ar',
+    'Unfortunately, the given exercise cannot replaced by any other' => 'Diemžēl doto vingrojumu nevar nomainīt pret nevienu citu'
 ];

@@ -69,6 +69,7 @@ class StudentExerciseController extends Controller
 
         $workoutExercise = $this->findModel($id);
         $nextWorkoutExercise = $workoutExercise->workout->getNextWorkoutExercise($workoutExercise);
+        $interchangeableExercises = $workoutExercise->exercise->getInterchangeableOtherExercises();
         $difficultyEvaluation = WorkoutExerciseEvaluation::find()->where(['workoutexercise_id' => $id])->one();
 
         $workoutExercise->workout->setAsOpened();
@@ -95,6 +96,7 @@ class StudentExerciseController extends Controller
             'nextWorkoutExercise' => $nextWorkoutExercise,
             'videoThumb' => $videoThumb,
             'difficultyEvaluation' => $difficultyEvaluation,
+            'interchangeableExercises' => $interchangeableExercises,
         ]);
     }
 
@@ -148,12 +150,18 @@ class StudentExerciseController extends Controller
         ]);
     }
 
+    public function actionReplaceExercise($id, $replacementId) {
+        $workoutExercise = $this->findModel($id);
+        $workoutExercise->replaceByExercise($replacementId);
+        return $this->redirect(["fitness-student-exercises/view", 'id' => $id]);
+    }
+
 
     /**
      * Finds the Lectures model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Lectures the loaded model
+     * @return WorkoutExercise the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
