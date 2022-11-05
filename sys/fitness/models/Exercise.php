@@ -18,7 +18,7 @@ class Exercise extends \yii\db\ActiveRecord
         return [
             [['author_id', 'name', 'popularity_type'], 'required'],
             [['author_id'], 'integer'],
-            [['is_pause'], 'boolean'],
+            [['is_pause', 'needs_evaluation'], 'boolean'],
             [['name', 'description', 'video', 'technique_video', 'popularity_type'], 'string'],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author_id' => 'id']],
         ];
@@ -34,6 +34,7 @@ class Exercise extends \yii\db\ActiveRecord
             'video' => \Yii::t('app', 'Video'),
             'technique_video' => \Yii::t('app', 'Technique video'),
             'is_pause' => \Yii::t('app', 'Is pause'),
+            'needs_evaluation' => \Yii::t('app', 'Needs evaluation'),
             'popularity_type' => \Yii::t('app', 'Popularity type'),
         ];
     }
@@ -110,5 +111,9 @@ class Exercise extends \yii\db\ActiveRecord
                 'text' => $otherExercise['name'],
             ];
         }, $otherExercises);
+    }
+
+    public function renderEvaluation(){
+        return !$this->is_pause && $this->needs_evaluation;
     }
 }

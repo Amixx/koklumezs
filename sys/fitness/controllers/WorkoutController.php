@@ -77,7 +77,30 @@ class WorkoutController extends Controller
             ->joinWith('evaluation')
             ->joinWith('messageForCoach')
             ->orderBy(['id' => SORT_DESC]);
-        $studentWorkouts = $query->asArray()->all();
+        $studentWorkouts = $query->all();
+
+        $evaluationExtraAttributes = [];
+        foreach($studentWorkouts as $workoutKey => &$studentWorkout) {
+            foreach($studentWorkout->workoutExercises as $exerciseKey => $exercise) {
+                if($exercise->evaluation) {
+                    $evaluationExtraAttributes[$workoutKey][$exerciseKey] = [
+                        'evaluation_text' =>  $exercise->evaluation->getEvaluationText(),
+                        'one_rep_max_range' => $exercise->evaluation->getOneRepMaxRange(),
+                    ];
+                }
+            }
+            $studentWorkout = $studentWorkout->toArray([], ['workoutExercises.exercise', 'workoutExercises.evaluation', 'messageForCoach'], true);
+        }
+
+        // TODO: this is very very bad!!! might cause performance issues! think of a better realisation!
+        foreach($evaluationExtraAttributes as $workoutKey => $exerciseKeyToEvaluationOneRepMaxRange) {
+            foreach($exerciseKeyToEvaluationOneRepMaxRange as $exerciseKey => $evaluationOneRepMaxRange) {
+                $evaluation = &$studentWorkouts[$workoutKey]['workoutExercises'][$exerciseKey]['evaluation'];
+                $evaluation['evaluation_text'] = $evaluationOneRepMaxRange['evaluation_text'];
+                $evaluation['one_rep_max_range'] = $evaluationOneRepMaxRange['one_rep_max_range'];
+            }
+        }
+
         return json_encode($studentWorkouts);
     }
 

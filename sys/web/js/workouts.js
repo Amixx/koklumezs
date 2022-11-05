@@ -57,7 +57,9 @@ Vue.component('added-exercise', {
             required: true,
         },
     },
-    data(){
+    data() {
+        if(this.tempExercise.exercise.is_pause !== '1') return {};
+
         const pauseLengths = [
             15,
             30,
@@ -71,15 +73,15 @@ Vue.component('added-exercise', {
             300,
             360,
         ];
-        const pauseLengthOptions =  pauseLengths.map(seconds => ({ value: seconds, label: seconds }));
+        const pauseLengthOptions = pauseLengths.map(seconds => ({value: seconds, label: seconds}));
         const selectedPauseLength = this.tempExercise.time_seconds
             ? pauseLengthOptions.find(x => x.value === this.tempExercise.time_seconds)
             : pauseLengthOptions[1];
 
-      return {
-          pauseLengthOptions: pauseLengthOptions,
-          selectedPauseLength: selectedPauseLength,
-      };
+        return {
+            pauseLengthOptions: pauseLengthOptions,
+            selectedPauseLength: selectedPauseLength,
+        };
     },
     computed: {
         specialVideoShownMessage() {
@@ -96,7 +98,7 @@ Vue.component('added-exercise', {
                 var forTime = v.time_seconds && !v.reps && timeMatches;
                 var forBoth = v.reps && v.time_seconds && repsMatch && timeMatches;
 
-                if(forReps || forTime || forBoth) {
+                if (forReps || forTime || forBoth) {
                     resForReps = forReps;
                     resForTime = forTime;
                     resForBoth = forBoth;
@@ -105,13 +107,13 @@ Vue.component('added-exercise', {
             });
 
             if (specialVideoToShow) {
-                if(resForReps) {
+                if (resForReps) {
                     return 'Tiks rādīts īpašais video <strong>' + this.tempExercise.reps + ' reizēm</strong>';
                 }
-                if(resForTime) {
+                if (resForTime) {
                     return 'Tiks rādīts īpašais video <strong>' + this.tempExercise.time_seconds + ' sekundēm</strong>';
                 }
-                if(resForBoth) {
+                if (resForBoth) {
                     return 'Tiks rādīts īpašais video <strong>' + this.tempExercise.reps + ' reizēm</strong> un <strong>' + this.tempExercise.time_seconds + ' sekundēm</strong>';
                 }
             }
@@ -121,8 +123,8 @@ Vue.component('added-exercise', {
     },
     watch: {
         selectedPauseLength: {
-            handler(n){
-                if(n) this.tempExercise.time_seconds = n.value;
+            handler(n) {
+                if (n) this.tempExercise.time_seconds = n.value;
             },
             immediate: true
         }
@@ -155,7 +157,11 @@ Vue.component('added-exercise', {
         </td>
         <td>
             <div class="form-group">
+                 <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
+                    <input class="form-control" v-model="tempExercise.time_seconds" style="width:60px;">
+                 </div>
                  <v-select
+                    v-else
                     label="label"
                     :options="pauseLengthOptions"
                     v-model="selectedPauseLength"
@@ -195,6 +201,15 @@ Vue.component('last-workouts-table', {
     methods: {
         getFileExtension(fileString) {
             return fileString.split('.').pop();
+        },
+        formatOneRepMaxRange(workoutExercise) {
+            if(!workoutExercise.evaluation || !workoutExercise.evaluation.one_rep_max_range) return "";
+            var min = workoutExercise.evaluation.one_rep_max_range.min;
+            var max = workoutExercise.evaluation.one_rep_max_range.max;
+
+            if(min === max) return min;
+
+            return [min, max].filter(x => x !== null).join("-");
         }
     },
     template: `
@@ -224,6 +239,7 @@ Vue.component('last-workouts-table', {
                                     <th>Laiks (sekundēs)</th>
                                     <th>Svars (kg)</th>
                                     <th>Novērtējums</th>
+                                    <th>1RM (no novērtējuma, svara un reizēm)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -233,7 +249,8 @@ Vue.component('last-workouts-table', {
                                     <td>{{ workoutExercise.reps }}</td>
                                     <td>{{ workoutExercise.time_seconds }}</td>
                                     <td>{{ workoutExercise.weight }}</td>
-                                    <td>{{ workoutExercise.evaluation ? evalValueToText[workoutExercise.evaluation.evaluation] : "" }}</td>
+                                    <td>{{ workoutExercise.evaluation ? workoutExercise.evaluation.evaluation_text : "" }}</td>
+                                    <td>{{ formatOneRepMaxRange(workoutExercise) }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -691,7 +708,7 @@ $(document).ready(function () {
                         time_seconds: null,
                         weight: null,
                     }
-                    if(lastSetOfExercise) {
+                    if (lastSetOfExercise) {
                         newWorkoutExercise.reps = lastSetOfExercise.reps
                         newWorkoutExercise.time_seconds = lastSetOfExercise.time_seconds
                         newWorkoutExercise.weight = lastSetOfExercise.weight

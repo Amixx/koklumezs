@@ -18,6 +18,7 @@ class ExerciseSearch extends Exercise
                 'name',
                 'description',
                 'is_pause',
+                'needs_evaluation',
                 'popularity_type',
                 'video',
                 'technique_video',
@@ -72,6 +73,9 @@ class ExerciseSearch extends Exercise
 
         if($this->is_pause !== null) {
             $query->andFilterWhere(['is_pause' => $this->is_pause]);
+        }
+        if($this->needs_evaluation !== null) {
+            $query->andFilterWhere(['needs_evaluation' => $this->needs_evaluation]);
         }
         if($this->popularity_type !== null) {
             $query->andFilterWhere(['popularity_type' => $this->popularity_type]);

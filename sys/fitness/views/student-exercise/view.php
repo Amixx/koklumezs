@@ -12,7 +12,7 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExercise->exercise->n
     <div class="col-sm-12 view-workout">
         <div class="view-workout__main-info">
             <h1><?= $workoutExercise->exercise->name; ?></h1>
-            <?php if($workoutExercise->exercise->is_pause) { ?>
+            <?php if ($workoutExercise->exercise->is_pause) { ?>
                 <div>
                     <div class="base-timer">
                         <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -37,7 +37,7 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExercise->exercise->n
                     </div>
                 </div>
             <?php } ?>
-            <?php if(!$workoutExercise->exercise->is_pause) { ?>
+            <?php if (!$workoutExercise->exercise->is_pause) { ?>
                 <p class="description"><?= $workoutExercise->repsWeightTimeFormatted() ?></p>
             <?php } ?>
             <div>
@@ -55,14 +55,18 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExercise->exercise->n
                 <?php } ?>
             </div>
             <div class="view-workout__actions">
-                <?php if (!$workoutExercise->exercise->is_pause) { ?>
+                <?php if ($workoutExercise->exercise->renderEvaluation()) { ?>
                     <div>
                         <?= $this->render(
                             "amount-evaluation",
-                            ['difficultyEvaluation' => $difficultyEvaluation]) ?>
+                            [
+                                'difficultyEvaluation' => $difficultyEvaluation,
+                                'reps' => $workoutExercise->reps,
+                                'timeSeconds' => $workoutExercise->time_seconds,
+                            ]) ?>
                     </div>
                 <?php } ?>
-                <?php if ($difficultyEvaluation || $workoutExercise->exercise->is_pause) { ?>
+                <?php if ($difficultyEvaluation || !$workoutExercise->exercise->renderEvaluation()) { ?>
                     <?php
                     $btnText = \Yii::t('app', $nextWorkoutExercise ? 'To next exercise' : 'Finish workout');
                     $btnLink = $nextWorkoutExercise
@@ -75,10 +79,11 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $workoutExercise->exercise->n
                     ); ?>
                 <?php } ?>
 
-                <?php if($nextWorkoutExercise && !$nextWorkoutExercise->exercise->is_pause) { ?>
+                <?php if ($nextWorkoutExercise && $workoutExercise->exercise->renderEvaluation()) { ?>
                     <div style="margin-top: 24px;">
                         <h4 style="margin-bottom: 8px;">Nākamais vingrojums</h4>
-                        <p><?= $nextWorkoutExercise->exercise->name ?> - <?= $nextWorkoutExercise->repsWeightTimeFormatted() ?></p>
+                        <p><?= $nextWorkoutExercise->exercise->name ?>
+                            - <?= $nextWorkoutExercise->repsWeightTimeFormatted() ?></p>
                     </div>
                 <?php } ?>
             </div>

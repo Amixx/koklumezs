@@ -49,6 +49,21 @@ $this->title = \Yii::t('app', 'Exercises');
                 ),
             ],
             [
+                'attribute' => 'needs_evaluation',
+                'value' => function ($dataProvider) {
+                    return Yii::t('app', $dataProvider['needs_evaluation'] ? 'Yes' : 'No');
+                },
+                'filter' => Html::dropDownList(
+                    'ExerciseSearch[needs_evaluation]',
+                    $get['ExerciseSearch']['needs_evaluation'] ?? '',
+                    [
+                        0 => Yii::t('app', 'No'),
+                        1 => Yii::t('app', 'Yes')
+                    ],
+                    ['prompt' => '-- Visi --', 'class' => 'form-control']
+                ),
+            ],
+            [
                 'attribute' => 'popularity_type',
                 'value' => function ($dataProvider) {
                     return Yii::t('app',

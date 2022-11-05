@@ -36,6 +36,12 @@ $this->title = $model->name;
                 }
             ],
             [
+                'attribute' => 'needs_evaluation',
+                'value' => function ($dataProvider) {
+                    return Yii::t('app', $dataProvider['needs_evaluation'] ? 'Yes' : 'No');
+                }
+            ],
+            [
                 'attribute' => 'popularity_type',
                 'value' => function ($dataProvider) {
                     return Yii::t('app',

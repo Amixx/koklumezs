@@ -21,10 +21,14 @@ $evaluations = [
     <div class="col-md-6" style="text-align:center; margin-bottom: 16px;">
         <div>
             <div>
-                <?= $this->render("amount-evaluation", [
+                <?=
+                // TODO: create separate component for evaluating whole workout
+                /*$this->render("amount-evaluation", [
                     'difficultyEvaluation' => $workoutEvaluation,
                     'readonly' => $hasBeenEvaluated,
-                ]) ?>
+                ]) */
+                ''
+                ?>
             </div>
         </div>
     </div>

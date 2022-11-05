@@ -1550,20 +1550,10 @@ div.has-experience.active, div.rent.active {
 }
 
 /* DIFFICULTY EVALUATION */
-.fitness-difficulty-eval .btn-group {
-    display: flex;
-}
-
 .fitness-difficulty-eval button {
-    border: 2px solid;
-    flex-basis: 100%;
-    transition: scale .3s;
-}
-
-.fitness-difficulty-eval button:not(:disabled):hover {
-    z-index: 1;
-    scale: 1.1;
-    opacity: 1;
+    display: block;
+    width: 100%;
+    margin-bottom: 4px;
 }
 
 .fitness-difficulty-eval button:nth-child(1) {
@@ -1593,11 +1583,6 @@ div.has-experience.active, div.rent.active {
 
 .fitness-difficulty-eval button.active {
     border-color: #007bff;
-}
-
-.fitness-difficulty-eval__description {
-    display: flex;
-    justify-content: space-between;
 }
 
 .view-workout__helpful-content {

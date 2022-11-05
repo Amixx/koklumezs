@@ -40,6 +40,7 @@ $tagSelected = function ($tagId) use ($selectedTagIds) {
         <?= $form->field($model, 'name')->textInput() ?>
         <?= $form->field($model, 'description')->textarea() ?>
         <?= $form->field($model, 'is_pause')->checkbox() ?>
+        <?= $form->field($model, 'needs_evaluation')->checkbox() ?>
         <?= $form->field($model, 'popularity_type')->dropDownList(
             [
                 'POPULAR' => Yii::t('app', 'Popular'),
@@ -61,17 +62,19 @@ $tagSelected = function ($tagId) use ($selectedTagIds) {
             <div class="help-block"></div>
         </div>
 
-        <div class="form-group">
-            <label class="control-label" for="interchangeable-exercises"> <?= \Yii::t('app', 'Interchangeable exercises') ?></label>
-            <select id="interchangeable-exercises" class="form-control" name="interchangeableExercises[]" aria-required="true" aria-invalid="false" multiple>
-                <option value=""></option>
+        <?php if(isset($interchangeableExerciseSelectedOptions)) { ?>
+            <div class="form-group">
+                <label class="control-label" for="interchangeable-exercises"> <?= \Yii::t('app', 'Interchangeable exercises') ?></label>
+                <select id="interchangeable-exercises" class="form-control" name="interchangeableExercises[]" aria-required="true" aria-invalid="false" multiple>
+                    <option value=""></option>
 
-                <?php foreach ($interchangeableExerciseSelectedOptions as $option) { ?>
-                    <option value="<?= $option['id'] ?>" selected><?= $option['text'] ?></option>
-                <?php } ?>
-            </select>
-            <div class="help-block"></div>
-        </div>
+                    <?php foreach ($interchangeableExerciseSelectedOptions as $option) { ?>
+                        <option value="<?= $option['id'] ?>" selected><?= $option['text'] ?></option>
+                    <?php } ?>
+                </select>
+                <div class="help-block"></div>
+            </div>
+        <?php } ?>
     </div>
     <hr/>
     <div class="form-group">

@@ -2,29 +2,14 @@
 
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
+use app\fitness\models\DifficultyEvaluation;
 
-$evaluations = [
-    [
-        'value' => 2,
-        'text' => "Garlaicīgi"
-    ],
-    [
-        'value' => 4,
-        'text' => "Viegli"
-    ],
-    [
-        'value' => 6,
-        'text' => "Nedaudz grūti"
-    ],
-    [
-        'value' => 8,
-        'text' => "Ļoti grūti"
-    ],
-    [
-        'value' => 10,
-        'text' => "Neiespējami"
-    ],
-];
+$difficultyEvaluationModel = $reps
+    ? DifficultyEvaluation::createForReps($reps)
+    : ($timeSeconds
+        ? DifficultyEvaluation::createForTime($timeSeconds)
+        : DifficultyEvaluation::createEmpty());
+$evaluations = $difficultyEvaluationModel->createEvaluations();
 
 $isButtonActive = function ($name) use ($evaluations, $difficultyEvaluation) {
     if (!$difficultyEvaluation) return false;
@@ -34,6 +19,7 @@ $isButtonActive = function ($name) use ($evaluations, $difficultyEvaluation) {
     return $evaluations[$evalIndex]['value'] === intval($difficultyEvaluation->evaluation);
 };
 
+
 ?>
 
 <p style="font-size: 18px; <?= isset($readonly) && $readonly ? '' : 'font-weight: bold' ?>">Kā gāja?</p>
@@ -42,7 +28,7 @@ $isButtonActive = function ($name) use ($evaluations, $difficultyEvaluation) {
     <?= Html::hiddenInput("difficulty-evaluation", null) ?>
 
     <div class="fitness-difficulty-eval">
-        <div class="btn-group">
+        <div>
             <?php foreach ($evaluations as $evaluation) {
                 $name = $evaluation['text'];
                 $emojiClass = "emoji emoji-$name";
@@ -55,14 +41,9 @@ $isButtonActive = function ($name) use ($evaluations, $difficultyEvaluation) {
                         title="<?= $evaluation['text'] ?>"
                     <?= isset($readonly) && $readonly ? 'disabled' : '' ?>
                 >
-                    &nbsp;
+                    <?= $evaluation['text'] ?>
                 </button>
             <?php } ?>
-        </div>
-        <div class="fitness-difficulty-eval__description">
-            <span>Pārāk viegli</span>
-            <span>Ideāli</span>
-            <span>Pārāk grūti</span>
         </div>
     </div>
 
