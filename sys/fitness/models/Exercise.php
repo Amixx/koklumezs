@@ -146,17 +146,20 @@ class Exercise extends \yii\db\ActiveRecord
     }
 
     public function lastTwoWeeksAvgOneRepMax(){
-        $averageOneRepMax = null;
+        $workoutExerciseEvaluations = $this->lastTwoWeeksEvaluations();
+        if(empty($workoutExerciseEvaluations)) return null;
 
-        foreach ($this->lastTwoWeeksEvaluations() as $workoutExerciseEvaluation) {
+        $averageOneRepMaxSum = null;
+
+        foreach ($workoutExerciseEvaluations as $workoutExerciseEvaluation) {
             $oneRepMaxRangeAverage = OneRepMaxCalculator::oneRepMaxRangeToAverage($workoutExerciseEvaluation->getOneRepMaxRange());
             if ($oneRepMaxRangeAverage) {
-                $averageOneRepMax === null
-                    ? $averageOneRepMax = $oneRepMaxRangeAverage
-                    : $averageOneRepMax += $oneRepMaxRangeAverage;
+                $averageOneRepMaxSum === null
+                    ? $averageOneRepMaxSum = $oneRepMaxRangeAverage
+                    : $averageOneRepMaxSum += $oneRepMaxRangeAverage;
             }
         }
 
-        return $averageOneRepMax;
+        return $averageOneRepMaxSum / count($workoutExerciseEvaluations);
     }
 }

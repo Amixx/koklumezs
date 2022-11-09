@@ -58,30 +58,35 @@ Vue.component('added-exercise', {
         },
     },
     data() {
-        if(this.tempExercise.exercise.is_pause !== '1') return {};
+        if (this.tempExercise.exercise.is_pause === '1') {
+            const pauseLengths = [
+                15,
+                30,
+                45,
+                60,
+                90,
+                120,
+                150,
+                180,
+                240,
+                300,
+                360,
+            ];
+            const pauseLengthOptions = pauseLengths.map(seconds => ({value: seconds, label: seconds}));
+            const selectedPauseLength = this.tempExercise.time_seconds
+                ? pauseLengthOptions.find(x => x.value === this.tempExercise.time_seconds)
+                : pauseLengthOptions[1];
 
-        const pauseLengths = [
-            15,
-            30,
-            45,
-            60,
-            90,
-            120,
-            150,
-            180,
-            240,
-            300,
-            360,
-        ];
-        const pauseLengthOptions = pauseLengths.map(seconds => ({value: seconds, label: seconds}));
-        const selectedPauseLength = this.tempExercise.time_seconds
-            ? pauseLengthOptions.find(x => x.value === this.tempExercise.time_seconds)
-            : pauseLengthOptions[1];
+            return {
+                pauseLengthOptions: pauseLengthOptions,
+                selectedPauseLength: selectedPauseLength,
+            };
+        }
 
         return {
-            pauseLengthOptions: pauseLengthOptions,
-            selectedPauseLength: selectedPauseLength,
-        };
+            weightPercentageOf1rm: null,
+            oneRepMaxEstimate: null,
+        }
     },
     computed: {
         specialVideoShownMessage() {
@@ -119,7 +124,15 @@ Vue.component('added-exercise', {
             }
 
             return null;
-        }
+        },
+        rpe() {
+            if(
+                !this.tempExercise.reps
+                || this.tempExercise < 1
+                || this.tempExercise.reps > 12
+                || !this.weightPercentageOf1rm) return null;
+            return RpeCalculator.calculateRpe(this.tempExercise.reps, this.weightPercentageOf1rm);
+        },
     },
     watch: {
         selectedPauseLength: {
@@ -127,6 +140,50 @@ Vue.component('added-exercise', {
                 if (n) this.tempExercise.time_seconds = n.value;
             },
             immediate: true
+        },
+        'tempExercise.weight': {
+            handler() {
+                if (!this.oneRepMaxEstimate) return;
+                if (this.ignoreWeightWatcher) {
+                    this.ignoreWeightWatcher = false;
+                    return;
+                } else {
+                    this.ignoreWeightPercentageOf1rmWatcher = true
+                    this.setWeightPercentageOf1rm();
+                }
+            }
+        },
+        weightPercentageOf1rm() {
+            if (!this.oneRepMaxEstimate) return;
+            if (this.ignoreWeightPercentageOf1rmWatcher) {
+                this.ignoreWeightPercentageOf1rmWatcher = false;
+                return;
+            } else {
+                this.ignoreWeightWatcher = true;
+                this.setWeight();
+            }
+        }
+    },
+    async mounted() {
+        const oneRepMaxEstimate = await ExerciseRepository.getLastTwoWeekAverageOneRepMax(this.tempExercise.exercise.id);
+        if (oneRepMaxEstimate) this.oneRepMaxEstimate = oneRepMaxEstimate;
+    },
+    methods: {
+        setWeightPercentageOf1rm() {
+            if (!this.tempExercise.weight) {
+                this.weightPercentageOf1rm = null;
+                return;
+            }
+            // this.weightPercentageOf1rm = this.oneRepMaxEstimate * (1.0278 - (0.0278 * this.tempExercise.reps));
+            this.weightPercentageOf1rm = ((this.tempExercise.weight / this.oneRepMaxEstimate) * 100).toFixed(0) + '%';
+        },
+        setWeight() {
+            if (!this.weightPercentageOf1rm) {
+                this.tempExercise.weight = null;
+                return;
+            }
+            // this.weightPercentageOf1rm = this.oneRepMaxEstimate * (1.0278 - (0.0278 * this.tempExercise.reps));
+            this.tempExercise.weight = parseInt(this.oneRepMaxEstimate * parseInt(this.weightPercentageOf1rm) / 100);
         }
     },
     template: `
@@ -152,13 +209,13 @@ Vue.component('added-exercise', {
         </td>
         <td>
             <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
-                <input class="form-control" v-model="tempExercise.reps" style="width:60px;">
+                <input class="form-control" v-model.number="tempExercise.reps" style="width:60px;">
             </div>
         </td>
         <td>
             <div class="form-group">
                  <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
-                    <input class="form-control" v-model="tempExercise.time_seconds" style="width:60px;">
+                    <input class="form-control" v-model.number="tempExercise.time_seconds" style="width:60px;">
                  </div>
                  <v-select
                     v-else
@@ -170,7 +227,17 @@ Vue.component('added-exercise', {
         </td>
         <td>
             <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
-                <input class="form-control" v-model="tempExercise.weight" style="width:45px;">
+                <input class="form-control" v-model="weightPercentageOf1rm" style="width:75px;">
+            </div>
+        </td>
+        <td>
+            <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
+                <input class="form-control" v-model.number="tempExercise.weight" style="width:45px;">
+            </div>
+        </td>
+         <td>
+            <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
+                <input class="form-control" v-model="rpe" readonly style="width:45px;">
             </div>
         </td>
         <td>
@@ -203,11 +270,11 @@ Vue.component('last-workouts-table', {
             return fileString.split('.').pop();
         },
         formatOneRepMaxRange(workoutExercise) {
-            if(!workoutExercise.evaluation || !workoutExercise.evaluation.one_rep_max_range) return "";
+            if (!workoutExercise.evaluation || !workoutExercise.evaluation.one_rep_max_range) return "";
             var min = workoutExercise.evaluation.one_rep_max_range.min;
             var max = workoutExercise.evaluation.one_rep_max_range.max;
 
-            if(min === max) return min;
+            if (min === max) return min;
 
             return [min, max].filter(x => x !== null).join("-");
         }
@@ -404,6 +471,41 @@ Vue.component('exercise-creation-modal', {
     `
 })
 
+const rpeArray = [
+    100, 97.8, 95.5, 93.9, 92.2, 90.7, 89.2, 87.8,
+    86.3, 85.0, 83.7, 82.4, 81.1, 79.9, 78.6, 77.4,
+    76.2, 75.1, 73.9, 72.3, 70.7, 69.4, 68.0, 66.7,
+    65.3, 64.0, 62.6, 61.3, 59.9, 58.6
+];
+const rpes = [10, 9.5, 9, 8.5, 8, 7.5, 7, 6.5];
+
+const rpeTable = {}
+
+for (let rep = 1; rep <= 12; rep++) {
+    const rpeArrayOffset = (rep - 1) * 2;
+    rpes.forEach(function (rpe, i) {
+        if (!rpeTable[rep]) rpeTable[rep] = {}
+        rpeTable[rep][rpe] = rpeArray[i + rpeArrayOffset];
+    })
+}
+
+class RpeCalculator {
+    static calculateRpe(reps, weightPercentageOf1rm) {
+        var x = rpeTable[reps]
+        var smallestDiff = null
+        var toReturn = null
+        for(const y in x) {
+            var newDiff = Math.abs(weightPercentageOf1rm - x[y])
+            if(!smallestDiff || newDiff < smallestDiff) {
+                smallestDiff = newDiff
+                toReturn = y
+            }
+        }
+
+        return toReturn
+    }
+}
+
 
 const getCsrfToken = () => {
     return document.querySelector("meta[name=csrf-token]").content
@@ -453,6 +555,10 @@ class ExerciseRepository extends Repository {
 
     static async create(exercise) {
         return (await axios.post(`${this.baseUrl}/api-create`, exercise, this.postConfig)).data
+    }
+
+    static async getLastTwoWeekAverageOneRepMax(id) {
+        return (await axios.get(`${this.baseUrl}/api-get-last-two-week-average-one-rep-max?id=${id}`)).data
     }
 }
 
@@ -996,7 +1102,9 @@ $(document).ready(function () {
                                             <th>Vingrojums</th>
                                             <th>Reizes</th>
                                             <th>Laiks (sekundēs)</th>
-                                            <th>Svars</th>
+                                            <th>Svars (% no 1RM)</th>
+                                            <th>Svars (kg)</th>
+                                            <th>RPE</th>
                                             <th>Dzēst</th>
                                         </tr>
                                     </thead>

@@ -174,7 +174,6 @@ class ExerciseController extends Controller
         $query = Exercise::find()
             ->joinWith('sets')
             ->groupBy('name')
-            ->andWhere(['is_archived' => 0])
             ->limit($limit);
 
         if (isset($get['tagIdGroups']) && $get['tagIdGroups']) {
@@ -216,6 +215,9 @@ class ExerciseController extends Controller
         }
 
         $query->andFilterWhere(['is_pause' => !!(isset($get['onlyPauses']) && $get['onlyPauses'])]);
+        if(!isset($get['onlyPauses'])) {
+            $query->andWhere(['is_archived' => 0]);
+        }
         if (isset($get['exercisePopularity']) && $get['exercisePopularity']) {
             $query->andFilterWhere(['popularity_type' => $get['exercisePopularity']]);
         }
@@ -260,6 +262,11 @@ class ExerciseController extends Controller
         ];
 
         return json_encode($response);
+    }
+
+    public function actionApiGetLastTwoWeekAverageOneRepMax($id){
+        $exercise = Exercise::findOne(['id' => $id]);
+        return $exercise->lastTwoWeeksAvgOneRepMax();
     }
 
     protected function findModel($id)
