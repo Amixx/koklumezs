@@ -120,18 +120,19 @@ class Exercise extends \yii\db\ActiveRecord
         return !$this->is_pause && $this->needs_evaluation;
     }
 
-    public function lastTwoWeeksEvaluations()
+    public function lastTwoWeeksEvaluationsOfUser($userId)
     {
         $evaluations = WorkoutExerciseEvaluation::find()
             ->joinWith('workoutExercise')
-            ->where([
+            ->andWhere(['user_id' => $userId])
+            ->andWhere([
                 'or',
                 ['exercise_id' => $this->id],
                 ['replaced_by_exercise_id' => $this->id],
             ])->all();
 
         $timeOffset = '+2 weeks';
-        $lastTwoWeeksEvaluations = array_filter(
+        return array_filter(
             $evaluations,
             function ($workoutExerciseEvaluation) use ($timeOffset) {
                 $evaluationCreatedPlusTwoWeeks = new \DateTime($workoutExerciseEvaluation->created);
@@ -141,12 +142,10 @@ class Exercise extends \yii\db\ActiveRecord
 
                 return $evaluationCreatedPlusTwoWeeks > $now;
             });
-
-        return $lastTwoWeeksEvaluations;
     }
 
-    public function lastTwoWeeksAvgOneRepMax(){
-        $workoutExerciseEvaluations = $this->lastTwoWeeksEvaluations();
+    public function lastTwoWeeksAvgOneRepMaxOfUser($userId){
+        $workoutExerciseEvaluations = $this->lastTwoWeeksEvaluationsOfUser($userId);
         if(empty($workoutExerciseEvaluations)) return null;
 
         $averageOneRepMaxSum = null;

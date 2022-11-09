@@ -225,6 +225,11 @@ Vue.component('added-exercise', {
                  ></v-select>
             </div>
         </td>
+         <td>
+            <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
+                <input class="form-control" v-model="oneRepMaxEstimate" readonly style="width:60px;">
+            </div>
+        </td>
         <td>
             <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
                 <input class="form-control" v-model="weightPercentageOf1rm" style="width:75px;">
@@ -232,7 +237,7 @@ Vue.component('added-exercise', {
         </td>
         <td>
             <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
-                <input class="form-control" v-model.number="tempExercise.weight" style="width:45px;">
+                <input class="form-control" v-model.number="tempExercise.weight" style="width:50px;">
             </div>
         </td>
          <td>
@@ -558,7 +563,7 @@ class ExerciseRepository extends Repository {
     }
 
     static async getLastTwoWeekAverageOneRepMax(id) {
-        return (await axios.get(`${this.baseUrl}/api-get-last-two-week-average-one-rep-max?id=${id}`)).data
+        return (await axios.get(`${this.baseUrl}/api-get-last-two-week-average-one-rep-max?id=${id}&userId=${window.studentId}`)).data
     }
 }
 
@@ -1102,6 +1107,7 @@ $(document).ready(function () {
                                             <th>Vingrojums</th>
                                             <th>Reizes</th>
                                             <th>Laiks (sekundēs)</th>
+                                            <th>Aptuvens 1RM</th>
                                             <th>Svars (% no 1RM)</th>
                                             <th>Svars (kg)</th>
                                             <th>RPE</th>

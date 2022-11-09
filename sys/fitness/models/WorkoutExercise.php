@@ -84,9 +84,11 @@ class WorkoutExercise extends \yii\db\ActiveRecord
     {
         if (!$this->isReplaced()) return 1;
 
+        $workoutUserId = $this->workout->student->id;
+
         $lastTwoWeeksOneRepMaxAverages = [
-            'original' => $this->exercise->lastTwoWeeksAvgOneRepMax(),
-            'replacement' => $this->replacementExercise->lastTwoWeeksAvgOneRepMax()
+            'original' => $this->exercise->lastTwoWeeksAvgOneRepMaxOfUser($workoutUserId),
+            'replacement' => $this->replacementExercise->lastTwoWeeksAvgOneRepMaxOfUser($workoutUserId)
         ];
 
         if(is_null($lastTwoWeeksOneRepMaxAverages['original']) || is_null($lastTwoWeeksOneRepMaxAverages['replacement'])){
