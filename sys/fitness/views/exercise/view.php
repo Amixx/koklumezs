@@ -42,6 +42,12 @@ $this->title = $model->name;
                 }
             ],
             [
+                'attribute' => 'is_archived',
+                'value' => function ($dataProvider) {
+                    return Yii::t('app', $dataProvider['is_archived'] ? 'Yes' : 'No');
+                }
+            ],
+            [
                 'attribute' => 'popularity_type',
                 'value' => function ($dataProvider) {
                     return Yii::t('app',

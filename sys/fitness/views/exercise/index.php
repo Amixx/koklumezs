@@ -64,6 +64,21 @@ $this->title = \Yii::t('app', 'Exercises');
                 ),
             ],
             [
+                'attribute' => 'is_archived',
+                'value' => function ($dataProvider) {
+                    return Yii::t('app', $dataProvider['is_archived'] ? 'Yes' : 'No');
+                },
+                'filter' => Html::dropDownList(
+                    'ExerciseSearch[is_archived]',
+                    $get['ExerciseSearch']['is_archived'] ?? '',
+                    [
+                        0 => Yii::t('app', 'No'),
+                        1 => Yii::t('app', 'Yes')
+                    ],
+                    ['prompt' => '-- Visi --', 'class' => 'form-control']
+                ),
+            ],
+            [
                 'attribute' => 'popularity_type',
                 'value' => function ($dataProvider) {
                     return Yii::t('app',

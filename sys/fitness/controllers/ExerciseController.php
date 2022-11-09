@@ -174,6 +174,7 @@ class ExerciseController extends Controller
         $query = Exercise::find()
             ->joinWith('sets')
             ->groupBy('name')
+            ->andWhere(['is_archived' => 0])
             ->limit($limit);
 
         if (isset($get['tagIdGroups']) && $get['tagIdGroups']) {

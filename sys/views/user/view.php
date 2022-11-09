@@ -52,6 +52,7 @@ $this->title = $model->id;
                     'user_level',
                     [
                         'attribute' => 'about',
+                        'format' => 'html',
                     ],
                 ],
             ]) ?>

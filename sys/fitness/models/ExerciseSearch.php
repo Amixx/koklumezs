@@ -20,6 +20,7 @@ class ExerciseSearch extends Exercise
                 'is_pause',
                 'needs_evaluation',
                 'popularity_type',
+                'is_archived',
                 'video',
                 'technique_video',
                 'created_at',
@@ -79,6 +80,9 @@ class ExerciseSearch extends Exercise
         }
         if($this->popularity_type !== null) {
             $query->andFilterWhere(['popularity_type' => $this->popularity_type]);
+        }
+        if($this->is_archived !== null) {
+            $query->andFilterWhere(['is_archived' => $this->is_archived]);
         }
 
         return $dataProvider;

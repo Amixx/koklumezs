@@ -324,7 +324,7 @@ return [
     'No message created' => 'Nav izveidota ziņa',
     'No messages' => 'Nav paziņojumu',
     'Not opened' => 'Nav atvērts',
-    'Notes' => 'Notis',
+    'Notes' => 'Piezīmes',
     'November' => 'Novembris',
     'October' => 'Oktobris',
     'Open all favourite lessons' => 'Atvērt visas mīļākās nodarbības',
@@ -776,5 +776,6 @@ return [
     'Exercise substitution' => 'Vingrojuma aizstāšana',
     'Substitute exercise' => 'Aizvietot vingrojumu',
     'The given exercise can be replaced with' => 'Doto vingrojumu iespējams aizstāt ar',
-    'Unfortunately, the given exercise cannot replaced by any other' => 'Diemžēl doto vingrojumu nevar nomainīt pret nevienu citu'
+    'Unfortunately, the given exercise cannot replaced by any other' => 'Diemžēl doto vingrojumu nevar nomainīt pret nevienu citu',
+    'Is archived' => 'Vai ir arhivēts',
 ];

@@ -795,7 +795,12 @@ $(document).ready(function () {
                         <div class="col-md-12" v-if="user">
                             <p>Vārds: {{ user.first_name }} {{ user.last_name }}</p>
                             <p>E-pasts: {{ user.email }}</p>
+                            <p>Tel. nr.: {{ user.phone_number }}</p>
                             <p>Valoda: {{ user.language }}</p>
+                            <div v-if="user.about">
+                                <p>Piezīmes:</p>
+                                <p v-html="user.about"></p>
+                            </div>
                         </div>
                     </div>
 
