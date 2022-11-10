@@ -19,7 +19,7 @@ class Exercise extends \yii\db\ActiveRecord
         return [
             [['author_id', 'name', 'popularity_type'], 'required'],
             [['author_id'], 'integer'],
-            [['is_pause', 'needs_evaluation', 'is_archived'], 'boolean'],
+            [['is_pause', 'needs_evaluation', 'is_archived', 'is_bodyweight'], 'boolean'],
             [['name', 'description', 'video', 'technique_video', 'popularity_type'], 'string'],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author_id' => 'id']],
         ];
@@ -38,6 +38,7 @@ class Exercise extends \yii\db\ActiveRecord
             'needs_evaluation' => \Yii::t('app', 'Needs evaluation'),
             'popularity_type' => \Yii::t('app', 'Popularity type'),
             'is_archived' => \Yii::t('app', 'Is archived'),
+            'is_bodyweight' => \Yii::t('app', 'Is bodyweight'),
         ];
     }
 

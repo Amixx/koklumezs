@@ -559,7 +559,7 @@ return [
     'easy' => 'viegli',
     'enter at least 4 symbols' => 'jāievada vismaz 4 simbolus',
     'hard' => 'grūti',
-    'here' => 'seit',
+    'here' => 'šeit',
     'rent' => 'Īres',
     'subscription' => 'Mācību',
     'Added exercises' => 'Pievienotie vingrojumi',
@@ -778,4 +778,5 @@ return [
     'The given exercise can be replaced with' => 'Doto vingrojumu iespējams aizstāt ar',
     'Unfortunately, the given exercise cannot replaced by any other' => 'Diemžēl doto vingrojumu nevar nomainīt pret nevienu citu',
     'Is archived' => 'Vai ir arhivēts',
+    'Is bodyweight' => 'Ķermeņa svara vingrojums'
 ];

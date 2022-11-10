@@ -18,67 +18,6 @@ $this->title = \Yii::t('app', 'Exercises');
             ['class' => 'yii\grid\SerialColumn'],
             'name',
             [
-                'attribute' => 'description',
-                'value' => function ($dataProvider) {
-                    $desc = $dataProvider['description'];
-                    if (!$desc) return '';
-
-                    $maxLength = 50;
-                    if (strlen($desc) < $maxLength) return $desc;
-                    $desc = $desc . " ";
-                    $text = substr($desc, 0, $maxLength);
-                    $desc = substr($text, 0, strrpos($desc, ' '));
-                    $desc = $desc . "...";
-                    return $desc;
-                },
-                'format' => 'raw',
-            ],
-            [
-                'attribute' => 'is_pause',
-                'value' => function ($dataProvider) {
-                    return Yii::t('app', $dataProvider['is_pause'] ? 'Yes' : 'No');
-                },
-                'filter' => Html::dropDownList(
-                    'ExerciseSearch[is_pause]',
-                    $get['ExerciseSearch']['is_pause'] ?? '',
-                    [
-                        0 => Yii::t('app', 'No'),
-                        1 => Yii::t('app', 'Yes')
-                    ],
-                    ['prompt' => '-- Visi --', 'class' => 'form-control']
-                ),
-            ],
-            [
-                'attribute' => 'needs_evaluation',
-                'value' => function ($dataProvider) {
-                    return Yii::t('app', $dataProvider['needs_evaluation'] ? 'Yes' : 'No');
-                },
-                'filter' => Html::dropDownList(
-                    'ExerciseSearch[needs_evaluation]',
-                    $get['ExerciseSearch']['needs_evaluation'] ?? '',
-                    [
-                        0 => Yii::t('app', 'No'),
-                        1 => Yii::t('app', 'Yes')
-                    ],
-                    ['prompt' => '-- Visi --', 'class' => 'form-control']
-                ),
-            ],
-            [
-                'attribute' => 'is_archived',
-                'value' => function ($dataProvider) {
-                    return Yii::t('app', $dataProvider['is_archived'] ? 'Yes' : 'No');
-                },
-                'filter' => Html::dropDownList(
-                    'ExerciseSearch[is_archived]',
-                    $get['ExerciseSearch']['is_archived'] ?? '',
-                    [
-                        0 => Yii::t('app', 'No'),
-                        1 => Yii::t('app', 'Yes')
-                    ],
-                    ['prompt' => '-- Visi --', 'class' => 'form-control']
-                ),
-            ],
-            [
                 'attribute' => 'popularity_type',
                 'value' => function ($dataProvider) {
                     return Yii::t('app',
@@ -98,8 +37,22 @@ $this->title = \Yii::t('app', 'Exercises');
                     ['prompt' => '-- Visi --', 'class' => 'form-control']
                 ),
             ],
-            'video',
-            'technique_video',
+            [
+                'attribute' => 'video',
+                'value' => function ($dataProvider) {
+                    if(!$dataProvider['video']) return '';
+                    return Html::a(Yii::t('app', 'here'), $dataProvider['video'], ['target' => '_blank']);
+                },
+                'format' => 'raw',
+            ],
+            [
+                'attribute' => 'technique_video',
+                'value' => function ($dataProvider) {
+                    if(!$dataProvider['video']) return '';
+                    return Html::a(Yii::t('app', 'here'), $dataProvider['technique_video'], ['target' => '_blank']);
+                },
+                'format' => 'raw',
+            ],
             [
                 'attribute' => 'exerciseTag',
                 'format' => 'raw',

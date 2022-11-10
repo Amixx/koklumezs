@@ -16,11 +16,7 @@ class ExerciseSearch extends Exercise
             [[
                 'author_id',
                 'name',
-                'description',
-                'is_pause',
-                'needs_evaluation',
                 'popularity_type',
-                'is_archived',
                 'video',
                 'technique_video',
                 'created_at',
@@ -48,7 +44,7 @@ class ExerciseSearch extends Exercise
      */
     public function search($params)
     {
-        $query = Exercise::find();
+        $query = Exercise::find()->where(['is_archived' => false]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -66,23 +62,13 @@ class ExerciseSearch extends Exercise
         }
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['like', 'video', $this->video])
             ->andFilterWhere(['like', 'technique_video', $this->technique_video])
             ->andFilterWhere(['like', 'created_at', $this->created_at])
             ->andFilterWhere(['like', 'updated_at', $this->updated_at]);
 
-        if($this->is_pause !== null) {
-            $query->andFilterWhere(['is_pause' => $this->is_pause]);
-        }
-        if($this->needs_evaluation !== null) {
-            $query->andFilterWhere(['needs_evaluation' => $this->needs_evaluation]);
-        }
         if($this->popularity_type !== null) {
             $query->andFilterWhere(['popularity_type' => $this->popularity_type]);
-        }
-        if($this->is_archived !== null) {
-            $query->andFilterWhere(['is_archived' => $this->is_archived]);
         }
 
         return $dataProvider;

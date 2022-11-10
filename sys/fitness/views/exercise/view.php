@@ -48,6 +48,12 @@ $this->title = $model->name;
                 }
             ],
             [
+                'attribute' => 'is_bodyweight',
+                'value' => function ($dataProvider) {
+                    return Yii::t('app', $dataProvider['is_bodyweight'] ? 'Yes' : 'No');
+                }
+            ],
+            [
                 'attribute' => 'popularity_type',
                 'value' => function ($dataProvider) {
                     return Yii::t('app',
