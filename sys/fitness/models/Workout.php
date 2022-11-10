@@ -166,4 +166,13 @@ class Workout extends \yii\db\ActiveRecord
             ->orderBy(['fitness_workoutexercises.id' => SORT_ASC])
             ->one();
     }
+
+    public static function getLastWorkoutOfUserAndExercise($userId, $exerciseId) {
+        return self::find()
+            ->joinWith('workoutExercises')
+            ->where(['user_id' => $userId])
+            ->andWhere(['fitness_workoutexercises.exercise_id' => $exerciseId])
+            ->orderBy(['created_at' => SORT_DESC])
+            ->one();
+    }
 }

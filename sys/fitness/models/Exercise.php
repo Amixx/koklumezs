@@ -3,6 +3,7 @@
 namespace app\fitness\models;
 
 use app\models\Users;
+use DateTime;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
@@ -120,7 +121,7 @@ class Exercise extends \yii\db\ActiveRecord
         return !$this->is_pause && $this->needs_evaluation;
     }
 
-    public function lastTwoWeeksEvaluationsOfUser($userId)
+    public function lastWeekEvaluationsOfUser($userId)
     {
         $evaluations = WorkoutExerciseEvaluation::find()
             ->joinWith('workoutExercise')
@@ -131,34 +132,63 @@ class Exercise extends \yii\db\ActiveRecord
                 ['replaced_by_exercise_id' => $this->id],
             ])->all();
 
-        $timeOffset = '+2 weeks';
         return array_filter(
             $evaluations,
-            function ($workoutExerciseEvaluation) use ($timeOffset) {
-                $evaluationCreatedPlusTwoWeeks = new \DateTime($workoutExerciseEvaluation->created);
-                $evaluationCreatedPlusTwoWeeks->modify($timeOffset);
+            function ($workoutExerciseEvaluation) {
+                $evaluationCreationPlusWeek = new \DateTime($workoutExerciseEvaluation->created);
+                $evaluationCreationPlusWeek->modify('+1 week');
 
                 $now = new \DateTime();
 
-                return $evaluationCreatedPlusTwoWeeks > $now;
+                return $evaluationCreationPlusWeek > $now;
             });
     }
 
-    public function lastTwoWeeksAvgOneRepMaxOfUser($userId){
-        $workoutExerciseEvaluations = $this->lastTwoWeeksEvaluationsOfUser($userId);
-        if(empty($workoutExerciseEvaluations)) return null;
+    public function estimatedAvgOneRepMaxOfUser($userId){
+        $workoutExerciseEvaluations = $this->lastWeekEvaluationsOfUser($userId);
 
         $averageOneRepMaxSum = null;
+        $res = null;
 
-        foreach ($workoutExerciseEvaluations as $workoutExerciseEvaluation) {
-            $oneRepMaxRangeAverage = OneRepMaxCalculator::oneRepMaxRangeToAverage($workoutExerciseEvaluation->getOneRepMaxRange());
-            if ($oneRepMaxRangeAverage) {
-                $averageOneRepMaxSum === null
-                    ? $averageOneRepMaxSum = $oneRepMaxRangeAverage
-                    : $averageOneRepMaxSum += $oneRepMaxRangeAverage;
+        // user has not done the exercise in the last week - use last workout evaluations and subtract 5% for every week
+        if(empty($workoutExerciseEvaluations)) {
+            $lastWorkout = Workout::getLastWorkoutOfUserAndExercise($userId, $this->id);
+            $addedEvaluationsCount = 0;
+
+            $now = new DateTime();
+            $workoutCreatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $lastWorkout->created_at);
+            $workoutCreatedWeeksAgo = floor($now->diff($workoutCreatedAt)->days/7);
+
+            $penaltyForEachWeek = 0.05;
+
+            foreach($lastWorkout->workoutExercises as $workoutExercise) {
+                if($workoutExercise->exercise_id == $this->id) {
+                    $oneRepMaxRangeAverage = OneRepMaxCalculator::oneRepMaxRangeToAverage($workoutExercise->evaluation->getOneRepMaxRange());
+                    if ($oneRepMaxRangeAverage) {
+                        $addedEvaluationsCount++;
+                        $averageOneRepMaxSum === null
+                            ? $averageOneRepMaxSum = $oneRepMaxRangeAverage
+                            : $averageOneRepMaxSum += $oneRepMaxRangeAverage;
+                    }
+                }
             }
+
+            if($addedEvaluationsCount > 0) {
+                $res = ($averageOneRepMaxSum / $addedEvaluationsCount) * (1 - ($penaltyForEachWeek * $workoutCreatedWeeksAgo));
+            }
+        } else {
+            foreach ($workoutExerciseEvaluations as $workoutExerciseEvaluation) {
+                $oneRepMaxRangeAverage = OneRepMaxCalculator::oneRepMaxRangeToAverage($workoutExerciseEvaluation->getOneRepMaxRange());
+                if ($oneRepMaxRangeAverage) {
+                    $averageOneRepMaxSum === null
+                        ? $averageOneRepMaxSum = $oneRepMaxRangeAverage
+                        : $averageOneRepMaxSum += $oneRepMaxRangeAverage;
+                }
+            }
+
+            $res = $averageOneRepMaxSum / count($workoutExerciseEvaluations);
         }
 
-        return $averageOneRepMaxSum / count($workoutExerciseEvaluations);
+        return $res;
     }
 }

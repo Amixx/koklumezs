@@ -266,7 +266,7 @@ class ExerciseController extends Controller
 
     public function actionApiGetLastTwoWeekAverageOneRepMax($id, $userId){
         $exercise = Exercise::findOne(['id' => $id]);
-        return round($exercise->lastTwoWeeksAvgOneRepMaxOfUser($userId), 1);
+        return round($exercise->estimatedAvgOneRepMaxOfUser($userId), 1);
     }
 
     protected function findModel($id)
