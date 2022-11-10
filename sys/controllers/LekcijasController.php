@@ -10,6 +10,7 @@ use app\models\Lecturesfiles;
 use app\models\LectureViews;
 use app\models\RelatedLectures;
 use app\models\RegistrationLesson;
+use app\models\User;
 use app\models\Userlectureevaluations;
 use app\models\UserLectures;
 use app\models\Users;
@@ -166,7 +167,7 @@ class LekcijasController extends Controller
                             $trial->user_id = $userContext->id;
                             $trial->save();
 
-                            $dbUser->status = 10;
+                            $dbUser->status = User::STATUS_ACTIVE;
                             $dbUser->save();
                         }
                     }
