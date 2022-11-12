@@ -6,6 +6,7 @@ use app\models\Users;
 use DateTime;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 
 class Exercise extends \yii\db\ActiveRecord
 {
@@ -191,5 +192,10 @@ class Exercise extends \yii\db\ActiveRecord
         }
 
         return $res;
+    }
+    
+    public static function getProgressionChainSelectOptions(){
+        $exercises = self::find()->where(['is_archived' => false, 'is_bodyweight' => true])->asArray()->all();
+        return ArrayHelper::map($exercises, 'id', 'name');
     }
 }

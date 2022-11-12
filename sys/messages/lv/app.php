@@ -778,5 +778,11 @@ return [
     'The given exercise can be replaced with' => 'Doto vingrojumu iespējams aizstāt ar',
     'Unfortunately, the given exercise cannot replaced by any other' => 'Diemžēl doto vingrojumu nevar nomainīt pret nevienu citu',
     'Is archived' => 'Vai ir arhivēts',
-    'Is bodyweight' => 'Ķermeņa svara vingrojums'
+    'Is bodyweight' => 'Ķermeņa svara vingrojums',
+    'Difficulty increase percent' => 'Sarežģītības palielinājums procentos',
+    'Progression chain ID' => 'Progresijas ķēdes ID',
+    'Progression chain' => 'Progresiju ķēde',
+    'Progression chains' => 'Progresiju ķēdes',
+    'Create progression chain' => 'Izveidot progresiju ķēdi',
+    'Update progression chain' => 'Rediģēt progresiju ķēdi',
 ];

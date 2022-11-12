@@ -130,6 +130,7 @@ $config = [
         'fitness-student-exercises' => 'app\fitness\controllers\StudentExerciseController',
         'fitness-exercise-videos' => 'app\fitness\controllers\ExerciseVideoController',
         'fitness-tags' => 'app\fitness\controllers\TagController',
+        'fitness-progression-chains' => 'app\fitness\controllers\ProgressionChainController',
     ],
 ];
 
