@@ -312,7 +312,7 @@ Vue.component('last-workouts-table', {
 
             return this.exerciseNameWithFallback(workoutExercise.replacementExercise.exercise) + " (aizstāja oriģinālo vingrojumu " + this.exerciseNameWithFallback(workoutExercise.exercise) + ")";
         },
-        getAttribute(workoutExercise, attribute){
+        getAttribute(workoutExercise, attribute) {
             return workoutExercise.replacementExercise
                 ? workoutExercise.replacementExercise[attribute]
                 : workoutExercise[attribute]
@@ -812,19 +812,12 @@ $(document).ready(function () {
                     const templates = (await TemplateRepository.list()).map(template => ({
                         ...template,
                         templateExercises: template.templateExercises.map(tempEx => {
-                            let setSequenceNo = 1
-                            template.templateExercises.forEach(tempExSet => {
-                                if (
-                                    tempExSet.exercise_id === tempEx.exercise_id &&
-                                    parseInt(tempExSet.id) < parseInt(tempEx.id)) {
-                                    setSequenceNo++
-                                }
-                            })
                             return {
                                 id: tempEx.id,
-                                sequenceNo: setSequenceNo,
                                 exercise: tempEx.exercise,
                                 weight: tempEx.weight ? parseFloat(tempEx.weight) : null,
+                                reps: tempEx.reps ? parseFloat(tempEx.reps) : null,
+                                time_seconds: tempEx.time_seconds ? parseFloat(tempEx.time_seconds) : null,
                             }
                         })
                     }))
@@ -871,7 +864,10 @@ $(document).ready(function () {
                     })
                 },
                 addTemplate(template) {
-                    this.workout.workoutExercises.push(...template.templateExercises.map(x => ({...x})));
+                    this.workout.workoutExercises.push(...template.templateExercises.map(x => ({
+                        ...x,
+                        sequenceNo: this.addedExercisesOfSet(x.exercise).length + 1
+                    })));
                 },
                 addAnotherLap() {
                     const exercisesToAdd = []
@@ -1210,29 +1206,78 @@ $(document).ready(function () {
             data() {
                 return {
                     exercises: null,
+                    pauses: null,
+                    exercisesLoading: false,
+                    workoutSubmitting: false,
+                    tags: null,
+                    tagTypeSelectOptions: null,
+                    selectedTagTypes: [],
+                    selectedTagGroups: [[], [], [], [], []],
+                    exerciseNameFilter: '',
+                    exercisePopularitySelectOptions: [
+                        {
+                            value: 'POPULAR',
+                            label: 'Populārs'
+                        },
+                        {
+                            value: 'AVERAGE',
+                            label: 'Vidēji populārs'
+                        },
+                        {
+                            value: 'RARE',
+                            label: 'Rets'
+                        },
+                    ],
+                    selectedExercisePopularity: null,
                     templateId: null,
                     template: {
                         title: null,
-                        description: null,
                         templateExercises: [],
+                        description: null,
                     },
                 }
             },
             computed: {
+                selectedTagGroupsFlat() {
+                    return this.selectedTagGroups.flat();
+                },
                 submitButtonText() {
                     return this.templateId ? 'Saglabāt izmaiņas' : 'Izveidot šablonu';
                 }
             },
             created() {
-                this.loadExercises();
+                this.loadTags();
+                this.loadTagTypeSelectOptions()
+                this.loadPauses()
                 if (window.templateId) {
                     this.templateId = window.templateId;
                     this.loadTemplate();
                 }
             },
+            watch: {
+                selectedTagGroupsFlat(n, o) {
+                    if (!o || n.length > o.length) {
+                        this.loadExercises()
+                    }
+                },
+                selectedTagTypes() {
+                    this.loadExercises()
+                },
+                selectedExercisePopularity() {
+                    this.loadExercises()
+                }
+            },
             methods: {
                 async loadExercises() {
-                    this.exercises = await ExerciseRepository.list(this.selectedTagGroups.map(x => x.map(y => y.id)))
+                    this.exercisesLoading = true
+                    const tagIdGroups = this.selectedTagGroupsFlat.length ? this.selectedTagGroups.map(x => x.map(y => y.id)) : null
+                    const tagTypes = this.selectedTagTypes.length ? this.selectedTagTypes.map(x => x.value) : null
+                    const exercisePopularity = this.selectedExercisePopularity ? this.selectedExercisePopularity.value : null
+                    this.exercises = await ExerciseRepository.list(tagIdGroups, tagTypes, this.exerciseNameFilter, exercisePopularity)
+                    this.exercisesLoading = false
+                },
+                async loadPauses() {
+                    this.pauses = await ExerciseRepository.listPauses()
                 },
                 async loadTemplate() {
                     const template = await TemplateRepository.get(window.templateId)
@@ -1243,16 +1288,66 @@ $(document).ready(function () {
                         id: tempEx.id,
                         exercise: tempEx.exercise,
                         weight: tempEx.weight ? parseFloat(tempEx.weight) : null,
+                        reps: tempEx.reps ? parseFloat(tempEx.reps) : null,
+                        time_seconds: tempEx.time_seconds ? parseFloat(tempEx.time_seconds) : null,
                     }))
                 },
+                async loadTags() {
+                    this.tags = await TagRepository.list()
+                },
+                async loadTagTypeSelectOptions() {
+                    const opts = await TagRepository.listTypeSelectOptions()
+                    this.tagTypeSelectOptions = Object.keys(opts).map(key => ({
+                        value: key,
+                        label: opts[key],
+                    }))
+                },
+                addedExercisesOfSet(exercise) {
+                    return this.template.templateExercises.filter(x => x.exercise.id === exercise.id)
+                },
                 addExercise(exercise) {
-                    this.template.templateExercises.push({
+                    const setsOfExercise = this.template.templateExercises.filter(we => we.exercise.id === exercise.id)
+                    const lastSetOfExercise = setsOfExercise.length ? setsOfExercise.pop() : null
+
+                    const newWorkoutExercise = {
                         exercise,
+                        sequenceNo: this.addedExercisesOfSet(exercise).length + 1,
+                        reps: null,
+                        time_seconds: null,
                         weight: null,
-                    })
+                    }
+                    if (lastSetOfExercise) {
+                        newWorkoutExercise.reps = lastSetOfExercise.reps
+                        newWorkoutExercise.time_seconds = lastSetOfExercise.time_seconds
+                        newWorkoutExercise.weight = lastSetOfExercise.weight
+                    }
+
+                    this.template.templateExercises.push(newWorkoutExercise)
                 },
                 removeExercise(index) {
-                    this.template.templateExercises.splice(index, 1);
+                    const removed = this.template.templateExercises.splice(index, 1)
+                    this.lowerAddedExerciseSetNumbers(removed[0])
+                },
+                lowerAddedExerciseSetNumbers(removedExercise) {
+                    this.template.templateExercises.forEach(x => {
+                        if (removedExercise.exercise.id === x.exercise.id) x.sequenceNo--
+                    })
+                },
+                addAnotherLap() {
+                    const exercisesToAdd = []
+                    for (let i = this.template.templateExercises.length - 1; i >= 0; i--) {
+                        const item = this.template.templateExercises[i];
+                        if (
+                            exercisesToAdd.length > 0
+                            && exercisesToAdd[exercisesToAdd.length - 1].id === item.exercise.id
+                        ) {
+                            break;
+                        } else {
+                            exercisesToAdd.unshift(item.exercise)
+                        }
+                    }
+
+                    exercisesToAdd.forEach(this.addExercise)
                 },
                 async createOrUpdateTemplate() {
                     if (this.templateId) {
@@ -1281,46 +1376,163 @@ $(document).ready(function () {
 
                 <div class="row">
                     <div class="col-md-6">
-                        <ul v-if="exercises" class="list-group">
-                            <li v-for="exercise in exercises" :key="exercise.id" class="list-group-item">
-                                <span style="margin-right: 8px;">
-                                    {{ exercise.name }}
-                                    ({{ addedExercisesOfSet(exercise).length }}/{{ exercise.sets.length }})
-                                </span>
-                                <button
-                                    v-if="exercise.sets.length !== addedExercisesOfSet(exercise).length"
-                                    class="btn btn-primary"
-                                    @click="addExercise(exercise)">
-                                    <span class="glyphicon glyphicon-plus" title="Pievienot treniņam"></span>
-                                </button>
+                       <h4>Vingrojumu meklēšana</h4>
+                       <ul class="nav nav-tabs" id="exercise-tabs" role="tablist">
+                         <li class="nav-item active">
+                            <a class="nav-link" id="exercises-tab" data-toggle="tab" href="#by-name" role="tab" aria-controls="exercises" aria-selected="true">
+                                Pēc nosaukuma
+                            </a>
+                         </li>
+                         <li class="nav-item">
+                            <a class="nav-link" id="templates-tab" data-toggle="tab" href="#by-tags" role="tab" aria-controls="templates" aria-selected="false">
+                                Pēc tagiem un popularitātes
+                            </a>
+                         </li>
+                       </ul>
+                       <ul v-if="tags" class="list-group" style="position:relative">
+                             <div class="tab-content" id="by-name-tab-content">
+                                <div class="tab-pane fade active in" id="by-name" role="tabpanel" aria-labelledby="exercises-tab">
+                                    <div class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                        <div class="text-right">
+                                            <button
+                                                class="btn btn-default"
+                                                style="margin-bottom:8px;"
+                                                @click="showCreateExerciseModal = true">
+                                                Izveidot vingrojumu
+                                            </button>
+                                        </div>
+                                        <div style="display:flex; gap:8px;">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                v-model="exerciseNameFilter"
+                                                @keydown.enter="() => {
+                                                    if(!(exerciseNameFilter.length < 3)) loadExercises()
+                                                }">
+                                            <button
+                                                class="btn btn-primary"
+                                                type="button"
+                                                :disabled="exerciseNameFilter.length < 3"
+                                                :title="exerciseNameFilter.length < 3 ? 'Ievadiet vismaz 3 simbolus!' : ''"
+                                                @click="loadExercises">
+                                                Meklēt
+                                            </button>
+                                        </div>                                                   
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="by-tags" role="tabpanel" aria-labelledby="exercises-tab">
+                                    <li class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                        <h4>Tagu atlase</h4>
+                                        <ul style="padding-left:0;">
+                                            <li class="list-group-item" style="border-top:0; border-bottom:0; text-align:center;" v-for="(selectedTags, i) in selectedTagGroups" :key="i">
+                                                <v-select
+                                                    label="value"
+                                                    :options="tags"
+                                                    multiple
+                                                    v-model="selectedTagGroups[i]"
+                                                ></v-select>
+                                                <div v-if="i !== selectedTagGroups.length-1">
+                                                    VAI
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li v-if="tagTypeSelectOptions" class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                         <h4>Tagu tipu atlase</h4>
+                                         <v-select
+                                            label="label"
+                                            :options="tagTypeSelectOptions"
+                                            multiple
+                                            v-model="selectedTagTypes"
+                                         ></v-select>
+                                    </li>
+                                    <li class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                         <h4>Vingrojumu popularitātes atlase</h4>
+                                         <v-select
+                                            label="label"
+                                            :options="exercisePopularitySelectOptions"
+                                            v-model="selectedExercisePopularity"
+                                         ></v-select>
+                                    </li>
+                                </div>
+                            </div>
+                        
+                            <li v-show="exercisesLoading" class="list-group-item disabled-overlay">
+                                <div class="loader" style="height:80px;width:80px;margin:auto;margin-top:25%;border-color:green;border-width:8px;border-top-color:gainsboro"></div>
+                            </li>                                       
+                            <li v-if="exercises" class="list-group-item" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                <p style="text-align: center;font-size: 18px;margin-bottom: 0;">Vingrojumi</p>
+                            </li>
+                            <li v-for="exercise in exercises" :key="exercise.id" class="list-group-item" style="display:flex; justify-content:space-between; flex-wrap: wrap; gap: 8px;" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                <span>
+                                    <a :href="'/sys/fitness-exercises/view?id=' + exercise.id" title="Apskatīt vingrojumu" target="_blank">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </a>
+                                    <span style="margin-right: 8px;">{{ exercise.name }}</span>
+                                    <button
+                                        class="btn btn-primary"
+                                        @click="addExercise(exercise)">
+                                        <span class="glyphicon glyphicon-plus" title="Pievienot treniņam"></span>
+                                    </button>
+                                </span>   
+                            </li>
+                            <li class="list-group-item" v-if="exercises && exercises.length === 20" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                Ielādēti pirmie 20 vingrojumi, kas atbilst atlasei.
+                            </li>
+                            <li class="list-group-item" v-else-if="exercises && !exercises.length" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                <span>Nav atrasts neviens vingrojums!</span>
+                            </li>
+                             <li class="list-group-item" v-if="pauses" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
+                                <p style="text-align: center;font-size: 18px;margin-bottom: 0;">Pauzes</p>
+                                <p v-for="(pause, i) in pauses" :key="i">
+                                    <a :href="'/sys/fitness-exercises/view?id=' + pause.id" title="Apskatīt pauzi" target="_blank">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </a>
+                                    <span>{{ pause.name }}</span>
+                                    <button
+                                        class="btn btn-primary"
+                                        @click="addExercise(pause)">
+                                        <span class="glyphicon glyphicon-plus" title="Pievienot treniņam"></span>
+                                    </button>
+                                </p>
                             </li>
                         </ul>
                     </div>
-
-                    <div v-if="template.templateExercises.length" class="col-md-6 limit-height">
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Piegājiens</th>
-                                    <th>Vingr. pieg.</th>
-                                    <th>Vingrojums</th>
-                                    <th>Reizes</th>
-                                    <th>Laiks (sekundēs)</th>
-                                    <th>Svars</th>
-                                    <th>Dzēst</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <added-exercise 
-                                    v-for="(templateExercise, i) in template.templateExercises"
-                                    :key="i"
-                                    :temp-exercise="templateExercise"
-                                    :index="i"
-                                    @add-set="addExercise(templateExercise.exercise)"
-                                    @remove="removeExercise(i)"
-                                ></added-exercise>
-                            </tbody>
-                        </table>
+                    <div class="col-md-6">
+                    <div v-if="template.templateExercises.length">
+                            <table class="table table-striped table-bordered" >
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Vingr. pieg.</th>
+                                        <th>Vingrojums</th>
+                                        <th>Reizes</th>
+                                        <th>Laiks (sekundēs)</th>
+                                        <th>Spējas (1RM)</th>
+                                        <th>Svars (% no 1RM)</th>
+                                        <th>Svars (kg)</th>
+                                        <th>RPE</th>
+                                        <th>Dzēst</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <added-exercise 
+                                        v-for="(templateExercise, i) in template.templateExercises"
+                                        :key="i"
+                                        :temp-exercise="templateExercise"
+                                        :index="i"
+                                        @add-set="addExercise(templateExercise.exercise)"
+                                        @remove="removeExercise(i)"
+                                    ></added-exercise>
+                                </tbody>
+                            </table>
+                            <div style="margin-top: 16px; display: flex;gap:16px;">
+                                <button class="btn btn-default w-100" style="width:100%;" @click="addAnotherLap">
+                                    Pievienot nākamo "apli"
+                                </button>
+                            </div>
+                        </div>
+                        <p v-else>Treniņam vēl nav pievienots neviens vingrojums...</p>
                     </div>
                 </div>
 

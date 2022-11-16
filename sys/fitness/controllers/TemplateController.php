@@ -69,7 +69,7 @@ class TemplateController extends Controller
                 foreach ($post['templateExercises'] as $tempEx) {
                     $templateExercise = new TemplateExercise;
                     $templateExercise->template_id = $template->id;
-                    $templateExercise->exercise_id = $tempEx['exercise'];
+                    $templateExercise->exercise_id = $tempEx['exercise']['id'];
                     $templateExercise->weight = $tempEx['weight'];
                     $templateExercise->reps = $tempEx['reps'];
                     $templateExercise->time_seconds = $tempEx['time_seconds'];
