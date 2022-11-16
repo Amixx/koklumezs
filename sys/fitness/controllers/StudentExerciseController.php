@@ -38,7 +38,8 @@ class StudentExerciseController extends Controller
         ];
     }
 
-    public function actionIndex(){
+    public function actionIndex()
+    {
         $user = Yii::$app->user->identity;
         $school = $user->getSchool();
         $videoThumb = $school->video_thumbnail;
@@ -150,7 +151,8 @@ class StudentExerciseController extends Controller
         ]);
     }
 
-    public function actionReplaceExercise($id, $replacementId) {
+    public function actionReplaceExercise($id, $replacementId)
+    {
         $workoutExercise = $this->findModel($id);
         $workoutExercise->replaceByExercise($replacementId);
         return $this->redirect(["fitness-student-exercises/view", 'id' => $id]);
@@ -166,7 +168,10 @@ class StudentExerciseController extends Controller
      */
     protected function findModel($id)
     {
-        $model = WorkoutExercise::find()->where(['fitness_workoutexercises.id' => $id])->joinWith('exercise')->one();
+        $model = WorkoutExercise::find()
+            ->where(['fitness_workoutexercises.id' => $id])
+            ->joinWith('exercise')
+            ->one();
         if (($model) !== null) {
             return $model;
         }

@@ -130,8 +130,8 @@ class Exercise extends \yii\db\ActiveRecord
             ->andWhere(['user_id' => $userId])
             ->andWhere([
                 'or',
-                ['exercise_id' => $this->id],
-                ['replaced_by_exercise_id' => $this->id],
+                ['fitness_workoutexercises.exercise_id' => $this->id],
+                ['fitness_replacement_exercises.exercise_id' => $this->id],
             ])->all();
 
         return array_filter(
@@ -146,55 +146,66 @@ class Exercise extends \yii\db\ActiveRecord
             });
     }
 
-    public function estimatedAvgOneRepMaxOfUser($userId){
+    public function estimatedAvgAbilityOfUser($userId)
+    {
         $workoutExerciseEvaluations = $this->lastWeekEvaluationsOfUser($userId);
 
-        $averageOneRepMaxSum = null;
+        $averageAbilitiesSum = null;
         $res = null;
 
+        // TODO: make this also respect if workout exercise has time or not (new property on exercise?)
+        $methodName = $this->is_bodyweight
+            ? 'getMaxRepsRange'
+            : 'getOneRepMaxRange';
+        $type = $this->is_bodyweight ? 'reps' : '1rm';
+
         // user has not done the exercise in the last week - use last workout evaluations and subtract 5% for every week
-        if(empty($workoutExerciseEvaluations)) {
+        if (empty($workoutExerciseEvaluations)) {
             $lastWorkout = Workout::getLastWorkoutOfUserAndExercise($userId, $this->id);
+
+            if (!$lastWorkout) return null;
+
             $addedEvaluationsCount = 0;
 
             $now = new DateTime();
             $workoutCreatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $lastWorkout->created_at);
-            $workoutCreatedWeeksAgo = floor($now->diff($workoutCreatedAt)->days/7);
+            $workoutCreatedWeeksAgo = floor($now->diff($workoutCreatedAt)->days / 7);
 
             $penaltyForEachWeek = 0.05;
 
-            foreach($lastWorkout->workoutExercises as $workoutExercise) {
-                if($workoutExercise->exercise_id == $this->id) {
-                    $oneRepMaxRangeAverage = OneRepMaxCalculator::oneRepMaxRangeToAverage($workoutExercise->evaluation->getOneRepMaxRange());
+            foreach ($lastWorkout->workoutExercises as $workoutExercise) {
+                if ($workoutExercise->exercise_id == $this->id) {
+                    $oneRepMaxRangeAverage = OneRepMaxCalculator::oneRepMaxRangeToAverage($workoutExercise->evaluation->$methodName());
                     if ($oneRepMaxRangeAverage) {
                         $addedEvaluationsCount++;
-                        $averageOneRepMaxSum === null
-                            ? $averageOneRepMaxSum = $oneRepMaxRangeAverage
-                            : $averageOneRepMaxSum += $oneRepMaxRangeAverage;
+                        $averageAbilitiesSum === null
+                            ? $averageAbilitiesSum = $oneRepMaxRangeAverage
+                            : $averageAbilitiesSum += $oneRepMaxRangeAverage;
                     }
                 }
             }
 
-            if($addedEvaluationsCount > 0) {
-                $res = ($averageOneRepMaxSum / $addedEvaluationsCount) * (1 - ($penaltyForEachWeek * $workoutCreatedWeeksAgo));
+            if ($addedEvaluationsCount > 0) {
+                $res = ($averageAbilitiesSum / $addedEvaluationsCount) * (1 - ($penaltyForEachWeek * $workoutCreatedWeeksAgo));
             }
         } else {
             foreach ($workoutExerciseEvaluations as $workoutExerciseEvaluation) {
-                $oneRepMaxRangeAverage = OneRepMaxCalculator::oneRepMaxRangeToAverage($workoutExerciseEvaluation->getOneRepMaxRange());
+                $oneRepMaxRangeAverage = OneRepMaxCalculator::oneRepMaxRangeToAverage($workoutExerciseEvaluation->$methodName());
                 if ($oneRepMaxRangeAverage) {
-                    $averageOneRepMaxSum === null
-                        ? $averageOneRepMaxSum = $oneRepMaxRangeAverage
-                        : $averageOneRepMaxSum += $oneRepMaxRangeAverage;
+                    $averageAbilitiesSum === null
+                        ? $averageAbilitiesSum = $oneRepMaxRangeAverage
+                        : $averageAbilitiesSum += $oneRepMaxRangeAverage;
                 }
             }
 
-            $res = $averageOneRepMaxSum / count($workoutExerciseEvaluations);
+            $res = $averageAbilitiesSum / count($workoutExerciseEvaluations);
         }
 
-        return $res;
+        return $res ? ['ability' => $res, 'type' => $type] : null;
     }
-    
-    public static function getProgressionChainSelectOptions(){
+
+    public static function getProgressionChainSelectOptions()
+    {
         $exercises = self::find()->where(['is_archived' => false, 'is_bodyweight' => true])->asArray()->all();
         return ArrayHelper::map($exercises, 'id', 'name');
     }

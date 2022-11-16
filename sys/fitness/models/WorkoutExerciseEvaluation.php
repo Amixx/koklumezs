@@ -55,35 +55,67 @@ class WorkoutExerciseEvaluation extends \yii\db\ActiveRecord
      */
     public function getWorkoutExercise()
     {
-        return $this->hasOne(WorkoutExercise::class, ['id' => 'workoutexercise_id']);
+        return $this->hasOne(WorkoutExercise::class, ['id' => 'workoutexercise_id'])->joinWith('replacementExercise');
     }
 
     public function getEvaluationText(){
-        $difficultyEvaluationModel = $this->workoutExercise->reps
-            ? DifficultyEvaluation::createForReps($this->workoutExercise->reps)
-            : DifficultyEvaluation::createForTime($this->workoutExercise->time_seconds);
+        $wExercise = $this->getEvaluatedExercise();
+        $difficultyEvaluationModel = $wExercise->reps
+            ? DifficultyEvaluation::createForReps($wExercise->reps)
+            : DifficultyEvaluation::createForTime($wExercise->time_seconds);
 
         return $difficultyEvaluationModel->createEvaluationText($this->evaluation);
     }
 
+    private function getEvaluatedExercise(){
+        return $this->workoutExercise->replacementExercise
+            ?: $this->workoutExercise;
+    }
+
     public function getOneRepMaxRange()
     {
+        $wExercise = $this->getEvaluatedExercise();
         if (
-            !$this->workoutExercise->weight
-            || !$this->workoutExercise->exercise->renderEvaluation()
-            || (!$this->workoutExercise->reps && !$this->workoutExercise->reps)) {
+            $wExercise->exercise->is_bodyweight ||
+            !$wExercise->weight
+            || !$wExercise->exercise->renderEvaluation()
+            || (!$wExercise->reps && !$wExercise->time_seconds)) {
             return null;
         }
 
-        $difficultyEvaluationModel = $this->workoutExercise->reps
-            ? DifficultyEvaluation::createForReps($this->workoutExercise->reps)
-            : DifficultyEvaluation::createForTime($this->workoutExercise->time_seconds);
+        $difficultyEvaluationModel = $wExercise->reps
+            ? DifficultyEvaluation::createForReps($wExercise->reps)
+            : DifficultyEvaluation::createForTime($wExercise->time_seconds);
 
         $minMaxTotalRepsOrTime = $difficultyEvaluationModel->createMinMaxTotalRepsOrTimeSeconds($this->evaluation);
 
         return OneRepMaxCalculator::oneRepMaxRange(
-            $this->workoutExercise->weight,
+            $wExercise->weight,
             $minMaxTotalRepsOrTime['min'],
             $minMaxTotalRepsOrTime['max']);
+    }
+
+    public function getMaxRepsRange(){
+        $wExercise = $this->getEvaluatedExercise();
+        if (
+            !$wExercise->exercise->is_bodyweight
+            || !$wExercise->exercise->renderEvaluation()
+            || !$wExercise->reps) {
+            return null;
+        }
+
+        return DifficultyEvaluation::createForReps($wExercise->reps)->createMinMaxTotalRepsOrTimeSeconds($this->evaluation);
+    }
+
+    public function getMaxTimeSecondsRange(){
+        $wExercise = $this->getEvaluatedExercise();
+        if (
+            !$wExercise->exercise->is_bodyweight
+            || !$wExercise->exercise->renderEvaluation()
+            || !$wExercise->time_seconds) {
+            return null;
+        }
+
+        return DifficultyEvaluation::createForReps($wExercise->time_seconds)->createMinMaxTotalRepsOrTimeSeconds($this->time_seconds);
     }
 }

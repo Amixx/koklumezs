@@ -126,7 +126,7 @@ Vue.component('added-exercise', {
             return null;
         },
         rpe() {
-            if(
+            if (
                 !this.tempExercise.reps
                 || this.tempExercise < 1
                 || this.tempExercise.reps > 12
@@ -165,8 +165,11 @@ Vue.component('added-exercise', {
         }
     },
     async mounted() {
-        const oneRepMaxEstimate = await ExerciseRepository.getLastTwoWeekAverageOneRepMax(this.tempExercise.exercise.id);
-        if (oneRepMaxEstimate) this.oneRepMaxEstimate = oneRepMaxEstimate;
+        const averageAbility = await ExerciseRepository.getAverageAbility(this.tempExercise.exercise.id);
+        // TODO: implement functionality for bodyweight max reps
+        if (averageAbility.ability && averageAbility.type === '1rm') {
+            this.oneRepMaxEstimate = averageAbility.ability;
+        }
     },
     methods: {
         setWeightPercentageOf1rm() {
@@ -174,7 +177,6 @@ Vue.component('added-exercise', {
                 this.weightPercentageOf1rm = null;
                 return;
             }
-            // this.weightPercentageOf1rm = this.oneRepMaxEstimate * (1.0278 - (0.0278 * this.tempExercise.reps));
             this.weightPercentageOf1rm = ((this.tempExercise.weight / this.oneRepMaxEstimate) * 100).toFixed(0) + '%';
         },
         setWeight() {
@@ -182,7 +184,6 @@ Vue.component('added-exercise', {
                 this.tempExercise.weight = null;
                 return;
             }
-            // this.weightPercentageOf1rm = this.oneRepMaxEstimate * (1.0278 - (0.0278 * this.tempExercise.reps));
             this.tempExercise.weight = parseInt(this.oneRepMaxEstimate * parseInt(this.weightPercentageOf1rm) / 100);
         }
     },
@@ -214,11 +215,11 @@ Vue.component('added-exercise', {
         </td>
         <td>
             <div class="form-group">
-                 <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
+                 <div v-if="!(tempExercise.exercise.is_pause === '1') && tempExercise.exercise.is_bodyweight === '1'" class="form-group">
                     <input class="form-control" v-model.number="tempExercise.time_seconds" style="width:60px;">
                  </div>
                  <v-select
-                    v-else
+                    v-else-if="tempExercise.exercise.is_pause === '1'"
                     label="label"
                     :options="pauseLengthOptions"
                     v-model="selectedPauseLength"
@@ -227,16 +228,16 @@ Vue.component('added-exercise', {
         </td>
          <td>
             <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
-                <input class="form-control" v-model="oneRepMaxEstimate" readonly style="width:60px;">
+                <input class="form-control" v-model="oneRepMaxEstimate" readonly style="width:70px;">
             </div>
         </td>
         <td>
-            <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
+            <div v-if="!(tempExercise.exercise.is_pause === '1') && tempExercise.exercise.is_bodyweight !== '1'" class="form-group">
                 <input class="form-control" v-model="weightPercentageOf1rm" style="width:75px;">
             </div>
         </td>
         <td>
-            <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
+            <div v-if="!(tempExercise.exercise.is_pause === '1') && tempExercise.exercise.is_bodyweight !== '1'" class="form-group">
                 <input class="form-control" v-model.number="tempExercise.weight" style="width:50px;">
             </div>
         </td>
@@ -262,6 +263,18 @@ var evalValueToText = {
     10: 'Neiespējami',
 };
 
+function formatAbilityRange(abilityRange, unit) {
+    var min = abilityRange.min;
+    var max = abilityRange.max;
+    var suffix = " (" + unit + ")";
+
+    var main = min === max
+        ? min
+        : [min, max].filter(x => x !== null).join("-");
+
+    return main + suffix;
+}
+
 Vue.component('last-workouts-table', {
     name: 'last-workouts-table',
     props: {
@@ -274,14 +287,35 @@ Vue.component('last-workouts-table', {
         getFileExtension(fileString) {
             return fileString.split('.').pop();
         },
-        formatOneRepMaxRange(workoutExercise) {
-            if (!workoutExercise.evaluation || !workoutExercise.evaluation.one_rep_max_range) return "";
-            var min = workoutExercise.evaluation.one_rep_max_range.min;
-            var max = workoutExercise.evaluation.one_rep_max_range.max;
+        formatAbilitiesRange(workoutExercise) {
+            if (!workoutExercise.evaluation) return "";
 
-            if (min === max) return min;
+            if (workoutExercise.evaluation.one_rep_max_range) {
+                return formatAbilityRange(workoutExercise.evaluation.one_rep_max_range, "kg");
+            }
+            if (workoutExercise.evaluation.max_reps_range) {
+                return formatAbilityRange(workoutExercise.evaluation.max_reps_range, "r");
+            }
+            if (workoutExercise.evaluation.max_time_seconds_range) {
+                return formatAbilityRange(workoutExercise.evaluation.max_time_seconds_range, "s");
+            }
 
-            return [min, max].filter(x => x !== null).join("-");
+            return "";
+        },
+        exerciseNameWithFallback(exerciseName) {
+            return exerciseName ? "<strong>" + exerciseName.name + "</strong>" : '(<em>dzēsts vingrojums<em>)';
+        },
+        formatWorkoutExerciseName(workoutExercise) {
+            if (!workoutExercise.replacementExercise) {
+                return this.exerciseNameWithFallback(workoutExercise.exercise)
+            }
+
+            return this.exerciseNameWithFallback(workoutExercise.replacementExercise.exercise) + " (aizstāja oriģinālo vingrojumu " + this.exerciseNameWithFallback(workoutExercise.exercise) + ")";
+        },
+        getAttribute(workoutExercise, attribute){
+            return workoutExercise.replacementExercise
+                ? workoutExercise.replacementExercise[attribute]
+                : workoutExercise[attribute]
         }
     },
     template: `
@@ -311,18 +345,18 @@ Vue.component('last-workouts-table', {
                                     <th>Laiks (sekundēs)</th>
                                     <th>Svars (kg)</th>
                                     <th>Novērtējums</th>
-                                    <th>1RM (no novērtējuma, svara un reizēm)</th>
+                                    <th>Spējas (1RM / max reizes / max laiks)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                  <tr v-for="(workoutExercise, i) in workout.workoutExercises" :key="i">
                                     <td>{{ i+1 }}</td>
-                                    <td>{{ workoutExercise.exercise ? workoutExercise.exercise.name : 'Dzēsts vingrojums' }}</td>
-                                    <td>{{ workoutExercise.reps }}</td>
-                                    <td>{{ workoutExercise.time_seconds }}</td>
-                                    <td>{{ workoutExercise.weight }}</td>
+                                    <td v-html="formatWorkoutExerciseName(workoutExercise)"></td>
+                                    <td>{{ getAttribute(workoutExercise, 'reps') }}</td>
+                                    <td>{{ getAttribute(workoutExercise, 'time_seconds') }}</td>
+                                    <td>{{ getAttribute(workoutExercise, 'weight') }}</td>
                                     <td>{{ workoutExercise.evaluation ? workoutExercise.evaluation.evaluation_text : "" }}</td>
-                                    <td>{{ formatOneRepMaxRange(workoutExercise) }}</td>
+                                    <td>{{ formatAbilitiesRange(workoutExercise) }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -499,9 +533,9 @@ class RpeCalculator {
         var x = rpeTable[reps]
         var smallestDiff = null
         var toReturn = null
-        for(const y in x) {
+        for (const y in x) {
             var newDiff = Math.abs(weightPercentageOf1rm - x[y])
-            if(!smallestDiff || newDiff < smallestDiff) {
+            if (!smallestDiff || newDiff < smallestDiff) {
                 smallestDiff = newDiff
                 toReturn = y
             }
@@ -562,8 +596,8 @@ class ExerciseRepository extends Repository {
         return (await axios.post(`${this.baseUrl}/api-create`, exercise, this.postConfig)).data
     }
 
-    static async getLastTwoWeekAverageOneRepMax(id) {
-        return (await axios.get(`${this.baseUrl}/api-get-last-two-week-average-one-rep-max?id=${id}&userId=${window.studentId}`)).data
+    static async getAverageAbility(id) {
+        return (await axios.get(`${this.baseUrl}/api-get-average-ability?id=${id}&userId=${window.studentId}`)).data
     }
 }
 
@@ -1107,7 +1141,7 @@ $(document).ready(function () {
                                             <th>Vingrojums</th>
                                             <th>Reizes</th>
                                             <th>Laiks (sekundēs)</th>
-                                            <th>Aptuvens 1RM</th>
+                                            <th>Spējas (1RM)</th>
                                             <th>Svars (% no 1RM)</th>
                                             <th>Svars (kg)</th>
                                             <th>RPE</th>

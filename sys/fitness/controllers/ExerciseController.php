@@ -264,9 +264,17 @@ class ExerciseController extends Controller
         return json_encode($response);
     }
 
-    public function actionApiGetLastTwoWeekAverageOneRepMax($id, $userId){
+    public function actionApiGetAverageAbility($id, $userId){
         $exercise = Exercise::findOne(['id' => $id]);
-        return round($exercise->estimatedAvgOneRepMaxOfUser($userId), 1);
+
+        $x = $exercise->estimatedAvgAbilityOfUser($userId);
+
+        if(!$x) return $x;
+        
+        return json_encode([
+            'ability' => round($x['ability'], 1),
+            'type' => $x['type'],
+        ]);
     }
 
     protected function findModel($id)

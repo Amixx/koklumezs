@@ -81,23 +81,27 @@ class WorkoutController extends Controller
 
         $evaluationExtraAttributes = [];
         foreach($studentWorkouts as $workoutKey => &$studentWorkout) {
-            foreach($studentWorkout->workoutExercises as $exerciseKey => $exercise) {
-                if($exercise->evaluation) {
-                    $evaluationExtraAttributes[$workoutKey][$exerciseKey] = [
-                        'evaluation_text' =>  $exercise->evaluation->getEvaluationText(),
-                        'one_rep_max_range' => $exercise->evaluation->getOneRepMaxRange(),
+            foreach($studentWorkout->workoutExercises as $wExerciseKey => $wExercise) {
+                if($wExercise->evaluation) {
+                    $evaluationExtraAttributes[$workoutKey][$wExerciseKey] = [
+                        'evaluation_text' =>  $wExercise->evaluation->getEvaluationText(),
+                        'one_rep_max_range' => $wExercise->evaluation->getOneRepMaxRange(),
+                        'max_reps_range' => $wExercise->evaluation->getMaxRepsRange(),
+                        'max_time_seconds_range' => $wExercise->evaluation->getMaxTimeSecondsRange(),
                     ];
                 }
             }
-            $studentWorkout = $studentWorkout->toArray([], ['workoutExercises.exercise', 'workoutExercises.evaluation', 'messageForCoach'], true);
+            $studentWorkout = $studentWorkout->toArray([], ['workoutExercises.exercise', 'workoutExercises.replacementExercise.exercise', 'workoutExercises.evaluation', 'messageForCoach'], true);
         }
 
         // TODO: this is very very bad!!! might cause performance issues! think of a better realisation!
         foreach($evaluationExtraAttributes as $workoutKey => $exerciseKeyToEvaluationOneRepMaxRange) {
-            foreach($exerciseKeyToEvaluationOneRepMaxRange as $exerciseKey => $evaluationOneRepMaxRange) {
-                $evaluation = &$studentWorkouts[$workoutKey]['workoutExercises'][$exerciseKey]['evaluation'];
+            foreach($exerciseKeyToEvaluationOneRepMaxRange as $wExerciseKey => $evaluationOneRepMaxRange) {
+                $evaluation = &$studentWorkouts[$workoutKey]['workoutExercises'][$wExerciseKey]['evaluation'];
                 $evaluation['evaluation_text'] = $evaluationOneRepMaxRange['evaluation_text'];
                 $evaluation['one_rep_max_range'] = $evaluationOneRepMaxRange['one_rep_max_range'];
+                $evaluation['max_reps_range'] = $evaluationOneRepMaxRange['max_reps_range'];
+                $evaluation['max_time_seconds_range'] = $evaluationOneRepMaxRange['max_time_seconds_range'];
             }
         }
 

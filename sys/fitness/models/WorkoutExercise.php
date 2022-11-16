@@ -20,14 +20,13 @@ class WorkoutExercise extends \yii\db\ActiveRecord
     {
         return [
             [['workout_id', 'exercise_id'], 'required'],
-            [['workout_id', 'exercise_id', 'replaced_by_exercise_id', 'reps', 'time_seconds'], 'integer'],
+            [['workout_id', 'exercise_id', 'reps', 'time_seconds'], 'integer'],
             [
                 ['weight'], 'number',
                 'numberPattern' => '/^\d+(.\d{1,2})?$/'
             ],
             [['workout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workout::class, 'targetAttribute' => ['workout_id' => 'id']],
             [['exercise_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exercise::class, 'targetAttribute' => ['exercise_id' => 'id']],
-            [['replaced_by_exercise_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exercise::class, 'targetAttribute' => ['replaced_by_exercise_id' => 'id']],
         ];
     }
 
@@ -37,7 +36,6 @@ class WorkoutExercise extends \yii\db\ActiveRecord
             'id' => 'ID',
             'workout_id' => \Yii::t('app', 'Workout ID'),
             'exercise_id' => \Yii::t('app', 'Exercise ID'),
-            'replaced_by_exercise_id' => \Yii::t('app', 'Replaced by exercise ID'),
             'weight' => \Yii::t('app', 'Weight'),
             'reps' => \Yii::t('app', 'Repetitions'),
             'time_seconds' => \Yii::t('app', 'Time (seconds)'),
@@ -62,7 +60,7 @@ class WorkoutExercise extends \yii\db\ActiveRecord
 
     public function getReplacementExercise()
     {
-        return $this->hasOne(Exercise::class, ['id' => 'replaced_by_exercise_id'])->joinWith('videos');
+        return $this->hasOne(ReplacementExercise::class, ['workoutexercise_id' => 'id'])->joinWith('exercise');
     }
 
     public function getEvaluation()
@@ -72,50 +70,58 @@ class WorkoutExercise extends \yii\db\ActiveRecord
 
     public function isReplaced()
     {
-        return !!$this->replaced_by_exercise_id;
+        return !!$this->replacementExercise;
     }
 
     public function getExerciseForStudent()
     {
-        return $this->isReplaced() ? $this->replacementExercise : $this->exercise;
+        return $this->isReplaced() ? $this->replacementExercise->exercise : $this->exercise;
     }
 
-    private function getWeightRatio()
+    private function getAbilityRatio()
     {
         if (!$this->isReplaced()) return 1;
 
         $workoutUserId = $this->workout->student->id;
 
         $lastTwoWeeksOneRepMaxAverages = [
-            'original' => $this->exercise->estimatedAvgOneRepMaxOfUser($workoutUserId),
-            'replacement' => $this->replacementExercise->estimatedAvgOneRepMaxOfUser($workoutUserId)
+            'original' => $this->exercise->estimatedAvgAbilityOfUser($workoutUserId),
+            'replacement' => $this->replacementExercise->exercise->estimatedAvgAbilityOfUser($workoutUserId)
         ];
 
-        if(is_null($lastTwoWeeksOneRepMaxAverages['original']) || is_null($lastTwoWeeksOneRepMaxAverages['replacement'])){
+        if (is_null($lastTwoWeeksOneRepMaxAverages['original']) || is_null($lastTwoWeeksOneRepMaxAverages['replacement'])) {
             // TODO: what to do in this situation?
             return 1;
         }
 
-        return $lastTwoWeeksOneRepMaxAverages['replacement'] / $lastTwoWeeksOneRepMaxAverages['original'];
+        return $lastTwoWeeksOneRepMaxAverages['replacement']['ability'] / $lastTwoWeeksOneRepMaxAverages['original']['ability'];
     }
 
     public function repsWeightTimeFormatted()
     {
-        $hasWeight = !!$this->weight;
-        $hasReps = !!$this->reps;
-        $hasTime = !!$this->time_seconds;
+        if(!$this->isReplaced()) {
+            $weight = $this->weight;
+            $reps = $this->reps;
+            $time = $this->time_seconds;
+        } else {
+            $weight = $this->replacementExercise->weight;
+            $reps = $this->replacementExercise->reps;
+            $time = $this->replacementExercise->time_seconds;
+        }
 
-        $weightRatio = $this->getWeightRatio();
-        $computedWeight = round($this->weight * $weightRatio, 1);
+        $hasWeight = !!$weight;
+        $hasReps = !!$reps;
+        $hasTime = !!$time;
+
 
         $res = '';
         if ($hasReps) {
-            $res = wrapInBold($this->reps) . ' reizes';
+            $res = wrapInBold($reps) . ' reizes';
         } else if ($hasTime) {
-            $res = wrapInBold($this->time_seconds) . ' sekundes';
+            $res = wrapInBold($time) . ' sekundes';
         }
         if ($hasWeight) {
-            $res .= ' ar ' . wrapInBold($computedWeight) . ' kg svaru';
+            $res .= ' ar ' . wrapInBold($weight) . ' kg svaru';
         }
 
         return $res;
@@ -154,10 +160,92 @@ class WorkoutExercise extends \yii\db\ActiveRecord
         return $workoutExercise->videoToDisplay();
     }
 
+    private function weightReplacedByWeight($exerciseToReplaceWith){
+        return !$this->exercise->is_bodyweight && !$exerciseToReplaceWith->is_bodyweight;
+    }
+
+    private function weightReplacedByBodyweight($exerciseToReplaceWith){
+        return !$this->exercise->is_bodyweight && $exerciseToReplaceWith->is_bodyweight;
+    }
+
+    private function bodyweightReplacedByWeight($exerciseToReplaceWith){
+        return $this->exercise->is_bodyweight && !$exerciseToReplaceWith->is_bodyweight;
+    }
+
+    private function getReplacementExerciseWeight($exerciseToReplaceWith){
+        if(is_null($this->weight)) return null;
+
+        $abilityRatio = $this->getAbilityRatio();
+
+        if($this->weightReplacedByWeight($exerciseToReplaceWith)) {
+            return round($this->weight * $abilityRatio, 1);
+        }
+        if($this->weightReplacedByBodyweight($exerciseToReplaceWith)) return null;
+        if($this->bodyweightReplacedByWeight($exerciseToReplaceWith)) {
+            //TODO: what to do here? calculate needed weight from bodyweight reps
+            return null;
+        }
+
+        return null;
+    }
+
+    private function getReplacementExerciseReps($exerciseToReplaceWith){
+        if($this->weightReplacedByWeight($exerciseToReplaceWith)) {
+            return $this->reps;
+        }
+        if($this->weightReplacedByBodyweight($exerciseToReplaceWith)) {
+            if(!$this->reps) return null;
+
+            $originalAbility = $this->exercise->estimatedAvgAbilityOfUser($this->workout->student->id);
+            $replacementAbility =$exerciseToReplaceWith->estimatedAvgAbilityOfUser($this->workout->student->id);
+            // TODO: improve this!
+            $originalRpe = RpeCalculator::calculateRpe(
+                $this->reps,
+                $this->weight / ($originalAbility ? $originalAbility['ability'] : 1));
+
+            return round(($replacementAbility ? $replacementAbility['ability'] : 10) * ($originalRpe / 10), 0);
+        }
+        if($this->bodyweightReplacedByWeight($exerciseToReplaceWith)) {
+            //TODO: what to do here? calculate needed reps from bodyweight reps
+            return null;
+        }
+
+        return null;
+    }
+
+    private function getReplacementExerciseTimeSeconds($exerciseToReplaceWith){
+        if($this->weightReplacedByWeight($exerciseToReplaceWith)) return $this->time_seconds;
+        if($this->weightReplacedByBodyweight($exerciseToReplaceWith)) {
+            if(!$this->time_seconds) return null;
+
+            $originalAbility = $this->exercise->estimatedAvgAbilityOfUser($this->workout->student->id);
+            $replacementAbility = $exerciseToReplaceWith->estimatedAvgAbilityOfUser($this->workout->student->id);
+            // TODO: improve this!
+            $originalRpe = RpeCalculator::calculateRpe(
+                $this->time_seconds,
+                $this->weight / ($originalAbility ? $originalAbility['ability'] : 1));
+
+            return round(($replacementAbility ? $replacementAbility['ability'] : 30) * ($originalRpe / 10), 0);
+        }
+        if($this->bodyweightReplacedByWeight($exerciseToReplaceWith)) return null;
+
+        return null;
+    }
+
+
     public function replaceByExercise($replacementExerciseId)
     {
-        $this->replaced_by_exercise_id = $replacementExerciseId;
-        $this->update();
-        return $this;
+        if($this->isReplaced()) return null;
+
+        $exerciseToReplaceWith = Exercise::find()->where(['id' => $replacementExerciseId])->one();
+
+        $replacementExercise = new ReplacementExercise;
+        $replacementExercise->workoutexercise_id = $this->id;
+        $replacementExercise->exercise_id = $replacementExerciseId;
+        $replacementExercise->weight = $this->getReplacementExerciseWeight($exerciseToReplaceWith);
+        $replacementExercise->reps = $this->getReplacementExerciseReps($exerciseToReplaceWith);
+        $replacementExercise->time_seconds = $this->getReplacementExerciseTimeSeconds($exerciseToReplaceWith);
+
+        return $replacementExercise->save();
     }
 }

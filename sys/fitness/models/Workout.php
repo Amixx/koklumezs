@@ -67,6 +67,7 @@ class Workout extends \yii\db\ActiveRecord
     {
         return $this->hasMany(WorkoutExercise::class, ['workout_id' => 'id'])
             ->joinWith('exercise')
+            ->joinWith('replacementExercise')
             ->joinWith('evaluation')
             ->orderBy(['fitness_workoutexercises.id' => SORT_ASC]);
     }
