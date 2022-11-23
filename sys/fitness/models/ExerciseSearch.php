@@ -2,7 +2,7 @@
 
 namespace app\fitness\models;
 
-use app\fitness\models\Exercise;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
@@ -44,7 +44,10 @@ class ExerciseSearch extends Exercise
      */
     public function search($params)
     {
-        $query = Exercise::find()->where(['is_archived' => false]);
+        $query = Exercise::find()->where([
+            'is_archived' => false,
+            'fitness_exercises.author_id' => Yii::$app->user->identity->id,
+        ]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

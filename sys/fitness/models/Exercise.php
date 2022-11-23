@@ -4,6 +4,7 @@ namespace app\fitness\models;
 
 use app\models\Users;
 use DateTime;
+use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
@@ -206,7 +207,13 @@ class Exercise extends \yii\db\ActiveRecord
 
     public static function getProgressionChainSelectOptions()
     {
-        $exercises = self::find()->where(['is_archived' => false, 'is_bodyweight' => true])->asArray()->all();
+        $exercises = self::find()
+            ->where([
+                'is_archived' => false,
+                'is_bodyweight' => true,
+                'fitness_exercises.author_id' => Yii::$app->user->identity->id
+            ])
+            ->asArray()->all();
         return ArrayHelper::map($exercises, 'id', 'name');
     }
 }

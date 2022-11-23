@@ -172,6 +172,9 @@ class ExerciseController extends Controller
         $limit = 20;
 
         $query = Exercise::find()
+            ->andWhere([
+                'fitness_exercises.author_id' => Yii::$app->user->identity->id
+            ])
             ->joinWith('sets')
             ->groupBy('name')
             ->limit($limit);
@@ -249,7 +252,10 @@ class ExerciseController extends Controller
         $get = Yii::$app->request->get();
         $exerciseNameSearchTerm = $get['term'];
 
-        $exercises = Exercise::find()->where(['like', 'name', $exerciseNameSearchTerm])->limit(50)->asArray()->all();
+        $exercises = Exercise::find()
+            ->where(['author_id' => Yii::$app->user->identity->id])
+            ->andWhere(['like', 'name', $exerciseNameSearchTerm])
+            ->limit(50)->asArray()->all();
         $select2Options = array_map(function ($exercise) {
             return [
                 'id' => $exercise['id'],
