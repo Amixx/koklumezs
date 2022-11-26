@@ -62,6 +62,8 @@ class UserController extends Controller
         $dataProvider = $searchModel->search($get);
         $schoolSubPlanPrices = SchoolSubPlans::getPrices();
         $planEndDates = StudentSubPlans::getReadablePlanEndDates();
+        $school = $userContext->getSchool();
+        $isFitnessSchool = $school->is_fitness_school;
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -70,6 +72,7 @@ class UserController extends Controller
             'lectures' => $lectures,
             'schoolSubPlanPrices' => $schoolSubPlanPrices,
             'planEndDates' => $planEndDates,
+            'isFitnessSchool' => $isFitnessSchool,
         ]);
     }
 
@@ -333,7 +336,7 @@ class UserController extends Controller
 
     public function actionApiGet($id)
     {
-        $user = Users::find()->where(['id' => $id])->asArray()->one();
+        $user = Users::find()->where(['users.id' => $id])->joinWith('clientData')->asArray()->one();
         return json_encode($user);
     }
 

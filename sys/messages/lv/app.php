@@ -787,4 +787,12 @@ return [
     'Update progression chain' => 'Rediģēt progresiju ķēdi',
     'Is ready' => 'Vai ir gatavs',
     'Is added to any workouts' => 'Vai ir iekļauts kādā treniņā',
+    'Bodyweight (kg)' => 'Ķermeņa svars (kg)',
+    'Injuries' => 'Traumas',
+    'Operations' => 'Operācijas',
+    'Blood analysis' => 'Asinsanalīzes',
+    'Emotional state' => 'Emocionālais stāvoklis',
+    'Edit client data' => 'Rediģēt klienta datus',
+    'Client data updated!' => 'Klienta dati atjaunoti!',
+    'Problems' => 'Problēmas',
 ];

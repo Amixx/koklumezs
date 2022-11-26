@@ -938,9 +938,19 @@ $(document).ready(function () {
                             <p>E-pasts: {{ user.email }}</p>
                             <p>Tel. nr.: {{ user.phone_number }}</p>
                             <p>Valoda: {{ user.language }}</p>
-                            <div v-if="user.about">
+                            <div v-if="user.clientData">
+                                <hr/>
+                                <p>Ķermeņa svars: {{ user.clientData.bodyweight }}</p>
+                                <p>Mērķis: {{ user.clientData.goal }}</p>
+                                <p>Pieredze: {{ user.clientData.experience }}</p>
+                                <p>Problēmas: {{ user.clientData.problems }}</p>
+                                <p>Operācijas: {{ user.clientData.operations }}</p>
+                                <p>Asinsanalīzes: {{ user.clientData.blood_analysis }}</p>
+                                <p>Emocionālais stāvoklis: {{ user.clientData.emotional_state }}</p>
+                                <div>
                                 <p>Piezīmes:</p>
-                                <p v-html="user.about"></p>
+                                <p v-html="user.clientData.notes"></p>
+                                </div>
                             </div>
                         </div>
                     </div>

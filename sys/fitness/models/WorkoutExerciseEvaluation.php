@@ -116,6 +116,6 @@ class WorkoutExerciseEvaluation extends \yii\db\ActiveRecord
             return null;
         }
 
-        return DifficultyEvaluation::createForReps($wExercise->time_seconds)->createMinMaxTotalRepsOrTimeSeconds($this->time_seconds);
+        return DifficultyEvaluation::createForReps($wExercise->time_seconds)->createMinMaxTotalRepsOrTimeSeconds($this->evaluation);
     }
 }
