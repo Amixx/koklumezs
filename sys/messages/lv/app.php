@@ -785,4 +785,6 @@ return [
     'Progression chains' => 'Progresiju ķēdes',
     'Create progression chain' => 'Izveidot progresiju ķēdi',
     'Update progression chain' => 'Rediģēt progresiju ķēdi',
+    'Is ready' => 'Vai ir gatavs',
+    'Is added to any workouts' => 'Vai ir iekļauts kādā treniņā',
 ];

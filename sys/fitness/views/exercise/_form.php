@@ -43,6 +43,7 @@ $tagSelected = function ($tagId) use ($selectedTagIds) {
         <?= $form->field($model, 'needs_evaluation')->checkbox() ?>
         <?= $form->field($model, 'is_archived')->checkbox() ?>
         <?= $form->field($model, 'is_bodyweight')->checkbox() ?>
+        <?= $form->field($model, 'is_ready')->checkbox() ?>
         <?= $form->field($model, 'popularity_type')->dropDownList(
             [
                 'POPULAR' => Yii::t('app', 'Popular'),

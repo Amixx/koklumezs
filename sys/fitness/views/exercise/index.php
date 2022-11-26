@@ -70,6 +70,42 @@ $this->title = \Yii::t('app', 'Exercises');
                 ),
             ],
             [
+                'attribute' => 'is_ready',
+                'format' => 'raw',
+                'value' => function ($dataProvider) {
+                   return $dataProvider['is_ready']
+                       ? Yii::t('app', 'Yes')
+                       : Yii::t('app', 'No');
+                },
+                'label' => Yii::t('app', 'Is ready'),
+                'filter' => Html::dropDownList(
+                    'ExerciseSearch[is_ready]',
+                    $get['ExerciseSearch']['is_ready'] ?? null,
+                    [
+                        true => Yii::t('app', 'Yes'),
+                        false => Yii::t('app', 'No'),
+                    ],
+                    ['prompt' => '-- Visi --', 'class' => 'form-control']
+                ),
+            ],
+            [
+                'attribute' => 'isAddedToAnyWorkouts',
+                'format' => 'raw',
+                'value' => function ($dataProvider) {
+                    return '';
+                },
+                'label' => Yii::t('app', 'Is added to any workouts'),
+                'filter' => Html::dropDownList(
+                    'ExerciseSearch[isAddedToAnyWorkouts]',
+                    $get['ExerciseSearch']['isAddedToAnyWorkouts'] ?? null,
+                    [
+                        true => Yii::t('app', 'Yes'),
+                        false => Yii::t('app', 'No'),
+                    ],
+                    ['prompt' => '-- Visi --', 'class' => 'form-control']
+                ),
+            ],
+            [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => \Yii::t('app', 'Actions'),
                 'template' => '{view} {update} {delete}',

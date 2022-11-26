@@ -54,6 +54,12 @@ $this->title = $model->name;
                 }
             ],
             [
+                'attribute' => 'is_ready',
+                'value' => function ($dataProvider) {
+                    return Yii::t('app', $dataProvider['is_ready'] ? 'Yes' : 'No');
+                }
+            ],
+            [
                 'attribute' => 'popularity_type',
                 'value' => function ($dataProvider) {
                     return Yii::t('app',

@@ -5,23 +5,29 @@ namespace app\fitness\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 
 class ExerciseSearch extends Exercise
 {
     public $exerciseTag;
+    public $isAddedToAnyWorkouts;
+
     public function rules()
     {
         return [
             [['id', 'author_id', 'exerciseTag'], 'integer'],
+            [['is_ready', 'isAddedToAnyWorkouts'], 'boolean'],
             [[
                 'author_id',
                 'name',
                 'popularity_type',
                 'video',
                 'technique_video',
+                'is_ready',
                 'created_at',
                 'updated_at',
                 'exerciseTag',
+                'isAddedToAnyWorkouts'
             ], 'safe'],
         ];
     }
@@ -60,7 +66,7 @@ class ExerciseSearch extends Exercise
             // $query->where('0=1');
             return $dataProvider;
         }
-        if($this->exerciseTag) {
+        if ($this->exerciseTag) {
             $query->andFilterWhere(['in', 'id', ExerciseTag::find()->select('exercise_id')->where(['tag_id' => $this->exerciseTag])]);
         }
 
@@ -70,8 +76,19 @@ class ExerciseSearch extends Exercise
             ->andFilterWhere(['like', 'created_at', $this->created_at])
             ->andFilterWhere(['like', 'updated_at', $this->updated_at]);
 
-        if($this->popularity_type !== null) {
+        if ($this->popularity_type !== null && $this->popularity_type !== '') {
             $query->andFilterWhere(['popularity_type' => $this->popularity_type]);
+        }
+        if ($this->is_ready !== null && $this->is_ready !== '') {
+            $query->andFilterWhere(['is_ready' => $this->is_ready]);
+        }
+        if ($this->isAddedToAnyWorkouts !== null && $this->isAddedToAnyWorkouts !== '') {
+            $x = WorkoutExercise::find()->select('exercise_id')->asArray()->all();
+            $query->andFilterWhere([
+                $this->isAddedToAnyWorkouts ? 'in' : 'not in',
+                'id',
+                ArrayHelper::getColumn($x, 'exercise_id'),
+            ]);
         }
 
         return $dataProvider;
