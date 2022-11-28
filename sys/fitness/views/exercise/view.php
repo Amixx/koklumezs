@@ -46,6 +46,8 @@ function createBooleanColumn($attribute)
             createBooleanColumn('needs_evaluation'),
             createBooleanColumn('is_bodyweight'),
 
+            createBooleanColumn('has_reps'),
+            createBooleanColumn('has_weight'),
             createBooleanColumn('has_time'),
             createBooleanColumn('has_resistance_bands'),
             createBooleanColumn('has_mode'),

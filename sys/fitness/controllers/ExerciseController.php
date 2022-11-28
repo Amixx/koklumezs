@@ -14,6 +14,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 class ExerciseController extends Controller
 {
@@ -227,7 +228,9 @@ class ExerciseController extends Controller
 
         $exercises = $query->joinWith('videos')->asArray()->all();
 
-        return json_encode($exercises);
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_JSON;
+        $response->data = $exercises;
     }
 
     public function actionApiCreate()

@@ -47,6 +47,8 @@ $tagSelected = function ($tagId) use ($selectedTagIds) {
         <?= $form->field($model, 'is_bodyweight')->checkbox() ?>
         <?= $form->field($model, 'is_ready')->checkbox() ?>
         <hr>
+        <?= $form->field($model, 'has_reps')->checkbox() ?>
+        <?= $form->field($model, 'has_weight')->checkbox() ?>
         <?= $form->field($model, 'has_time')->checkbox() ?>
         <?= $form->field($model, 'has_resistance_bands')->checkbox() ?>
         <?= $form->field($model, 'has_mode')->checkbox() ?>

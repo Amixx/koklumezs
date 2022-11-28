@@ -56,9 +56,13 @@ Vue.component('added-exercise', {
             type: Number,
             required: true,
         },
+        shouldShowColumns: {
+            type: Array,
+            required: true,
+        }
     },
     data() {
-        if (this.tempExercise.exercise.is_pause === '1') {
+        if (this.tempExercise.exercise.is_pause) {
             const pauseLengths = [
                 15,
                 30,
@@ -177,14 +181,14 @@ Vue.component('added-exercise', {
                 this.weightPercentageOf1rm = null;
                 return;
             }
-            this.weightPercentageOf1rm = ((this.tempExercise.weight / this.oneRepMaxEstimate) * 100).toFixed(0) + '%';
+            this.weightPercentageOf1rm = parseInt(((this.tempExercise.weight / this.oneRepMaxEstimate) * 100).toFixed(0))
         },
         setWeight() {
             if (!this.weightPercentageOf1rm) {
                 this.tempExercise.weight = null;
                 return;
             }
-            this.tempExercise.weight = parseInt(this.oneRepMaxEstimate * parseInt(this.weightPercentageOf1rm) / 100);
+            this.tempExercise.weight = parseInt(this.oneRepMaxEstimate * this.weightPercentageOf1rm / 100);
         }
     },
     template: `
@@ -209,41 +213,108 @@ Vue.component('added-exercise', {
             <span>{{ tempExercise.exercise.name }}</span>
         </td>
         <td>
-            <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
-                <input class="form-control" v-model.number="tempExercise.reps" style="width:60px;">
+            <div v-if="!tempExercise.exercise.is_pause" class="form-group">
+              {{ oneRepMaxEstimate }}
             </div>
         </td>
-        <td>
-            <div class="form-group">
-                 <div v-if="!(tempExercise.exercise.is_pause === '1') && tempExercise.exercise.is_bodyweight === '1'" class="form-group">
-                    <input class="form-control" v-model.number="tempExercise.time_seconds" style="width:60px;">
+        <td v-if="shouldShowColumns.reps">
+            <div v-if="!tempExercise.exercise.is_pause" class="form-group">
+                <input
+                    class="form-control"
+                    v-model.number="tempExercise.reps"
+                    style="width:50px;">
+            </div>
+        </td>        
+        <td v-if="shouldShowColumns.weight">
+            <div
+                v-if="!tempExercise.exercise.is_pause"
+                class="form-group"
+                style="display:flex;text-align:center;gap:8px;font-size:11px">
+                <div>
+                     <input
+                        class="form-control"
+                        v-model.number="weightPercentageOf1rm"
+                        style="width:50px;">
+                    <span>% no 1RM</span>
+                </div>
+                <div>
+                    <input class="form-control" v-model.number="tempExercise.weight" style="width:50px;">
+                    <span>kg</span>
+                </div>
+            </div>
+        </td>
+         <td v-if="shouldShowColumns.rpe">
+            <div v-if="!tempExercise.exercise.is_pause" class="form-group">
+                <input class="form-control" v-model="rpe" readonly style="width:45px;">
+            </div>
+        </td>
+        <td v-if="shouldShowColumns.time">
+            <div v-if="tempExercise.exercise.is_pause || tempExercise.exercise.has_time">
+                 <div v-if="tempExercise.exercise.has_time" class="form-group">
+                    <input
+                        class="form-control"
+                        v-model.number="tempExercise.time_seconds"
+                        style="width:50px;">
                  </div>
                  <v-select
-                    v-else-if="tempExercise.exercise.is_pause === '1'"
+                    v-else-if="tempExercise.exercise.is_pause"
                     label="label"
                     :options="pauseLengthOptions"
                     v-model="selectedPauseLength"
                  ></v-select>
             </div>
         </td>
-         <td>
-            <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
-                <input class="form-control" v-model="oneRepMaxEstimate" readonly style="width:70px;">
+        <td v-if="shouldShowColumns.resistance_bands">
+            <div v-if="tempExercise.exercise.has_resistance_bands" class="form-group">
+                <input class="form-control" v-model="tempExercise.resistance_bands" style="width:100px;">
             </div>
         </td>
-        <td>
-            <div v-if="!(tempExercise.exercise.is_pause === '1') && tempExercise.exercise.is_bodyweight !== '1'" class="form-group">
-                <input class="form-control" v-model="weightPercentageOf1rm" style="width:75px;">
+        <td v-if="shouldShowColumns.mode">
+            <div v-if="tempExercise.exercise.has_mode" class="form-group">
+                <input
+                    class="form-control"
+                    v-model="tempExercise.mode" 
+                    style="width:50px;">
             </div>
         </td>
-        <td>
-            <div v-if="!(tempExercise.exercise.is_pause === '1') && tempExercise.exercise.is_bodyweight !== '1'" class="form-group">
-                <input class="form-control" v-model.number="tempExercise.weight" style="width:50px;">
+        <td v-if="shouldShowColumns.incline_percent">
+            <div v-if="tempExercise.exercise.has_incline_percent" class="form-group">
+                <input
+                     class="form-control"
+                     v-model.number="tempExercise.incline_percent" 
+                     style="width:50px;">
             </div>
         </td>
-         <td>
-            <div v-if="!(tempExercise.exercise.is_pause === '1')" class="form-group">
-                <input class="form-control" v-model="rpe" readonly style="width:45px;">
+        <td v-if="shouldShowColumns.pace">
+            <div v-if="tempExercise.exercise.has_pace" class="form-group">
+                <input
+                    class="form-control"
+                    v-model.number="tempExercise.pace"
+                    style="width:50px;">
+            </div>
+        </td>
+        <td v-if="shouldShowColumns.speed">
+            <div v-if="tempExercise.exercise.has_speed" class="form-group">
+                <input
+                    class="form-control"
+                    v-model.number="tempExercise.speed"
+                    style="width:50px;">
+            </div>
+        </td>
+        <td v-if="shouldShowColumns.pulse">
+            <div v-if="tempExercise.exercise.has_pulse" class="form-group">
+                <input
+                    class="form-control"
+                    v-model.number="tempExercise.pulse"
+                    style="width:50px;">
+            </div>
+        </td>
+        <td v-if="shouldShowColumns.height">
+            <div v-if="tempExercise.exercise.has_height" class="form-group">
+                <input
+                    class="form-control"
+                    v-model.number="tempExercise.height"
+                    style="width:50px;">
             </div>
         </td>
         <td>
@@ -335,7 +406,7 @@ Vue.component('last-workouts-table', {
                     <td>{{ workout.description }}</td>
                     <td class="text-center" style="white-space:nowrap">{{ workout.opened_at ? workout.opened_at : 'Nav atvērts' }}</td>
                     <td>
-                        <span v-if="workout.abandoned === '1'" class="text-danger" style="line-height: 2.5; font-weight: bold;">Šis treniņš tika pamests!</span>
+                        <span v-if="workout.abandoned" class="text-danger" style="line-height: 2.5; font-weight: bold;">Šis treniņš tika pamests!</span>
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
@@ -578,7 +649,7 @@ class ExerciseRepository extends Repository {
                 exerciseName,
                 exercisePopularity
             }
-        })).data
+        })).data.map(ExerciseVM.createFrom)
     }
 
     static async listPauses() {
@@ -588,7 +659,7 @@ class ExerciseRepository extends Repository {
                 ...set,
                 sequenceNo: i + 1
             }))
-            return exercise
+            return ExerciseVM.createFrom(exercise)
         })
     }
 
@@ -598,6 +669,60 @@ class ExerciseRepository extends Repository {
 
     static async getAverageAbility(id) {
         return (await axios.get(`${this.baseUrl}/api-get-average-ability?id=${id}&userId=${window.studentId}`)).data
+    }
+}
+
+const parseJsonBoolean = (str) => str === "1"
+
+class ExerciseVM {
+    id;
+    author_id;
+    name;
+    description;
+    video;
+    technique_video;
+    is_pause;
+    needs_evaluation;
+    popularity_type;
+    is_archived;
+    is_bodyweight;
+    is_ready;
+    has_time;
+    has_resistance_bands;
+    has_mode;
+    has_incline_percent;
+    has_pace;
+    has_speed;
+    has_pulse;
+    has_height;
+
+    constructor(
+        parsedExercise
+    ) {
+        Object.assign(this, parsedExercise)
+    }
+
+    static createFrom(exerciseFromApi) {
+        const copy = {...exerciseFromApi}
+        copy.id = parseInt(copy.id)
+        copy.author_id = parseInt(copy.author_id)
+        copy.is_pause = parseJsonBoolean(copy.is_pause)
+        copy.needs_evaluation = parseJsonBoolean(copy.needs_evaluation)
+        copy.is_archived = parseJsonBoolean(copy.is_archived)
+        copy.is_bodyweight = parseJsonBoolean(copy.is_bodyweight)
+        copy.is_ready = parseJsonBoolean(copy.is_ready)
+        copy.has_weight = parseJsonBoolean(copy.has_weight)
+        copy.has_reps = parseJsonBoolean(copy.has_reps)
+        copy.has_time = parseJsonBoolean(copy.has_time)
+        copy.has_resistance_bands = parseJsonBoolean(copy.has_resistance_bands)
+        copy.has_mode = parseJsonBoolean(copy.has_mode)
+        copy.has_incline_percent = parseJsonBoolean(copy.has_incline_percent)
+        copy.has_pace = parseJsonBoolean(copy.has_pace)
+        copy.has_speed = parseJsonBoolean(copy.has_speed)
+        copy.has_pulse = parseJsonBoolean(copy.has_pulse)
+        copy.has_height = parseJsonBoolean(copy.has_height)
+
+        return new ExerciseVM(copy)
     }
 }
 
@@ -687,6 +812,39 @@ class TemplateRepository extends Repository {
 //     return score
 // }
 
+class WorkoutExerciseVM {
+    exercise;
+    sequenceNo;
+    reps = null;
+    weight = null;
+    time_seconds = null;
+    resistance_bands = null;
+    mode = null;
+    incline_percent = null;
+    pace = null;
+    speed = null;
+    pulse = null;
+    height = null;
+
+    constructor(exercise, sequenceNo, lastSetOfExercise){
+        this.exercise = exercise;
+        this.sequenceNo = sequenceNo;
+        if (lastSetOfExercise) {
+            console.log(lastSetOfExercise)
+            this.reps = lastSetOfExercise.reps
+            this.weight = lastSetOfExercise.weight
+            this.time_seconds = lastSetOfExercise.time_seconds
+            this.resistance_bands = lastSetOfExercise.resistance_bands
+            this.mode = lastSetOfExercise.mode
+            this.incline_percent = lastSetOfExercise.incline_percent
+            this.pace = lastSetOfExercise.pace
+            this.speed = lastSetOfExercise.speed
+            this.pulse = lastSetOfExercise.pulse
+            this.height = lastSetOfExercise.height
+        }
+    }
+}
+
 
 $(document).ready(function () {
     var workoutCreationId = "workout-creation";
@@ -763,6 +921,23 @@ $(document).ready(function () {
                 //     }
                 //     return score
                 // }
+                shouldShowExerciseTableCols(){
+                    const showReps = this.workout.workoutExercises?.some(x => x.exercise.has_reps)
+                    const showWeight = this.workout.workoutExercises?.some(x => x.exercise.has_weight)
+                    return {
+                        reps: showReps,
+                        weight: showWeight,
+                        rpe: showWeight || showReps,
+                        time: this.workout.workoutExercises?.some(x => x.exercise.has_time || x.exercise.is_pause),
+                        resistance_bands: this.anyAddedExerciseHasAttribute('has_resistance_bands'),
+                        mode: this.anyAddedExerciseHasAttribute('has_mode'),
+                        incline_percent: this.anyAddedExerciseHasAttribute('has_incline_percent'),
+                        pace: this.anyAddedExerciseHasAttribute('has_pace'),
+                        speed: this.anyAddedExerciseHasAttribute('has_speed'),
+                        pulse: this.anyAddedExerciseHasAttribute('has_pulse'),
+                        height: this.anyAddedExerciseHasAttribute('has_height'),
+                    }
+                }
             },
             created() {
                 this.loadTemplates();
@@ -837,22 +1012,13 @@ $(document).ready(function () {
                 },
                 addExercise(exercise) {
                     const setsOfExercise = this.workout.workoutExercises.filter(we => we.exercise.id === exercise.id)
-                    const lastSetOfExercise = setsOfExercise.length ? setsOfExercise.pop() : null
-
-                    const newWorkoutExercise = {
-                        exercise,
-                        sequenceNo: this.addedExercisesOfSet(exercise).length + 1,
-                        reps: null,
-                        time_seconds: null,
-                        weight: null,
-                    }
-                    if (lastSetOfExercise) {
-                        newWorkoutExercise.reps = lastSetOfExercise.reps
-                        newWorkoutExercise.time_seconds = lastSetOfExercise.time_seconds
-                        newWorkoutExercise.weight = lastSetOfExercise.weight
-                    }
-
-                    this.workout.workoutExercises.push(newWorkoutExercise)
+                    this.workout.workoutExercises.push(
+                        new WorkoutExerciseVM(
+                            exercise,
+                            this.addedExercisesOfSet(exercise).length + 1,
+                            setsOfExercise.length ? setsOfExercise.pop() : null
+                        )
+                    )
                 },
                 removeExercise(index) {
                     const removed = this.workout.workoutExercises.splice(index, 1)
@@ -907,6 +1073,9 @@ $(document).ready(function () {
                 async addJustCreated(exercise) {
                     this.addExercise(exercise)
                     if (this.exerciseNameFilter.length >= 3) this.loadExercises()
+                },
+                anyAddedExerciseHasAttribute(attribute){
+                    return this.workout.workoutExercises?.some(x => x.exercise[attribute])
                 }
             },
             template: `
@@ -962,7 +1131,7 @@ $(document).ready(function () {
                     </div>
 
                     <div class="tab-pane fade" id="workout-creation" role="tabpanel" aria-labelledby="workout-creation-tab">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <ul class="nav nav-tabs" id="exercise-tabs" role="tablist">
                                 <li class="nav-item active">
                                     <a class="nav-link" id="exercises-tab" data-toggle="tab" href="#exercises" role="tab" aria-controls="exercises" aria-selected="false">
@@ -1123,7 +1292,7 @@ $(document).ready(function () {
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-12">
 <!--                            <h4>Tagu "balance score"</h4>-->
 <!--                            <p>(<em>šajā treniņā</em> | <em>šajā + visos iepriekšējos treniņos</em>)</p>-->
 <!--                            <ul class="list-group">-->
@@ -1145,12 +1314,18 @@ $(document).ready(function () {
                                             <th>#</th>
                                             <th>Vingr. pieg.</th>
                                             <th>Vingrojums</th>
-                                            <th>Reizes</th>
-                                            <th>Laiks (sekundēs)</th>
                                             <th>Spējas (1RM)</th>
-                                            <th>Svars (% no 1RM)</th>
-                                            <th>Svars (kg)</th>
-                                            <th>RPE</th>
+                                            <th v-if="shouldShowExerciseTableCols.reps">Reizes</th>
+                                            <th v-if="shouldShowExerciseTableCols.weight">Svars</th>
+                                            <th v-if="shouldShowExerciseTableCols.rpe">RPE</th>
+                                            <th v-if="shouldShowExerciseTableCols.time">Laiks (sek)</th>
+                                            <th v-if="shouldShowExerciseTableCols.resistance_bands">Pretestības gumijas</th>
+                                            <th v-if="shouldShowExerciseTableCols.mode">Režīms</th>
+                                            <th v-if="shouldShowExerciseTableCols.incline_percent">Slīpums (%)</th>
+                                            <th v-if="shouldShowExerciseTableCols.pace">Temps (min/km)</th>
+                                            <th v-if="shouldShowExerciseTableCols.speed">Ātrums (km/h)</th>
+                                            <th v-if="shouldShowExerciseTableCols.pulse">Pulss</th>
+                                            <th v-if="shouldShowExerciseTableCols.height">Augstums (cm)</th>
                                             <th>Dzēst</th>
                                         </tr>
                                     </thead>
@@ -1160,6 +1335,7 @@ $(document).ready(function () {
                                             :key="i"
                                             :temp-exercise="workoutExercise"
                                             :index="i"
+                                            :should-show-columns="shouldShowExerciseTableCols"
                                             @add-set="addExercise(workoutExercise.exercise)"
                                             @remove="removeExercise(i)"
                                         ></added-exercise>
@@ -1253,7 +1429,7 @@ $(document).ready(function () {
                 },
                 submitButtonText() {
                     return this.templateId ? 'Saglabāt izmaiņas' : 'Izveidot šablonu';
-                }
+                },
             },
             created() {
                 this.loadTags();
@@ -1319,20 +1495,9 @@ $(document).ready(function () {
                     const setsOfExercise = this.template.templateExercises.filter(we => we.exercise.id === exercise.id)
                     const lastSetOfExercise = setsOfExercise.length ? setsOfExercise.pop() : null
 
-                    const newWorkoutExercise = {
-                        exercise,
-                        sequenceNo: this.addedExercisesOfSet(exercise).length + 1,
-                        reps: null,
-                        time_seconds: null,
-                        weight: null,
-                    }
-                    if (lastSetOfExercise) {
-                        newWorkoutExercise.reps = lastSetOfExercise.reps
-                        newWorkoutExercise.time_seconds = lastSetOfExercise.time_seconds
-                        newWorkoutExercise.weight = lastSetOfExercise.weight
-                    }
-
-                    this.template.templateExercises.push(newWorkoutExercise)
+                    this.template.templateExercises.push(
+                        new WorkoutExerciseVM(exercise, this.addedExercisesOfSet(exercise).length + 1, lastSetOfExercise)
+                    )
                 },
                 removeExercise(index) {
                     const removed = this.template.templateExercises.splice(index, 1)
@@ -1385,7 +1550,7 @@ $(document).ready(function () {
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                        <h4>Vingrojumu meklēšana</h4>
                        <ul class="nav nav-tabs" id="exercise-tabs" role="tablist">
                          <li class="nav-item active">
@@ -1508,7 +1673,7 @@ $(document).ready(function () {
                             </li>
                         </ul>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                     <div v-if="template.templateExercises.length">
                             <table class="table table-striped table-bordered" >
                                 <thead>

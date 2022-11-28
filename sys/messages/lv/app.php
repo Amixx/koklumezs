@@ -803,4 +803,6 @@ return [
     'Has speed' => 'Vai ir ātrums',
     'Has pulse' => 'Vai ir pulss',
     'Has height' => 'Vai ir augstums',
+    'Has reps' => 'Vai ir reizes',
+    'Has weight' => 'Vai ir svars',
 ];
