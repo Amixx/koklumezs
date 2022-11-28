@@ -21,7 +21,21 @@ class Exercise extends \yii\db\ActiveRecord
         return [
             [['author_id', 'name', 'popularity_type'], 'required'],
             [['author_id'], 'integer'],
-            [['is_pause', 'needs_evaluation', 'is_archived', 'is_bodyweight', 'is_ready'], 'boolean'],
+            [[
+                'is_pause',
+                'needs_evaluation',
+                'is_archived',
+                'is_bodyweight',
+                'is_ready',
+                'has_time',
+                'has_resistance_bands',
+                'has_mode',
+                'has_incline_percent',
+                'has_pace',
+                'has_speed',
+                'has_pulse',
+                'has_height',
+            ], 'boolean'],
             [['name', 'description', 'video', 'technique_video', 'popularity_type'], 'string'],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author_id' => 'id']],
         ];
@@ -42,6 +56,14 @@ class Exercise extends \yii\db\ActiveRecord
             'is_archived' => \Yii::t('app', 'Is archived'),
             'is_bodyweight' => \Yii::t('app', 'Is bodyweight'),
             'is_ready' => \Yii::t('app', 'Is ready'),
+            'has_time' => \Yii::t('app', 'Has time'),
+            'has_resistance_bands' => \Yii::t('app', 'Has resistance bands'),
+            'has_mode' => \Yii::t('app', 'Has mode'),
+            'has_incline_percent' => \Yii::t('app', 'Has incline'),
+            'has_pace' => \Yii::t('app', 'Has pace'),
+            'has_speed' => \Yii::t('app', 'Has speed'),
+            'has_pulse' => \Yii::t('app', 'Has pulse'),
+            'has_height' => \Yii::t('app', 'Has height'),
         ];
     }
 

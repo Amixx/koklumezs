@@ -8,6 +8,17 @@ $this->title = $model->name;
 ['label' => \Yii::t('app', 'Exercises'), 'url' => ['index']];
 
 \yii\web\YiiAsset::register($this);
+
+function createBooleanColumn($attribute)
+{
+    return [
+        'attribute' => $attribute,
+        'value' => function ($dataProvider) use ($attribute) {
+            return Yii::t('app', $dataProvider[$attribute] ? 'Yes' : 'No');
+        }
+    ];
+}
+
 ?>
 <div class="lectures-view">
 
@@ -29,36 +40,21 @@ $this->title = $model->name;
         'attributes' => [
             'name',
             'description',
-            [
-                'attribute' => 'is_pause',
-                'value' => function ($dataProvider) {
-                    return Yii::t('app', $dataProvider['is_pause'] ? 'Yes' : 'No');
-                }
-            ],
-            [
-                'attribute' => 'needs_evaluation',
-                'value' => function ($dataProvider) {
-                    return Yii::t('app', $dataProvider['needs_evaluation'] ? 'Yes' : 'No');
-                }
-            ],
-            [
-                'attribute' => 'is_archived',
-                'value' => function ($dataProvider) {
-                    return Yii::t('app', $dataProvider['is_archived'] ? 'Yes' : 'No');
-                }
-            ],
-            [
-                'attribute' => 'is_bodyweight',
-                'value' => function ($dataProvider) {
-                    return Yii::t('app', $dataProvider['is_bodyweight'] ? 'Yes' : 'No');
-                }
-            ],
-            [
-                'attribute' => 'is_ready',
-                'value' => function ($dataProvider) {
-                    return Yii::t('app', $dataProvider['is_ready'] ? 'Yes' : 'No');
-                }
-            ],
+            createBooleanColumn('is_archived'),
+            createBooleanColumn('is_ready'),
+            createBooleanColumn('is_pause'),
+            createBooleanColumn('needs_evaluation'),
+            createBooleanColumn('is_bodyweight'),
+
+            createBooleanColumn('has_time'),
+            createBooleanColumn('has_resistance_bands'),
+            createBooleanColumn('has_mode'),
+            createBooleanColumn('has_incline_percent'),
+            createBooleanColumn('has_pace'),
+            createBooleanColumn('has_speed'),
+            createBooleanColumn('has_pulse'),
+            createBooleanColumn('has_height'),
+
             [
                 'attribute' => 'popularity_type',
                 'value' => function ($dataProvider) {
@@ -131,7 +127,7 @@ $this->title = $model->name;
     <div>
         <h3><?= Yii::t('app', 'Interchangeable exercises') ?></h3>
         <div>
-            <?php foreach($model->getInterchangeableOtherExercises() as $exercise) { ?>
+            <?php foreach ($model->getInterchangeableOtherExercises() as $exercise) { ?>
                 <span><?= $exercise['name'] ?></span>,
             <?php } ?>
         </div>

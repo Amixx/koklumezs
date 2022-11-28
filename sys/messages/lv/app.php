@@ -795,4 +795,12 @@ return [
     'Edit client data' => 'Rediģēt klienta datus',
     'Client data updated!' => 'Klienta dati atjaunoti!',
     'Problems' => 'Problēmas',
+    'Has time' => 'Vai ir laiks',
+    'Has resistance bands' => 'Vai ir pretestības gumijas',
+    'Has mode' => 'Vai ir režīms',
+    'Has incline' => 'Vai ir slīpums',
+    'Has pace' => 'Vai ir temps',
+    'Has speed' => 'Vai ir ātrums',
+    'Has pulse' => 'Vai ir pulss',
+    'Has height' => 'Vai ir augstums',
 ];

@@ -1,5 +1,7 @@
 <?php
 
+/* @var \app\fitness\models\Exercise $model */
+
 use mihaildev\ckeditor\CKEditor;
 use mihaildev\elfinder\ElFinder;
 use mihaildev\elfinder\InputFile;
@@ -44,6 +46,16 @@ $tagSelected = function ($tagId) use ($selectedTagIds) {
         <?= $form->field($model, 'is_archived')->checkbox() ?>
         <?= $form->field($model, 'is_bodyweight')->checkbox() ?>
         <?= $form->field($model, 'is_ready')->checkbox() ?>
+        <hr>
+        <?= $form->field($model, 'has_time')->checkbox() ?>
+        <?= $form->field($model, 'has_resistance_bands')->checkbox() ?>
+        <?= $form->field($model, 'has_mode')->checkbox() ?>
+        <?= $form->field($model, 'has_incline_percent')->checkbox() ?>
+        <?= $form->field($model, 'has_pace')->checkbox() ?>
+        <?= $form->field($model, 'has_speed')->checkbox() ?>
+        <?= $form->field($model, 'has_pulse')->checkbox() ?>
+        <?= $form->field($model, 'has_height')->checkbox() ?>
+        <hr>
         <?= $form->field($model, 'popularity_type')->dropDownList(
             [
                 'POPULAR' => Yii::t('app', 'Popular'),
