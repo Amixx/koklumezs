@@ -44,6 +44,7 @@ Vue.component('modal', {
     `
 })
 
+const rpes = [10, 9.5, 9, 8.5, 8, 7.5, 7, 6.5];
 
 Vue.component('added-exercise', {
     name: 'added-exercise',
@@ -59,7 +60,11 @@ Vue.component('added-exercise', {
         shouldShowColumns: {
             type: Array,
             required: true,
-        }
+        },
+        lockedInput: {
+            type: String,
+            required: true,
+        },
     },
     data() {
         if (this.tempExercise.exercise.is_pause) {
@@ -90,6 +95,8 @@ Vue.component('added-exercise', {
         return {
             weightPercentageOf1rm: null,
             oneRepMaxEstimate: null,
+            rpe: null,
+            rpeOptions: rpes.map(rpe => ({value: rpe, label: rpe}))
         }
     },
     computed: {
@@ -129,14 +136,6 @@ Vue.component('added-exercise', {
 
             return null;
         },
-        rpe() {
-            if (
-                !this.tempExercise.reps
-                || this.tempExercise < 1
-                || this.tempExercise.reps > 12
-                || !this.weightPercentageOf1rm) return null;
-            return RpeCalculator.calculateRpe(this.tempExercise.reps, this.weightPercentageOf1rm);
-        },
     },
     watch: {
         selectedPauseLength: {
@@ -150,11 +149,11 @@ Vue.component('added-exercise', {
                 if (!this.oneRepMaxEstimate) return;
                 if (this.ignoreWeightWatcher) {
                     this.ignoreWeightWatcher = false;
-                    return;
                 } else {
                     this.ignoreWeightPercentageOf1rmWatcher = true
                     this.setWeightPercentageOf1rm();
                 }
+                this.setLockedInputValue()
             }
         },
         weightPercentageOf1rm() {
@@ -164,9 +163,22 @@ Vue.component('added-exercise', {
                 return;
             } else {
                 this.ignoreWeightWatcher = true;
-                this.setWeight();
+                this.setWeightKgFromPercentageOf1rm();
             }
-        }
+        },
+        'tempExercise.reps': {
+            handler() {
+                this.setLockedInputValue();
+            }
+        },
+        'tempExercise.reps': {
+            handler() {
+                this.setLockedInputValue();
+            }
+        },
+        rpe() {
+            this.setLockedInputValue();
+        },
     },
     async mounted() {
         const averageAbility = await ExerciseRepository.getAverageAbility(this.tempExercise.exercise.id);
@@ -183,13 +195,52 @@ Vue.component('added-exercise', {
             }
             this.weightPercentageOf1rm = parseInt(((this.tempExercise.weight / this.oneRepMaxEstimate) * 100).toFixed(0))
         },
-        setWeight() {
+        setWeightKgFromPercentageOf1rm() {
             if (!this.weightPercentageOf1rm) {
                 this.tempExercise.weight = null;
                 return;
             }
             this.tempExercise.weight = parseInt(this.oneRepMaxEstimate * this.weightPercentageOf1rm / 100);
-        }
+        },
+        setLockedInputValue() {
+            if (!this.oneRepMaxEstimate) return;
+            if (this.lockedInput === 'rpe') {
+                this.setRpe();
+            } else if (this.lockedInput === 'weight') {
+                this.setWeight();
+            } else if (this.lockedInput === 'reps') {
+                this.setReps();
+            }
+        },
+        setRpe() {
+            if (
+                !this.tempExercise.reps
+                || this.tempExercise < 1
+                || this.tempExercise.reps > 12
+                || !this.weightPercentageOf1rm) {
+                this.rpe = null;
+                return;
+            }
+            this.rpe = this.rpeOptions.find(x => x.value === RpeCalculator.calculateRpe(this.tempExercise.reps, this.weightPercentageOf1rm));
+        },
+        setWeight() {
+            if (
+                !this.tempExercise.reps
+                || this.tempExercise < 1
+                || this.tempExercise.reps > 12
+                || !this.rpe) {
+                this.weightPercentageOf1rm = null;
+                return;
+            }
+            this.weightPercentageOf1rm = RpeCalculator.calculateWeight(this.rpe.value, this.tempExercise.reps);
+        },
+        setReps() {
+            if (!this.weightPercentageOf1rm || !this.rpe) {
+                this.tempExercise.reps = null;
+                return;
+            }
+            this.tempExercise.reps = RpeCalculator.calculateReps(this.rpe.value, this.weightPercentageOf1rm);
+        },
     },
     template: `
     <tr>
@@ -222,6 +273,7 @@ Vue.component('added-exercise', {
                 <input
                     class="form-control"
                     v-model.number="tempExercise.reps"
+                    :readonly="lockedInput === 'reps'"
                     style="width:50px;">
             </div>
         </td>        
@@ -234,18 +286,29 @@ Vue.component('added-exercise', {
                      <input
                         class="form-control"
                         v-model.number="weightPercentageOf1rm"
+                         :readonly="lockedInput === 'weight'"
                         style="width:50px;">
                     <span>% no 1RM</span>
                 </div>
                 <div>
-                    <input class="form-control" v-model.number="tempExercise.weight" style="width:50px;">
+                    <input
+                        class="form-control"
+                        v-model.number="tempExercise.weight"
+                        :readonly="lockedInput === 'weight'"
+                        style="width:50px;">
                     <span>kg</span>
                 </div>
             </div>
         </td>
          <td v-if="shouldShowColumns.rpe">
             <div v-if="!tempExercise.exercise.is_pause" class="form-group">
-                <input class="form-control" v-model="rpe" readonly style="width:45px;">
+                <v-select
+                    label="label"
+                    :options="rpeOptions"
+                    v-model="rpe"
+                    :disabled="lockedInput === 'rpe'"
+                    style="width:95px;"
+                 ></v-select>
             </div>
         </td>
         <td v-if="shouldShowColumns.time">
@@ -610,32 +673,63 @@ const rpeArray = [
     76.2, 75.1, 73.9, 72.3, 70.7, 69.4, 68.0, 66.7,
     65.3, 64.0, 62.6, 61.3, 59.9, 58.6
 ];
-const rpes = [10, 9.5, 9, 8.5, 8, 7.5, 7, 6.5];
 
-const rpeTable = {}
-
+const repsToWeightPercentageToRpe = {}
 for (let rep = 1; rep <= 12; rep++) {
     const rpeArrayOffset = (rep - 1) * 2;
     rpes.forEach(function (rpe, i) {
-        if (!rpeTable[rep]) rpeTable[rep] = {}
-        rpeTable[rep][rpe] = rpeArray[i + rpeArrayOffset];
+        const weightPercentage = rpeArray[i + rpeArrayOffset]
+        if (!repsToWeightPercentageToRpe[rep]) repsToWeightPercentageToRpe[rep] = {}
+        repsToWeightPercentageToRpe[rep][weightPercentage] = rpe;
     })
+}
+const repsToRpeToWeightPercentage = {}
+for (let rep = 1; rep <= 12; rep++) {
+    const rpeArrayOffset = (rep - 1) * 2;
+    rpes.forEach(function (rpe, i) {
+        const weightPercentage = rpeArray[i + rpeArrayOffset]
+        if (!repsToRpeToWeightPercentage[rep]) repsToRpeToWeightPercentage[rep] = {}
+        repsToRpeToWeightPercentage[rep][rpe] = weightPercentage;
+    })
+}
+const rpeToWeightPercentageToReps = {}
+for (let rep = 1; rep <= 12; rep++) {
+    const rpeArrayOffset = (rep - 1) * 2;
+    rpes.forEach(function (rpe, i) {
+        const weightPercentage = rpeArray[i + rpeArrayOffset]
+        if (!rpeToWeightPercentageToReps[rpe]) rpeToWeightPercentageToReps[rpe] = {}
+        rpeToWeightPercentageToReps[rpe][weightPercentage] = rep;
+    })
+}
+
+function findClosestNumber(haystack, needle) {
+    return haystack.reduce(function (prev, curr) {
+        return Math.abs(curr - needle) < Math.abs(prev - needle)
+            ? curr
+            : prev;
+    });
 }
 
 class RpeCalculator {
     static calculateRpe(reps, weightPercentageOf1rm) {
-        var x = rpeTable[reps]
-        var smallestDiff = null
-        var toReturn = null
-        for (const y in x) {
-            var newDiff = Math.abs(weightPercentageOf1rm - x[y])
-            if (!smallestDiff || newDiff < smallestDiff) {
-                smallestDiff = newDiff
-                toReturn = y
-            }
-        }
+        const weightPercentageToRpe = repsToWeightPercentageToRpe[reps]
+        return weightPercentageToRpe[
+            findClosestNumber(
+                Object.keys(weightPercentageToRpe).map(x => parseFloat(x)),
+                weightPercentageOf1rm)]
+    }
 
-        return toReturn
+    static calculateWeight(rpe, reps) {
+        return repsToRpeToWeightPercentage[reps][rpe]
+    }
+
+    static calculateReps(rpe, weightPercentageOf1rm) {
+        const weightPercentageToRpe = rpeToWeightPercentageToReps[rpe]
+        if(!weightPercentageToRpe) return null
+        return weightPercentageToRpe[
+            findClosestNumber(
+                Object.keys(weightPercentageToRpe).map(x => parseFloat(x)),
+                weightPercentageOf1rm)]
     }
 }
 
@@ -849,11 +943,10 @@ class WorkoutExerciseVM {
     pulse = null;
     height = null;
 
-    constructor(exercise, sequenceNo, lastSetOfExercise){
+    constructor(exercise, sequenceNo, lastSetOfExercise) {
         this.exercise = exercise;
         this.sequenceNo = sequenceNo;
         if (lastSetOfExercise) {
-            console.log(lastSetOfExercise)
             this.reps = lastSetOfExercise.reps
             this.weight = lastSetOfExercise.weight
             this.time_seconds = lastSetOfExercise.time_seconds
@@ -915,6 +1008,7 @@ $(document).ready(function () {
                     selectedExercisePopularity: null,
                     showCreateExerciseModal: false,
                     creatingExercise: false,
+                    lockedInput: 'rpe',
                 }
             },
             computed: {
@@ -944,7 +1038,7 @@ $(document).ready(function () {
                 //     }
                 //     return score
                 // }
-                shouldShowExerciseTableCols(){
+                shouldShowExerciseTableCols() {
                     const showReps = this.workout.workoutExercises?.some(x => x.exercise.has_reps)
                     const showWeight = this.workout.workoutExercises?.some(x => x.exercise.has_weight)
                     return {
@@ -1097,7 +1191,7 @@ $(document).ready(function () {
                     this.addExercise(exercise)
                     if (this.exerciseNameFilter.length >= 3) this.loadExercises()
                 },
-                anyAddedExerciseHasAttribute(attribute){
+                anyAddedExerciseHasAttribute(attribute) {
                     return this.workout.workoutExercises?.some(x => x.exercise[attribute])
                 }
             },
@@ -1338,9 +1432,33 @@ $(document).ready(function () {
                                             <th>Vingr. pieg.</th>
                                             <th>Vingrojums</th>
                                             <th>Spējas (1RM)</th>
-                                            <th v-if="shouldShowExerciseTableCols.reps">Reizes</th>
-                                            <th v-if="shouldShowExerciseTableCols.weight">Svars</th>
-                                            <th v-if="shouldShowExerciseTableCols.rpe">RPE</th>
+                                            <th v-if="shouldShowExerciseTableCols.reps">
+                                                <span>Reizes</span>
+                                                <button
+                                                    v-if="lockedInput !== 'reps'"
+                                                    class="btn"
+                                                    @click="lockedInput = 'reps'">
+                                                    <i class="glyphicon glyphicon-lock"></i>
+                                                </button>
+                                            </th>
+                                            <th v-if="shouldShowExerciseTableCols.weight">
+                                                <span>Svars</span>
+                                                <button
+                                                    v-if="lockedInput !== 'weight'"
+                                                    class="btn"
+                                                    @click="lockedInput = 'weight'">
+                                                    <i class="glyphicon glyphicon-lock"></i>
+                                                </button>
+                                            </th>
+                                            <th v-if="shouldShowExerciseTableCols.rpe">
+                                                <span>RPE</span>
+                                                <button
+                                                    v-if="lockedInput !== 'rpe'"
+                                                    class="btn"
+                                                    @click="lockedInput = 'rpe'">
+                                                    <i class="glyphicon glyphicon-lock"></i>
+                                                </button>
+                                            </th>
                                             <th v-if="shouldShowExerciseTableCols.time">Laiks (sek)</th>
                                             <th v-if="shouldShowExerciseTableCols.resistance_bands">Pretestības gumijas</th>
                                             <th v-if="shouldShowExerciseTableCols.mode">Režīms</th>
@@ -1359,6 +1477,7 @@ $(document).ready(function () {
                                             :temp-exercise="workoutExercise"
                                             :index="i"
                                             :should-show-columns="shouldShowExerciseTableCols"
+                                            :locked-input="lockedInput"
                                             @add-set="addExercise(workoutExercise.exercise)"
                                             @remove="removeExercise(i)"
                                         ></added-exercise>
