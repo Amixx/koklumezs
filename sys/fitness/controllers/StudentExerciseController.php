@@ -88,7 +88,11 @@ class StudentExerciseController extends Controller
 
                 $nextWorkoutExercise
                     ? $this->redirect(['', 'id' => $nextWorkoutExercise['id']])
-                    : $this->redirect(['lekcijas/index']);
+                    : $this->redirect(
+                    [
+                        'fitness-student-exercises/workout-summary',
+                        'workoutId' => $workoutExercise->workout_id,
+                    ]);
             }
         }
 

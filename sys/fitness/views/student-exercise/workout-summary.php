@@ -18,7 +18,7 @@ $evaluations = [
     <div class="col-sm-12 text-center" style="margin-bottom: 16px;">
         <h2>Apsveicam! Treniņš ir galā! 🎉</h2>
     </div>
-    <div class="col-md-6" style="text-align:center; margin-bottom: 16px;">
+    <!--div class="col-md-6" style="text-align:center; margin-bottom: 16px;">
         <div>
             <div>
                 <?=
@@ -31,8 +31,8 @@ $evaluations = [
                 ?>
             </div>
         </div>
-    </div>
-    <div class="col-md-6" style="margin-bottom: 32px;">
+    </div-->
+    <div class="col-md-12" style="margin-bottom: 32px;">
         <?php if (!$messageModel->id) { ?>
             <?php $form = ActiveForm::begin(); ?>
             <?= $form->field($messageModel, 'text')->textarea() ?>

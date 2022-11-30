@@ -116,7 +116,8 @@ class Workout extends \yii\db\ActiveRecord
             ->where(['student_id' => $userContext->id])
             ->orderBy(['id' => SORT_DESC])
             ->joinWith('workoutExercises')
-            ->joinWith('evaluation');
+            ->joinWith('evaluation')
+            ->joinWith('messageForCoach');
 
         if ($finished) {
             $query->andWhere([

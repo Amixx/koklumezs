@@ -812,4 +812,5 @@ return [
     'Speed (km/h)' => 'Ātrums (km/h)',
     'Pulse' => 'Pulss',
     'Height (cm)' => 'Augstums (cm)',
+    'Send message to trainer' => 'Nosūtīt ziņu trenerim',
 ];

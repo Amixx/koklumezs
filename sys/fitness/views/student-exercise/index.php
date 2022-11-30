@@ -26,7 +26,7 @@ $this->title = \Yii::t('app', 'My workouts');
                     $thumbStyle = ThumbnailHelper::getThumbnailStyle($vid, $videoThumb);
 
                     $isNew = !$workout['opened_at'];
-                    $isUnfinished = !$workout['evaluation'] && !$workout['abandoned'];
+                    $isUnfinished = !$workout['messageForCoach'] && !$workout['abandoned'];
 
                     if ($isNew || $isUnfinished) { ?>
                         <div class="col-md-6 col-lg-3 text-center lecture-wrap">
@@ -41,7 +41,7 @@ $this->title = \Yii::t('app', 'My workouts');
                                 $firstUnopenedexercise = Workout::getFirstUnopenedExercise($workout);
                                 ?>
                                 <span class="lecture-thumb unfinished" style="<?= $thumbStyle ?>">
-                                 <?= Html::a(Yii::t('app', $firstUnopenedexercise ? 'Continue workout' : 'Evaluate workout'), $firstUnopenedexercise ? [
+                                 <?= Html::a(Yii::t('app', $firstUnopenedexercise ? 'Continue workout' : 'Send message to trainer'), $firstUnopenedexercise ? [
                                      'fitness-student-exercises/view',
                                      'id' => $firstUnopenedexercise->id,
                                  ] : [
