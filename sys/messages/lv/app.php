@@ -813,4 +813,5 @@ return [
     'Pulse' => 'Pulss',
     'Height (cm)' => 'Augstums (cm)',
     'Send message to trainer' => 'Nosūtīt ziņu trenerim',
+    'Is added to any progression chain' => 'Vai ir pievienots kādai progresijas ķēdei'
 ];

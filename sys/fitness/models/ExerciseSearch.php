@@ -11,6 +11,7 @@ class ExerciseSearch extends Exercise
 {
     public $exerciseTag;
     public $isAddedToAnyWorkouts;
+    public $isAddedToAnyProgressionChains = null;
 
     public function rules()
     {
@@ -23,11 +24,13 @@ class ExerciseSearch extends Exercise
                 'popularity_type',
                 'video',
                 'technique_video',
+                'is_bodyweight',
                 'is_ready',
                 'created_at',
                 'updated_at',
                 'exerciseTag',
-                'isAddedToAnyWorkouts'
+                'isAddedToAnyWorkouts',
+                'isAddedToAnyProgressionChains',
             ], 'safe'],
         ];
     }
@@ -79,15 +82,26 @@ class ExerciseSearch extends Exercise
         if ($this->popularity_type !== null && $this->popularity_type !== '') {
             $query->andFilterWhere(['popularity_type' => $this->popularity_type]);
         }
+        if ($this->is_bodyweight !== null && $this->is_bodyweight !== '') {
+            $query->andFilterWhere(['is_bodyweight' => $this->is_bodyweight]);
+        }
         if ($this->is_ready !== null && $this->is_ready !== '') {
             $query->andFilterWhere(['is_ready' => $this->is_ready]);
         }
         if ($this->isAddedToAnyWorkouts !== null && $this->isAddedToAnyWorkouts !== '') {
-            $x = WorkoutExercise::find()->select('exercise_id')->asArray()->all();
+            $usedExerciseExerciseIds = WorkoutExercise::find()->select('exercise_id')->asArray()->all();
             $query->andFilterWhere([
                 $this->isAddedToAnyWorkouts ? 'in' : 'not in',
                 'id',
-                ArrayHelper::getColumn($x, 'exercise_id'),
+                ArrayHelper::getColumn($usedExerciseExerciseIds, 'exercise_id'),
+            ]);
+        }
+        if ($this->isAddedToAnyProgressionChains !== null && $this->isAddedToAnyProgressionChains !== '') {
+            $exerciseIdsInProgressionChains = ProgressionChainExercise::find()->select('exercise_id')->asArray()->all();
+            $query->andFilterWhere([
+                $this->isAddedToAnyProgressionChains ? 'in' : 'not in',
+                'id',
+                ArrayHelper::getColumn($exerciseIdsInProgressionChains, 'exercise_id'),
             ]);
         }
 

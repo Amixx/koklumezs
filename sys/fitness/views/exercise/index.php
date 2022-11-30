@@ -17,26 +17,26 @@ $this->title = \Yii::t('app', 'Exercises');
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'name',
-            [
-                'attribute' => 'popularity_type',
-                'value' => function ($dataProvider) {
-                    return Yii::t('app',
-                        $dataProvider['popularity_type'] === 'POPULAR'
-                            ? 'Popular'
-                            : ($dataProvider['popularity_type'] === 'AVERAGE' ? 'Average popularity' : 'Rare')
-                    );
-                },
-                'filter' => Html::dropDownList(
-                    'ExerciseSearch[popularity_type]',
-                    $get['ExerciseSearch']['popularity_type'] ?? '',
-                    [
-                        'POPULAR' => Yii::t('app', 'Popular'),
-                        'AVERAGE' => Yii::t('app', 'Average popularity'),
-                        'RARE' => Yii::t('app', 'Rare')
-                    ],
-                    ['prompt' => '-- Visi --', 'class' => 'form-control']
-                ),
-            ],
+//            [
+//                'attribute' => 'popularity_type',
+//                'value' => function ($dataProvider) {
+//                    return Yii::t('app',
+//                        $dataProvider['popularity_type'] === 'POPULAR'
+//                            ? 'Popular'
+//                            : ($dataProvider['popularity_type'] === 'AVERAGE' ? 'Average popularity' : 'Rare')
+//                    );
+//                },
+//                'filter' => Html::dropDownList(
+//                    'ExerciseSearch[popularity_type]',
+//                    $get['ExerciseSearch']['popularity_type'] ?? '',
+//                    [
+//                        'POPULAR' => Yii::t('app', 'Popular'),
+//                        'AVERAGE' => Yii::t('app', 'Average popularity'),
+//                        'RARE' => Yii::t('app', 'Rare')
+//                    ],
+//                    ['prompt' => '-- Visi --', 'class' => 'form-control']
+//                ),
+//            ],
             [
                 'attribute' => 'video',
                 'value' => function ($dataProvider) {
@@ -70,6 +70,25 @@ $this->title = \Yii::t('app', 'Exercises');
                 ),
             ],
             [
+                'attribute' => 'is_bodyweight',
+                'format' => 'raw',
+                'value' => function ($dataProvider) {
+                    return $dataProvider['is_bodyweight']
+                        ? Yii::t('app', 'Yes')
+                        : Yii::t('app', 'No');
+                },
+                'label' => Yii::t('app', 'Is bodyweight'),
+                'filter' => Html::dropDownList(
+                    'ExerciseSearch[is_bodyweight]',
+                    $get['ExerciseSearch']['is_bodyweight'] ?? null,
+                    [
+                        true => Yii::t('app', 'Yes'),
+                        false => Yii::t('app', 'No'),
+                    ],
+                    ['prompt' => '-- Visi --', 'class' => 'form-control']
+                ),
+            ],
+            [
                 'attribute' => 'is_ready',
                 'format' => 'raw',
                 'value' => function ($dataProvider) {
@@ -98,6 +117,23 @@ $this->title = \Yii::t('app', 'Exercises');
                 'filter' => Html::dropDownList(
                     'ExerciseSearch[isAddedToAnyWorkouts]',
                     $get['ExerciseSearch']['isAddedToAnyWorkouts'] ?? null,
+                    [
+                        true => Yii::t('app', 'Yes'),
+                        false => Yii::t('app', 'No'),
+                    ],
+                    ['prompt' => '-- Visi --', 'class' => 'form-control']
+                ),
+            ],
+            [
+                'attribute' => 'isAddedToAnyProgressionChains',
+                'format' => 'raw',
+                'value' => function ($dataProvider) {
+                    return '';
+                },
+                'label' => Yii::t('app', 'Is added to any progression chain'),
+                'filter' => Html::dropDownList(
+                    'ExerciseSearch[isAddedToAnyProgressionChains]',
+                    $get['ExerciseSearch']['isAddedToAnyProgressionChains'] ?? null,
                     [
                         true => Yii::t('app', 'Yes'),
                         false => Yii::t('app', 'No'),
