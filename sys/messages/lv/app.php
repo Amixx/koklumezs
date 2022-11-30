@@ -805,4 +805,11 @@ return [
     'Has height' => 'Vai ir augstums',
     'Has reps' => 'Vai ir reizes',
     'Has weight' => 'Vai ir svars',
+    'Resistance bands' => 'Pretestības gumijas',
+    'Mode' => 'Režīms',
+    'Incline (%)' => 'Slīpums (%)',
+    'Pace (min/km)' => 'Temps (min/km)',
+    'Speed (km/h)' => 'Ātrums (km/h)',
+    'Pulse' => 'Pulss',
+    'Height (cm)' => 'Augstums (cm)',
 ];

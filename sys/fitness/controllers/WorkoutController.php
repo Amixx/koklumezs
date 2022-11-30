@@ -56,11 +56,9 @@ class WorkoutController extends Controller
         if ($workout->save()) {
             foreach ($post['workoutExercises'] as $workoutExSet) {
                 $workoutExercise = new WorkoutExercise;
-                $workoutExercise->workout_id = $workout->id;
+                $workoutExercise->load($workoutExSet, '');
                 $workoutExercise->exercise_id = $workoutExSet['exercise']['id'];
-                $workoutExercise->weight = $workoutExSet['weight'];
-                $workoutExercise->reps = $workoutExSet['reps'];
-                $workoutExercise->time_seconds = $workoutExSet['time_seconds'];
+                $workoutExercise->workout_id = $workout->id;
                 $workoutExercise->save();
             }
             Yii::$app->session->setFlash('success', Yii::t('app', 'Workout successfully created') . '!');

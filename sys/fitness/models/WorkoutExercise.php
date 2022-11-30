@@ -20,11 +20,23 @@ class WorkoutExercise extends \yii\db\ActiveRecord
     {
         return [
             [['workout_id', 'exercise_id'], 'required'],
-            [['workout_id', 'exercise_id', 'reps', 'time_seconds'], 'integer'],
+            [[
+                'workout_id',
+                'exercise_id',
+                'reps',
+                'time_seconds',
+                'mode',
+                'incline_percent',
+                'pace',
+                'speed',
+                'pulse',
+                'height',
+            ], 'integer'],
             [
                 ['weight'], 'number',
                 'numberPattern' => '/^\d+(.\d{1,2})?$/'
             ],
+            [['resistance_bands'], 'string'],
             [['workout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Workout::class, 'targetAttribute' => ['workout_id' => 'id']],
             [['exercise_id'], 'exist', 'skipOnError' => true, 'targetClass' => Exercise::class, 'targetAttribute' => ['exercise_id' => 'id']],
         ];
@@ -39,6 +51,13 @@ class WorkoutExercise extends \yii\db\ActiveRecord
             'weight' => \Yii::t('app', 'Weight'),
             'reps' => \Yii::t('app', 'Repetitions'),
             'time_seconds' => \Yii::t('app', 'Time (seconds)'),
+            'resistance_bands' => \Yii::t('app', 'Resistance bands'),
+            'mode' => \Yii::t('app', 'Mode'),
+            'incline_percent' => \Yii::t('app', 'Incline (%)'),
+            'pace' => \Yii::t('app', 'Pace (min/km)'),
+            'speed' => \Yii::t('app', 'Speed (km/h)'),
+            'pulse' => \Yii::t('app', 'Pulse'),
+            'height' => \Yii::t('app', 'Height (cm)'),
         ];
     }
 

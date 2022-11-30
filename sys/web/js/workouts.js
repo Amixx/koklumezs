@@ -387,6 +387,23 @@ Vue.component('last-workouts-table', {
             return workoutExercise.replacementExercise
                 ? workoutExercise.replacementExercise[attribute]
                 : workoutExercise[attribute]
+        },
+        getExtraAttributeValues(workoutExercise) {
+            const extraAttributes = [
+                {attribute: 'resistance_bands', label: 'Pretestības gumijas'},
+                {attribute: 'mode', label: 'Režīms'},
+                {attribute: 'incline_percent', label: 'Slīpums (%)'},
+                {attribute: 'pace', label: 'Temps (min/km)'},
+                {attribute: 'speed', label: 'Ātrums'},
+                {attribute: 'pulse', label: 'Pulss'},
+                {attribute: 'height', label: 'Augstums (cm)'},
+            ]
+            return extraAttributes.map(extraAttribute => {
+                const exercise = workoutExercise.replacementExercise
+                    ? workoutExercise.replacementExercise
+                    : workoutExercise
+                return exercise[extraAttribute.attribute] ? `${extraAttribute.label}: ${exercise[extraAttribute.attribute]}` : null;
+            })
         }
     },
     template: `
@@ -415,6 +432,7 @@ Vue.component('last-workouts-table', {
                                     <th>Reizes</th>
                                     <th>Laiks (sekundēs)</th>
                                     <th>Svars (kg)</th>
+                                    <th>Papildus atribūti</th>
                                     <th>Novērtējums</th>
                                     <th>Spējas (1RM / max reizes / max laiks)</th>
                                 </tr>
@@ -426,6 +444,11 @@ Vue.component('last-workouts-table', {
                                     <td>{{ getAttribute(workoutExercise, 'reps') }}</td>
                                     <td>{{ getAttribute(workoutExercise, 'time_seconds') }}</td>
                                     <td>{{ getAttribute(workoutExercise, 'weight') }}</td>
+                                    <td>
+                                        <div v-for="(extraAttributeString, i) in getExtraAttributeValues(workoutExercise)" :key="i">
+                                            <p v-if="extraAttributeString">{{ extraAttributeString }}</p>
+                                        </div>
+                                    </td>
                                     <td>{{ workoutExercise.evaluation ? workoutExercise.evaluation.evaluation_text : "" }}</td>
                                     <td>{{ formatAbilitiesRange(workoutExercise) }}</td>
                                 </tr>

@@ -36,11 +36,11 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $exercise->name;
                                             stroke-dasharray="283"
                                             class="base-timer__path-remaining"
                                             d="
-                                          M 50, 50
-                                          m -45, 0
-                                          a 45,45 0 1,0 90,0
-                                          a 45,45 0 1,0 -90,0
-                                        "
+                                              M 50, 50
+                                              m -45, 0
+                                              a 45,45 0 1,0 90,0
+                                              a 45,45 0 1,0 -90,0
+                                            "
                                     ></path>
                                 </g>
                             </svg>
@@ -51,8 +51,16 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $exercise->name;
                     </div>
                 <?php } ?>
                 <?php if (!$exercise->is_pause) { ?>
-                    <p class="description"><?= $workoutExercise->repsWeightTimeFormatted() ?></p>
-                <?php } ?>
+                <p><?= $workoutExercise->repsWeightTimeFormatted() ?></p>
+                <div>
+                    <?php foreach (['resistance_bands', 'mode', 'incline_percent', 'pace', 'speed', 'pulse', 'height'] as $extraAttribute)
+                        if ($workoutExercise->resistance_bands) { ?>
+                            <p>
+                                <?= $workoutExercise->getAttributeLabel($extraAttribute) . ": " . $workoutExercise->$extraAttribute ?>
+                            </p>
+                        <?php }
+                    } ?>
+                </div>
                 <div>
                     <?php
                     $vid = $workoutExercise->videoToDisplay();
@@ -95,8 +103,10 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $exercise->name;
                     <?php if ($nextWorkoutExercise && $exercise->renderEvaluation()) { ?>
                         <div style="margin-top: 24px;">
                             <h4 style="margin-bottom: 8px;">Nākamais vingrojums</h4>
-                            <p><?= $nextWorkoutExercise->exercise->name ?>
-                                - <?= $nextWorkoutExercise->repsWeightTimeFormatted() ?></p>
+                            <p>
+                                <?= $nextWorkoutExercise->exercise->name ?>
+                                - <?= $nextWorkoutExercise->repsWeightTimeFormatted() ?>
+                            </p>
                         </div>
                     <?php } ?>
                 </div>
