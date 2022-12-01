@@ -595,6 +595,56 @@ Vue.component('error-flash', {
     `
 })
 
+Vue.component('form-input', {
+    name: 'form-input',
+    props: ['value', 'type', 'label'],
+    data() {
+        return {
+            internalValue: this.value
+        }
+    },
+    methods: {
+        updateValue() {
+            console.log(this.internalValue)
+            this.$emit('input', this.internalValue)
+        }
+    },
+    watch: {
+        internalValue(n, o) {
+            if (!o || n !== o) this.updateValue(n)
+        }
+    },
+    template: `
+    <div>
+        <div v-if="type === 'text'">
+            <div class="form-group">
+                <label class="control-label">{{ label }}</label>
+                <input
+                    v-model="internalValue"
+                    type="text"
+                    class="form-control">
+            </div>
+        </div>
+        <div v-else-if="type === 'textarea'">
+            <div class="form-group">
+                <label class="control-label">{{ label }}</label>
+                <textarea
+                    v-model="internalValue"
+                    class="form-control"
+                ></textarea>
+            </div>
+        </div>
+        <div v-else-if="type === 'checkbox'">
+            <div class="form-group">
+            <label>
+                <input type="checkbox" v-model="internalValue">
+                <span>{{ label }}</span>
+            </label>
+        </div>
+    </div>
+    `
+})
+
 Vue.component('exercise-creation-modal', {
     name: 'exercise-creation-modal',
     props: {
@@ -605,24 +655,61 @@ Vue.component('exercise-creation-modal', {
         }
     },
     data() {
+        const defaultExercise = {
+            name: null,
+            description: null,
+            video: null,
+            technique_video: null,
+            needs_evaluation: true,
+            is_bodyweight: false,
+            has_reps: true,
+            has_weight: true,
+            has_time: false,
+            has_resistance_bands: false,
+            has_mode: false,
+            has_incline_percent: false,
+            has_pace: false,
+            has_speed: false,
+            has_pulse: false,
+            has_height: false,
+        }
         return {
-            name: '',
-            description: '',
+            defaultExercise,
+            exercise: {...defaultExercise},
+            attributeLabels: {
+                name: 'Nosaukums',
+                description: 'Apraksts',
+                video: 'Video',
+                technique_video: 'Tehnikas video',
+                needs_evaluation: 'Jānovērtē',
+                is_bodyweight: 'Ķermeņa svara vingrojums',
+                has_reps: 'Reizes',
+                has_weight: 'Svars (kg)',
+                has_time: 'Laiks (s)',
+                has_resistance_bands: 'Pretestības gumijas',
+                has_mode: 'Režīms',
+                has_incline_percent: 'Slīpums (%)',
+                has_pace: 'Temps',
+                has_speed: 'Ātrums (km/h)',
+                has_pulse: 'Pulss',
+                has_height: 'Augstums (cm)',
+            },
             isLoading: false,
         }
     },
     created() {
-        this.name = this.initialName;
+        this.exercise.name = this.initialName;
     },
     methods: {
         async submit() {
             this.isLoading = true;
             try {
-                return await ExerciseRepository.create({name: this.name, description: this.description});
+                return await ExerciseRepository.create(this.exercise);
             } catch (e) {
-                console.log(e);
+                console.error(e);
             } finally {
                 this.isLoading = false;
+                this.exercise = this.defaultExercise;
             }
         },
         async submitWithoutAdding() {
@@ -638,30 +725,44 @@ Vue.component('exercise-creation-modal', {
     template: `
     <modal id="exercise-creation-modal" title="Vingrojuma izveidošana" @close="$emit('close')">
         <div>
-            <div class="form-group required">
-                <label class="control-label" for="exercise-name">Nosaukums</label>
-                <input
-                    v-model="name"
-                    type="text"
-                    id="exercise-name"
-                    class="form-control"
-                    name="Exercise[name]"
-                    aria-required="true">
-            </div>
-            <div class="form-group field-exercise-description">
-                <label class="control-label" for="exercise-description">Apraksts</label>
-                <textarea
-                    v-model="description"
-                    id="exercise-description"
-                    class="form-control"
-                    name="Exercise[description]"
-                ></textarea>
+            <form-input v-model="exercise.name" type="text" :label="attributeLabels['name']" />
+            <form-input v-model="exercise.description" type="textarea" :label="attributeLabels['description']" />
+            <form-input v-model="exercise.video" type="text" :label="attributeLabels['video']" />
+            <form-input v-model="exercise.technique_video" type="text" :label="attributeLabels['technique_video']" />
+            <form-input v-model="exercise.needs_evaluation" type="checkbox" :label="attributeLabels['needs_evaluation']" />
+            <form-input v-model="exercise.is_bodyweight" type="checkbox" :label="attributeLabels['is_bodyweight']" />
+            <h3>Parametri, kurus jāievada piešķirot vingrojumu</h3>
+            <div style="display:flex; gap:32px;">
+                <div>
+                    <form-input v-model="exercise.has_reps" type="checkbox" :label="attributeLabels['has_reps']" />
+                    <form-input v-model="exercise.has_weight" type="checkbox" :label="attributeLabels['has_weight']" />
+                    <form-input v-model="exercise.has_time" type="checkbox" :label="attributeLabels['has_time']" />
+                </div>
+                <div>
+                    <form-input v-model="exercise.has_resistance_bands" type="checkbox" :label="attributeLabels['has_resistance_bands']" />
+                    <form-input v-model="exercise.has_mode" type="checkbox" :label="attributeLabels['has_mode']" />
+                    <form-input v-model="exercise.has_height" type="checkbox" :label="attributeLabels['has_height']" />
+                </div>
+                <div>
+                    <form-input v-model="exercise.has_incline_percent" type="checkbox" :label="attributeLabels['has_incline_percent']" />
+                    <form-input v-model="exercise.has_pace" type="checkbox" :label="attributeLabels['has_pace']" />
+                    <form-input v-model="exercise.has_speed" type="checkbox" :label="attributeLabels['has_speed']" />
+                    <form-input v-model="exercise.has_pulse" type="checkbox" :label="attributeLabels['has_pulse']" />
+                </div>
             </div>
         </div>
         <div style="display:flex; gap: 8px; justify-content: center;">
             <button type="button" class="btn" @click="$emit('close')">Atcelt</button>        
-            <button class="btn btn-primary" :disabled="!name.length || isLoading" @click="submitWithoutAdding">Izveidot</button>        
-            <button class="btn btn btn-success" :disabled="!name.length || isLoading" @click="submitAndAddToWorkout">Izveidot un piešķirt treniņam</button>        
+            <button
+                class="btn btn-primary" 
+                :disabled="!exercise.name || !exercise.name.length || isLoading"
+                @click="submitWithoutAdding"
+            >Izveidot</button>        
+            <button
+                class="btn btn btn-success"
+                :disabled="!exercise.name || !exercise.name.length || isLoading"
+                @click="submitAndAddToWorkout"
+            >Izveidot un piešķirt treniņam</button>        
         </div>
     </modal>      
     `
@@ -725,7 +826,7 @@ class RpeCalculator {
 
     static calculateReps(rpe, weightPercentageOf1rm) {
         const weightPercentageToRpe = rpeToWeightPercentageToReps[rpe]
-        if(!weightPercentageToRpe) return null
+        if (!weightPercentageToRpe) return null
         return weightPercentageToRpe[
             findClosestNumber(
                 Object.keys(weightPercentageToRpe).map(x => parseFloat(x)),
@@ -1248,7 +1349,7 @@ $(document).ready(function () {
                     </div>
 
                     <div class="tab-pane fade" id="workout-creation" role="tabpanel" aria-labelledby="workout-creation-tab">
-                        <div class="col-md-12">
+                        <div class="col-md-4">
                             <ul class="nav nav-tabs" id="exercise-tabs" role="tablist">
                                 <li class="nav-item active">
                                     <a class="nav-link" id="exercises-tab" data-toggle="tab" href="#exercises" role="tab" aria-controls="exercises" aria-selected="false">
@@ -1376,8 +1477,8 @@ $(document).ready(function () {
                                                 v-if="exerciseNameFilter"
                                                 class="btn btn-success"
                                                 :disabled="creatingExercise"
-                                                @click="createAndAddSearchValueExercise">
-                                                Izveidot un piešķirt <strong>{{ exerciseNameFilter }}</strong>
+                                                @click="showCreateExerciseModal = true">
+                                                Izveidot <strong>{{ exerciseNameFilter }}</strong>
                                             </button>
                                         </li>
                                          <li class="list-group-item" v-if="pauses" :style="{ 'z-index': exercisesLoading ? '-1' : 'auto' }">
@@ -1409,7 +1510,7 @@ $(document).ready(function () {
                             </div>
                         </div>
 
-                        <div class="col-md-12">
+                        <div class="col-md-8">
 <!--                            <h4>Tagu "balance score"</h4>-->
 <!--                            <p>(<em>šajā treniņā</em> | <em>šajā + visos iepriekšējos treniņos</em>)</p>-->
 <!--                            <ul class="list-group">-->
@@ -1424,7 +1525,7 @@ $(document).ready(function () {
                                 <input class="form-control" v-model="workout.description">
                             </label>
 
-                            <div v-if="workout.workoutExercises.length">
+                            <div v-if="workout.workoutExercises.length" style="overflow-y:auto">
                                 <table class="table table-striped table-bordered" >
                                     <thead>
                                         <tr>

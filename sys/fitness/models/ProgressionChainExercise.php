@@ -42,4 +42,9 @@ class ProgressionChainExercise extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Exercise::class, ['id' => 'exercise_id']);
     }
+
+    public function getMainExercise()
+    {
+        return $this->hasOne(ProgressionChainMainExercise::class, ['progression_chain_exercise_id' => 'id']);
+    }
 }

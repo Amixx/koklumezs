@@ -5,30 +5,55 @@ use yii\widgets\ActiveForm;
 
 ?>
 
-<div class="lectures-form">
+<div class="progression-chain-form">
 
     <?php $form = ActiveForm::begin(); ?>
     <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
         <?= $form->field($model, 'title')->textInput() ?>
     </div>
     <?php if (isset($progressionChainExercises)) { ?>
-        <div>
+        <div style="display:flex; flex-wrap:wrap; gap: 16px;align-items:baseline;">
             <?php for ($i = 0; $i <= 10; $i++) { ?>
                 <?php if ($i > 0) { ?>
-                    <span style="display: flex; align-items: last baseline">
-                      <span>+</span>
-                        <?= $form->field($progressionChainExercises[$i], "[$i]difficulty_increase_percent")->textInput(['style' => 'width: 60px'])->label(false) ?>
-                        <span>%</span>
-                    </span>
+                    <span style="display:inline-block">
+                            <span style="display: flex; align-items: last baseline">
+                                <span>+</span>
+                                <?= $form->field($progressionChainExercises[$i], "[$i]difficulty_increase_percent")->textInput(['style' => 'width: 60px'])->label(false) ?>
+                                <span>%</span>
+                             </span>
+                        </span>
                 <?php } ?>
-
-                <?= $form->field($progressionChainExercises[$i], "[$i]exercise_id")->dropDownList(
-                    $exerciseSelectOptions,
-                    [
-                        'prompt' => '-- ' . \Yii::t('app', 'Choose') . ' --',
-                    ]
-                )->label(false) ?>
+                <div style="display:inline-block">
+                    <?= $form->field($progressionChainExercises[$i], "[$i]exercise_id")->dropDownList(
+                        $exerciseSelectOptions,
+                        [
+                            'prompt' => '-- ' . \Yii::t('app', 'Choose') . ' --',
+                            'class' => 'progression-chain-exercise-select',
+                        ]
+                    )->label(false) ?>
+                </div>
             <?php } ?>
+        </div>
+
+        <div class="progression-chain-main-exercise-form">
+            <span>Ķēdes vingrojuma</span>
+            <?= $form->field($mainExercise, "exerciseId")->dropDownList(
+                $exerciseSelectOptions,
+                [
+                    'prompt' => '-- ' . \Yii::t('app', 'Choose') . ' --',
+                    'class' => 'progression-chain-exercise-select',
+                ]
+            )->label(false) ?>
+            <span>grūtība ir</span>
+            <?= $form->field($mainExercise, "rep_bw_ratio_percent")->label(false) ?>
+            <span>procenti reiz</span>
+            <?= $form->field($mainExercise, 'weight_exercise_id')->dropDownList(
+                $weightExerciseSelectOptions,
+                [
+                    'prompt' => '-- ' . \Yii::t('app', 'Choose') . ' --',
+                ]
+            )->label(false) ?>
+            <span>reiz {ķermeņa svars}</span>
         </div>
     <?php } ?>
 

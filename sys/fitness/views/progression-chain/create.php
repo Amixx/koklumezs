@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Lectures */
 
-$this->title = \Yii::t('app',  'Create tag');
+$this->title = \Yii::t('app',  'Create progression chain');
 ['label' => \Yii::t('app',  'Tags'), 'url' => ['index']];
 
 ?>

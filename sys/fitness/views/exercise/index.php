@@ -96,7 +96,7 @@ $this->title = \Yii::t('app', 'Exercises');
                        ? Yii::t('app', 'Yes')
                        : Yii::t('app', 'No');
                 },
-                'label' => Yii::t('app', 'Is ready'),
+                'label' => Yii::t('app', 'Ready'),
                 'filter' => Html::dropDownList(
                     'ExerciseSearch[is_ready]',
                     $get['ExerciseSearch']['is_ready'] ?? null,
@@ -113,7 +113,7 @@ $this->title = \Yii::t('app', 'Exercises');
                 'value' => function ($dataProvider) {
                     return '';
                 },
-                'label' => Yii::t('app', 'Is added to any workouts'),
+                'label' => Yii::t('app', 'Is in a workout'),
                 'filter' => Html::dropDownList(
                     'ExerciseSearch[isAddedToAnyWorkouts]',
                     $get['ExerciseSearch']['isAddedToAnyWorkouts'] ?? null,
@@ -130,7 +130,7 @@ $this->title = \Yii::t('app', 'Exercises');
                 'value' => function ($dataProvider) {
                     return '';
                 },
-                'label' => Yii::t('app', 'Is added to any progression chain'),
+                'label' => Yii::t('app', 'Is in a progression chain'),
                 'filter' => Html::dropDownList(
                     'ExerciseSearch[isAddedToAnyProgressionChains]',
                     $get['ExerciseSearch']['isAddedToAnyProgressionChains'] ?? null,

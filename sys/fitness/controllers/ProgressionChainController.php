@@ -4,6 +4,7 @@ namespace app\fitness\controllers;
 
 use app\fitness\models\Exercise;
 use app\fitness\models\ProgressionChainExercise;
+use app\fitness\models\ProgressionChainMainExercise;
 use Yii;
 use app\fitness\models\ProgressionChain;
 use app\models\Users;
@@ -79,6 +80,13 @@ class ProgressionChainController extends Controller
         $model = $this->findModel($id);
 
         $progressionChainExercises = $model->exercises;
+        $mainExercise = new ProgressionChainMainExercise;
+        foreach($progressionChainExercises as $pce) {
+            if($pce->mainExercise) {
+                $mainExercise = $pce->mainExercise;
+                $mainExercise->exerciseId = $pce->exercise_id;
+            };
+        }
         while (count($progressionChainExercises) <= 10) {
             $new = new ProgressionChainExercise;
             $new->progression_chain_id = $model->id;
@@ -87,7 +95,6 @@ class ProgressionChainController extends Controller
 
 
         if ($model->load($post) && $model->save()) {
-
             foreach ($progressionChainExercises as $index => $progressionChainExercise) {
                 $postItem = $post['ProgressionChainExercise'][$index];
                 if(isset($postItem['exercise_id'])) {
@@ -98,9 +105,15 @@ class ProgressionChainController extends Controller
                 }
 
                 if ($progressionChainExercise->exercise_id && ($index === 0 || $progressionChainExercise->difficulty_increase_percent)) {
-                    $progressionChainExercise->id ? $progressionChainExercise->update() : $progressionChainExercise->save();
+                    $progressionChainExercise->save();
                 }
             }
+        }
+        if($mainExercise->load($post)) {
+            foreach($progressionChainExercises as $pce) {
+                if($pce->exercise_id === $mainExercise->exerciseId) $mainExercise->progression_chain_exercise_id = $pce->id;
+            }
+            if($mainExercise->validate()) $mainExercise->save();
         }
 
         Url::remember(Yii::$app->request->referrer);
@@ -108,7 +121,9 @@ class ProgressionChainController extends Controller
         return $this->render('@app/fitness/views/progression-chain/update', [
             'model' => $model,
             'progressionChainExercises' => $progressionChainExercises,
-            'exerciseSelectOptions' => Exercise::getProgressionChainSelectOptions()
+            'exerciseSelectOptions' => Exercise::getProgressionChainSelectOptions(),
+            'weightExerciseSelectOptions' => Exercise::getWeightExerciseSelectOptions(),
+            'mainExercise' => $mainExercise,
         ]);
     }
 

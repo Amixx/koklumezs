@@ -55,19 +55,19 @@ class Exercise extends \yii\db\ActiveRecord
             'is_pause' => \Yii::t('app', 'Is pause'),
             'needs_evaluation' => \Yii::t('app', 'Needs evaluation'),
             'popularity_type' => \Yii::t('app', 'Popularity type'),
-            'is_archived' => \Yii::t('app', 'Is archived'),
+            'is_archived' => \Yii::t('app', 'Archived'),
             'is_bodyweight' => \Yii::t('app', 'Is bodyweight'),
-            'is_ready' => \Yii::t('app', 'Is ready'),
-            'has_reps' => \Yii::t('app', 'Has reps'),
-            'has_weight' => \Yii::t('app', 'Has weight'),
-            'has_time' => \Yii::t('app', 'Has time'),
-            'has_resistance_bands' => \Yii::t('app', 'Has resistance bands'),
-            'has_mode' => \Yii::t('app', 'Has mode'),
-            'has_incline_percent' => \Yii::t('app', 'Has incline'),
-            'has_pace' => \Yii::t('app', 'Has pace'),
-            'has_speed' => \Yii::t('app', 'Has speed'),
-            'has_pulse' => \Yii::t('app', 'Has pulse'),
-            'has_height' => \Yii::t('app', 'Has height'),
+            'is_ready' => \Yii::t('app', 'Ready'),
+            'has_reps' => \Yii::t('app', 'Reps'),
+            'has_weight' => \Yii::t('app', 'Weight (kg)'),
+            'has_time' => \Yii::t('app', 'Time (s)'),
+            'has_resistance_bands' => \Yii::t('app', 'Resistance bands'),
+            'has_mode' => \Yii::t('app', 'Mode'),
+            'has_incline_percent' => \Yii::t('app', 'Incline (%)'),
+            'has_pace' => \Yii::t('app', 'Pace (min/km)'),
+            'has_speed' => \Yii::t('app', 'Speed (km/h)'),
+            'has_pulse' => \Yii::t('app', 'Pulse'),
+            'has_height' => \Yii::t('app', 'Height (cm)'),
         ];
     }
 
@@ -238,6 +238,18 @@ class Exercise extends \yii\db\ActiveRecord
             ->where([
                 'is_archived' => false,
                 'is_bodyweight' => true,
+                'fitness_exercises.author_id' => Yii::$app->user->identity->id
+            ])
+            ->asArray()->all();
+        return ArrayHelper::map($exercises, 'id', 'name');
+    }
+
+    public static function getWeightExerciseSelectOptions()
+    {
+        $exercises = self::find()
+            ->where([
+                'is_archived' => false,
+                'has_weight' => true,
                 'fitness_exercises.author_id' => Yii::$app->user->identity->id
             ])
             ->asArray()->all();

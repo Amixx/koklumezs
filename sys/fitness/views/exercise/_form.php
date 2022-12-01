@@ -41,22 +41,30 @@ $tagSelected = function ($tagId) use ($selectedTagIds) {
     <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
         <?= $form->field($model, 'name')->textInput() ?>
         <?= $form->field($model, 'description')->textarea() ?>
-        <?= $form->field($model, 'is_pause')->checkbox() ?>
         <?= $form->field($model, 'needs_evaluation')->checkbox() ?>
         <?= $form->field($model, 'is_archived')->checkbox() ?>
         <?= $form->field($model, 'is_bodyweight')->checkbox() ?>
         <?= $form->field($model, 'is_ready')->checkbox() ?>
         <hr>
-        <?= $form->field($model, 'has_reps')->checkbox() ?>
-        <?= $form->field($model, 'has_weight')->checkbox() ?>
-        <?= $form->field($model, 'has_time')->checkbox() ?>
-        <?= $form->field($model, 'has_resistance_bands')->checkbox() ?>
-        <?= $form->field($model, 'has_mode')->checkbox() ?>
-        <?= $form->field($model, 'has_incline_percent')->checkbox() ?>
-        <?= $form->field($model, 'has_pace')->checkbox() ?>
-        <?= $form->field($model, 'has_speed')->checkbox() ?>
-        <?= $form->field($model, 'has_pulse')->checkbox() ?>
-        <?= $form->field($model, 'has_height')->checkbox() ?>
+        <h3><?= Yii::t('app', 'Parameters to enter when assigning the exercise') ?></h3>
+        <div style="display:flex; gap:32px;">
+            <div>
+                <?= $form->field($model, 'has_reps')->checkbox() ?>
+                <?= $form->field($model, 'has_weight')->checkbox() ?>
+                <?= $form->field($model, 'has_time')->checkbox() ?>
+            </div>
+            <div>
+                <?= $form->field($model, 'has_resistance_bands')->checkbox() ?>
+                <?= $form->field($model, 'has_mode')->checkbox() ?>
+                <?= $form->field($model, 'has_height')->checkbox() ?>
+            </div>
+            <div>
+                <?= $form->field($model, 'has_incline_percent')->checkbox() ?>
+                <?= $form->field($model, 'has_pace')->checkbox() ?>
+                <?= $form->field($model, 'has_speed')->checkbox() ?>
+                <?= $form->field($model, 'has_pulse')->checkbox() ?>
+            </div>
+        </div>
         <hr>
         <?= $form->field($model, 'popularity_type')->dropDownList(
             [

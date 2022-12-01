@@ -1673,3 +1673,22 @@ div.has-experience.active, div.rent.active {
 .base-timer__svg {
     transform: scaleX(-1);
 }
+
+.container.main-page-container {
+    background: rgba(255, 255, 255, 0.8)
+}
+
+.form-group .select2-container--default .select2-selection--single {
+    min-width: unset !important;
+}
+
+.progression-chain-main-exercise-form {
+    display: flex;
+    align-items: last baseline;
+    gap: 8px;
+    margin-top: 32px;
+}
+
+.progression-chain-form .select2 {
+    max-width: 200px;
+}

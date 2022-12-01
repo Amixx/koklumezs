@@ -237,11 +237,8 @@ class ExerciseController extends Controller
     {
         $post = Yii::$app->request->post();
         $exercise = new Exercise;
+        $exercise->load($post, '');
         $exercise->author_id = Yii::$app->user->identity->id;
-        $exercise->name = $post['name'];
-        if (isset($post['description']) && $post['description']) {
-            $exercise->description = $post['description'];
-        }
         $exercise->popularity_type = 'AVERAGE';
 
         if ($exercise->save()) {
