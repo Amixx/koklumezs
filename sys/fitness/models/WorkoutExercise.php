@@ -3,6 +3,7 @@
 namespace app\fitness\models;
 
 use app\models\Users;
+use Yii;
 
 function wrapInBold($str)
 {
@@ -24,6 +25,7 @@ class WorkoutExercise extends \yii\db\ActiveRecord
                 'workout_id',
                 'exercise_id',
                 'reps',
+                'actual_reps',
                 'time_seconds',
                 'mode',
                 'incline_percent',
@@ -34,6 +36,10 @@ class WorkoutExercise extends \yii\db\ActiveRecord
             ], 'integer'],
             [
                 ['weight'], 'number',
+                'numberPattern' => '/^\d+(.\d{1,2})?$/'
+            ],
+            [
+                ['actual_weight'], 'number',
                 'numberPattern' => '/^\d+(.\d{1,2})?$/'
             ],
             [['resistance_bands'], 'string'],
@@ -50,6 +56,8 @@ class WorkoutExercise extends \yii\db\ActiveRecord
             'exercise_id' => \Yii::t('app', 'Exercise ID'),
             'weight' => \Yii::t('app', 'Weight'),
             'reps' => \Yii::t('app', 'Repetitions'),
+            'actual_weight' => \Yii::t('app', 'Actual weight'),
+            'actual_reps' => \Yii::t('app', 'Actual repetitions'),
             'time_seconds' => \Yii::t('app', 'Time (seconds)'),
             'resistance_bands' => \Yii::t('app', 'Resistance bands'),
             'mode' => \Yii::t('app', 'Mode'),
@@ -116,11 +124,43 @@ class WorkoutExercise extends \yii\db\ActiveRecord
         return $lastTwoWeeksOneRepMaxAverages['replacement']['ability'] / $lastTwoWeeksOneRepMaxAverages['original']['ability'];
     }
 
+    private function getAvgAbilityThisWorkoutAndBeforeRatio()
+    {
+        $avgAbilityBeforeThisWorkout = $this->exercise->estimatedAvgAbilityOfUser($this->workout->student_id, $this->workout_id);
+        if(!$avgAbilityBeforeThisWorkout) return null;
+        $avgAbilityThisWorkout = $this->exercise->estimatedAvgAbilityInWorkout($this->workout);
+        $ratio = isset($avgAbilityThisWorkout['ability']) && isset($avgAbilityBeforeThisWorkout['type'])
+            ? $avgAbilityThisWorkout['ability'] / $avgAbilityBeforeThisWorkout['ability']
+            : null;
+        return ['ratio' => $ratio, 'type' => $avgAbilityThisWorkout['type']];
+    }
+
+    public function setActualWeightAndReps(){
+        $this->actual_weight = $this->weight;
+        $this->actual_reps = $this->reps;
+        $ratioArr = $this->getAvgAbilityThisWorkoutAndBeforeRatio();
+        if(!$ratioArr) {
+            $this->save();
+            return;
+        }
+
+        if($ratioArr['ratio']) {
+            if($ratioArr['type'] === '1rm' && $this->weight || !$this->actual_weight) {
+                $this->actual_weight = round($this->weight * $ratioArr['ratio'], 1);
+            }
+            if($ratioArr['type'] === 'reps' && $this->reps || !$this->actual_reps) {
+                $this->actual_reps = round($this->reps * $ratioArr['ratio']);
+            }
+        }
+
+        $this->save();
+    }
+
     public function repsWeightTimeFormatted()
     {
-        if(!$this->isReplaced()) {
-            $weight = $this->weight;
-            $reps = $this->reps;
+        if (!$this->isReplaced()) {
+            $weight = $this->actual_weight;
+            $reps = $this->actual_reps;
             $time = $this->time_seconds;
         } else {
             $weight = $this->replacementExercise->weight;
@@ -135,12 +175,12 @@ class WorkoutExercise extends \yii\db\ActiveRecord
 
         $res = '';
         if ($hasReps) {
-            $res = wrapInBold($reps) . ' reizes';
+            $res = wrapInBold($this->actual_reps) . ' reizes';
         } else if ($hasTime) {
             $res = wrapInBold($time) . ' sekundes';
         }
         if ($hasWeight) {
-            $res .= ' ar ' . wrapInBold($weight) . ' kg svaru';
+            $res .= ' ar ' . wrapInBold($this->actual_weight) . ' kg svaru';
         }
 
         return $res;
@@ -179,28 +219,32 @@ class WorkoutExercise extends \yii\db\ActiveRecord
         return $workoutExercise->videoToDisplay();
     }
 
-    private function weightReplacedByWeight($exerciseToReplaceWith){
+    private function weightReplacedByWeight($exerciseToReplaceWith)
+    {
         return !$this->exercise->is_bodyweight && !$exerciseToReplaceWith->is_bodyweight;
     }
 
-    private function weightReplacedByBodyweight($exerciseToReplaceWith){
+    private function weightReplacedByBodyweight($exerciseToReplaceWith)
+    {
         return !$this->exercise->is_bodyweight && $exerciseToReplaceWith->is_bodyweight;
     }
 
-    private function bodyweightReplacedByWeight($exerciseToReplaceWith){
+    private function bodyweightReplacedByWeight($exerciseToReplaceWith)
+    {
         return $this->exercise->is_bodyweight && !$exerciseToReplaceWith->is_bodyweight;
     }
 
-    private function getReplacementExerciseWeight($exerciseToReplaceWith){
-        if(is_null($this->weight)) return null;
+    private function getReplacementExerciseWeight($exerciseToReplaceWith)
+    {
+        if (is_null($this->actual_weight)) return null;
 
         $abilityRatio = $this->getAbilityRatio();
 
-        if($this->weightReplacedByWeight($exerciseToReplaceWith)) {
-            return round($this->weight * $abilityRatio, 1);
+        if ($this->weightReplacedByWeight($exerciseToReplaceWith)) {
+            return round($this->actual_weight * $abilityRatio, 1);
         }
-        if($this->weightReplacedByBodyweight($exerciseToReplaceWith)) return null;
-        if($this->bodyweightReplacedByWeight($exerciseToReplaceWith)) {
+        if ($this->weightReplacedByBodyweight($exerciseToReplaceWith)) return null;
+        if ($this->bodyweightReplacedByWeight($exerciseToReplaceWith)) {
             //TODO: what to do here? calculate needed weight from bodyweight reps
             return null;
         }
@@ -208,23 +252,24 @@ class WorkoutExercise extends \yii\db\ActiveRecord
         return null;
     }
 
-    private function getReplacementExerciseReps($exerciseToReplaceWith){
-        if($this->weightReplacedByWeight($exerciseToReplaceWith)) {
-            return $this->reps;
+    private function getReplacementExerciseReps($exerciseToReplaceWith)
+    {
+        if ($this->weightReplacedByWeight($exerciseToReplaceWith)) {
+            return $this->actual_reps;
         }
-        if($this->weightReplacedByBodyweight($exerciseToReplaceWith)) {
-            if(!$this->reps) return null;
+        if ($this->weightReplacedByBodyweight($exerciseToReplaceWith)) {
+            if (!$this->actual_reps) return null;
 
             $originalAbility = $this->exercise->estimatedAvgAbilityOfUser($this->workout->student->id);
-            $replacementAbility =$exerciseToReplaceWith->estimatedAvgAbilityOfUser($this->workout->student->id);
+            $replacementAbility = $exerciseToReplaceWith->estimatedAvgAbilityOfUser($this->workout->student->id);
             // TODO: improve this!
             $originalRpe = RpeCalculator::calculateRpe(
-                $this->reps,
-                $this->weight / ($originalAbility ? $originalAbility['ability'] : 1));
+                $this->actual_reps,
+                $this->actual_weight / ($originalAbility ? $originalAbility['ability'] : 1));
 
             return round(($replacementAbility ? $replacementAbility['ability'] : 10) * ($originalRpe / 10), 0);
         }
-        if($this->bodyweightReplacedByWeight($exerciseToReplaceWith)) {
+        if ($this->bodyweightReplacedByWeight($exerciseToReplaceWith)) {
             //TODO: what to do here? calculate needed reps from bodyweight reps
             return null;
         }
@@ -232,21 +277,22 @@ class WorkoutExercise extends \yii\db\ActiveRecord
         return null;
     }
 
-    private function getReplacementExerciseTimeSeconds($exerciseToReplaceWith){
-        if($this->weightReplacedByWeight($exerciseToReplaceWith)) return $this->time_seconds;
-        if($this->weightReplacedByBodyweight($exerciseToReplaceWith)) {
-            if(!$this->time_seconds) return null;
+    private function getReplacementExerciseTimeSeconds($exerciseToReplaceWith)
+    {
+        if ($this->weightReplacedByWeight($exerciseToReplaceWith)) return $this->time_seconds;
+        if ($this->weightReplacedByBodyweight($exerciseToReplaceWith)) {
+            if (!$this->time_seconds) return null;
 
             $originalAbility = $this->exercise->estimatedAvgAbilityOfUser($this->workout->student->id);
             $replacementAbility = $exerciseToReplaceWith->estimatedAvgAbilityOfUser($this->workout->student->id);
             // TODO: improve this!
             $originalRpe = RpeCalculator::calculateRpe(
                 $this->time_seconds,
-                $this->weight / ($originalAbility ? $originalAbility['ability'] : 1));
+                $this->actual_weight / ($originalAbility ? $originalAbility['ability'] : 1));
 
             return round(($replacementAbility ? $replacementAbility['ability'] : 30) * ($originalRpe / 10), 0);
         }
-        if($this->bodyweightReplacedByWeight($exerciseToReplaceWith)) return null;
+        if ($this->bodyweightReplacedByWeight($exerciseToReplaceWith)) return null;
 
         return null;
     }
@@ -254,7 +300,7 @@ class WorkoutExercise extends \yii\db\ActiveRecord
 
     public function replaceByExercise($replacementExerciseId)
     {
-        if($this->isReplaced()) return null;
+        if ($this->isReplaced()) return null;
 
         $exerciseToReplaceWith = Exercise::find()->where(['id' => $replacementExerciseId])->one();
 

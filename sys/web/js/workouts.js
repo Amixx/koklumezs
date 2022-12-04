@@ -447,6 +447,17 @@ Vue.component('last-workouts-table', {
             return this.exerciseNameWithFallback(workoutExercise.replacementExercise.exercise) + " (aizstāja oriģinālo vingrojumu " + this.exerciseNameWithFallback(workoutExercise.exercise) + ")";
         },
         getAttribute(workoutExercise, attribute) {
+            if(attribute === 'actual_weight') {
+                return workoutExercise.replacementExercise
+                    ? workoutExercise.replacementExercise['weight']
+                    : (workoutExercise[attribute] ? workoutExercise[attribute] : workoutExercise['weight']);
+            }
+            if(attribute === 'actual_reps') {
+                return workoutExercise.replacementExercise
+                    ? workoutExercise.replacementExercise['reps']
+                    : (workoutExercise[attribute] ? workoutExercise[attribute] : workoutExercise['reps']);
+            }
+
             return workoutExercise.replacementExercise
                 ? workoutExercise.replacementExercise[attribute]
                 : workoutExercise[attribute]
@@ -504,9 +515,15 @@ Vue.component('last-workouts-table', {
                                  <tr v-for="(workoutExercise, i) in workout.workoutExercises" :key="i">
                                     <td>{{ i+1 }}</td>
                                     <td v-html="formatWorkoutExerciseName(workoutExercise)"></td>
-                                    <td>{{ getAttribute(workoutExercise, 'reps') }}</td>
+                                    <td>
+                                        <div style="white-space:nowrap">Piešķirtais: {{ getAttribute(workoutExercise, 'reps') }}</div>
+                                        <div style="white-space:nowrap">Reālais: {{ getAttribute(workoutExercise, 'actual_reps') }}</div>
+                                    </td>
                                     <td>{{ getAttribute(workoutExercise, 'time_seconds') }}</td>
-                                    <td>{{ getAttribute(workoutExercise, 'weight') }}</td>
+                                    <td>
+                                        <div style="white-space:nowrap">Piešķirtais: {{ getAttribute(workoutExercise, 'weight') }}</div>
+                                        <div style="white-space:nowrap">Reālais: {{ getAttribute(workoutExercise, 'actual_weight') }}</div>
+                                    </td>
                                     <td>
                                         <div v-for="(extraAttributeString, i) in getExtraAttributeValues(workoutExercise)" :key="i">
                                             <p v-if="extraAttributeString">{{ extraAttributeString }}</p>

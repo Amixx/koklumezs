@@ -15,7 +15,7 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $exercise->name;
         <div class="col-sm-12 view-workout">
             <div class="view-workout__main-info">
                 <h1><?= $exercise->name; ?></h1>
-                <?php if (!$workoutExercise->isReplaced()) { ?>
+                <?php if (!$workoutExercise->isReplaced() && $interchangeableExercises && !empty($interchangeableExercises)) { ?>
                     <div>
                         <?= Html::button(Yii::t('app', 'Substitute exercise'), [
                             'class' => 'btn btn-warning btn-sm',
@@ -82,7 +82,7 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $exercise->name;
                                 "amount-evaluation",
                                 [
                                     'difficultyEvaluation' => $difficultyEvaluation,
-                                    'reps' => $workoutExercise->reps,
+                                    'reps' => $workoutExercise->actual_reps,
                                     'timeSeconds' => $workoutExercise->time_seconds,
                                 ]) ?>
                         </div>
@@ -100,12 +100,14 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $exercise->name;
                         ); ?>
                     <?php } ?>
 
-                    <?php if ($nextWorkoutExercise && $exercise->renderEvaluation()) { ?>
+                    <?php if ($nextWorkoutExercise && ($exercise->renderEvaluation() || $exercise->is_pause)) { ?>
                         <div style="margin-top: 24px;">
                             <h4 style="margin-bottom: 8px;">Nākamais vingrojums</h4>
                             <p>
                                 <?= $nextWorkoutExercise->exercise->name ?>
-                                - <?= $nextWorkoutExercise->repsWeightTimeFormatted() ?>
+                                <?= $nextWorkoutExercise->repsWeightTimeFormatted()
+                                    ? " - " . $nextWorkoutExercise->repsWeightTimeFormatted()
+                                    : '' ?>
                             </p>
                         </div>
                     <?php } ?>
@@ -144,8 +146,8 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $exercise->name;
                         <div class="view-workout__other-exercise-item">
                         <span>
                             <span><?= $wExercise->exercise->name ?></span>
-                            <?php if ($wExercise->weight) { ?>
-                                <span>(<strong><?= $wExercise->weight ?></strong> kg)</span>
+                            <?php if ($wExercise->actual_weight) { ?>
+                                <span>(<strong><?= $wExercise->actual_weight ?></strong> kg)</span>
                             <?php } ?>
                         </span>
                             <?php if ($class === 'future' && $wExercise->exercise->technique_video) { ?>

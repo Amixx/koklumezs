@@ -5,7 +5,6 @@ namespace app\fitness\controllers;
 use app\fitness\models\Workout;
 use app\fitness\models\PostWorkoutMessage;
 use app\fitness\models\WorkoutEvaluation;
-use app\models\Lectures;
 use app\fitness\models\WorkoutExercise;
 use app\fitness\models\WorkoutExerciseEvaluation;
 use Yii;
@@ -74,6 +73,7 @@ class StudentExerciseController extends Controller
         $difficultyEvaluation = WorkoutExerciseEvaluation::find()->where(['workoutexercise_id' => $id])->one();
 
         $workoutExercise->workout->setAsOpened();
+        $workoutExercise->setActualWeightAndReps();
 
         $post = Yii::$app->request->post();
         if (isset($post["difficulty-evaluation"])) {

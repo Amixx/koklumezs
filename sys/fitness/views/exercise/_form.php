@@ -42,6 +42,7 @@ $tagSelected = function ($tagId) use ($selectedTagIds) {
         <?= $form->field($model, 'name')->textInput() ?>
         <?= $form->field($model, 'description')->textarea() ?>
         <?= $form->field($model, 'needs_evaluation')->checkbox() ?>
+        <?= $form->field($model, 'is_pause')->checkbox() ?>
         <?= $form->field($model, 'is_archived')->checkbox() ?>
         <?= $form->field($model, 'is_bodyweight')->checkbox() ?>
         <?= $form->field($model, 'is_ready')->checkbox() ?>

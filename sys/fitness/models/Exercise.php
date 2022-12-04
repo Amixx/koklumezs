@@ -151,16 +151,21 @@ class Exercise extends \yii\db\ActiveRecord
         return !$this->is_pause && $this->needs_evaluation;
     }
 
-    public function lastWeekEvaluationsOfUser($userId)
+    public function lastWeekEvaluationsOfUser($userId, $workoutIdToExclude = null)
     {
-        $evaluations = WorkoutExerciseEvaluation::find()
+        $query =  WorkoutExerciseEvaluation::find()
             ->joinWith('workoutExercise')
             ->andWhere(['user_id' => $userId])
             ->andWhere([
                 'or',
                 ['fitness_workoutexercises.exercise_id' => $this->id],
                 ['fitness_replacement_exercises.exercise_id' => $this->id],
-            ])->all();
+            ]);
+        if($workoutIdToExclude) {
+            $query->andWhere(['!=', 'workout_id', $workoutIdToExclude]);
+        }
+
+        $evaluations = $query->all();
 
         return array_filter(
             $evaluations,
@@ -174,9 +179,9 @@ class Exercise extends \yii\db\ActiveRecord
             });
     }
 
-    public function estimatedAvgAbilityOfUser($userId)
+    public function estimatedAvgAbilityOfUser($userId, $workoutIdToExclude = null)
     {
-        $workoutExerciseEvaluations = $this->lastWeekEvaluationsOfUser($userId);
+        $workoutExerciseEvaluations = $this->lastWeekEvaluationsOfUser($userId, $workoutIdToExclude);
 
         $averageAbilitiesSum = null;
         $res = null;
@@ -202,7 +207,7 @@ class Exercise extends \yii\db\ActiveRecord
             $penaltyForEachWeek = 0.05;
 
             foreach ($lastWorkout->workoutExercises as $workoutExercise) {
-                if ($workoutExercise->exercise_id == $this->id) {
+                if ($workoutExercise->exercise_id == $this->id && $workoutExercise->evaluation) {
                     $oneRepMaxRangeAverage = OneRepMaxCalculator::oneRepMaxRangeToAverage($workoutExercise->evaluation->$methodName());
                     if ($oneRepMaxRangeAverage) {
                         $addedEvaluationsCount++;
@@ -228,6 +233,36 @@ class Exercise extends \yii\db\ActiveRecord
 
             $res = $averageAbilitiesSum / count($workoutExerciseEvaluations);
         }
+
+        return $res ? ['ability' => $res, 'type' => $type] : null;
+    }
+
+    public function estimatedAvgAbilityInWorkout($workout)
+    {
+        $averageAbilitiesSum = null;
+        $res = null;
+
+        // TODO: make this also respect if workout exercise has time or not (new property on exercise?)
+        $methodName = $this->is_bodyweight
+            ? 'getMaxRepsRange'
+            : 'getOneRepMaxRange';
+        $type = $this->is_bodyweight ? 'reps' : '1rm';
+
+        $addedEvaluationsCount = 0;
+
+        foreach ($workout->workoutExercises as $workoutExercise) {
+            if ($workoutExercise->exercise_id == $this->id && $workoutExercise->evaluation) {
+                $oneRepMaxRangeAverage = OneRepMaxCalculator::oneRepMaxRangeToAverage($workoutExercise->evaluation->$methodName());
+                if ($oneRepMaxRangeAverage) {
+                    $addedEvaluationsCount++;
+                    $averageAbilitiesSum === null
+                        ? $averageAbilitiesSum = $oneRepMaxRangeAverage
+                        : $averageAbilitiesSum += $oneRepMaxRangeAverage;
+                }
+            }
+        }
+
+        if ($addedEvaluationsCount > 0) $res = $averageAbilitiesSum / $addedEvaluationsCount;
 
         return $res ? ['ability' => $res, 'type' => $type] : null;
     }
