@@ -13,6 +13,7 @@ class ExerciseSearch extends Exercise
     public $exerciseTag;
     public $isAddedToAnyWorkouts;
     public $isAddedToAnyProgressionChains = null;
+    public $interchangeableExercisesCount = null;
 
     public function rules()
     {
@@ -32,6 +33,7 @@ class ExerciseSearch extends Exercise
                 'exerciseTag',
                 'isAddedToAnyWorkouts',
                 'isAddedToAnyProgressionChains',
+                'interchangeableExercisesCount',
             ], 'safe'],
         ];
     }
@@ -103,6 +105,16 @@ class ExerciseSearch extends Exercise
                 'id',
                 ArrayHelper::getColumn($exerciseIdsInProgressionChains, 'exercise_id'),
             ]);
+        }
+        if ($this->interchangeableExercisesCount !== null && $this->interchangeableExercisesCount !== '') {
+            $queryEnd = $this->interchangeableExercisesCount === "5+" ? ">= 5" : "= $this->interchangeableExercisesCount";
+            $filterSql = "
+                select fitness_exercises.id from fitness_exercises join fitness_interchangeable_exercises
+                on fitness_interchangeable_exercises.exercise_id_1 = fitness_exercises.id
+                   or fitness_interchangeable_exercises.exercise_id_2 = fitness_exercises.id
+                group by fitness_exercises.id
+                having COUNT(*) $queryEnd";
+            $query->andWhere(['in', 'id', Yii::$app->db->createCommand($filterSql)->queryAll()]);
         }
 
         return $dataProvider;

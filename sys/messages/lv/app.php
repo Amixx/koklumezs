@@ -827,5 +827,6 @@ return [
     'Coefficient' => 'Koeficients',
     'Workout assigning' => 'Treniņu piešķiršana',
     'Not set' => 'Nav uzstādīts',
-    'Is bodyweight exercise' => 'Vai ir ķermeņa svara vingrojums'
+    'Is bodyweight exercise' => 'Vai ir ķermeņa svara vingrojums',
+    'Interchangeable exercises count' => 'Aizvietojamo vingrojumu skaits'
 ];

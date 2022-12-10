@@ -33,7 +33,7 @@ $this->title = \Yii::t('app', 'Exercises');
             [
                 'attribute' => 'technique_video',
                 'value' => function ($dataProvider) {
-                    if(!$dataProvider['video']) return '';
+                    if(!$dataProvider['technique_video']) return '';
                     return Html::a(Yii::t('app', 'here'), $dataProvider['technique_video'], ['target' => '_blank']);
                 },
                 'format' => 'raw',
@@ -124,6 +124,27 @@ $this->title = \Yii::t('app', 'Exercises');
                     [
                         true => Yii::t('app', 'Yes'),
                         false => Yii::t('app', 'No'),
+                    ],
+                    ['prompt' => '-- Visi --', 'class' => 'form-control']
+                ),
+            ],
+            [
+                'attribute' => 'interchangeableExercisesCount',
+                'format' => 'raw',
+                'value' => function ($dataProvider) {
+                    return '';
+                },
+                'label' => Yii::t('app', 'Interchangeable exercises count'),
+                'filter' => Html::dropDownList(
+                    'ExerciseSearch[interchangeableExercisesCount]',
+                    $get['ExerciseSearch']['interchangeableExercisesCount'] ?? null,
+                    [
+                            0 => 0,
+                            1 => 1,
+                            2 => 2,
+                            3 => 3,
+                            4 => 4,
+                            '5+' => '5+',
                     ],
                     ['prompt' => '-- Visi --', 'class' => 'form-control']
                 ),

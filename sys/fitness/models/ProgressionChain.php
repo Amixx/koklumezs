@@ -17,6 +17,8 @@ class ProgressionChain extends \yii\db\ActiveRecord
     {
         return [
             [['title'], 'string'],
+            [['author_id'], 'required'],
+            [['author_id'], 'integer'],
         ];
     }
 
@@ -24,6 +26,7 @@ class ProgressionChain extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'author_id' => \Yii::t('app',  'Author ID'),
             'title' => \Yii::t('app',  'Title'),
         ];
     }

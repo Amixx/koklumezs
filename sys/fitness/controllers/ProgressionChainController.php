@@ -43,8 +43,9 @@ class ProgressionChainController extends Controller
 
     public function actionIndex()
     {
+        $userContext = Yii::$app->user->identity;
         $dataProvider = new ActiveDataProvider([
-            'query' => ProgressionChain::find(),
+            'query' => ProgressionChain::find()->where(['author_id' => $userContext->id]),
         ]);
 
         return $this->render('@app/fitness/views/progression-chain/index', [
@@ -62,8 +63,10 @@ class ProgressionChainController extends Controller
 
     public function actionCreate()
     {
+        $userContext = Yii::$app->user->identity;
         $post = Yii::$app->request->post();
         $model = new ProgressionChain();
+        $model->author_id = $userContext->id;
 
         if ($model->load($post) && $model->save()) {
             return $this->redirect(['update', 'id' => $model->id]);
