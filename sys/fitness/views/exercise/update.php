@@ -17,7 +17,7 @@ $this->title = \Yii::t('app', 'Edit exercise') . ': ' . $model->name;
         'model' => $model,
         'tags' => $tags,
         'selectedTagIds' => $selectedTagIds,
-        'interchangeableExerciseSelectedOptions' => $interchangeableExerciseSelectedOptions,
+        'interchangeableExercisesSelectValue' => $interchangeableExercisesSelectValue,
     ]) ?>
 
 </div>

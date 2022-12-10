@@ -80,6 +80,19 @@ class ExerciseController extends Controller
                     $exerciseTag->save();
                 }
             }
+
+            if (isset($post['interchangeableExercises'])) {
+                $addedInterchangeableExerciseIds = $post['interchangeableExercises'];
+
+                foreach ($addedInterchangeableExerciseIds as $ieid) {
+                    if ($ieid == $model->id) continue;
+                    $interchangeableExercise = new InterchangeableExercise;
+                    $interchangeableExercise->exercise_id_1 = $model->id;
+                    $interchangeableExercise->exercise_id_2 = $ieid;
+                    $interchangeableExercise->save();
+                }
+            }
+
             return $this->redirect(['index']);
         }
 
@@ -95,7 +108,7 @@ class ExerciseController extends Controller
         $model = $this->findModel($id);
         $selectedTagIds = ArrayHelper::getColumn($model['exerciseTags'], 'tag_id');
         $interchangeableExerciseIds = $model->getInterchangeableExerciseIds();
-        $interchangeableExerciseSelectedOptions = $model->getInterchangeableExercisesSelect2Options();
+        $interchangeableExercisesSelectValue = $model->getInterchangeableExercisesSelect2Options();
         $tags = Tag::find()->asArray()->all();
 
         if ($model->load($post) && $model->save()) {
@@ -124,7 +137,7 @@ class ExerciseController extends Controller
                 $addedInterchangeableExerciseIds = array_diff($post['interchangeableExercises'], $interchangeableExerciseIds);
 
                 foreach ($addedInterchangeableExerciseIds as $ieid) {
-                    if($ieid == $model->id) continue;
+                    if ($ieid == $model->id) continue;
                     $interchangeableExercise = new InterchangeableExercise;
                     $interchangeableExercise->exercise_id_1 = $model->id;
                     $interchangeableExercise->exercise_id_2 = $ieid;
@@ -152,7 +165,7 @@ class ExerciseController extends Controller
             'model' => $model,
             'tags' => $tags,
             'selectedTagIds' => $selectedTagIds,
-            'interchangeableExerciseSelectedOptions' => $interchangeableExerciseSelectedOptions,
+            'interchangeableExercisesSelectValue' => $interchangeableExercisesSelectValue,
         ]);
     }
 
@@ -216,7 +229,7 @@ class ExerciseController extends Controller
         }
 
         $query->andFilterWhere(['is_pause' => !!(isset($get['onlyPauses']) && $get['onlyPauses'])]);
-        if(!isset($get['onlyPauses'])) {
+        if (!isset($get['onlyPauses'])) {
             $query->andWhere(['is_archived' => 0]);
         }
         if (isset($get['exercisePopularity']) && $get['exercisePopularity']) {
@@ -267,13 +280,14 @@ class ExerciseController extends Controller
         return json_encode($response);
     }
 
-    public function actionApiGetAverageAbility($id, $userId){
+    public function actionApiGetAverageAbility($id, $userId)
+    {
         $exercise = Exercise::findOne(['id' => $id]);
 
         $x = $exercise->estimatedAvgAbilityOfUser($userId);
 
-        if(!$x) return $x;
-        
+        if (!$x) return $x;
+
         return json_encode([
             'ability' => round($x['ability'], 1),
             'type' => $x['type'],

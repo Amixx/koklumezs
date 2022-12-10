@@ -15,6 +15,7 @@ $this->title = \Yii::t('app',  'Create exercise');
     <?= $this->render('_form', [
         'model' => $model,
         'tags' => $tags,
+        'interchangeableExercisesSelectValue' => [],
     ]) ?>
 
 </div>

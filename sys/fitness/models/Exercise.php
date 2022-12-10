@@ -135,6 +135,15 @@ class Exercise extends \yii\db\ActiveRecord
         }, $interchangeableExercises);
     }
 
+    public static function getAllExerciseSelect2Options(){
+        return array_map(function ($exercise) {
+            return [
+                'id' => $exercise['id'],
+                'text' => $exercise['name'],
+            ];
+        }, self::find()->where(['author_id' => Yii::$app->user->identity->id])->asArray()->all());
+    }
+
     public function getInterchangeableExercisesSelect2Options()
     {
         $otherExercises = $this->getInterchangeableOtherExercises();
