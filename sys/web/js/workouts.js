@@ -381,6 +381,11 @@ Vue.component('added-exercise', {
             </div>
         </td>
         <td>
+            <button class="btn drag-handle">
+                <span class="glyphicon glyphicon-move"></span>
+            </button>
+        </td>
+        <td>
             <button class="btn btn-danger" @click="$emit('remove')">
                 <span class="glyphicon glyphicon-trash"></span>
             </button>
@@ -447,12 +452,12 @@ Vue.component('last-workouts-table', {
             return this.exerciseNameWithFallback(workoutExercise.replacementExercise.exercise) + " (aizstāja oriģinālo vingrojumu " + this.exerciseNameWithFallback(workoutExercise.exercise) + ")";
         },
         getAttribute(workoutExercise, attribute) {
-            if(attribute === 'actual_weight') {
+            if (attribute === 'actual_weight') {
                 return workoutExercise.replacementExercise
                     ? workoutExercise.replacementExercise['weight']
                     : (workoutExercise[attribute] ? workoutExercise[attribute] : workoutExercise['weight']);
             }
-            if(attribute === 'actual_reps') {
+            if (attribute === 'actual_reps') {
                 return workoutExercise.replacementExercise
                     ? workoutExercise.replacementExercise['reps']
                     : (workoutExercise[attribute] ? workoutExercise[attribute] : workoutExercise['reps']);
@@ -721,7 +726,7 @@ Vue.component('exercise-creation-modal', {
             this.isLoading = true;
             try {
                 const data = {...this.exercise}
-                if(data.is_bodyweight !== null && typeof data.is_bodyweight === 'object') {
+                if (data.is_bodyweight !== null && typeof data.is_bodyweight === 'object') {
                     data.is_bodyweight = data.is_bodyweight.value
                 }
                 return await ExerciseRepository.create(data);
@@ -1097,6 +1102,9 @@ $(document).ready(function () {
 
     if ($workoutCreation) {
         new Vue({
+            components: {
+                draggable: window.vuedraggable
+            },
             data: function () {
                 return {
                     exercises: null,
@@ -1134,6 +1142,7 @@ $(document).ready(function () {
                     showCreateExerciseModal: false,
                     creatingExercise: false,
                     lockedInput: 'rpe',
+                    draggableTestArr: [{id: 1, name: 'john'}, {id: 2, name: 'peter'}, {id: 3, name: 'asdf'}]
                 }
             },
             computed: {
@@ -1318,6 +1327,18 @@ $(document).ready(function () {
                 },
                 anyAddedExerciseHasAttribute(attribute) {
                     return this.workout.workoutExercises?.some(x => x.exercise[attribute])
+                },
+                recalculateAddedExerciseSetNumbers(){
+                    const exerciseIdToSetCount = {}
+                    this.workout.workoutExercises.forEach(x => {
+                        x.sequenceNo = x.exercise.id in exerciseIdToSetCount
+                            ? exerciseIdToSetCount[x.exercise.id] + 1
+                            : 1
+                        exerciseIdToSetCount[x.exercise.id] = x.sequenceNo
+                    })
+                },
+                onDragEnd(){
+                    this.recalculateAddedExerciseSetNumbers()
                 }
             },
             template: `
@@ -1550,7 +1571,7 @@ $(document).ready(function () {
                             </label>
 
                             <div v-if="workout.workoutExercises.length" style="overflow-y:auto">
-                                <table class="table table-striped table-bordered" >
+                                <table class="table table-striped table-bordered added-exercises-table">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -1592,21 +1613,27 @@ $(document).ready(function () {
                                             <th v-if="shouldShowExerciseTableCols.speed">Ātrums (km/h)</th>
                                             <th v-if="shouldShowExerciseTableCols.pulse">Pulss</th>
                                             <th v-if="shouldShowExerciseTableCols.height">Augstums (cm)</th>
+                                            <th>Pārv.</th>
                                             <th>Dzēst</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <added-exercise 
-                                            v-for="(workoutExercise, i) in workout.workoutExercises"
-                                            :key="i"
-                                            :temp-exercise="workoutExercise"
-                                            :index="i"
-                                            :should-show-columns="shouldShowExerciseTableCols"
-                                            :locked-input="lockedInput"
-                                            @add-set="addExercise(workoutExercise.exercise)"
-                                            @remove="removeExercise(i)"
-                                        ></added-exercise>
-                                    </tbody>
+                                    <draggable
+                                        v-model="workout.workoutExercises"
+                                        group="addedExercises"
+                                        tag="tbody"
+                                        handle=".drag-handle"
+                                        @end="onDragEnd">
+                                            <added-exercise 
+                                                 v-for="(workoutExercise, i) in workout.workoutExercises"
+                                                 :key="i"
+                                                :temp-exercise="workoutExercise"
+                                                :index="i"
+                                                :should-show-columns="shouldShowExerciseTableCols"
+                                                :locked-input="lockedInput"
+                                                @add-set="addExercise(workoutExercise.exercise)"
+                                                @remove="removeExercise(i)"
+                                            ></added-exercise>
+                                    </draggable>
                                 </table>
                                 <div style="margin-top: 16px; display: flex;gap:16px;">
                                     <button class="btn btn-default w-100" style="width:100%;" @click="addAnotherLap">
