@@ -56,7 +56,7 @@ class Exercise extends \yii\db\ActiveRecord
             'needs_evaluation' => \Yii::t('app', 'Needs evaluation'),
             'popularity_type' => \Yii::t('app', 'Popularity type'),
             'is_archived' => \Yii::t('app', 'Archived'),
-            'is_bodyweight' => \Yii::t('app', 'Is bodyweight'),
+            'is_bodyweight' => \Yii::t('app', 'Is bodyweight exercise'),
             'is_ready' => \Yii::t('app', 'Ready'),
             'has_reps' => \Yii::t('app', 'Reps'),
             'has_weight' => \Yii::t('app', 'Weight (kg)'),

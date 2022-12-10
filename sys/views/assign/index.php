@@ -5,60 +5,62 @@ use yii\helpers\Url;
 
 $empty = '<code>Not set</code>';
 
-$this->title = \Yii::t('app', 'Lesson assigning');
+$this->title = \Yii::t('app', $isFitnessSchool ? 'Workout assigning' : 'Lesson assigning');
 ?>
 <h1><?= $this->title ?></h1>
-<p style="display:inline-block">
-    <?= Html::a(
-        \Yii::t('app', 'Manually invoke automatic assignment for all students'),
-        ['/cron', 'send' => 1],
-        [
-            'class' => 'btn btn-success',
-            'target' => '_blank',
-            'data' => [
-                'confirm' => \Yii::t('app', 'Are you sure?'),
+<?php if (!$isFitnessSchool) { ?>
+    <p style="display:inline-block">
+        <?= Html::a(
+            \Yii::t('app', 'Manually invoke automatic assignment for all students'),
+            ['/cron', 'send' => 1],
+            [
+                'class' => 'btn btn-success',
+                'target' => '_blank',
+                'data' => [
+                    'confirm' => \Yii::t('app', 'Are you sure?'),
+                ]
             ]
-        ]
-    ) ?>
-</p>
-<div style="display:inline-block">
-    <label for="user-language-selector">
-        <?= \Yii::t('app', 'Language') ?>:
-        <select name="user-language-selector" id="UserLanguageSelector">
-            <option value="all" selected><?= \Yii::t('app', 'All') ?></option>
-            <option value="lv"><?= \Yii::t('app', 'Latvian') ?></option>
-            <option value="eng"><?= \Yii::t('app', 'English') ?></option>
-        </select>
-    </label>
-</div>
-<div style="display:inline-block">
-    <?= \Yii::t('app', 'Abonement types') ?>:
-    <label style="display:inline; margin-right:16px;">
-        <input type="checkbox" name="subscription-type-selector"
-               class="subscription-type-selector type-free"><?= \Yii::t('app', 'Free') ?>
-    </label>
-    <label style="display:inline; margin-right:16px;">
-        <input type="checkbox" name="subscription-type-selector"
-               class="subscription-type-selector type-paid"><?= \Yii::t('app', 'Paid') ?>
-    </label>
-    <label style="display:inline; margin-right:16px;">
-        <input type="checkbox" name="subscription-type-selector"
-               class="subscription-type-selector type-lead"><?= \Yii::t('app', 'Lead') ?>
-    </label>
-    <input type="hidden" name="subscription-type-selector" class="subscription-type-selector type-pausing">
-</div>
+        ) ?>
+    </p>
+    <div style="display:inline-block">
+        <label for="user-language-selector">
+            <?= \Yii::t('app', 'Language') ?>:
+            <select name="user-language-selector" id="UserLanguageSelector">
+                <option value="all" selected><?= \Yii::t('app', 'All') ?></option>
+                <option value="lv"><?= \Yii::t('app', 'Latvian') ?></option>
+                <option value="eng"><?= \Yii::t('app', 'English') ?></option>
+            </select>
+        </label>
+    </div>
+    <div style="display:inline-block">
+        <?= \Yii::t('app', 'Abonement types') ?>:
+        <label style="display:inline; margin-right:16px;">
+            <input type="checkbox" name="subscription-type-selector"
+                   class="subscription-type-selector type-free"><?= \Yii::t('app', 'Free') ?>
+        </label>
+        <label style="display:inline; margin-right:16px;">
+            <input type="checkbox" name="subscription-type-selector"
+                   class="subscription-type-selector type-paid"><?= \Yii::t('app', 'Paid') ?>
+        </label>
+        <label style="display:inline; margin-right:16px;">
+            <input type="checkbox" name="subscription-type-selector"
+                   class="subscription-type-selector type-lead"><?= \Yii::t('app', 'Lead') ?>
+        </label>
+        <input type="hidden" name="subscription-type-selector" class="subscription-type-selector type-pausing">
+    </div>
+<?php } ?>
 <div class="grid-view">
     <table class="table table-striped table-bordered" id="AssignTable">
         <thead>
         <tr>
             <th scope="col">#</th>
+            <th scope="col" class="action-column"><?= \Yii::t('app', 'Actions') ?></th>
             <th scope="col"><?= \Yii::t('app', 'User') ?></th>
             <th scope="col"><?= \Yii::t('app', 'Last lesson') ?></th>
             <th scope="col"><?= \Yii::t('app', 'Times played') ?></th>
             <th scope="col"><?= \Yii::t('app', 'Difficulty') ?></th>
             <th scope="col"><?= \Yii::t('app', 'Evaluation') ?></th>
             <th scope="col"><?= \Yii::t('app', 'Abilities') ?></th>
-            <th scope="col" class="action-column"><?= \Yii::t('app', 'Actions') ?></th>
         </tr>
         </thead>
         <tbody>
@@ -66,29 +68,6 @@ $this->title = \Yii::t('app', 'Lesson assigning');
         foreach ($users as $id => $user) { ?>
             <tr>
                 <td><?= $a ?></td>
-                <td><?= $user['first_name'] ?> <?= $user['last_name'] ?></td>
-                <?php if (isset($lastlectures[$id])) { ?>
-                    <td><?= $lastlectures[$id]->lecture->title ?></td>
-                    <td class="text-center"><?= $lastlectures[$id]['open_times'] ?></td>
-                    <td class="text-center"><?= $lastlectures[$id]->lecture->complexity ?></td>
-                    <td class="text-center">
-                        <?= isset($evaluations[$id][$lastlectures[$id]->lecture_id])
-                            ? $evaluations[$id][$lastlectures[$id]->lecture_id]
-                            : $empty; ?>
-                    </td>
-                <?php } else { ?>
-                    <td><?= $empty ?></td>
-                    <td><?= $empty ?></td>
-                    <td><?= $empty ?></td>
-                    <td><?= $empty ?></td>
-                <?php } ?>
-                <td class="text-center"><?= isset($goals[$id][$goalsnow]) ? array_sum($goals[$id][$goalsnow]) : $empty ?></td>
-                <td class="text-center">
-                        <span data-userid='<?= $user['id'] ?>' style='width: 41px;'
-                              class='btn btn-success glyphicon glyphicon-envelope chat-with-student'>
-                            &nbsp;
-                        </span>
-                </td>
                 <td class="text-center">
                     <?= Html::a(
                         '<span class="glyphicon glyphicon-user"> </span>',
@@ -124,6 +103,29 @@ $this->title = \Yii::t('app', 'Lesson assigning');
                             ]
                         );
                     } ?>
+                </td>
+                <td><?= $user['first_name'] ?> <?= $user['last_name'] ?></td>
+                <?php if (isset($lastlectures[$id])) { ?>
+                    <td><?= $lastlectures[$id]->lecture->title ?></td>
+                    <td class="text-center"><?= $lastlectures[$id]['open_times'] ?></td>
+                    <td class="text-center"><?= $lastlectures[$id]->lecture->complexity ?></td>
+                    <td class="text-center">
+                        <?= isset($evaluations[$id][$lastlectures[$id]->lecture_id])
+                            ? $evaluations[$id][$lastlectures[$id]->lecture_id]
+                            : $empty; ?>
+                    </td>
+                <?php } else { ?>
+                    <td><?= $empty ?></td>
+                    <td><?= $empty ?></td>
+                    <td><?= $empty ?></td>
+                    <td><?= $empty ?></td>
+                <?php } ?>
+                <td class="text-center"><?= isset($goals[$id][$goalsnow]) ? array_sum($goals[$id][$goalsnow]) : $empty ?></td>
+                <td class="text-center">
+                        <span data-userid='<?= $user['id'] ?>' style='width: 41px;'
+                              class='btn btn-success glyphicon glyphicon-envelope chat-with-student'>
+                            &nbsp;
+                        </span>
                 </td>
                 <td style="display:none" class="user-language"><?= $user['language'] ?></td>
                 <td style="display:none" class="user-subscription-type"><?= $user['subscription_type'] ?></td>

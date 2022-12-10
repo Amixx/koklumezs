@@ -824,5 +824,8 @@ return [
     'Is in a workout' => 'Ir kādā treniņā',
     'Progression chain exercise' => 'Progresijas ķēdes vingrojums',
     'Weight exercise' => 'Svara vingrojums',
-    'Coefficient' => 'Koeficients'
+    'Coefficient' => 'Koeficients',
+    'Workout assigning' => 'Treniņu piešķiršana',
+    'Not set' => 'Nav uzstādīts',
+    'Is bodyweight exercise' => 'Vai ir ķermeņa svara vingrojums'
 ];

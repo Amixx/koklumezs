@@ -33,6 +33,22 @@ $this->title = \Yii::t('app', 'Users');
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
+            [
+                'class' => yii\grid\ActionColumn::class,
+                'template' => '{view} {update} {delete} {update-client-data}',
+                'buttons' => [
+                    'update-client-data' => function ($url, $model, $key) use ($isFitnessSchool) {
+                        return $isFitnessSchool
+                            ? Html::a(
+                                '<i class="glyphicon glyphicon-stats"></i>', Url::to(['client-data/update', 'userId' => $model->id]),
+                                [
+                                    'title' => \Yii::t('app', 'Edit client data'),
+                                ]
+                            )
+                            : '';
+                    },
+                ]
+            ],
             'first_name',
             'last_name',
             [
@@ -257,22 +273,6 @@ $this->title = \Yii::t('app', 'Users');
                     return "<span data-userid='$userId' style='width: 41px;' class='btn btn-success glyphicon glyphicon-envelope chat-with-student'>&nbsp;</span>";
                 },
                 'format' => 'raw',
-            ],
-            [
-                'class' => yii\grid\ActionColumn::class,
-                'template' => '{view} {update} {delete} {update-client-data}',
-                'buttons' => [
-                    'update-client-data' => function ($url, $model, $key) use ($isFitnessSchool) {
-                        return $isFitnessSchool
-                            ? Html::a(
-                                '<i class="glyphicon glyphicon-stats"></i>', Url::to(['client-data/update', 'userId' => $model->id]),
-                                [
-                                    'title' => \Yii::t('app', 'Edit client data'),
-                                ]
-                            )
-                            : '';
-                    },
-                ]
             ],
         ],
     ]); ?>

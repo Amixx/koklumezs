@@ -20,6 +20,11 @@ $this->title = \Yii::t('app', 'Tags');
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'header' => \Yii::t('app', 'Actions'),
+                'template' => '{update} {delete}',
+            ],
             'value',
             'description',
             [
@@ -28,12 +33,6 @@ $this->title = \Yii::t('app', 'Tags');
                     return Tag::getTagTypeLabel($dataProvider['type']);
                 }
             ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'header' => \Yii::t('app', 'Actions'),
-                'template' => '{update} {delete}',
-            ],
-
         ],
     ]); ?>
 

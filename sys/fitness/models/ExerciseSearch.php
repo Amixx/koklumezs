@@ -5,6 +5,7 @@ namespace app\fitness\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
 class ExerciseSearch extends Exercise
@@ -78,12 +79,11 @@ class ExerciseSearch extends Exercise
             ->andFilterWhere(['like', 'technique_video', $this->technique_video])
             ->andFilterWhere(['like', 'created_at', $this->created_at])
             ->andFilterWhere(['like', 'updated_at', $this->updated_at]);
-
-        if ($this->popularity_type !== null && $this->popularity_type !== '') {
-            $query->andFilterWhere(['popularity_type' => $this->popularity_type]);
-        }
-        if ($this->is_bodyweight !== null && $this->is_bodyweight !== '') {
-            $query->andFilterWhere(['is_bodyweight' => $this->is_bodyweight]);
+        if ($this->is_bodyweight !== null) {
+            $condition = $this->is_bodyweight === 'not set'
+                ? ['is', 'is_bodyweight', new Expression('NULL')]
+                : ['is_bodyweight' => $this->is_bodyweight];
+            $query->andFilterWhere($condition);
         }
         if ($this->is_ready !== null && $this->is_ready !== '') {
             $query->andFilterWhere(['is_ready' => $this->is_ready]);

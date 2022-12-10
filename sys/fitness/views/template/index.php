@@ -20,16 +20,13 @@ $this->title = \Yii::t('app', 'Templates');
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'title',
-            'description',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => \Yii::t('app', 'Actions'),
                 'template' => '{view} {update} {delete}',
             ],
-
+            'title',
+            'description',
         ],
     ]); ?>
-
-
 </div>

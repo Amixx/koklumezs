@@ -19,14 +19,12 @@ $this->title = \Yii::t('app', 'Progression chains');
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'title',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => \Yii::t('app', 'Actions'),
                 'template' => '{update} {delete}',
             ],
+            'title',
         ],
     ]); ?>
-
-
 </div>

@@ -622,7 +622,6 @@ Vue.component('form-input', {
     },
     methods: {
         updateValue() {
-            console.log(this.internalValue)
             this.$emit('input', this.internalValue)
         }
     },
@@ -678,7 +677,7 @@ Vue.component('exercise-creation-modal', {
             video: null,
             technique_video: null,
             needs_evaluation: true,
-            is_bodyweight: false,
+            is_bodyweight: null,
             has_reps: true,
             has_weight: true,
             has_time: false,
@@ -721,7 +720,11 @@ Vue.component('exercise-creation-modal', {
         async submit() {
             this.isLoading = true;
             try {
-                return await ExerciseRepository.create(this.exercise);
+                const data = {...this.exercise}
+                if(data.is_bodyweight !== null && typeof data.is_bodyweight === 'object') {
+                    data.is_bodyweight = data.is_bodyweight.value
+                }
+                return await ExerciseRepository.create(data);
             } catch (e) {
                 console.error(e);
             } finally {
@@ -747,7 +750,11 @@ Vue.component('exercise-creation-modal', {
             <form-input v-model="exercise.video" type="text" :label="attributeLabels['video']" />
             <form-input v-model="exercise.technique_video" type="text" :label="attributeLabels['technique_video']" />
             <form-input v-model="exercise.needs_evaluation" type="checkbox" :label="attributeLabels['needs_evaluation']" />
-            <form-input v-model="exercise.is_bodyweight" type="checkbox" :label="attributeLabels['is_bodyweight']" />
+            <label>{{ attributeLabels['is_bodyweight'] }}</label>
+            <v-select label="label" :options="[
+                { value: false, label: 'Nē' },
+                { value: true, label: 'Jā' },
+            ]" v-model="exercise.is_bodyweight"/>
             <h3>Parametri, kurus jāievada piešķirot vingrojumu</h3>
             <div style="display:flex; gap:32px;">
                 <div>

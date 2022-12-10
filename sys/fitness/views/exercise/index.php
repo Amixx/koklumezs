@@ -16,27 +16,12 @@ $this->title = \Yii::t('app', 'Exercises');
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'header' => \Yii::t('app', 'Actions'),
+                'template' => '{view} {update} {delete}',
+            ],
             'name',
-//            [
-//                'attribute' => 'popularity_type',
-//                'value' => function ($dataProvider) {
-//                    return Yii::t('app',
-//                        $dataProvider['popularity_type'] === 'POPULAR'
-//                            ? 'Popular'
-//                            : ($dataProvider['popularity_type'] === 'AVERAGE' ? 'Average popularity' : 'Rare')
-//                    );
-//                },
-//                'filter' => Html::dropDownList(
-//                    'ExerciseSearch[popularity_type]',
-//                    $get['ExerciseSearch']['popularity_type'] ?? '',
-//                    [
-//                        'POPULAR' => Yii::t('app', 'Popular'),
-//                        'AVERAGE' => Yii::t('app', 'Average popularity'),
-//                        'RARE' => Yii::t('app', 'Rare')
-//                    ],
-//                    ['prompt' => '-- Visi --', 'class' => 'form-control']
-//                ),
-//            ],
             [
                 'attribute' => 'video',
                 'value' => function ($dataProvider) {
@@ -64,7 +49,7 @@ $this->title = \Yii::t('app', 'Exercises');
                 'label' => Yii::t('app', 'Tags'),
                 'filter' => Html::dropDownList(
                     'ExerciseSearch[exerciseTag]',
-                    $get['ExerciseSearch']['exerciseTag'] ?? '',
+                    $get['ExerciseSearch']['exerciseTag'] ?? null,
                     \app\fitness\models\Tag::getForSelect(),
                     ['prompt' => '-- Visi --', 'class' => 'form-control']
                 ),
@@ -73,6 +58,7 @@ $this->title = \Yii::t('app', 'Exercises');
                 'attribute' => 'is_bodyweight',
                 'format' => 'raw',
                 'value' => function ($dataProvider) {
+                    if(is_null($dataProvider['is_bodyweight'])) return Yii::t('app', 'Not set');
                     return $dataProvider['is_bodyweight']
                         ? Yii::t('app', 'Yes')
                         : Yii::t('app', 'No');
@@ -82,6 +68,7 @@ $this->title = \Yii::t('app', 'Exercises');
                     'ExerciseSearch[is_bodyweight]',
                     $get['ExerciseSearch']['is_bodyweight'] ?? null,
                     [
+                        'not set' => Yii::t('app', 'Not set'),
                         true => Yii::t('app', 'Yes'),
                         false => Yii::t('app', 'No'),
                     ],
@@ -140,11 +127,6 @@ $this->title = \Yii::t('app', 'Exercises');
                     ],
                     ['prompt' => '-- Visi --', 'class' => 'form-control']
                 ),
-            ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'header' => \Yii::t('app', 'Actions'),
-                'template' => '{view} {update} {delete}',
             ],
         ],
     ]); ?>

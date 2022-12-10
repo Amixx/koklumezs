@@ -44,8 +44,13 @@ function createBooleanColumn($attribute)
             createBooleanColumn('is_ready'),
             createBooleanColumn('is_pause'),
             createBooleanColumn('needs_evaluation'),
-            createBooleanColumn('is_bodyweight'),
-
+             [
+                'attribute' => 'is_bodyweight',
+                'value' => function ($dataProvider) {
+                    if(is_null($dataProvider['is_bodyweight'])) return Yii::t('app', 'Not set');
+                    return Yii::t('app', $dataProvider['is_bodyweight'] ? 'Yes' : 'No');
+                }
+            ],
             createBooleanColumn('has_reps'),
             createBooleanColumn('has_weight'),
             createBooleanColumn('has_time'),

@@ -44,7 +44,12 @@ $tagSelected = function ($tagId) use ($selectedTagIds) {
         <?= $form->field($model, 'needs_evaluation')->checkbox() ?>
         <?= $form->field($model, 'is_pause')->checkbox() ?>
         <?= $form->field($model, 'is_archived')->checkbox() ?>
-        <?= $form->field($model, 'is_bodyweight')->checkbox() ?>
+        <?= $form->field($model, 'is_bodyweight')->dropDownList(
+            [
+                false => Yii::t('app', 'No'),
+                true => Yii::t('app', 'Yes'),
+            ],
+            ['prompt' => Yii::t('app', 'Not set')]) ?>
         <?= $form->field($model, 'is_ready')->checkbox() ?>
         <hr>
         <h3><?= Yii::t('app', 'Parameters to enter when assigning the exercise') ?></h3>
@@ -88,10 +93,12 @@ $tagSelected = function ($tagId) use ($selectedTagIds) {
             <div class="help-block"></div>
         </div>
 
-        <?php if(isset($interchangeableExerciseSelectedOptions)) { ?>
+        <?php if (isset($interchangeableExerciseSelectedOptions)) { ?>
             <div class="form-group">
-                <label class="control-label" for="interchangeable-exercises"> <?= \Yii::t('app', 'Interchangeable exercises') ?></label>
-                <select id="interchangeable-exercises" class="form-control" name="interchangeableExercises[]" aria-required="true" aria-invalid="false" multiple>
+                <label class="control-label"
+                       for="interchangeable-exercises"> <?= \Yii::t('app', 'Interchangeable exercises') ?></label>
+                <select id="interchangeable-exercises" class="form-control" name="interchangeableExercises[]"
+                        aria-required="true" aria-invalid="false" multiple>
                     <option value=""></option>
 
                     <?php foreach ($interchangeableExerciseSelectedOptions as $option) { ?>

@@ -92,7 +92,7 @@ class UserLayoutHelper extends LayoutHelper
 
         $fitnessTeacherMenu =
             [
-                ['label' => Yii::t('app',  'School'), 'url' => ['/assign'], 'active' =>  in_array(Yii::$app->controller->id, ['assign']),],
+                ['label' => 'GYM', 'url' => ['/assign'], 'active' =>  in_array(Yii::$app->controller->id, ['assign']),],
                 ['label' => '+', 'url' => ['/assign/userlectures'], 'active' =>  in_array(Yii::$app->controller->id, ['assign'])],
                 ['label' => Yii::t('app',  'Clients'), 'url' => ['/user'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
                 ['label' => '+', 'url' => ['/user/create'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],

@@ -71,6 +71,7 @@ class ExerciseController extends Controller
         $model->author_id = Yii::$app->user->identity->id;
         $model->needs_evaluation = true;
         $model->popularity_type = 'AVERAGE';
+        $model->is_bodyweight = null;
 
         $tags = Tag::find()->asArray()->all();
 
