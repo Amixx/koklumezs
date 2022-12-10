@@ -5,6 +5,7 @@ namespace app\fitness\controllers;
 use app\fitness\models\Exercise;
 use app\fitness\models\ProgressionChainExercise;
 use app\fitness\models\ProgressionChainMainExercise;
+use app\fitness\models\Tag;
 use Yii;
 use app\fitness\models\ProgressionChain;
 use app\models\Users;
@@ -48,9 +49,7 @@ class ProgressionChainController extends Controller
             'query' => ProgressionChain::find()->where(['author_id' => $userContext->id]),
         ]);
 
-        return $this->render('@app/fitness/views/progression-chain/index', [
-            'dataProvider' => $dataProvider,
-        ]);
+        return $this->render('@app/fitness/views/progression-chain/index', ['dataProvider' => $dataProvider]);
     }
 
     public function actionView($id)
@@ -90,33 +89,40 @@ class ProgressionChainController extends Controller
                 $mainExercise->exerciseId = $pce->exercise_id;
             };
         }
-        while (count($progressionChainExercises) <= 10) {
+        while (count($progressionChainExercises) <= 11) {
             $new = new ProgressionChainExercise;
             $new->progression_chain_id = $model->id;
             $progressionChainExercises[] = $new;
         }
 
+        $exerciseModel = Exercise::initForProgressionChainForm();
+        $tags = Tag::find()->asArray()->all();
 
-        if ($model->load($post) && $model->save()) {
-            foreach ($progressionChainExercises as $index => $progressionChainExercise) {
-                $postItem = $post['ProgressionChainExercise'][$index];
-                if(isset($postItem['exercise_id'])) {
-                    $progressionChainExercise->exercise_id = $postItem['exercise_id'];
-                }
-                if(isset($postItem['difficulty_increase_percent'])) {
-                    $progressionChainExercise->difficulty_increase_percent = $postItem['difficulty_increase_percent'];
-                }
+        if($exerciseModel->load($post) && $exerciseModel->save()){
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Exercise successfully created') . '!');
+            $exerciseModel = Exercise::initForProgressionChainForm();
+        } else {
+            if ($model->load($post) && $model->save()) {
+                foreach ($progressionChainExercises as $index => $progressionChainExercise) {
+                    $postItem = $post['ProgressionChainExercise'][$index];
+                    if(isset($postItem['exercise_id'])) {
+                        $progressionChainExercise->exercise_id = $postItem['exercise_id'];
+                    }
+                    if(isset($postItem['difficulty_increase_percent'])) {
+                        $progressionChainExercise->difficulty_increase_percent = $postItem['difficulty_increase_percent'];
+                    }
 
-                if ($progressionChainExercise->exercise_id && ($index === 0 || $progressionChainExercise->difficulty_increase_percent)) {
-                    $progressionChainExercise->save();
+                    if ($progressionChainExercise->exercise_id && ($index === 0 || $progressionChainExercise->difficulty_increase_percent)) {
+                        $progressionChainExercise->save();
+                    }
                 }
             }
-        }
-        if($mainExercise->load($post)) {
-            foreach($progressionChainExercises as $pce) {
-                if($pce->exercise_id === $mainExercise->exerciseId) $mainExercise->progression_chain_exercise_id = $pce->id;
+            if($mainExercise->load($post)) {
+                foreach($progressionChainExercises as $pce) {
+                    if($pce->exercise_id === $mainExercise->exerciseId) $mainExercise->progression_chain_exercise_id = $pce->id;
+                }
+                if($mainExercise->validate()) $mainExercise->save();
             }
-            if($mainExercise->validate()) $mainExercise->save();
         }
 
         Url::remember(Yii::$app->request->referrer);
@@ -127,6 +133,8 @@ class ProgressionChainController extends Controller
             'exerciseSelectOptions' => Exercise::getProgressionChainSelectOptions(),
             'weightExerciseSelectOptions' => Exercise::getWeightExerciseSelectOptions(),
             'mainExercise' => $mainExercise,
+            'exerciseModel' => $exerciseModel,
+            'tags' => $tags,
         ]);
     }
 

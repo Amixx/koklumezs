@@ -18,5 +18,7 @@ $this->title = \Yii::t('app', 'Update progression chain') . ': ' . $model->title
         'exerciseSelectOptions' => $exerciseSelectOptions,
         'mainExercise' => $mainExercise,
         'weightExerciseSelectOptions' => $weightExerciseSelectOptions,
+        'exerciseModel' => $exerciseModel,
+        'tags' => $tags,
     ]) ?>
 </div>

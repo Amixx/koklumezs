@@ -153,7 +153,7 @@ class Exercise extends \yii\db\ActiveRecord
 
     public function lastWeekEvaluationsOfUser($userId, $workoutIdToExclude = null)
     {
-        $query =  WorkoutExerciseEvaluation::find()
+        $query = WorkoutExerciseEvaluation::find()
             ->joinWith('workoutExercise')
             ->andWhere(['user_id' => $userId])
             ->andWhere([
@@ -161,7 +161,7 @@ class Exercise extends \yii\db\ActiveRecord
                 ['fitness_workoutexercises.exercise_id' => $this->id],
                 ['fitness_replacement_exercises.exercise_id' => $this->id],
             ]);
-        if($workoutIdToExclude) {
+        if ($workoutIdToExclude) {
             $query->andWhere(['!=', 'workout_id', $workoutIdToExclude]);
         }
 
@@ -289,5 +289,24 @@ class Exercise extends \yii\db\ActiveRecord
             ])
             ->asArray()->all();
         return ArrayHelper::map($exercises, 'id', 'name');
+    }
+
+    public static function initForForm()
+    {
+        $model = new Exercise();
+        $model->author_id = Yii::$app->user->identity->id;
+        $model->needs_evaluation = true;
+        $model->popularity_type = 'AVERAGE';
+        $model->is_bodyweight = null;
+        $model->has_reps = true;
+        $model->has_weight = true;
+        return $model;
+    }
+
+    public static function initForProgressionChainForm()
+    {
+        $model = self::initForForm();
+        $model->is_bodyweight = true;
+        return $model;
     }
 }

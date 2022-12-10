@@ -12,8 +12,8 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'title')->textInput() ?>
     </div>
     <?php if (isset($progressionChainExercises)) { ?>
-        <div style="display:flex; flex-wrap:wrap; gap: 16px;align-items:baseline;">
-            <?php for ($i = 0; $i <= 10; $i++) { ?>
+        <div style="display:flex; flex-wrap:wrap; gap: 32px 16px;align-items:baseline;">
+            <?php for ($i = 0; $i <= 11; $i++) { ?>
                 <?php if ($i > 0) { ?>
                     <span style="display:inline-block">
                             <span style="display: flex; align-items: last baseline">
@@ -24,13 +24,16 @@ use yii\widgets\ActiveForm;
                         </span>
                 <?php } ?>
                 <div style="display:inline-block">
-                    <?= $form->field($progressionChainExercises[$i], "[$i]exercise_id")->dropDownList(
-                        $exerciseSelectOptions,
-                        [
-                            'prompt' => '-- ' . \Yii::t('app', 'Choose') . ' --',
-                            'class' => 'progression-chain-exercise-select',
-                        ]
-                    )->label(false) ?>
+                    <div style="display:inline-block">
+                        <?= $form->field($progressionChainExercises[$i], "[$i]exercise_id")->dropDownList(
+                            $exerciseSelectOptions,
+                            [
+                                'prompt' => '-- ' . \Yii::t('app', 'Choose') . ' --',
+                                'class' => 'progression-chain-exercise-select',
+                            ]
+                        )->label(false) ?>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-insert-progression-chain-exercise" style="display:inline-block"><i class="glyphicon glyphicon-plus"></i></button>
                 </div>
             <?php } ?>
         </div>
@@ -64,4 +67,15 @@ use yii\widgets\ActiveForm;
 
     <?php ActiveForm::end(); ?>
 
+    <hr>
+    <hr>
+
+    <h3><?= Yii::t('app', 'Exercise creation') ?></h3>
+
+    <?php if (isset($exerciseModel)) {
+        echo $this->render('../exercise/_form', [
+            'model' => $exerciseModel,
+            'tags' => $tags,
+        ]);
+    } ?>
 </div>

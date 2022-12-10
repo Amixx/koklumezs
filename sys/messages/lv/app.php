@@ -828,5 +828,7 @@ return [
     'Workout assigning' => 'Treniņu piešķiršana',
     'Not set' => 'Nav uzstādīts',
     'Is bodyweight exercise' => 'Vai ir ķermeņa svara vingrojums',
-    'Interchangeable exercises count' => 'Aizvietojamo vingrojumu skaits'
+    'Interchangeable exercises count' => 'Aizvietojamo vingrojumu skaits',
+    'Exercise successfully created' => 'Vingrojums veiksmīgi izveidots',
+    'Exercise creation' => 'Vingrojuma izveidošana',
 ];

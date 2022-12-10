@@ -67,11 +67,7 @@ class ExerciseController extends Controller
     public function actionCreate()
     {
         $post = Yii::$app->request->post();
-        $model = new Exercise();
-        $model->author_id = Yii::$app->user->identity->id;
-        $model->needs_evaluation = true;
-        $model->popularity_type = 'AVERAGE';
-        $model->is_bodyweight = null;
+        $model = Exercise::initForForm();
 
         $tags = Tag::find()->asArray()->all();
 

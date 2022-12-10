@@ -175,7 +175,54 @@ $(document).ready(function () {
 
     setUpTimer();
     setupNextReplacementExerciseButton();
+    setupInsertProgressionChainExerciseButton();
 });
+
+
+function increateIndexForSelectEl(selectEl, oldIndex, newIndex){
+    selectEl.innerHTML = selectEl.innerHTML.replaceAll("[" + oldIndex + "]", "[" + newIndex + "]");
+    selectEl.innerHTML = selectEl.innerHTML.replaceAll("-" + oldIndex + "-", "-" + newIndex + "-");
+}
+
+function increaseIndexBy1(buttonEl, oldIndex){
+    var selectEl = buttonEl.parentElement;
+    var percentEl = buttonEl.parentElement.nextSibling ? buttonEl.parentElement.nextSibling.nextSibling : null;
+    var newIndex = oldIndex + 1
+    increateIndexForSelectEl(selectEl, oldIndex, newIndex)
+    if(percentEl) increateIndexForSelectEl(percentEl, oldIndex+1, newIndex+1)
+}
+
+function setupInsertProgressionChainExerciseButton() {
+    var $buttons = $('.btn-insert-progression-chain-exercise');
+    $buttons.on('click', function(){
+        $("body").find("select").select2("destroy");
+
+        var buttonIndex = $buttons.index($(this))
+
+        var selectContainerClone = this.parentElement.cloneNode(true);
+        var percentInputClone = this.parentElement.nextSibling.nextSibling.cloneNode(true);
+
+        increateIndexForSelectEl(selectContainerClone, buttonIndex, buttonIndex+1)
+        $(selectContainerClone).find("select").select2().val(null).trigger("change")
+        $(selectContainerClone).insertAfter($(this.parentElement))
+
+        percentInputClone.innerHTML = percentInputClone.innerHTML.replaceAll(buttonIndex-1, buttonIndex-1)
+        $(percentInputClone).find("input").val(null)
+        $(percentInputClone).insertAfter($(this.parentElement))
+
+        $buttons.each(function(i, el) {
+            if(i === buttonIndex) {
+                var percentEl = el.parentElement.nextSibling.nextSibling.nextSibling
+                    ? el.parentElement.nextSibling.nextSibling.nextSibling.nextSibling
+                    : null;
+                if(percentEl) increateIndexForSelectEl(percentEl, i+1, i+2)
+            } else if(i > buttonIndex) increaseIndexBy1(el, i)
+        })
+        $buttons = $('.btn-insert-progression-chain-exercise');
+
+        $("body").find("select").select2();
+    })
+}
 
 
 
