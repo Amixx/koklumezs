@@ -107,14 +107,19 @@ class ExerciseSearch extends Exercise
             ]);
         }
         if ($this->interchangeableExercisesCount !== null && $this->interchangeableExercisesCount !== '') {
-            $queryEnd = $this->interchangeableExercisesCount === "5+" ? ">= 5" : "= $this->interchangeableExercisesCount";
-            $filterSql = "
+            $baseFilterSql = "
                 select fitness_exercises.id from fitness_exercises join fitness_interchangeable_exercises
                 on fitness_interchangeable_exercises.exercise_id_1 = fitness_exercises.id
                    or fitness_interchangeable_exercises.exercise_id_2 = fitness_exercises.id
-                group by fitness_exercises.id
-                having COUNT(*) $queryEnd";
-            $query->andWhere(['in', 'id', Yii::$app->db->createCommand($filterSql)->queryAll()]);
+                group by fitness_exercises.id";
+
+            if ($this->interchangeableExercisesCount === '0') {
+                $query->andWhere(['not in', 'id', Yii::$app->db->createCommand($baseFilterSql)->queryAll()]);
+            } else {
+                $queryEnd = $this->interchangeableExercisesCount === "5+" ? ">= 5" : "= $this->interchangeableExercisesCount";
+                $filterSql = "$baseFilterSql having COUNT(*) $queryEnd";
+                $query->andWhere(['in', 'id', Yii::$app->db->createCommand($filterSql)->queryAll()]);
+            }
         }
 
         return $dataProvider;
