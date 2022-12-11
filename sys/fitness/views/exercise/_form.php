@@ -95,8 +95,9 @@ $tagSelected = function ($tagId) use ($selectedTagIds) {
 
         <?php if (isset($interchangeableExercisesSelectValue)) { ?>
             <div class="form-group">
-                <label class="control-label"
-                       for="interchangeable-exercises"> <?= \Yii::t('app', 'Interchangeable exercises') ?></label>
+                <label class="control-label" for="interchangeable-exercises">
+                    <?= \Yii::t('app', 'Interchangeable exercises') ?>
+                </label>
                 <select id="interchangeable-exercises" class="form-control" name="interchangeableExercises[]"
                         aria-required="true" aria-invalid="false" multiple>
                     <option value=""></option>

@@ -164,6 +164,13 @@ $(document).ready(function () {
         $(this).parent().next().toggleClass('hidden')
     });
 
+    setupInterchangeableExerciseSelects();
+    setUpTimer();
+    setupNextReplacementExerciseButton();
+    setupInsertProgressionChainExerciseButton();
+});
+
+function setupInterchangeableExerciseSelects(){
     $('select#interchangeable-exercises').select2({
         minimumInputLength: 3,
         ajax: {
@@ -172,11 +179,7 @@ $(document).ready(function () {
             dataType: 'json',
         }
     });
-
-    setUpTimer();
-    setupNextReplacementExerciseButton();
-    setupInsertProgressionChainExerciseButton();
-});
+}
 
 
 function increateIndexForSelectEl(selectEl, oldIndex, newIndex){

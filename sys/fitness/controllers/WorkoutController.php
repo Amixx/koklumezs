@@ -30,6 +30,8 @@ class WorkoutController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'api-create' => ['POST'],
+                    'api-save-as-draft' => ['POST'],
+                    'api-publish-draft' => ['POST'],
                 ],
             ],
         ];
@@ -46,12 +48,23 @@ class WorkoutController extends Controller
 
     public function actionApiCreate()
     {
+        $this->saveWorkout(false);
+    }
+
+    public function actionApiSaveAsDraft()
+    {
+        $this->saveWorkout(true);
+    }
+
+    private function saveWorkout($asDraft)
+    {
         $userContext = Yii::$app->user->identity;
         $post = Yii::$app->request->post();
         $workout = new Workout;
         $workout->author_id = $userContext->id;
         $workout->student_id = $post['studentId'];
         $workout->description = $post['description'];
+        $workout->is_draft = $asDraft;
 
         if ($workout->save()) {
             foreach ($post['workoutExercises'] as $workoutExSet) {
@@ -67,6 +80,15 @@ class WorkoutController extends Controller
         }
     }
 
+    public function actionApiPublishDraft($workoutId)
+    {
+        $workout = Workout::findOne($workoutId);
+        $workout->is_draft = false;
+        $workout->save();
+        return json_encode($workout);
+    }
+
+
     public function actionApiOfStudent($id)
     {
         $query = Workout::find()
@@ -78,11 +100,11 @@ class WorkoutController extends Controller
         $studentWorkouts = $query->all();
 
         $evaluationExtraAttributes = [];
-        foreach($studentWorkouts as $workoutKey => &$studentWorkout) {
-            foreach($studentWorkout->workoutExercises as $wExerciseKey => $wExercise) {
-                if($wExercise->evaluation) {
+        foreach ($studentWorkouts as $workoutKey => &$studentWorkout) {
+            foreach ($studentWorkout->workoutExercises as $wExerciseKey => $wExercise) {
+                if ($wExercise->evaluation) {
                     $evaluationExtraAttributes[$workoutKey][$wExerciseKey] = [
-                        'evaluation_text' =>  $wExercise->evaluation->getEvaluationText(),
+                        'evaluation_text' => $wExercise->evaluation->getEvaluationText(),
                         'one_rep_max_range' => $wExercise->evaluation->getOneRepMaxRange(),
                         'max_reps_range' => $wExercise->evaluation->getMaxRepsRange(),
                         'max_time_seconds_range' => $wExercise->evaluation->getMaxTimeSecondsRange(),
@@ -93,8 +115,8 @@ class WorkoutController extends Controller
         }
 
         // TODO: this is very very bad!!! might cause performance issues! think of a better realisation!
-        foreach($evaluationExtraAttributes as $workoutKey => $exerciseKeyToEvaluationOneRepMaxRange) {
-            foreach($exerciseKeyToEvaluationOneRepMaxRange as $wExerciseKey => $evaluationOneRepMaxRange) {
+        foreach ($evaluationExtraAttributes as $workoutKey => $exerciseKeyToEvaluationOneRepMaxRange) {
+            foreach ($exerciseKeyToEvaluationOneRepMaxRange as $wExerciseKey => $evaluationOneRepMaxRange) {
                 $evaluation = &$studentWorkouts[$workoutKey]['workoutExercises'][$wExerciseKey]['evaluation'];
                 $evaluation['evaluation_text'] = $evaluationOneRepMaxRange['evaluation_text'];
                 $evaluation['one_rep_max_range'] = $evaluationOneRepMaxRange['one_rep_max_range'];
@@ -106,7 +128,8 @@ class WorkoutController extends Controller
         return json_encode($studentWorkouts);
     }
 
-    public function actionAbandon($id) {
+    public function actionAbandon($id)
+    {
         $workout = Workout::findOne(['id' => $id]);
         $workout->setAsAbandoned();
         Yii::$app->session->setFlash('success', Yii::t('app', 'Workout has been abandoned') . '!');

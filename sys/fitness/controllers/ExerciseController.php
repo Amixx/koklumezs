@@ -246,13 +246,23 @@ class ExerciseController extends Controller
     public function actionApiCreate()
     {
         $post = Yii::$app->request->post();
-        $exercise = new Exercise;
-        $exercise->load($post, '');
-        $exercise->author_id = Yii::$app->user->identity->id;
-        $exercise->popularity_type = 'AVERAGE';
+        $model = new Exercise;
+        $model->load($post, '');
+        $model->author_id = Yii::$app->user->identity->id;
+        $model->popularity_type = 'AVERAGE';
 
-        if ($exercise->save()) {
-            return json_encode(ArrayHelper::toArray($exercise));
+        if ($model->save()) {
+            if (isset($post['interchangeableExercises'])) {
+                foreach ($post['interchangeableExercises'] as $ieid) {
+                    if ($ieid == $model->id) continue;
+                    $interchangeableExercise = new InterchangeableExercise;
+                    $interchangeableExercise->exercise_id_1 = $model->id;
+                    $interchangeableExercise->exercise_id_2 = $ieid;
+                    $interchangeableExercise->save();
+                }
+            }
+
+            return json_encode(ArrayHelper::toArray($model));
         }
         return null;
     }

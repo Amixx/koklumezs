@@ -831,4 +831,5 @@ return [
     'Interchangeable exercises count' => 'Aizvietojamo vingrojumu skaits',
     'Exercise successfully created' => 'Vingrojums veiksmīgi izveidots',
     'Exercise creation' => 'Vingrojuma izveidošana',
+    'Workout successfully assigned' => 'Treniņš veiksmīgi piešķirts'
 ];

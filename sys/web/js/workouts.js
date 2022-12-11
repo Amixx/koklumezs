@@ -422,6 +422,11 @@ Vue.component('last-workouts-table', {
             required: true,
         }
     },
+    data() {
+        return {
+            publishingDraft: false,
+        }
+    },
     methods: {
         getFileExtension(fileString) {
             return fileString.split('.').pop();
@@ -483,6 +488,17 @@ Vue.component('last-workouts-table', {
                     : workoutExercise
                 return exercise[extraAttribute.attribute] ? `${extraAttribute.label}: ${exercise[extraAttribute.attribute]}` : null;
             })
+        },
+        async publishWorkoutDraft(workoutId) {
+            this.publishingDraft = true
+            try {
+                await WorkoutRepository.publishDraft(workoutId)
+                this.$emit('reload-user-workouts')
+            } catch (e) {
+                console.error(e)
+            } finally {
+                this.publishingDraft = false
+            }
         }
     },
     template: `
@@ -498,7 +514,15 @@ Vue.component('last-workouts-table', {
             </thead>
             <tbody>
                 <tr v-for="workout in workouts">
-                    <td class="text-center" style="white-space:nowrap">{{ workout.created_at }}</td>
+                    <td class="text-center" style="white-space:nowrap">
+                        <div>{{ workout.created_at }}</div>
+                        <div v-if="workout.is_draft === 1" style="margin-top: 16px;">
+                            <div class="text-danger" style="white-space:normal">Šis treniņš ir melnraksts - tas vēl klientam nav redzams!</div>
+                            <loading-button :loading="publishingDraft" @click.native="() => publishWorkoutDraft(workout.id)">
+                                Piešķirt
+                            </loading-button>
+                        </div>
+                    </td>
                     <td>{{ workout.description }}</td>
                     <td class="text-center" style="white-space:nowrap">{{ workout.opened_at ? workout.opened_at : 'Nav atvērts' }}</td>
                     <td>
@@ -721,6 +745,9 @@ Vue.component('exercise-creation-modal', {
     created() {
         this.exercise.name = this.initialName;
     },
+    mounted(){
+        window.setupInterchangeableExerciseSelects()
+    },
     methods: {
         async submit() {
             this.isLoading = true;
@@ -729,6 +756,7 @@ Vue.component('exercise-creation-modal', {
                 if (data.is_bodyweight !== null && typeof data.is_bodyweight === 'object') {
                     data.is_bodyweight = data.is_bodyweight.value
                 }
+                data.interchangeableExercises = $("select#interchangeable-exercises").select2().val()
                 return await ExerciseRepository.create(data);
             } catch (e) {
                 console.error(e);
@@ -777,7 +805,21 @@ Vue.component('exercise-creation-modal', {
                     <form-input v-model="exercise.has_pace" type="checkbox" :label="attributeLabels['has_pace']" />
                     <form-input v-model="exercise.has_speed" type="checkbox" :label="attributeLabels['has_speed']" />
                     <form-input v-model="exercise.has_pulse" type="checkbox" :label="attributeLabels['has_pulse']" />
-                </div>
+                </div>              
+            </div>
+             <div class="form-group">
+                <label class="control-label"
+                       for="interchangeable-exercises">
+                       Aizvietojamie vingrojumi
+                </label>
+                <select
+                    id="interchangeable-exercises" 
+                    class="form-control"
+                    name="interchangeableExercises[]"
+                    aria-required="true"
+                    aria-invalid="false"
+                    multiple>
+                </select>
             </div>
         </div>
         <div style="display:flex; gap: 8px; justify-content: center;">
@@ -1002,6 +1044,14 @@ class WorkoutRepository extends Repository {
     static async create(workout) {
         await axios.post(`${this.baseUrl}/api-create`, workout, this.postConfig)
     }
+
+    static async saveAsDraft(workout) {
+        await axios.post(`${this.baseUrl}/api-save-as-draft`, workout, this.postConfig)
+    }
+
+    static async publishDraft(workoutId) {
+        await axios.post(`${this.baseUrl}/api-publish-draft?workoutId=${workoutId}`, {}, this.postConfig)
+    }
 }
 
 
@@ -1142,7 +1192,8 @@ $(document).ready(function () {
                     showCreateExerciseModal: false,
                     creatingExercise: false,
                     lockedInput: 'rpe',
-                    draggableTestArr: [{id: 1, name: 'john'}, {id: 2, name: 'peter'}, {id: 3, name: 'asdf'}]
+                    draggableTestArr: [{id: 1, name: 'john'}, {id: 2, name: 'peter'}, {id: 3, name: 'asdf'}],
+                    savingWorkoutAsDraft: false,
                 }
             },
             computed: {
@@ -1256,6 +1307,7 @@ $(document).ready(function () {
                     })
                 },
                 async loadUserWorkouts() {
+                    if (this.userWorkouts) this.userWorkouts = []
                     this.userWorkouts = await WorkoutRepository.ofUser(window.studentId)
                 },
                 addedExercisesOfSet(exercise) {
@@ -1328,7 +1380,7 @@ $(document).ready(function () {
                 anyAddedExerciseHasAttribute(attribute) {
                     return this.workout.workoutExercises?.some(x => x.exercise[attribute])
                 },
-                recalculateAddedExerciseSetNumbers(){
+                recalculateAddedExerciseSetNumbers() {
                     const exerciseIdToSetCount = {}
                     this.workout.workoutExercises.forEach(x => {
                         x.sequenceNo = x.exercise.id in exerciseIdToSetCount
@@ -1337,8 +1389,20 @@ $(document).ready(function () {
                         exerciseIdToSetCount[x.exercise.id] = x.sequenceNo
                     })
                 },
-                onDragEnd(){
+                onDragEnd() {
                     this.recalculateAddedExerciseSetNumbers()
+                },
+                async saveWorkoutAsDraft() {
+                    this.savingWorkoutAsDraft = true
+                    try {
+                        await WorkoutRepository.saveAsDraft(this.workout)
+                        window.location.replace(getUrl('/assign'));
+                    } catch (e) {
+                        if (e.response?.status === 422) {
+                            console.error(e.response)
+                            this.workoutSubmitting = false
+                        }
+                    }
                 }
             },
             template: `
@@ -1389,7 +1453,7 @@ $(document).ready(function () {
 
                     <div class="tab-pane fade active in" id="previous-workouts" role="tabpanel" aria-labelledby="previous-workouts-tab">
                         <div class="col-md-12">
-                            <last-workouts-table v-if="userWorkouts" :workouts="userWorkouts"></last-workouts-table>
+                            <last-workouts-table v-if="userWorkouts" :workouts="userWorkouts" @reload-user-workouts="loadUserWorkouts"></last-workouts-table>
                         </div>
                     </div>
 
@@ -1639,6 +1703,9 @@ $(document).ready(function () {
                                     <button class="btn btn-default w-100" style="width:100%;" @click="addAnotherLap">
                                         Pievienot nākamo "apli"
                                     </button>
+                                    <loading-button class="btn-info" :loading="savingWorkoutAsDraft" @click.native="saveWorkoutAsDraft" style="width:100%;">
+                                        Saglabāt treniņu kā melnrakstu
+                                    </loading-button>
                                     <loading-button :loading="workoutSubmitting" @click.native="submitWorkout" style="width:100%;">
                                         Nosūtīt treniņu
                                     </loading-button>

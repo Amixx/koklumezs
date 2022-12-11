@@ -97,7 +97,12 @@ class UserLayoutHelper extends LayoutHelper
                 ['label' => Yii::t('app',  'Clients'), 'url' => ['/user'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
                 ['label' => '+', 'url' => ['/user/create'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
                 ['label' => Yii::t('app',  'Exercises'), 'url' => ['/fitness-exercises'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-exercises']),],
-                ['label' => '+', 'url' => ['/fitness-exercises/create'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-exercises']),],
+                [
+                    'label' => '+',
+                    'url' => ['/fitness-exercises/create'],
+                    'active' => in_array(Yii::$app->controller->id, ['fitness-exercises']),
+                    'linkOptions' => ['target' => '_blank']
+                ],
                 ['label' => Yii::t('app',  'Templates'), 'url' => ['/fitness-templates'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-templates']),],
                 ['label' => '+', 'url' => ['/fitness-templates/create'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-templates']),],
                 ['label' => Yii::t('app',  'Tags'), 'url' => ['/fitness-tags'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-tags']),],

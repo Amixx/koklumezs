@@ -21,7 +21,7 @@ class Workout extends \yii\db\ActiveRecord
             [['author_id', 'student_id'], 'required'],
             [['author_id', 'student_id'], 'integer'],
             [['description'], 'string'],
-            [['abandoned'], 'boolean'],
+            [['abandoned', 'is_draft'], 'boolean'],
             [['created_at', 'opened_at'], 'safe'],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author_id' => 'id']],
             [['student_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['student_id' => 'id']],
@@ -47,6 +47,7 @@ class Workout extends \yii\db\ActiveRecord
             'student_id' => \Yii::t('app', 'Student ID'),
             'description' => \Yii::t('app', 'Notes'),
             'abandoned' => \Yii::t('app', 'Has been abandoned'),
+            'is_draft' => \Yii::t('app', 'Is draft'),
             'created_at' => \Yii::t('app', 'Created at'),
             'opened_at' => \Yii::t('app', 'Opened at'),
         ];
@@ -113,7 +114,10 @@ class Workout extends \yii\db\ActiveRecord
     {
         $userContext = Yii::$app->user->identity;
         $query = self::find()
-            ->where(['student_id' => $userContext->id])
+            ->where([
+                'student_id' => $userContext->id,
+                'is_draft' => false,
+            ])
             ->orderBy(['id' => SORT_DESC])
             ->joinWith('workoutExercises')
             ->joinWith('evaluation')
@@ -172,7 +176,10 @@ class Workout extends \yii\db\ActiveRecord
     public static function getLastWorkoutOfUserAndExercise($userId, $exerciseId) {
         return self::find()
             ->joinWith('workoutExercises')
-            ->where(['user_id' => $userId])
+            ->where([
+                'user_id' => $userId,
+                'is_draft' => false,
+            ])
             ->andWhere(['fitness_workoutexercises.exercise_id' => $exerciseId])
             ->orderBy(['created_at' => SORT_DESC])
             ->one();
