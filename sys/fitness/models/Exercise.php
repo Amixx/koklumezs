@@ -9,7 +9,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 
-class Exercise extends \yii\db\ActiveRecord
+class Exercise extends Yii\db\ActiveRecord
 {
     public static function tableName()
     {
@@ -38,7 +38,15 @@ class Exercise extends \yii\db\ActiveRecord
                 'has_pulse',
                 'has_height',
             ], 'boolean'],
-            [['name', 'description', 'video', 'technique_video', 'popularity_type'], 'string'],
+            [[
+                'name',
+                'description',
+                'video',
+                'equipment_video',
+                'equipment_video_thumbnail',
+                'technique_video',
+                'popularity_type',
+            ], 'string'],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['author_id' => 'id']],
         ];
     }
@@ -47,27 +55,29 @@ class Exercise extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'author_id' => \Yii::t('app', 'Author ID'),
-            'name' => \Yii::t('app', 'Title'),
-            'description' => \Yii::t('app', 'Apraksts'),
-            'video' => \Yii::t('app', 'Video'),
-            'technique_video' => \Yii::t('app', 'Technique video'),
-            'is_pause' => \Yii::t('app', 'Is pause'),
-            'needs_evaluation' => \Yii::t('app', 'Needs evaluation'),
-            'popularity_type' => \Yii::t('app', 'Popularity type'),
-            'is_archived' => \Yii::t('app', 'Archived'),
-            'is_bodyweight' => \Yii::t('app', 'Is bodyweight exercise'),
-            'is_ready' => \Yii::t('app', 'Ready'),
-            'has_reps' => \Yii::t('app', 'Reps'),
-            'has_weight' => \Yii::t('app', 'Weight (kg)'),
-            'has_time' => \Yii::t('app', 'Time (s)'),
-            'has_resistance_bands' => \Yii::t('app', 'Resistance bands'),
-            'has_mode' => \Yii::t('app', 'Mode'),
-            'has_incline_percent' => \Yii::t('app', 'Incline (%)'),
-            'has_pace' => \Yii::t('app', 'Pace (min/km)'),
-            'has_speed' => \Yii::t('app', 'Speed (km/h)'),
-            'has_pulse' => \Yii::t('app', 'Pulse'),
-            'has_height' => \Yii::t('app', 'Height (cm)'),
+            'author_id' => Yii::t('app', 'Author ID'),
+            'name' => Yii::t('app', 'Title'),
+            'description' => Yii::t('app', 'Apraksts'),
+            'video' => Yii::t('app', 'Video'),
+            'equipment_video' => Yii::t('app', 'Equipment video'),
+            'equipment_video_thumbnail' =>  Yii::t('app', 'Equipment video thumbnail'),
+            'technique_video' => Yii::t('app', 'Technique video'),
+            'is_pause' => Yii::t('app', 'Is pause'),
+            'needs_evaluation' => Yii::t('app', 'Needs evaluation'),
+            'popularity_type' => Yii::t('app', 'Popularity type'),
+            'is_archived' => Yii::t('app', 'Archived'),
+            'is_bodyweight' => Yii::t('app', 'Is bodyweight exercise'),
+            'is_ready' => Yii::t('app', 'Ready'),
+            'has_reps' => Yii::t('app', 'Reps'),
+            'has_weight' => Yii::t('app', 'Weight (kg)'),
+            'has_time' => Yii::t('app', 'Time (s)'),
+            'has_resistance_bands' => Yii::t('app', 'Resistance bands'),
+            'has_mode' => Yii::t('app', 'Mode'),
+            'has_incline_percent' => Yii::t('app', 'Incline (%)'),
+            'has_pace' => Yii::t('app', 'Pace (min/km)'),
+            'has_speed' => Yii::t('app', 'Speed (km/h)'),
+            'has_pulse' => Yii::t('app', 'Pulse'),
+            'has_height' => Yii::t('app', 'Height (cm)'),
         ];
     }
 
@@ -123,6 +133,20 @@ class Exercise extends \yii\db\ActiveRecord
             else if ($ie['exercise_id_2'] != $this->id) $ids[] = $ie['exercise_id_2'];
         }
         return $ids;
+    }
+
+    public function getVideoThumb(){
+        if($this->equipment_video_thumbnail) return $this->equipment_video_thumbnail;
+
+        $user = Yii::$app->user->identity;
+        $school = $user->getSchool();
+        return $school->video_thumbnail;
+    }
+
+    public function getInterchangeableOtherExercisesObj()
+    {
+        $exerciseIds = $this->getInterchangeableExerciseIds();
+        return self::find()->where(['in', 'id', $exerciseIds])->all();
     }
 
     public function getInterchangeableOtherExercises()

@@ -69,7 +69,7 @@ class StudentExerciseController extends Controller
 
         $workoutExercise = $this->findModel($id);
         $nextWorkoutExercise = $workoutExercise->workout->getNextWorkoutExercise($workoutExercise);
-        $interchangeableExercises = $workoutExercise->exercise->getInterchangeableOtherExercises();
+        $interchangeableExercises = $workoutExercise->exercise->getInterchangeableOtherExercisesObj();
         $difficultyEvaluation = WorkoutExerciseEvaluation::find()->where(['workoutexercise_id' => $id])->one();
 
         $workoutExercise->workout->setAsOpened();

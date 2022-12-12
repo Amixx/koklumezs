@@ -117,11 +117,11 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $exercise->name;
                 <?php if ($exercise->description) { ?>
                     <p><?= $exercise->description ?></p>
                 <?php } ?>
-                <?php if ($exercise->technique_video) { ?>
+                <?php if ($exercise->equipment_video) { ?>
                     <?= $this->render(
                         'video',
                         [
-                            'fileUrl' => $exercise->technique_video,
+                            'fileUrl' => $exercise->equipment_video,
                             'thumbnail' => $videoThumb,
                             'id' => 'fitness_technique',
                         ]
@@ -150,7 +150,7 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $exercise->name;
                                 <span>(<strong><?= $wExercise->actual_weight ?></strong> kg)</span>
                             <?php } ?>
                         </span>
-                            <?php if ($class === 'future' && $wExercise->exercise->technique_video) { ?>
+                            <?php if ($class === 'future' && $wExercise->exercise->equipment_video) { ?>
                                 <button class="btn btn-primary fitness-toggle-technique-vid">
                                     <span class="glyphicon glyphicon-menu-down"></span>
                                 </button>
@@ -160,7 +160,7 @@ $this->title = \Yii::t('app', 'Exercise') . ': ' . $exercise->name;
                             <?= $this->render(
                                 'video',
                                 [
-                                    'fileUrl' => $wExercise->exercise->technique_video,
+                                    'fileUrl' => $wExercise->exercise->equipment_video,
                                     'thumbnail' => $videoThumb,
                                     'id' => 'fitness_other_ex_technique_' . $wExercise->id,
                                 ]

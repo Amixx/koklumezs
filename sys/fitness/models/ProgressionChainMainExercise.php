@@ -2,6 +2,7 @@
 
 namespace app\fitness\models;
 
+use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use app\models\Users;
@@ -29,9 +30,10 @@ class ProgressionChainMainExercise extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'progression_chain_exercise_id' => \Yii::t('app',  'Progression chain exercise'),
-            'weight_exercise_id' => \Yii::t('app',  'Weight exercise'),
-            'rep_bw_ratio_percent' => \Yii::t('app',  'Coefficient'),
+            'exerciseId' =>  Yii::t('app',  'Exercise'),
+            'progression_chain_exercise_id' => Yii::t('app',  'Progression chain exercise'),
+            'weight_exercise_id' => Yii::t('app',  'Weight exercise'),
+            'rep_bw_ratio_percent' => Yii::t('app',  'Coefficient'),
         ];
     }
 

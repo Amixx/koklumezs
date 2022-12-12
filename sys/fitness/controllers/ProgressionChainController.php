@@ -100,29 +100,29 @@ class ProgressionChainController extends Controller
 
         if($exerciseModel->load($post) && $exerciseModel->save()){
             Yii::$app->session->setFlash('success', Yii::t('app', 'Exercise successfully created') . '!');
-            $exerciseModel = Exercise::initForProgressionChainForm();
-        } else {
-            if ($model->load($post) && $model->save()) {
-                foreach ($progressionChainExercises as $index => $progressionChainExercise) {
-                    $postItem = $post['ProgressionChainExercise'][$index];
-                    if(isset($postItem['exercise_id'])) {
-                        $progressionChainExercise->exercise_id = $postItem['exercise_id'];
-                    }
-                    if(isset($postItem['difficulty_increase_percent'])) {
-                        $progressionChainExercise->difficulty_increase_percent = $postItem['difficulty_increase_percent'];
-                    }
+        }
+        $exerciseModel = Exercise::initForProgressionChainForm();
 
-                    if ($progressionChainExercise->exercise_id && ($index === 0 || $progressionChainExercise->difficulty_increase_percent)) {
-                        $progressionChainExercise->save();
-                    }
+        if ($model->load($post) && $model->save()) {
+            foreach ($progressionChainExercises as $index => $progressionChainExercise) {
+                $postItem = $post['ProgressionChainExercise'][$index];
+                if(isset($postItem['exercise_id'])) {
+                    $progressionChainExercise->exercise_id = $postItem['exercise_id'];
+                }
+                if(isset($postItem['difficulty_increase_percent'])) {
+                    $progressionChainExercise->difficulty_increase_percent = $postItem['difficulty_increase_percent'];
+                }
+
+                if ($progressionChainExercise->exercise_id && ($index === 0 || $progressionChainExercise->difficulty_increase_percent)) {
+                    $progressionChainExercise->save();
                 }
             }
-            if($mainExercise->load($post)) {
-                foreach($progressionChainExercises as $pce) {
-                    if($pce->exercise_id === $mainExercise->exerciseId) $mainExercise->progression_chain_exercise_id = $pce->id;
-                }
-                if($mainExercise->validate()) $mainExercise->save();
+        }
+        if($mainExercise->load($post)) {
+            foreach($progressionChainExercises as $pce) {
+                if($pce->exercise_id === $mainExercise->exerciseId) $mainExercise->progression_chain_exercise_id = $pce->id;
             }
+            if($mainExercise->validate()) $mainExercise->save();
         }
 
         Url::remember(Yii::$app->request->referrer);

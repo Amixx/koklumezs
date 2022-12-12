@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 
 <div class="progression-chain-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['enableClientValidation' => false]); ?>
     <div class="tab-pane fade active in" id="home" role="tabpanel" aria-labelledby="home-tab">
         <?= $form->field($model, 'title')->textInput() ?>
     </div>
@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
         <div style="display:flex; flex-wrap:wrap; gap: 32px 16px;align-items:baseline;">
             <?php for ($i = 0; $i <= 11; $i++) { ?>
                 <?php if ($i > 0) { ?>
-                    <span style="display:inline-block">
+                    <span style="display:inline-block" class="percentage-input-container">
                             <span style="display: flex; align-items: last baseline">
                                 <span>+</span>
                                 <?= $form->field($progressionChainExercises[$i], "[$i]difficulty_increase_percent")->textInput(['style' => 'width: 60px'])->label(false) ?>
@@ -23,7 +23,7 @@ use yii\widgets\ActiveForm;
                              </span>
                         </span>
                 <?php } ?>
-                <div style="display:inline-block">
+                <div style="display:inline-block" class="exercise-select-container">
                     <div style="display:inline-block">
                         <?= $form->field($progressionChainExercises[$i], "[$i]exercise_id")->dropDownList(
                             $exerciseSelectOptions,
@@ -33,7 +33,9 @@ use yii\widgets\ActiveForm;
                             ]
                         )->label(false) ?>
                     </div>
-                    <button type="button" class="btn btn-sm btn-insert-progression-chain-exercise" style="display:inline-block"><i class="glyphicon glyphicon-plus"></i></button>
+                    <?php if($i !== 11) { ?>
+                        <button type="button" class="btn btn-sm btn-insert-progression-chain-exercise" style="display:inline-block"><i class="glyphicon glyphicon-plus"></i></button>
+                    <?php }?>
                 </div>
             <?php } ?>
         </div>
@@ -65,8 +67,6 @@ use yii\widgets\ActiveForm;
         <?= Html::submitButton(\Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
     </div>
 
-    <?php ActiveForm::end(); ?>
-
     <hr>
     <hr>
 
@@ -76,6 +76,9 @@ use yii\widgets\ActiveForm;
         echo $this->render('../exercise/_form', [
             'model' => $exerciseModel,
             'tags' => $tags,
+            'outerForm' => $form,
         ]);
     } ?>
+
+    <?php ActiveForm::end(); ?>
 </div>

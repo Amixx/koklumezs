@@ -31,6 +31,14 @@ $this->title = \Yii::t('app', 'Exercises');
                 'format' => 'raw',
             ],
             [
+                'attribute' => 'equipment_video',
+                'value' => function ($dataProvider) {
+                    if(!$dataProvider['equipment_video']) return '';
+                    return Html::a(Yii::t('app', 'here'), $dataProvider['equipment_video'], ['target' => '_blank']);
+                },
+                'format' => 'raw',
+            ],
+            [
                 'attribute' => 'technique_video',
                 'value' => function ($dataProvider) {
                     if(!$dataProvider['technique_video']) return '';

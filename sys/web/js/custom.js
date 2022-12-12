@@ -170,7 +170,7 @@ $(document).ready(function () {
     setupInsertProgressionChainExerciseButton();
 });
 
-function setupInterchangeableExerciseSelects(){
+function setupInterchangeableExerciseSelects() {
     $('select#interchangeable-exercises').select2({
         minimumInputLength: 3,
         ajax: {
@@ -182,45 +182,48 @@ function setupInterchangeableExerciseSelects(){
 }
 
 
-function increateIndexForSelectEl(selectEl, oldIndex, newIndex){
-    selectEl.innerHTML = selectEl.innerHTML.replaceAll("[" + oldIndex + "]", "[" + newIndex + "]");
-    selectEl.innerHTML = selectEl.innerHTML.replaceAll("-" + oldIndex + "-", "-" + newIndex + "-");
+function increaseIndexForSelectEl(selectEl, oldIndex, newIndex) {
+    selectEl.html(
+        selectEl.html()
+            .replaceAll("[" + oldIndex + "]", "[" + newIndex + "]")
+            .replaceAll("-" + oldIndex + "-", "-" + newIndex + "-")
+    );
 }
 
-function increaseIndexBy1(buttonEl, oldIndex){
-    var selectEl = buttonEl.parentElement;
-    var percentEl = buttonEl.parentElement.nextSibling ? buttonEl.parentElement.nextSibling.nextSibling : null;
-    var newIndex = oldIndex + 1
-    increateIndexForSelectEl(selectEl, oldIndex, newIndex)
-    if(percentEl) increateIndexForSelectEl(percentEl, oldIndex+1, newIndex+1)
+function increaseIndexBy1(buttonEl, oldIndex) {
+    var $selectEl = $(buttonEl).parent();
+    var $percentEl = $selectEl.next();
+    var newIndex = oldIndex + 1;
+    increaseIndexForSelectEl($selectEl, oldIndex, newIndex);
+    if ($percentEl.length) increaseIndexForSelectEl($percentEl, oldIndex + 1, newIndex + 1);
 }
 
 function setupInsertProgressionChainExerciseButton() {
     var $buttons = $('.btn-insert-progression-chain-exercise');
-    $buttons.on('click', function(){
+    $buttons.on('click', function () {
         $("body").find("select").select2("destroy");
 
-        var buttonIndex = $buttons.index($(this))
+        var buttonIndex = $buttons.index($(this));
 
         var selectContainerClone = this.parentElement.cloneNode(true);
         var percentInputClone = this.parentElement.nextSibling.nextSibling.cloneNode(true);
 
-        increateIndexForSelectEl(selectContainerClone, buttonIndex, buttonIndex+1)
-        $(selectContainerClone).find("select").select2().val(null).trigger("change")
-        $(selectContainerClone).insertAfter($(this.parentElement))
+        increaseIndexForSelectEl($(selectContainerClone), buttonIndex, buttonIndex + 1);
+        $(selectContainerClone).find("select").select2().val(null).trigger("change");
+        $(selectContainerClone).insertAfter($(this.parentElement));
 
-        percentInputClone.innerHTML = percentInputClone.innerHTML.replaceAll(buttonIndex-1, buttonIndex-1)
-        $(percentInputClone).find("input").val(null)
-        $(percentInputClone).insertAfter($(this.parentElement))
+        $(percentInputClone).html($(percentInputClone).html().replaceAll(buttonIndex - 1, buttonIndex - 1));
+        $(percentInputClone).find("input").val(null);
+        $(percentInputClone).insertAfter($(this.parentElement));
 
-        $buttons.each(function(i, el) {
-            if(i === buttonIndex) {
-                var percentEl = el.parentElement.nextSibling.nextSibling.nextSibling
-                    ? el.parentElement.nextSibling.nextSibling.nextSibling.nextSibling
-                    : null;
-                if(percentEl) increateIndexForSelectEl(percentEl, i+1, i+2)
-            } else if(i > buttonIndex) increaseIndexBy1(el, i)
-        })
+        $buttons.each(function (i, el) {
+            if (i === buttonIndex) {
+                var $percentEl = $(el).parent().next().next().next();
+                if ($percentEl) increaseIndexForSelectEl($percentEl, i + 1, i + 2);
+            } else if (i > buttonIndex) increaseIndexBy1(el, i);
+        });
+        var $lastSelect = $('.exercise-select-container').last();
+        increaseIndexForSelectEl($lastSelect, $buttons.length, $buttons.length+1);
         $buttons = $('.btn-insert-progression-chain-exercise');
 
         $("body").find("select").select2();
@@ -228,12 +231,11 @@ function setupInsertProgressionChainExerciseButton() {
 }
 
 
-
-function setupNextReplacementExerciseButton(){
+function setupNextReplacementExerciseButton() {
     var $nextReplacementeExerciseBtn = $('.btn-next-replacement-exercise');
-    if(!$nextReplacementeExerciseBtn) return;
+    if (!$nextReplacementeExerciseBtn) return;
 
-    $nextReplacementeExerciseBtn.on('click', function(){
+    $nextReplacementeExerciseBtn.on('click', function () {
         var $replacementOptionContainer = $(this).closest('.exercise-replacement-option-container');
         $replacementOptionContainer.attr('hidden', true);
         $replacementOptionContainer.next().attr('hidden', false);
@@ -250,9 +252,9 @@ function formatTimeLeft(time) {
     return minutes + ":" + seconds;
 }
 
-function timeStringToSeconds(timeString){
+function timeStringToSeconds(timeString) {
     var split = timeString.split(':');
-    if(split.length === 1) return parseInt(split[0]);
+    if (split.length === 1) return parseInt(split[0]);
 
     return (parseInt(split[0]) * 60) + parseInt(split[1]);
 }
@@ -274,7 +276,7 @@ function setUpTimer() {
 
     function setCircleDasharray() {
         var firstArg = (((timeLeft / TIME_LIMIT) * FULL_DASH_ARRAY) - 10).toFixed(0);
-        if(firstArg < 0) firstArg = 0;
+        if (firstArg < 0) firstArg = 0;
         $pathRemaining.attr("stroke-dasharray", firstArg + " " + FULL_DASH_ARRAY);
     }
 
@@ -282,7 +284,7 @@ function setUpTimer() {
         timePassed = timePassed += 1;
         timeLeft = TIME_LIMIT - timePassed;
         $timerLabel.text(formatTimeLeft(timeLeft));
-        if(timeLeft === 0) {
+        if (timeLeft === 0) {
             $('.exercise-action-btn')[0].click();
             clearInterval(timerInterval);
         }
@@ -290,8 +292,6 @@ function setUpTimer() {
         setCircleDasharray();
     }, 1000);
 }
-
-
 
 
 function createPaymentIntent(planId, priceType, callback) {

@@ -7,7 +7,17 @@ use yii\helpers\Html;
     <?php foreach ($interchangeableExercises as $index => $interchangeableExercise) { ?>
         <div class="exercise-replacement-option-container" <?= $index === 0 ? '' : 'hidden' ?>>
             <div>
-                <h3 style="margin-top: 0;"><strong><?= $interchangeableExercise['name'] ?></strong></h3>
+                <h3 style="margin-top: 0;"><strong><?= $interchangeableExercise->name ?></strong></h3>
+                <?php if ($interchangeableExercise->equipment_video) {
+                    echo $this->render(
+                        'video',
+                        [
+                            'fileUrl' => $interchangeableExercise->equipment_video,
+                            'thumbnail' => $interchangeableExercise->getVideoThumb(),
+                            'id' => 'fitness_interchagneable_exercise_technique' . $interchangeableExercise->id,
+                        ]
+                    );
+                } ?>
                 <p>Vai Tev ir šim vingrojumam nepieciešamais aprīkojums?</p>
             </div>
             <div style="display: flex; gap: 8px;">
@@ -20,7 +30,7 @@ use yii\helpers\Html;
                     [
                         'fitness-student-exercises/replace-exercise',
                         'id' => $workoutExercise->id,
-                        'replacementId' => $interchangeableExercise['id']
+                        'replacementId' => $interchangeableExercise->id
                     ], [
                     'class' => 'btn btn-success',
                     'style' => 'width: 100%',

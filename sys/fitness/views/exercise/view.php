@@ -73,6 +73,7 @@ function createBooleanColumn($attribute)
                 }
             ],
             'video',
+            'equipment_video',
             'technique_video',
             [
                 'attribute' => 'exerciseTags',
