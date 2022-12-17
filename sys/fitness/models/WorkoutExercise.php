@@ -10,7 +10,7 @@ function wrapInBold($str)
     return "<strong>$str</strong>";
 }
 
-class WorkoutExercise extends \yii\db\ActiveRecord
+class WorkoutExercise extends Yii\db\ActiveRecord
 {
     public static function tableName()
     {
@@ -26,6 +26,7 @@ class WorkoutExercise extends \yii\db\ActiveRecord
                 'exercise_id',
                 'reps',
                 'actual_reps',
+                'executed_reps',
                 'time_seconds',
                 'mode',
                 'incline_percent',
@@ -52,20 +53,21 @@ class WorkoutExercise extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'workout_id' => \Yii::t('app', 'Workout ID'),
-            'exercise_id' => \Yii::t('app', 'Exercise ID'),
-            'weight' => \Yii::t('app', 'Weight'),
-            'reps' => \Yii::t('app', 'Repetitions'),
-            'actual_weight' => \Yii::t('app', 'Actual weight'),
-            'actual_reps' => \Yii::t('app', 'Actual repetitions'),
-            'time_seconds' => \Yii::t('app', 'Time (seconds)'),
-            'resistance_bands' => \Yii::t('app', 'Resistance bands'),
-            'mode' => \Yii::t('app', 'Mode'),
-            'incline_percent' => \Yii::t('app', 'Incline (%)'),
-            'pace' => \Yii::t('app', 'Pace (min/km)'),
-            'speed' => \Yii::t('app', 'Speed (km/h)'),
-            'pulse' => \Yii::t('app', 'Pulse'),
-            'height' => \Yii::t('app', 'Height (cm)'),
+            'workout_id' => Yii::t('app', 'Workout ID'),
+            'exercise_id' => Yii::t('app', 'Exercise ID'),
+            'weight' => Yii::t('app', 'Weight'),
+            'reps' => Yii::t('app', 'Repetitions'),
+            'actual_weight' => Yii::t('app', 'Actual weight'),
+            'actual_reps' => Yii::t('app', 'Actual repetitions'),
+            'executed_reps' => Yii::t('app', 'Executed repetitions'),
+            'time_seconds' => Yii::t('app', 'Time (seconds)'),
+            'resistance_bands' => Yii::t('app', 'Resistance bands'),
+            'mode' => Yii::t('app', 'Mode'),
+            'incline_percent' => Yii::t('app', 'Incline (%)'),
+            'pace' => Yii::t('app', 'Pace (min/km)'),
+            'speed' => Yii::t('app', 'Speed (km/h)'),
+            'pulse' => Yii::t('app', 'Pulse'),
+            'height' => Yii::t('app', 'Height (cm)'),
         ];
     }
 
@@ -313,5 +315,15 @@ class WorkoutExercise extends \yii\db\ActiveRecord
         $replacementExercise->time_seconds = $this->getReplacementExerciseTimeSeconds($exerciseToReplaceWith);
 
         return $replacementExercise->save();
+    }
+
+    public function setExecutedReps($executedReps){
+        if($this->isReplaced()) {
+            $this->replacementExercise->executed_reps = $executedReps;
+            $this->replacementExercise->save();
+        } else {
+            $this->executed_reps = $executedReps;
+            $this->save();
+        }
     }
 }

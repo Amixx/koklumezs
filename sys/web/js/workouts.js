@@ -467,6 +467,11 @@ Vue.component('last-workouts-table', {
                     ? workoutExercise.replacementExercise['reps']
                     : (workoutExercise[attribute] ? workoutExercise[attribute] : workoutExercise['reps']);
             }
+            if (attribute === 'executed_reps') {
+                if(workoutExercise[attribute]) return workoutExercise[attribute];
+                if(workoutExercise.replacementExercise?.[attribute]) return workoutExercise.replacementExercise[attribute]
+                return null
+            }
 
             return workoutExercise.replacementExercise
                 ? workoutExercise.replacementExercise[attribute]
@@ -558,7 +563,12 @@ Vue.component('last-workouts-table', {
                                             <p v-if="extraAttributeString">{{ extraAttributeString }}</p>
                                         </div>
                                     </td>
-                                    <td>{{ workoutExercise.evaluation ? workoutExercise.evaluation.evaluation_text : "" }}</td>
+                                    <td>
+                                        <span>{{ workoutExercise.evaluation ? workoutExercise.evaluation.evaluation_text : "" }}</span>
+                                        <span v-if="getAttribute(workoutExercise, 'executed_reps')">
+                                            (Tika izpildītas <strong>{{ getAttribute(workoutExercise, 'executed_reps') }}</strong> reizes)
+                                        </span>
+                                    </td>
                                     <td>{{ formatAbilitiesRange(workoutExercise) }}</td>
                                 </tr>
                             </tbody>

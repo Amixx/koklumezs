@@ -71,7 +71,12 @@ class DifficultyEvaluation
         ];
     }
 
+    public function createMinMaxRepsOrTimeSecondsForNotFinished(){
+        return ['min' => $this->repsOrTime, 'max' => $this->repsOrTime];
+    }
+
     public function createMinMaxTotalRepsOrTimeSeconds($evaluationValue){
+        if ($evaluationValue === 10) return $this->createMinMaxRepsOrTimeSecondsForNotFinished();
         $minMaxExtraRepsOrTimeSeconds = $this->createMinMaxRepsOrTimeSeconds($evaluationValue);
         return [
             'min' => $this->repsOrTime + $minMaxExtraRepsOrTimeSeconds['min'],
@@ -94,7 +99,8 @@ class DifficultyEvaluation
         return array_map(function ($evaluationValue) {
             return [
                 'value' => $evaluationValue,
-                'text' => self::createEvaluationText($evaluationValue)
+                'text' => self::createEvaluationText($evaluationValue),
+                'is_could_not_finish' => $evaluationValue === 10,
             ];
         }, [2, 4, 6, 8, 10]);
     }

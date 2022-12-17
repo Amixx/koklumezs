@@ -2,7 +2,9 @@
 
 namespace app\fitness\models;
 
-class ReplacementExercise extends \yii\db\ActiveRecord
+use Yii;
+
+class ReplacementExercise extends Yii\db\ActiveRecord
 {
     public static function tableName()
     {
@@ -13,7 +15,7 @@ class ReplacementExercise extends \yii\db\ActiveRecord
     {
         return [
             [['workoutexercise_id', 'exercise_id'], 'required'],
-            [['workoutexercise_id', 'exercise_id', 'reps', 'time_seconds'], 'integer'],
+            [['workoutexercise_id', 'exercise_id', 'reps', 'executed_reps', 'time_seconds'], 'integer'],
             [
                 ['weight'], 'number',
                 'numberPattern' => '/^\d+(.\d{1,2})?$/'
@@ -27,11 +29,12 @@ class ReplacementExercise extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'workoutexercise_id' => \Yii::t('app', 'Workout exercise ID'),
-            'exercise_id' => \Yii::t('app', 'Exercise ID'),
-            'weight' => \Yii::t('app', 'Weight'),
-            'reps' => \Yii::t('app', 'Repetitions'),
-            'time_seconds' => \Yii::t('app', 'Time (seconds)'),
+            'workoutexercise_id' => Yii::t('app', 'Workout exercise ID'),
+            'exercise_id' => Yii::t('app', 'Exercise ID'),
+            'weight' => Yii::t('app', 'Weight'),
+            'reps' => Yii::t('app', 'Repetitions'),
+            'executed_reps' => Yii::t('app', 'Executed repetitions'),
+            'time_seconds' => Yii::t('app', 'Time (seconds)'),
         ];
     }
 

@@ -96,6 +96,10 @@ class StudentExerciseController extends Controller
             }
         }
 
+        if(isset($post['executed-reps']) && $post['executed-reps'] !== '') {
+            $workoutExercise->setExecutedReps($post['executed-reps']);
+        }
+
         return $this->render('@app/fitness/views/student-exercise/view', [
             'workoutExercise' => $workoutExercise,
             'nextWorkoutExercise' => $nextWorkoutExercise,

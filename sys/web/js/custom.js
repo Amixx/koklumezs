@@ -963,8 +963,18 @@ $("[data-role=fitness-eval-btn]").on("click", submitFitnessEvaluation);
 function submitFitnessEvaluation() {
     var $hiddenInput = $(this).parent().parent().siblings("[name=difficulty-evaluation]");
     $hiddenInput.val(this.dataset.value);
-    $(this).closest("form").submit();
+    if(!this.dataset.isCouldNotFinish) {
+        $(this).closest("form").submit();
+    } else {
+        $('#exercise-could-not-finish-modal').modal('show');
+    }
 }
+
+$("#could-not-finish-modal-submit-button").on('click', function(){
+    this.disabled = true
+    $('input[name="executed-reps"]').val($('#could-not-finish-modal-reps-input').val())
+    $('.fitness-difficulty-eval').closest('form').submit()
+})
 
 $("[data-role=evaluation-emoji]").on("click", submitLessonEvaluation);
 

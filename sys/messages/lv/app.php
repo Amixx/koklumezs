@@ -842,4 +842,6 @@ return [
     'Weight exercise ability ratios' => 'Svara vingrojumu spēju attiecības',
     'Create weight exercise ability ratio' => 'Izveidot svara vingrojuma spēju attiecību',
     'WEAR' => 'SVSA',
+    'Executed repetitions' => 'Izpildītās reizes',
+    'How many reps did you manage' => 'Cik reizes izdevās uztaisīt'
 ];

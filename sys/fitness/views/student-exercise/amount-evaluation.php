@@ -26,6 +26,7 @@ $isButtonActive = function ($name) use ($evaluations, $difficultyEvaluation) {
 <div>
     <?php $form = ActiveForm::begin(); ?>
     <?= Html::hiddenInput("difficulty-evaluation", null) ?>
+    <?= Html::hiddenInput("executed-reps", null) ?>
 
     <div class="fitness-difficulty-eval">
         <div>
@@ -37,6 +38,7 @@ $isButtonActive = function ($name) use ($evaluations, $difficultyEvaluation) {
                         type="button"
                         data-role="fitness-eval-btn"
                         data-value="<?= $evaluation['value'] ?>"
+                        data-is-could-not-finish="<?= $evaluation['is_could_not_finish'] ?>"
                         class="btn <?= $isButtonActive($name) ? 'active' : '' ?>"
                         title="<?= $evaluation['text'] ?>"
                     <?= isset($readonly) && $readonly ? 'disabled' : '' ?>
@@ -50,3 +52,12 @@ $isButtonActive = function ($name) use ($evaluations, $difficultyEvaluation) {
 
     <?php ActiveForm::end(); ?>
 </div>
+
+<?= $this->render(
+    '@app/fitness/views/shared/modal',
+    [
+        'title' => Yii::t('app', 'How many reps did you manage') . '?',
+        'id' => 'exercise-could-not-finish-modal',
+        'bodyFileName' => "@app/fitness/views/student-exercise/exercise-could-not-finish-modal-body",
+    ]
+); ?>

@@ -81,8 +81,8 @@ class WorkoutExerciseEvaluation extends \yii\db\ActiveRecord
 
     private function getEvaluatedExerciseReps(){
         return $this->workoutExercise->replacementExercise
-            ? $this->workoutExercise->replacementExercise->reps
-            :  ($this->workoutExercise->actual_reps ?: $this->workoutExercise->reps);
+            ? $this->workoutExercise->replacementExercise->executed_reps ?: $this->workoutExercise->replacementExercise->reps
+            :  ($this->workoutExercise->executed_reps ?: $this->workoutExercise->actual_reps ?: $this->workoutExercise->reps);
     }
 
     public function getOneRepMaxRange()
