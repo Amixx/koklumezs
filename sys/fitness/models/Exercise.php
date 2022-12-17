@@ -60,7 +60,7 @@ class Exercise extends Yii\db\ActiveRecord
             'description' => Yii::t('app', 'Apraksts'),
             'video' => Yii::t('app', 'Video'),
             'equipment_video' => Yii::t('app', 'Equipment video'),
-            'equipment_video_thumbnail' =>  Yii::t('app', 'Equipment video thumbnail'),
+            'equipment_video_thumbnail' => Yii::t('app', 'Equipment video thumbnail'),
             'technique_video' => Yii::t('app', 'Technique video'),
             'is_pause' => Yii::t('app', 'Is pause'),
             'needs_evaluation' => Yii::t('app', 'Needs evaluation'),
@@ -114,6 +114,32 @@ class Exercise extends Yii\db\ActiveRecord
         return $this->hasMany(ExerciseVideo::class, ['exercise_id' => 'id']);
     }
 
+    public function getWeightExerciseAbilityRatios($joinWithExercises = false)
+    {
+        if (!$this->has_weight) return null;
+        $query = WeightExerciseAbilityRatio::find()->where(['or', ['exercise_id_1' => $this->id], ['exercise_id_2' => $this->id]]);
+        if ($joinWithExercises) {
+            $query->joinWith('exercise1');
+            $query->joinWith('exercise2');
+        }
+        return $query->asArray()->all();
+    }
+
+    public function getWeightExerciseAbilityRatiosMapped()
+    {
+        if (!$this->has_weight) return null;
+        $weightExerciseAbilityRatios = $this->getWeightExerciseAbilityRatios();
+        $res = [];
+        foreach ($weightExerciseAbilityRatios as $wear) {
+            if ($wear->exercise_id_1 === $this->id) {
+                $res[$wear->exercise_id_2] = $wear->ratio_percent;
+            } else {
+                $res[$wear->exercise_id_1] = $wear->ratio_percent;
+            }
+        }
+        return $res;
+    }
+
     public function getInterchangeableExercises($joinWithExercises = false)
     {
         $query = InterchangeableExercise::find()->where(['or', ['exercise_id_1' => $this->id], ['exercise_id_2' => $this->id]]);
@@ -135,8 +161,9 @@ class Exercise extends Yii\db\ActiveRecord
         return $ids;
     }
 
-    public function getVideoThumb(){
-        if($this->equipment_video_thumbnail) return $this->equipment_video_thumbnail;
+    public function getVideoThumb()
+    {
+        if ($this->equipment_video_thumbnail) return $this->equipment_video_thumbnail;
 
         $user = Yii::$app->user->identity;
         $school = $user->getSchool();
@@ -159,7 +186,8 @@ class Exercise extends Yii\db\ActiveRecord
         }, $interchangeableExercises);
     }
 
-    public static function getAllExerciseSelect2Options(){
+    public static function getAllExerciseSelect2Options()
+    {
         return array_map(function ($exercise) {
             return [
                 'id' => $exercise['id'],
@@ -186,14 +214,18 @@ class Exercise extends Yii\db\ActiveRecord
 
     public function lastWeekEvaluationsOfUser($userId, $workoutIdToExclude = null)
     {
+        $isOriginalExerciseAndNotReplacedCondition = "fitness_workoutexercises.exercise_id = {$this->id} AND fitness_replacement_exercises.id IS NULL";
+        $isReplacementExerciseCondition = ['fitness_replacement_exercises.exercise_id' => $this->id];
+
         $query = WorkoutExerciseEvaluation::find()
             ->joinWith('workoutExercise')
             ->andWhere(['user_id' => $userId])
             ->andWhere([
                 'or',
-                ['fitness_workoutexercises.exercise_id' => $this->id],
-                ['fitness_replacement_exercises.exercise_id' => $this->id],
+                $isOriginalExerciseAndNotReplacedCondition,
+                $isReplacementExerciseCondition,
             ]);
+
         if ($workoutIdToExclude) {
             $query->andWhere(['!=', 'workout_id', $workoutIdToExclude]);
         }
@@ -210,6 +242,29 @@ class Exercise extends Yii\db\ActiveRecord
 
                 return $evaluationCreationPlusWeek > $now;
             });
+    }
+
+    public function averageAbilityInWorkout($workout, $methodName){
+        $addedEvaluationsCount = 0;
+        $averageAbilitiesSum = null;
+
+        foreach ($workout->workoutExercises as $workoutExercise) {
+            if ($workoutExercise->evaluation && (
+                    $workoutExercise->exercise_id == $this->id && !$workoutExercise->isReplaced()
+                    || $workoutExercise->isReplaced() && $workoutExercise->replacementExercise->exercise_id == $this->id
+                )) {
+
+                $oneRepMaxRangeAverage = OneRepMaxCalculator::oneRepMaxRangeToAverage($workoutExercise->evaluation->$methodName());
+                if ($oneRepMaxRangeAverage) {
+                    $addedEvaluationsCount++;
+                    $averageAbilitiesSum === null
+                        ? $averageAbilitiesSum = $oneRepMaxRangeAverage
+                        : $averageAbilitiesSum += $oneRepMaxRangeAverage;
+                }
+            }
+        }
+
+        return $addedEvaluationsCount > 0 ? $averageAbilitiesSum / $addedEvaluationsCount : null;
     }
 
     public function estimatedAvgAbilityOfUser($userId, $workoutIdToExclude = null)
@@ -231,28 +286,16 @@ class Exercise extends Yii\db\ActiveRecord
 
             if (!$lastWorkout) return null;
 
-            $addedEvaluationsCount = 0;
-
             $now = new DateTime();
             $workoutCreatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $lastWorkout->created_at);
             $workoutCreatedWeeksAgo = floor($now->diff($workoutCreatedAt)->days / 7);
 
             $penaltyForEachWeek = 0.05;
 
-            foreach ($lastWorkout->workoutExercises as $workoutExercise) {
-                if ($workoutExercise->exercise_id == $this->id && $workoutExercise->evaluation) {
-                    $oneRepMaxRangeAverage = OneRepMaxCalculator::oneRepMaxRangeToAverage($workoutExercise->evaluation->$methodName());
-                    if ($oneRepMaxRangeAverage) {
-                        $addedEvaluationsCount++;
-                        $averageAbilitiesSum === null
-                            ? $averageAbilitiesSum = $oneRepMaxRangeAverage
-                            : $averageAbilitiesSum += $oneRepMaxRangeAverage;
-                    }
-                }
-            }
+            $averageAbility = $this->averageAbilityInWorkout($lastWorkout, $methodName);
 
-            if ($addedEvaluationsCount > 0) {
-                $res = ($averageAbilitiesSum / $addedEvaluationsCount) * (1 - ($penaltyForEachWeek * $workoutCreatedWeeksAgo));
+            if (!is_null($averageAbility)) {
+                $res = $averageAbility * (1 - ($penaltyForEachWeek * $workoutCreatedWeeksAgo));
             }
         } else {
             foreach ($workoutExerciseEvaluations as $workoutExerciseEvaluation) {
@@ -281,21 +324,8 @@ class Exercise extends Yii\db\ActiveRecord
             : 'getOneRepMaxRange';
         $type = $this->is_bodyweight ? 'reps' : '1rm';
 
-        $addedEvaluationsCount = 0;
-
-        foreach ($workout->workoutExercises as $workoutExercise) {
-            if ($workoutExercise->exercise_id == $this->id && $workoutExercise->evaluation) {
-                $oneRepMaxRangeAverage = OneRepMaxCalculator::oneRepMaxRangeToAverage($workoutExercise->evaluation->$methodName());
-                if ($oneRepMaxRangeAverage) {
-                    $addedEvaluationsCount++;
-                    $averageAbilitiesSum === null
-                        ? $averageAbilitiesSum = $oneRepMaxRangeAverage
-                        : $averageAbilitiesSum += $oneRepMaxRangeAverage;
-                }
-            }
-        }
-
-        if ($addedEvaluationsCount > 0) $res = $averageAbilitiesSum / $addedEvaluationsCount;
+        $averageAbility = $this->averageAbilityInWorkout($workout, $methodName);
+        if (!is_null($averageAbility)) $res = $averageAbility;
 
         return $res ? ['ability' => $res, 'type' => $type] : null;
     }

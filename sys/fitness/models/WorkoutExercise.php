@@ -105,20 +105,17 @@ class WorkoutExercise extends \yii\db\ActiveRecord
         return $this->isReplaced() ? $this->replacementExercise->exercise : $this->exercise;
     }
 
-    private function getAbilityRatio()
+    private function getAbilityRatio($exerciseToReplaceWith)
     {
-        if (!$this->isReplaced()) return 1;
-
         $workoutUserId = $this->workout->student->id;
 
         $lastTwoWeeksOneRepMaxAverages = [
             'original' => $this->exercise->estimatedAvgAbilityOfUser($workoutUserId),
-            'replacement' => $this->replacementExercise->exercise->estimatedAvgAbilityOfUser($workoutUserId)
+            'replacement' => $exerciseToReplaceWith->estimatedAvgAbilityOfUser($workoutUserId)
         ];
 
         if (is_null($lastTwoWeeksOneRepMaxAverages['original']) || is_null($lastTwoWeeksOneRepMaxAverages['replacement'])) {
-            // TODO: what to do in this situation?
-            return 1;
+            return null;
         }
 
         return $lastTwoWeeksOneRepMaxAverages['replacement']['ability'] / $lastTwoWeeksOneRepMaxAverages['original']['ability'];
@@ -175,12 +172,12 @@ class WorkoutExercise extends \yii\db\ActiveRecord
 
         $res = '';
         if ($hasReps) {
-            $res = wrapInBold($this->actual_reps) . ' reizes';
+            $res = wrapInBold($reps) . ' reizes';
         } else if ($hasTime) {
             $res = wrapInBold($time) . ' sekundes';
         }
         if ($hasWeight) {
-            $res .= ' ar ' . wrapInBold($this->actual_weight) . ' kg svaru';
+            $res .= ' ar ' . wrapInBold($weight) . ' kg svaru';
         }
 
         return $res;
@@ -238,7 +235,11 @@ class WorkoutExercise extends \yii\db\ActiveRecord
     {
         if (is_null($this->actual_weight)) return null;
 
-        $abilityRatio = $this->getAbilityRatio();
+        $abilityRatio = $this->getAbilityRatio($exerciseToReplaceWith);
+
+        if(is_null($abilityRatio)) {
+            $abilityRatio = WeightExerciseAbilityRatio::getAbilityRatioFor($this->exercise_id, $exerciseToReplaceWith->id);
+        }
 
         if ($this->weightReplacedByWeight($exerciseToReplaceWith)) {
             return round($this->actual_weight * $abilityRatio, 1);

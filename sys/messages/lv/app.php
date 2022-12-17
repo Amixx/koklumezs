@@ -834,4 +834,12 @@ return [
     'Workout successfully assigned' => 'Treniņš veiksmīgi piešķirts',
     'Equipment video' => 'Inventāra video',
     'Equipment video thumbnail' => 'Inventāra video sīktēls',
+    'Exercise 1' => 'Vingrojums 1',
+    'Exercise 2' => 'Vingrojums 2',
+    'Ratio (percent)' => 'Attiecība (procentos)',
+    'Ratio percent ({exercise 1 weight} / {exercise 2 weight} * 100)' => 'Attiecība procentos ({1. vingrojuma svars} / {2. vingrojuma svars} * 100)',
+    'Weight exercise ability ratio deleted!' => 'Svaru vingrojumu spēju attiecība dzēsta!',
+    'Weight exercise ability ratios' => 'Svara vingrojumu spēju attiecības',
+    'Create weight exercise ability ratio' => 'Izveidot svara vingrojuma spēju attiecību',
+    'WEAR' => 'SVSA',
 ];

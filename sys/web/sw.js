@@ -18,7 +18,7 @@ function getUrls(urlArray) {
 }
 
 var base = "koklumezs-";
-var version = "1.0.63";
+var version = "1.0.64";
 var cacheName = base + version;
 
 var urlsForCachingStrategies = { 

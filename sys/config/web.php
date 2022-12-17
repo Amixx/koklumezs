@@ -132,6 +132,7 @@ $config = [
         'fitness-tags' => 'app\fitness\controllers\TagController',
         'fitness-progression-chains' => 'app\fitness\controllers\ProgressionChainController',
         'client-data' => 'app\fitness\controllers\ClientDataController',
+        'weight-exercise-ability-ratios' => 'app\fitness\controllers\WeightExerciseAbilityRatioController',
     ],
 ];
 

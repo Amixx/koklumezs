@@ -171,13 +171,13 @@ $(document).ready(function () {
 });
 
 function setupInterchangeableExerciseSelects() {
-    $('select#interchangeable-exercises').select2({
+    $('select#interchangeable-exercises, select.all-exercise-select').select2({
         minimumInputLength: 3,
         ajax: {
             url: getUrl('/fitness-exercises/for-select'),
             delay: 250,
             dataType: 'json',
-        }
+        },
     });
 }
 

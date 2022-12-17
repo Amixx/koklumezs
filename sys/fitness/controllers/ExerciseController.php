@@ -273,7 +273,10 @@ class ExerciseController extends Controller
         $exerciseNameSearchTerm = $get['term'];
 
         $exercises = Exercise::find()
-            ->where(['author_id' => Yii::$app->user->identity->id])
+            ->where([
+                'author_id' => Yii::$app->user->identity->id,
+                'is_archived' => false,
+            ])
             ->andWhere(['like', 'name', $exerciseNameSearchTerm])
             ->limit(50)->asArray()->all();
         $select2Options = array_map(function ($exercise) {
