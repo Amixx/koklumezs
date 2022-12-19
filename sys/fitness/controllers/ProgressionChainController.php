@@ -89,7 +89,7 @@ class ProgressionChainController extends Controller
                 $mainExercise->exerciseId = $pce->exercise_id;
             };
         }
-        while (count($progressionChainExercises) <= 11) {
+        while (count($progressionChainExercises) <= 20) {
             $new = new ProgressionChainExercise;
             $new->progression_chain_id = $model->id;
             $progressionChainExercises[] = $new;

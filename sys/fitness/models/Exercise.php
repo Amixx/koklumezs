@@ -114,6 +114,11 @@ class Exercise extends Yii\db\ActiveRecord
         return $this->hasMany(ExerciseVideo::class, ['exercise_id' => 'id']);
     }
 
+    public function getProgressionChainMainExercises()
+    {
+        return $this->hasMany(ProgressionChainMainExercise::class, ['weight_exercise_id' => 'id']);
+    }
+
     public function getWeightExerciseAbilityRatios($joinWithExercises = false)
     {
         if (!$this->has_weight) return null;
@@ -122,7 +127,7 @@ class Exercise extends Yii\db\ActiveRecord
             $query->joinWith('exercise1');
             $query->joinWith('exercise2');
         }
-        return $query->asArray()->all();
+        return $query->all();
     }
 
     public function getWeightExerciseAbilityRatiosMapped()
@@ -244,7 +249,8 @@ class Exercise extends Yii\db\ActiveRecord
             });
     }
 
-    public function averageAbilityInWorkout($workout, $methodName){
+    public function averageAbilityInWorkout($workout, $methodName)
+    {
         $addedEvaluationsCount = 0;
         $averageAbilitiesSum = null;
 
@@ -371,5 +377,111 @@ class Exercise extends Yii\db\ActiveRecord
         $model = self::initForForm();
         $model->is_bodyweight = true;
         return $model;
+    }
+
+    private function recursivelyFindBodyweightChainMainExercise($exerciseIdToIgnore, &$percentages)
+    {
+        $wears = $this->getWeightExerciseAbilityRatios(true);
+
+        foreach ($wears as $wear) {
+            if (($wear->exercise_id_1 == $this->id ? $wear->exercise_id_2 : $wear->exercise_id_1) == $exerciseIdToIgnore) {
+                continue;
+            };
+
+            if ($wear->exercise_id_1 == $this->id) {
+                $otherExercise = $wear->exercise2;
+                $percentages[] = $wear->ratioPercentAsFraction();
+            } else {
+                $otherExercise = $wear->exercise1;
+                $percentages[] = 1 / $wear->ratioPercentAsFraction();
+            }
+
+            if ($otherExercise->progressionChainMainExercises) {
+                $percentages[] = $otherExercise->progressionChainMainExercises[0]->rep_bw_ratio_percent;
+                return [
+                    'chain_main_exercise' => $otherExercise->progressionChainMainExercises[0],
+                    'percentages' => $percentages,
+                ];
+            }
+
+            $iterRes = $otherExercise->recursivelyFindBodyweightChainMainExercise($exerciseIdToIgnore, $percentages);
+            if ($iterRes) return $iterRes;
+
+            array_pop($percentages);
+        }
+
+        return null;
+    }
+
+    private function findBodyweightExerciseChainMainExercise()
+    {
+        if (!$this->has_weight) return null;
+
+        $percentages = [];
+        if (!empty($this->progressionChainMainExercises)) {
+            $percentages[] = $this->progressionChainMainExercises[0]->rep_bw_ratio_percent;
+            return [
+                'chain_main_exercise' => $this->progressionChainMainExercises[0],
+                'percentages' => $percentages,
+            ];
+        }
+
+        $wears = $this->getWeightExerciseAbilityRatios(true);
+
+        foreach ($wears as $wear) {
+            if ($wear->exercise_id_1 == $this->id) {
+                $otherExercise = $wear->exercise2;
+                $percentages[] = $wear->ratioPercentAsFraction();
+            } else {
+                $otherExercise = $wear->exercise1;
+                $percentages[] = 1 / $wear->ratioPercentAsFraction();
+            }
+            if ($otherExercise->progressionChainMainExercises) {
+                $percentages[] = $otherExercise->progressionChainMainExercises[0]->rep_bw_ratio_percent;
+                return [
+                    'chain_main_exercise' => $otherExercise->progressionChainMainExercises[0],
+                    'percentages' => $percentages,
+                ];
+            }
+
+            $iterRes = $otherExercise->recursivelyFindBodyweightChainMainExercise($this->id, $percentages);
+            if ($iterRes) return $iterRes;
+
+            array_pop($percentages);
+        }
+
+        return null;
+    }
+
+    private function getAveragePercentage($array)
+    {
+        return array_sum($array) / count($array);
+    }
+
+    public function getBodyweightChainExercise()
+    {
+        $mainExerciseArr = self::findBodyweightExerciseChainMainExercise();
+        return $mainExerciseArr ? [
+            'chain_exercise' => $mainExerciseArr['chain_main_exercise']->progressionChainExercise,
+            'percentage' => $this->getAveragePercentage($mainExerciseArr['percentages']),
+        ] : null;
+    }
+
+    public function getBodyweightChain()
+    {
+        $bodyweightChainExercise = self::getBodyweightChainExercise();
+        return $bodyweightChainExercise ? $bodyweightChainExercise['chain_exercise']->progressionChain : null;
+    }
+
+    public function getBodyweightChainExerciseToAssign()
+    {
+        $bodyweightChain = $this->getBodyweightChain();
+        if (!$bodyweightChain) return null;
+        //TODO: calculate which is the most appropriate exercise to assign from the chain
+        $bodyweightChainExercise = self::getBodyweightChainExercise();
+        return [
+            'exercise' => $bodyweightChainExercise['chain_exercise']->exercise,
+            'percentage' => $bodyweightChainExercise['percentage'],
+        ];
     }
 }

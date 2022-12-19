@@ -69,8 +69,11 @@ class StudentExerciseController extends Controller
 
         $workoutExercise = $this->findModel($id);
         $nextWorkoutExercise = $workoutExercise->workout->getNextWorkoutExercise($workoutExercise);
-        $interchangeableExercises = $workoutExercise->exercise->getInterchangeableOtherExercisesObj();
         $difficultyEvaluation = WorkoutExerciseEvaluation::find()->where(['workoutexercise_id' => $id])->one();
+
+        $interchangeableExercises = $workoutExercise->exercise->getInterchangeableOtherExercisesObj();
+        $progressionChainExerciseToReplaceWith = $workoutExercise->exercise->getBodyweightChainExerciseToAssign();
+        if($progressionChainExerciseToReplaceWith) $interchangeableExercises[] = $progressionChainExerciseToReplaceWith;
 
         $workoutExercise->workout->setAsOpened();
         $workoutExercise->setActualWeightAndReps();
@@ -159,10 +162,10 @@ class StudentExerciseController extends Controller
         ]);
     }
 
-    public function actionReplaceExercise($id, $replacementId)
+    public function actionReplaceExercise($id, $replacementId, $replacementBodyweightPercentage)
     {
         $workoutExercise = $this->findModel($id);
-        $workoutExercise->replaceByExercise($replacementId);
+        $workoutExercise->replaceByExercise($replacementId, $replacementBodyweightPercentage);
         return $this->redirect(["fitness-student-exercises/view", 'id' => $id]);
     }
 

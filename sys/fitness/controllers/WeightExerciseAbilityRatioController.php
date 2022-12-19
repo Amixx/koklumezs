@@ -2,6 +2,7 @@
 
 namespace app\fitness\controllers;
 
+use app\fitness\models\Exercise;
 use Yii;
 use app\fitness\models\WeightExerciseAbilityRatio;
 use app\models\Users;
@@ -39,6 +40,21 @@ class WeightExerciseAbilityRatioController extends Controller
 
     public function actionIndex()
     {
+//        $tests = [
+//            Exercise::find()->where(['id' => 383])->one(),
+//            Exercise::find()->where(['id' => 1569])->one(),
+//            Exercise::find()->where(['id' => 1570])->one(),
+//            Exercise::find()->where(['id' => 1571])->one(),
+//        ];
+//        foreach($tests as $test) {
+//            $x = $test->findBodyweightExerciseChainMainExercise();
+//            var_dump($x);
+//            echo "<hr/>";
+//            echo "<hr/>";
+//            echo "<hr/>";
+//        }
+//        die();
+
         $userContext = Yii::$app->user->identity;
         $dataProvider = new ActiveDataProvider([
             'query' => WeightExerciseAbilityRatio::find()

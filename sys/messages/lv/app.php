@@ -843,5 +843,8 @@ return [
     'Create weight exercise ability ratio' => 'Izveidot svara vingrojuma spēju attiecību',
     'WEAR' => 'SVSA',
     'Executed repetitions' => 'Izpildītās reizes',
-    'How many reps did you manage' => 'Cik reizes izdevās uztaisīt'
+    'How many reps did you manage' => 'Cik reizes izdevās uztaisīt',
+    'Associated weight exercise' => 'Piesaistītais svara vingrojums',
+    'Related exercise chains' => 'Saistītas vingrojumu ķēdes',
+    'Bodyweight chain exercise to be replaced by (from chain)' => 'Ar kuru ķermeņa svara vingrojumu iespējams aizvietot (no ķēdes)',
 ];

@@ -25,6 +25,13 @@ $this->title = \Yii::t('app', 'Progression chains');
                 'template' => '{update} {delete}',
             ],
             'title',
+            [
+                'label' => Yii::t('app', 'Associated weight exercise'),
+                'value' => function ($dataProvider) {
+                    $mainExercise = $dataProvider->getMainExercise();
+                    return $mainExercise ? $mainExercise->weightExercise->name : '';
+                }
+            ],
         ],
     ]); ?>
 </div>

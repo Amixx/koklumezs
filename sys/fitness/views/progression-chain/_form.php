@@ -13,7 +13,7 @@ use yii\widgets\ActiveForm;
     </div>
     <?php if (isset($progressionChainExercises)) { ?>
         <div style="display:flex; flex-wrap:wrap; gap: 32px 16px;align-items:baseline;">
-            <?php for ($i = 0; $i <= 11; $i++) { ?>
+            <?php for ($i = 0; $i <= 20; $i++) { ?>
                 <?php if ($i > 0) { ?>
                     <span style="display:inline-block" class="percentage-input-container">
                             <span style="display: flex; align-items: last baseline">
@@ -33,7 +33,7 @@ use yii\widgets\ActiveForm;
                             ]
                         )->label(false) ?>
                     </div>
-                    <?php if($i !== 11) { ?>
+                    <?php if($i !== 20) { ?>
                         <button type="button" class="btn btn-sm btn-insert-progression-chain-exercise" style="display:inline-block"><i class="glyphicon glyphicon-plus"></i></button>
                     <?php }?>
                 </div>

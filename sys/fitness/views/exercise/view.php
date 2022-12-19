@@ -44,10 +44,10 @@ function createBooleanColumn($attribute)
             createBooleanColumn('is_ready'),
             createBooleanColumn('is_pause'),
             createBooleanColumn('needs_evaluation'),
-             [
+            [
                 'attribute' => 'is_bodyweight',
                 'value' => function ($dataProvider) {
-                    if(is_null($dataProvider['is_bodyweight'])) return Yii::t('app', 'Not set');
+                    if (is_null($dataProvider['is_bodyweight'])) return Yii::t('app', 'Not set');
                     return Yii::t('app', $dataProvider['is_bodyweight'] ? 'Yes' : 'No');
                 }
             ],
@@ -137,6 +137,19 @@ function createBooleanColumn($attribute)
         <div>
             <?php foreach ($model->getInterchangeableOtherExercises() as $exercise) { ?>
                 <span><?= $exercise['name'] ?></span>,
+            <?php } ?>
+        </div>
+    </div>
+
+    <div>
+        <h3><?= Yii::t('app', 'Related exercise chains') ?></h3>
+        <div>
+            <?php foreach ($model->progressionChainMainExercises as $progressionChainMainExercise) { ?>
+                <span>
+                    <?php if ($progressionChainMainExercise->progressionChainExercise && $progressionChainMainExercise->progressionChainExercise->progressionChain) {
+                        echo $progressionChainMainExercise->progressionChainExercise->progressionChain->title . " ";
+                   } ?>
+                </span>
             <?php } ?>
         </div>
     </div>

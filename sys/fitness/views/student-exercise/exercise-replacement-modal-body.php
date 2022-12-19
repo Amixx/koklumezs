@@ -4,17 +4,21 @@ use yii\helpers\Html;
 
 ?>
 <div>
-    <?php foreach ($interchangeableExercises as $index => $interchangeableExercise) { ?>
+    <?php foreach ($interchangeableExercises as $index => $interchangeableExercise) {
+        $exercise = array_key_exists('exercise', $interchangeableExercise)
+            ? $interchangeableExercise['exercise']
+            : $interchangeableExercise;
+        ?>
         <div class="exercise-replacement-option-container" <?= $index === 0 ? '' : 'hidden' ?>>
             <div>
-                <h3 style="margin-top: 0;"><strong><?= $interchangeableExercise->name ?></strong></h3>
-                <?php if ($interchangeableExercise->equipment_video) {
+                <h3 style="margin-top: 0;"><strong><?= $exercise->name ?></strong></h3>
+                <?php if ($exercise->equipment_video) {
                     echo $this->render(
                         'video',
                         [
-                            'fileUrl' => $interchangeableExercise->equipment_video,
-                            'thumbnail' => $interchangeableExercise->getVideoThumb(),
-                            'id' => 'fitness_interchagneable_exercise_technique' . $interchangeableExercise->id,
+                            'fileUrl' => $exercise->equipment_video,
+                            'thumbnail' => $exercise->getVideoThumb(),
+                            'id' => 'fitness_interchagneable_exercise_technique' . $exercise->id,
                         ]
                     );
                 } ?>
@@ -30,7 +34,8 @@ use yii\helpers\Html;
                     [
                         'fitness-student-exercises/replace-exercise',
                         'id' => $workoutExercise->id,
-                        'replacementId' => $interchangeableExercise->id
+                        'replacementId' => $exercise->id,
+                        'replacementBodyweightPercentage' => array_key_exists('percentage', $interchangeableExercise) ? $interchangeableExercise['percentage'] : null,
                     ], [
                     'class' => 'btn btn-success',
                     'style' => 'width: 100%',

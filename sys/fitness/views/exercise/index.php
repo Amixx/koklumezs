@@ -157,6 +157,18 @@ $this->title = \Yii::t('app', 'Exercises');
                     ['prompt' => '-- Visi --', 'class' => 'form-control']
                 ),
             ],
+            [
+                'attribute' => 'canReachAnyProgressionChains',
+                'format' => 'raw',
+                'value' => function ($dataProvider) {
+                    $bodyweightChainExercise = $dataProvider->getBodyweightChainExercise();
+                    if(!$bodyweightChainExercise) return '';
+                    $exerciseName = $bodyweightChainExercise['chain_exercise']->exercise->name;
+                    $percentageRounded = round($bodyweightChainExercise['percentage']);
+                    return "<p>Vingrojums: {$exerciseName}</p> <p>Attiecība: {$percentageRounded}%</p>";
+                },
+                'label' => Yii::t('app', 'Bodyweight chain exercise to be replaced by (from chain)'),
+            ],
         ],
     ]); ?>
 </div>
