@@ -162,8 +162,10 @@ class StudentExerciseController extends Controller
         ]);
     }
 
-    public function actionReplaceExercise($id, $replacementId, $replacementBodyweightPercentage)
+    public function actionReplaceExercise($id, $replacementId)
     {
+        $get = Yii::$app->request->get();
+        $replacementBodyweightPercentage = $get['replacementBodyweightPercentage'] ?? null;
         $workoutExercise = $this->findModel($id);
         $workoutExercise->replaceByExercise($replacementId, $replacementBodyweightPercentage);
         return $this->redirect(["fitness-student-exercises/view", 'id' => $id]);
