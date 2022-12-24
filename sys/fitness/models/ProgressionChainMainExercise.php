@@ -3,9 +3,6 @@
 namespace app\fitness\models;
 
 use Yii;
-use yii\behaviors\TimestampBehavior;
-use yii\db\Expression;
-use app\models\Users;
 
 class ProgressionChainMainExercise extends \yii\db\ActiveRecord
 {

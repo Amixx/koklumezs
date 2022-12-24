@@ -379,7 +379,7 @@ class Exercise extends Yii\db\ActiveRecord
         return $model;
     }
 
-    private function recursivelyFindBodyweightChainMainExercise($exerciseIdToIgnore, &$percentages)
+    private function recursivelyFindBodyweightChainMainExercise($exerciseIdToIgnore, &$percentages, &$alreadyCheckedExerciseIdPairs)
     {
         $wears = $this->getWeightExerciseAbilityRatios(true);
 
@@ -404,8 +404,19 @@ class Exercise extends Yii\db\ActiveRecord
                 ];
             }
 
-            $iterRes = $otherExercise->recursivelyFindBodyweightChainMainExercise($exerciseIdToIgnore, $percentages);
-            if ($iterRes) return $iterRes;
+            $thisExercisePairHasAlreadyBeenChecked = !empty(array_filter(
+                $alreadyCheckedExerciseIdPairs,
+                function ($a) use ($otherExercise) {
+                    return $this->id === $a[0] && $otherExercise->id === $a[1]
+                        || $this->id === $a[1] && $otherExercise->id === $a[0];
+                }));
+            if ($thisExercisePairHasAlreadyBeenChecked) {
+                continue;
+            } else {
+                $alreadyCheckedExerciseIdPairs[] = [$this->id, $otherExercise->id];
+                $iterRes = $otherExercise->recursivelyFindBodyweightChainMainExercise($exerciseIdToIgnore, $percentages, $alreadyCheckedExerciseIdPairs);
+                if ($iterRes) return $iterRes;
+            }
 
             array_pop($percentages);
         }
@@ -444,7 +455,9 @@ class Exercise extends Yii\db\ActiveRecord
                 ];
             }
 
-            $iterRes = $otherExercise->recursivelyFindBodyweightChainMainExercise($this->id, $percentages);
+            $alreadyCheckedExerciseIdPairs = [];
+            $iterRes = $otherExercise->recursivelyFindBodyweightChainMainExercise($this->id, $percentages, $alreadyCheckedExerciseIdPairs);
+
             if ($iterRes) return $iterRes;
 
             array_pop($percentages);
