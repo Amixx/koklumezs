@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\fitness\models\ClientData;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -52,7 +53,7 @@ class User extends ActiveRecord implements IdentityInterface
             'first_name' =>  \Yii::t('app',  'Name'),
             'last_name' => \Yii::t('app',  'Surname'),
             'password' => \Yii::t('app',  'Password'),
-            'about' => \Yii::t('app',  'About user'),
+            'about' => \Yii::t('app',  'Notes'),
             'last_opened_chat' => \Yii::t('app',  'Last time opened chat'),
             'wants_more_lessons' => \Yii::t('app',  'Wants more lessons'),
             'is_deleted' => \Yii::t('app',  'Is deleted'),
@@ -75,6 +76,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function getSchoolTeacher()
     {
         return $this->hasOne(SchoolTeacher::class, ['user_id' => 'id'])->joinWith("school");
+    }
+
+    public function getClientData()
+    {
+        return $this->hasOne(ClientData::class, ['user_id' => 'id']);
     }
 
     public static function findIdentity($id)

@@ -18,13 +18,14 @@ function getUrls(urlArray) {
 }
 
 var base = "koklumezs-";
-var version = "1.0.14";
+var version = "1.0.66";
 var cacheName = base + version;
 
 var urlsForCachingStrategies = { 
     cacheOnly: getUrls([
         "/js/select2.js",
         "/js/custom.js",
+        "/js/workouts.js",
         "/js/Youtube.min.js",
         "/css/site.css",
         "/css/select2.css",

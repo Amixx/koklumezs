@@ -1,5 +1,7 @@
 <?php
 
+/* @var bool $isFitnessSchool */
+
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\GridView;
@@ -10,27 +12,43 @@ use app\models\StudentSubPlans;
 use app\models\SchoolSubPlans;
 use app\models\LectureViews;
 
-$this->title = \Yii::t('app',  'Users');
+$this->title = \Yii::t('app', 'Users');
 ?>
 <div class="user-index">
     <h1><?= Yii::t('app', 'Students') ?></h1>
     <p>
-        <?= Html::a(\Yii::t('app',  'Create user'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(\Yii::t('app', 'Create user'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <p>
-        <?= Html::a(\Yii::t('app',  'Students who have registered but have not started playing yet'), ['recently-registered-students/index'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(\Yii::t('app', 'Students who have registered but have not started playing yet'), ['recently-registered-students/index'], ['class' => 'btn btn-primary']) ?>
     </p>
     <p>
-        <?= Html::a(\Yii::t('app',  'Student "commitments" to start later'), ['start-later-commitments/index'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(\Yii::t('app', 'Student "commitments" to start later'), ['start-later-commitments/index'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?php
-    $status = [10 => \Yii::t('app',  'Active'), 9 => \Yii::t('app',  'Inactive'), 0 => \Yii::t('app',  'Deleted')];
+    $status = [10 => \Yii::t('app', 'Active'), 9 => \Yii::t('app', 'Inactive'), 0 => \Yii::t('app', 'Deleted')];
     ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
+            [
+                'class' => yii\grid\ActionColumn::class,
+                'template' => '{view} {update} {delete} {update-client-data}',
+                'buttons' => [
+                    'update-client-data' => function ($url, $model, $key) use ($isFitnessSchool) {
+                        return $isFitnessSchool
+                            ? Html::a(
+                                '<i class="glyphicon glyphicon-stats"></i>', Url::to(['client-data/update', 'userId' => $model->id]),
+                                [
+                                    'title' => \Yii::t('app', 'Edit client data'),
+                                ]
+                            )
+                            : '';
+                    },
+                ]
+            ],
             'first_name',
             'last_name',
             [
@@ -38,11 +56,11 @@ $this->title = \Yii::t('app',  'Users');
                 'format' => 'raw',
                 'value' => function ($dataProvider) {
                     if ($dataProvider->subscription_type == 'free') {
-                        return \Yii::t('app',  'For free');
+                        return \Yii::t('app', 'For free');
                     } else if ($dataProvider->subscription_type == 'paid') {
-                        return \Yii::t('app',  'Paid');
+                        return \Yii::t('app', 'Paid');
                     } else {
-                        return \Yii::t('app',  'Lead');
+                        return \Yii::t('app', 'Lead');
                     }
                 },
                 'filter' => Html::dropDownList(
@@ -51,7 +69,7 @@ $this->title = \Yii::t('app',  'Users');
                         ? \Yii::t('app', $get['TeacherUserSearch']['subscription_type'])
                         : '',
                     app\models\Users::getSubscriptionTypes(),
-                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                    ['prompt' => '-- ' . \Yii::t('app', 'Show all') . ' --', 'class' => 'form-control']
                 ),
             ],
             [
@@ -59,11 +77,11 @@ $this->title = \Yii::t('app',  'Users');
                 'format' => 'raw',
                 'value' => function ($dataProvider) {
                     if ($dataProvider->status == '10') {
-                        return "<span style='color:green;'>" . \Yii::t('app',  'Active') . "</span>";
+                        return "<span style='color:green;'>" . \Yii::t('app', 'Active') . "</span>";
                     } else if ($dataProvider->status == '9') {
-                        return "<span style='color:red;'>" . \Yii::t('app',  'Inactive') . "</span>";
+                        return "<span style='color:red;'>" . \Yii::t('app', 'Inactive') . "</span>";
                     } else {
-                        return "<span>" . \Yii::t('app',  'Passive') . "</span>";
+                        return "<span>" . \Yii::t('app', 'Passive') . "</span>";
                     }
                 },
                 'filter' => Html::dropDownList(
@@ -72,7 +90,7 @@ $this->title = \Yii::t('app',  'Users');
                         ? $get['TeacherUserSearch']['status']
                         : '',
                     app\models\Users::getStatus(),
-                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                    ['prompt' => '-- ' . \Yii::t('app', 'Show all') . ' --', 'class' => 'form-control']
                 ),
             ],
             [
@@ -101,7 +119,7 @@ $this->title = \Yii::t('app',  'Users');
                         ? $get['TeacherUserSearch']['subplan_monthly_cost']
                         : '',
                     $schoolSubPlanPrices,
-                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                    ['prompt' => '-- ' . \Yii::t('app', 'Show all') . ' --', 'class' => 'form-control']
                 ),
             ],
             [
@@ -114,7 +132,7 @@ $this->title = \Yii::t('app',  'Users');
                         return \Yii::t('app', 'No lesson plan');
                     }
                     if ($latestLessonPlan['plan']['months'] == '0') {
-                        return \Yii::t('app',  'Unlimited');
+                        return \Yii::t('app', 'Unlimited');
                     }
                     $planPauses = StudentSubplanPauses::getForStudentSubplan($latestLessonPlan['id'])->asArray()->all();
                     $date = date_create($latestLessonPlan["start_date"]);
@@ -131,7 +149,7 @@ $this->title = \Yii::t('app',  'Users');
                         ? $get['TeacherUserSearch']['subplan_end_date']
                         : '',
                     $planEndDates,
-                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                    ['prompt' => '-- ' . \Yii::t('app', 'Show all') . ' --', 'class' => 'form-control']
                 ),
                 'format' => 'raw'
             ],
@@ -179,11 +197,11 @@ $this->title = \Yii::t('app',  'Users');
                             $sentInvoices = $studentSubplan["sent_invoices_count"];
                             $planType = "(Dzēsts plāns)";
                             $planModel = SchoolSubPlans::findOne($studentSubplan['plan']['id']);
-                            
-                            if($planModel) {
+
+                            if ($planModel) {
                                 $planType = $planModel->typeText();
                             }
-                            
+
                             $urlToEditPlan = Url::to(['student-sub-plans/update', 'id' => $studentSubplan['id']]);
                             $urlToSendReminder = Url::to(['cron/remind-to-pay', 'studentSubplanId' => $studentSubplan['id']]);
                             $remindToPayHtml = $isLate
@@ -239,7 +257,7 @@ $this->title = \Yii::t('app',  'Users');
                         'paid' => Yii::t('app', 'All paid'),
                         'prepaid' => Yii::t('app', 'Prepaid'),
                     ],
-                    ['prompt' => '-- ' . \Yii::t('app',  'Show all') . ' --', 'class' => 'form-control']
+                    ['prompt' => '-- ' . \Yii::t('app', 'Show all') . ' --', 'class' => 'form-control']
                 ),
                 'format' => 'html',
             ],
@@ -256,7 +274,6 @@ $this->title = \Yii::t('app',  'Users');
                 },
                 'format' => 'raw',
             ],
-            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 </div>

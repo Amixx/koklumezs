@@ -1,5 +1,5 @@
 <?php
-$playAlongTitle = $isFitnessSchool ? 'How to use equipment' : 'Let\'s play together'
+$playAlongTitle = 'Let\'s play together';
 ?>
 
 <div class="visible-xs">

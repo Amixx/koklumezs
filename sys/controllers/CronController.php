@@ -284,23 +284,23 @@ class CronController extends Controller
                 }
             }
 
-            if (Trials::shouldSendTrialEndedEmail($student["id"])) {
-                $sent = EmailSender::sendTrialEndMessage($student);
-
-                if (
-                    $student
-                    && $student['status']
-                    && $student['status'] == Users::STATUS_ACTIVE
-                ) {
-                    $stud = Users::findOne($student['id']);
-                    $stud->status = Users::STATUS_PASSIVE;
-                    $stud->update();
-                }
-
-                if ($sent) {
-                    Trials::markEndMessageSent($student["id"]);
-                }
-            }
+//            if (Trials::shouldSendTrialEndedEmail($student["id"])) {
+//                $sent = EmailSender::sendTrialEndMessage($student);
+//
+//                if (
+//                    $student
+//                    && $student['status']
+//                    && $student['status'] == Users::STATUS_ACTIVE
+//                ) {
+//                    $stud = Users::findOne($student['id']);
+//                    $stud->status = Users::STATUS_PASSIVE;
+//                    $stud->update();
+//                }
+//
+//                if ($sent) {
+//                    Trials::markEndMessageSent($student["id"]);
+//                }
+//            }
 
             $firstRentPlan = StudentSubPlans::findFirstRentSubPlan($student['id']);
             if ($firstRentPlan && $firstRentPlan['sent_invoices_count'] === 1 && $firstRentPlan['times_paid'] === 0) {

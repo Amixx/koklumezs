@@ -43,7 +43,7 @@ label.custom-control-label {
 
 .navbar {
     min-height: 90px;
-    padding-top: 20px;   
+    padding-top: 20px;
 }
 
 .navbar-header {
@@ -51,7 +51,7 @@ label.custom-control-label {
 }
 
 .navbar-brand {
-    padding: 0!important;
+    padding: 0 !important;
     z-index: 1;
     position: relative;
 }
@@ -74,7 +74,7 @@ h4 {
     height: auto;
     margin: 0 auto -60px;
     padding: 0 0 60px;
-    background-repeat:repeat;
+    background-repeat: repeat;
 }
 
 .background-overlay {
@@ -90,7 +90,7 @@ h4 {
     background-color: rgba(196, 196, 196, 0.5);
 }
 
-.wrap>.container {
+.wrap > .container {
     padding: 91px 15px 20px;
     position: relative;
 }
@@ -100,7 +100,7 @@ h4 {
 }
 
 .table {
-    background:white;
+    background: white;
 }
 
 .footer {
@@ -142,13 +142,11 @@ a.desc:after {
 }
 
 a.asc:after {
-    content: /*"\e113"*/
-    "\e151";
+    content: /*"\e113"*/ "\e151";
 }
 
 a.desc:after {
-    content: /*"\e114"*/
-    "\e152";
+    content: /*"\e114"*/ "\e152";
 }
 
 .sort-numerical a.asc:after {
@@ -166,6 +164,7 @@ a.desc:after {
 .sort-ordinal a.desc:after {
     content: "\e156";
 }
+
 /* .grid-view {
     overflow-x:auto;
 } */
@@ -191,14 +190,15 @@ a.desc:after {
 
 /* align the logout "link" (button in form) of the navbar */
 
-.nav li>form>button.logout {
+.nav li > form > button.logout {
     padding: 15px;
-    border: none;  
+    border: none;
     display: inline-block;
     text-overflow: ellipsis;
     overflow: hidden;
     width: 190px;
 }
+
 .video-js {
     width: 636px;
     height: 358px;
@@ -241,27 +241,36 @@ a.desc:after {
     border-radius: 10px;
 }
 
+.lecture-thumb.unfinished {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 0;
+}
+
 .lecture-wrap {
     transition: all .2s ease-in-out;
     box-sizing: border-box;
     font-size: 16px;
-    min-width: 263px; 
-    position: relative;  
+    min-width: 263px;
+    position: relative;
 }
 
-.LectureOverview__Wrap:first-child .lecture-wrap:nth-child(odd){
+.LectureOverview__Wrap:first-child .lecture-wrap:nth-child(odd) {
     padding: 16px 6px 16px 16px;
 }
 
-.LectureOverview__Wrap:first-child .lecture-wrap:nth-child(even){
+.LectureOverview__Wrap:first-child .lecture-wrap:nth-child(even) {
     padding: 16px 8px 16px 6px;
 }
 
-.LectureOverview__Wrap:last-child .lecture-wrap:nth-child(odd){
+.LectureOverview__Wrap:last-child .lecture-wrap:nth-child(odd) {
     padding: 16px 6px 16px 8px;
 }
 
-.LectureOverview__Wrap:last-child .lecture-wrap:nth-child(even){
+.LectureOverview__Wrap:last-child .lecture-wrap:nth-child(even) {
     padding: 16px 16px 16px 6px;
 }
 
@@ -276,7 +285,7 @@ a.desc:after {
     transform: scale(1.1);
 }
 
-.lecture-title{
+.lecture-title {
     position: absolute;
     top: 20px;
     left: 24px;
@@ -284,7 +293,7 @@ a.desc:after {
     color: white;
     text-align: left;
     font-size: 14px;
-    z-index:2;
+    z-index: 2;
     /* background: rgba(0,0,0, .5);
     padding: 4px 8px;
     border-radius: 20px;
@@ -322,7 +331,7 @@ a.desc:after {
 
 .lesson-column-item:hover {
     text-decoration: none;
-    color: rgb(50,50,50);
+    color: rgb(50, 50, 50);
     background: rgb(240, 240, 240);
     border-radius: 4px;
 }
@@ -336,16 +345,16 @@ a.desc:after {
     height: auto;
 }
 
-.evaluation-and-favorite{
+.evaluation-and-favorite {
     float: left;
 }
 
-.nav>li>form>button.logout:focus,
-.nav>li>form>button.logout:hover {
+.nav > li > form > button.logout:focus,
+.nav > li > form > button.logout:hover {
     text-decoration: none;
 }
 
-.nav>li>form>button.logout:focus {
+.nav > li > form > button.logout:focus {
     outline: none;
 }
 
@@ -368,21 +377,21 @@ a.desc:after {
 .LessonComments__Container {
     border: 1px solid gainsboro;
     border-radius: 18px;
-    display:inline-block;
+    display: inline-block;
     padding: 5px 10px;
     margin-top: 10px;
     max-width: 85%;
 }
 
 .LessonComments__Container--response {
-    margin-left:20px;
+    margin-left: 20px;
 }
 
 .LessonComments__Response {
     border-radius: 16px;
     text-indent: 10px;
     border: 1px solid gainsboro;
-    outline: 0!important;
+    outline: 0 !important;
     margin-top: 5px;
     margin-left: 20px;
     width: 68%;
@@ -396,11 +405,11 @@ a.desc:after {
     padding-left: 20px;
 }
 
-.LectureOverview__Section {   
+.LectureOverview__Section {
     padding: 5px;
     background-color: rgba(196, 196, 196, 0.5);
-    margin: 3px; 
-    padding: 4px 16px; 
+    margin: 3px;
+    padding: 4px 16px;
     border-radius: 16px;
     padding: 4px 16px 16px 16px;
     min-height: 85vh;
@@ -416,7 +425,9 @@ a.desc:after {
 }
 
 .LectureOverview__LinkToAll {
-    float:right; margin-top:-32px; cursor:pointer;
+    float: right;
+    margin-top: -32px;
+    cursor: pointer;
 }
 
 .LectureOverview__Title {
@@ -511,7 +522,7 @@ div.has-experience.active, div.rent.active {
     width: 100%;
 }
 
-.login-remember{
+.login-remember {
     margin-top: 16px;
 }
 
@@ -521,7 +532,7 @@ div.has-experience.active, div.rent.active {
 }
 
 .rent-submit-button {
-   margin: 0 32px;
+    margin: 0 32px;
 }
 
 .login-forgot {
@@ -532,7 +543,7 @@ div.has-experience.active, div.rent.active {
 .login-forgot a {
     margin-top: 26px;
     text-decoration: none;
-    color:#999;
+    color: #999;
 }
 
 .signup-questions-textarea {
@@ -586,12 +597,12 @@ div.has-experience.active, div.rent.active {
 }
 
 #chat-btn-with-icons.teacher {
-    left: calc(50% - 530px);
+    left: 50px;
 }
 
 .teacher-communication-button {
     border-radius: 10px;
-    padding: 10px 20px;   
+    padding: 10px 20px;
     color: black;
     margin-top: 4px;
 }
@@ -603,7 +614,7 @@ div.has-experience.active, div.rent.active {
     padding-left: 95px;
 }
 
-.teacher-communication-button:hover { 
+.teacher-communication-button:hover {
     color: black;
 }
 
@@ -617,9 +628,9 @@ div.has-experience.active, div.rent.active {
     color: white;
     top: -40%;
     right: 10%;
-  }
+}
 
- .chat-unread-count {
+.chat-unread-count {
     position: absolute;
     margin: 0 -5px;
     z-index: 2;
@@ -631,12 +642,12 @@ div.has-experience.active, div.rent.active {
     right: -2%;
 }
 
-.chat-unread-count:empty,.chat-unread-count-groups:empty {
+.chat-unread-count:empty, .chat-unread-count-groups:empty {
     display: none;
 }
 
 .chat-user-item {
-    line-height: 1.5; 
+    line-height: 1.5;
     font-size: 16px;
     padding: 8px 0;
     cursor: pointer;
@@ -675,97 +686,138 @@ div.has-experience.active, div.rent.active {
 }
 
 
-
 /******************** SPINNER ************/
 
 .spinner-container {
-    text-align:center;
+    text-align: center;
 }
 
 .lds-roller {
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
 }
+
 .lds-roller div {
-  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  transform-origin: 40px 40px;
+    animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    transform-origin: 40px 40px;
 }
+
 .lds-roller div:after {
-  content: " ";
-  display: block;
-  position: absolute;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgb(166, 252, 124);
-  margin: -4px 0 0 -4px;
+    content: " ";
+    display: block;
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgb(166, 252, 124);
+    margin: -4px 0 0 -4px;
 }
+
 .lds-roller div:nth-child(1) {
-  animation-delay: -0.036s;
+    animation-delay: -0.036s;
 }
+
 .lds-roller div:nth-child(1):after {
-  top: 63px;
-  left: 63px;
+    top: 63px;
+    left: 63px;
 }
+
 .lds-roller div:nth-child(2) {
-  animation-delay: -0.072s;
+    animation-delay: -0.072s;
 }
+
 .lds-roller div:nth-child(2):after {
-  top: 68px;
-  left: 56px;
+    top: 68px;
+    left: 56px;
 }
+
 .lds-roller div:nth-child(3) {
-  animation-delay: -0.108s;
+    animation-delay: -0.108s;
 }
+
 .lds-roller div:nth-child(3):after {
-  top: 71px;
-  left: 48px;
+    top: 71px;
+    left: 48px;
 }
+
 .lds-roller div:nth-child(4) {
-  animation-delay: -0.144s;
+    animation-delay: -0.144s;
 }
+
 .lds-roller div:nth-child(4):after {
-  top: 72px;
-  left: 40px;
+    top: 72px;
+    left: 40px;
 }
+
 .lds-roller div:nth-child(5) {
-  animation-delay: -0.18s;
+    animation-delay: -0.18s;
 }
+
 .lds-roller div:nth-child(5):after {
-  top: 71px;
-  left: 32px;
+    top: 71px;
+    left: 32px;
 }
+
 .lds-roller div:nth-child(6) {
-  animation-delay: -0.216s;
+    animation-delay: -0.216s;
 }
+
 .lds-roller div:nth-child(6):after {
-  top: 68px;
-  left: 24px;
+    top: 68px;
+    left: 24px;
 }
+
 .lds-roller div:nth-child(7) {
-  animation-delay: -0.252s;
+    animation-delay: -0.252s;
 }
+
 .lds-roller div:nth-child(7):after {
-  top: 63px;
-  left: 17px;
+    top: 63px;
+    left: 17px;
 }
+
 .lds-roller div:nth-child(8) {
-  animation-delay: -0.288s;
+    animation-delay: -0.288s;
 }
+
 .lds-roller div:nth-child(8):after {
-  top: 56px;
-  left: 12px;
+    top: 56px;
+    left: 12px;
 }
+
 @keyframes lds-roller {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
+
+
+.loader {
+    border: 4px solid #f3f3f3;
+    /* Light grey */
+    border-top: 4px solid gainsboro;
+    /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 /******************** END OF SPINNER *************/
 .signup-checkbox-label {
     font-size: 18px;
@@ -798,8 +850,7 @@ div.has-experience.active, div.rent.active {
 }
 
 
-
-.removeBtnStyle{
+.removeBtnStyle {
     border: none;
     background: none;
     outline: none;
@@ -813,10 +864,10 @@ div.has-experience.active, div.rent.active {
 
 
 .btn-orange {
-    background: rgba(248, 197, 67, .8);   
+    background: rgba(248, 197, 67, .8);
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
     border: none;
-    border: 1px solid rgba(255,255,255,0);
+    border: 1px solid rgba(255, 255, 255, 0);
     padding: 6px 20px;
     margin: 4px 4px;
     color: black;
@@ -827,7 +878,7 @@ div.has-experience.active, div.rent.active {
     background: rgba(67, 118, 247, .8);
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
     border: none;
-    border: 1px solid rgba(255,255,255,0);
+    border: 1px solid rgba(255, 255, 255, 0);
     padding: 6px 20px;
     margin: 4px 4px;
     color: white;
@@ -840,7 +891,7 @@ div.has-experience.active, div.rent.active {
 
 .btn-gray {
     background: #c4c4c4;
-    border: 1px solid rgba(255,255,255,0);
+    border: 1px solid rgba(255, 255, 255, 0);
     border-radius: 8px;
     color: black;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
@@ -864,8 +915,7 @@ div.has-experience.active, div.rent.active {
 }
 
 
-
-.favourite-lessons-button{
+.favourite-lessons-button {
     font-size: 12px;
     width: 100%;
     padding: 6px 4px;
@@ -876,8 +926,8 @@ div.has-experience.active, div.rent.active {
 }
 
 @font-face {
-  font-family: open-moji;
-  src: url(../fonts/OpenMoji-Color.ttf);
+    font-family: open-moji;
+    src: url(../fonts/OpenMoji-Color.ttf);
 }
 
 .emoji:before {
@@ -885,6 +935,7 @@ div.has-experience.active, div.rent.active {
     font-size: 25px;
     opacity: .5;
 }
+
 .emoji.active:before {
     opacity: 1;
 }
@@ -892,15 +943,19 @@ div.has-experience.active, div.rent.active {
 .emoji-sleepy:before {
     content: "\1f634";
 }
+
 .emoji-wink:before {
     content: "\1f609";
 }
+
 .emoji-smile:before {
     content: "\1f60a";
 }
+
 .emoji-surprise:before {
     content: "\1f60f";
 }
+
 .emoji-fatigue:before {
     content: "\1f61f";
 }
@@ -908,7 +963,7 @@ div.has-experience.active, div.rent.active {
 .lecture-status {
     position: absolute;
     padding: 5px 15px;
-    width: 50%; 
+    width: 50%;
     text-align: center !important;
     border-radius: 8px;
     bottom: 23px;
@@ -917,7 +972,7 @@ div.has-experience.active, div.rent.active {
     color: black;
     text-align: left;
     font-size: 14px;
-    z-index:2;   
+    z-index: 2;
 }
 
 .bg-yellow {
@@ -956,7 +1011,7 @@ div.has-experience.active, div.rent.active {
 }
 
 .lesson-list {
-    margin-bottom:16px;
+    margin-bottom: 16px;
     list-style-type: none;
     padding: 0;
 }
@@ -976,7 +1031,7 @@ div.has-experience.active, div.rent.active {
 .file-file:hover {
     text-decoration: none;
     color: black;
-    background: rgba(255, 255,255, 0.4);
+    background: rgba(255, 255, 255, 0.4);
 }
 
 .video-title-mobile {
@@ -1018,11 +1073,11 @@ div.has-experience.active, div.rent.active {
 }
 
 .more-lessons-button {
-    background: rgba(248, 197, 67, 1);  
+    background: rgba(248, 197, 67, 1);
     position: relative;
 }
 
-@media(max-width: 1199px) {
+@media (max-width: 1199px) {
     .video-js {
         width: 520px;
         height: 293px;
@@ -1050,7 +1105,7 @@ div.has-experience.active, div.rent.active {
 }
 
 
-@media(max-width: 991.5px){
+@media (max-width: 991.5px) {
     .video-js {
         width: 704px;
         height: 396px;
@@ -1078,6 +1133,7 @@ div.has-experience.active, div.rent.active {
     ul.navbar-nav li.dropdown:hover > ul.dropdown-menu {
         display: block;
     }
+
     .lesson-column-outer {
         padding: 0;
         height: 100%;
@@ -1085,7 +1141,7 @@ div.has-experience.active, div.rent.active {
 }
 
 
-@media(max-width:768px) {
+@media (max-width: 768px) {
     .more-lessons-teacher-portrait {
         margin-left: max(calc(50% - 184px), 12px);
     }
@@ -1098,10 +1154,12 @@ div.has-experience.active, div.rent.active {
         width: 300px;
         height: 236px;
     }
+
     .modal .video-js {
         width: 100%;
         height: 236px;
     }
+
     .lecture-wrap {
         min-width: unset !important;
         padding: 8px !important;
@@ -1111,16 +1169,20 @@ div.has-experience.active, div.rent.active {
         display: inline-block;
         width: 49%;
     }
+
     .lecture-thumb {
         height: 160px;
     }
+
     .lecture-wrap:hover {
         transform: scale(1.03);
     }
+
     .video-js {
         width: 100%;
         height: 300px;
     }
+
     .school-logo {
         width: 60px;
         height: 60px;
@@ -1128,33 +1190,41 @@ div.has-experience.active, div.rent.active {
         margin: 10px 15px;
         display: block;
     }
+
     .navbar {
         min-height: 80px;
         padding-top: 10px;
     }
+
     .navbar-header {
         margin-top: -10px;
     }
+
     .navbar-toggle {
         margin-top: 18px;
     }
+
     .navbar-collapse {
         margin-top: 12px;
     }
-    .nav li>form>button.logout {
+
+    .nav li > form > button.logout {
         display: block;
         text-align: left;
         width: 100%;
         padding: 10px 15px;
     }
-    .LessonTop{
+
+    .LessonTop {
         text-align: center;
         align-content: center;
     }
-    .login-header,.login-input{
+
+    .login-header, .login-input {
         font-size: 12px;
     }
-    .evaluation-and-favorite{
+
+    .evaluation-and-favorite {
         background: rgb(196, 196, 196);
         border-radius: 10px;
         text-align: center;
@@ -1165,9 +1235,11 @@ div.has-experience.active, div.rent.active {
     .next-lesson {
         margin: 8px 0 0 0;
     }
-    .big-title{
+
+    .big-title {
         display: none;
     }
+
     .LessonComments__Container {
         max-width: 75%;
     }
@@ -1175,9 +1247,12 @@ div.has-experience.active, div.rent.active {
     .LessonComments__Container--response {
         max-width: 70%;
     }
+
     .LectureOverview__LinkToAll {
-        float:none; margin-top:0;
-    }  
+        float: none;
+        margin-top: 0;
+    }
+
     .LectureOverview__Section {
         min-height: unset;
     }
@@ -1188,7 +1263,8 @@ div.has-experience.active, div.rent.active {
 
     .LectureOverview__EmptyText {
         margin-bottom: 32px;
-    } 
+    }
+
     .login-container {
         align-content: center;
         margin-top: 0px;
@@ -1198,7 +1274,7 @@ div.has-experience.active, div.rent.active {
     .login-header {
         margin-top: 20px;
     }
-    
+
     div > .login-form {
         margin: 0;
         padding: 0;
@@ -1211,7 +1287,7 @@ div.has-experience.active, div.rent.active {
 
     .search-section {
         margin-top: 5px;
-        margin-bottom: 5px;  
+        margin-bottom: 5px;
         margin: 0;
         padding: 4px;
         display: inline-block;
@@ -1232,18 +1308,21 @@ div.has-experience.active, div.rent.active {
     .lesson-column {
         min-height: unset;
     }
+
     .lectures-index {
         padding: 0;
     }
+
     .btn-long {
         padding: 6px 40px;
     }
+
     #chat-btn-with-icons, #chat-btn-with-icons.teacher {
         top: 12px;
         right: 70px;
         left: auto;
     }
-    
+
     .btn-narrow {
         padding: 6px 10px;
     }
@@ -1255,13 +1334,11 @@ div.has-experience.active, div.rent.active {
     }
 }
 
-@media(max-width:400px) {
+@media (max-width: 400px) {
     .sort-button {
         padding: 6px;
     }
 }
-
-
 
 
 .reg-page-1 h3 {
@@ -1283,7 +1360,7 @@ div.has-experience.active, div.rent.active {
 }
 
 .reg-page-1-title-outer {
-    flex: 0 1 100%; 
+    flex: 0 1 100%;
     min-height: 200px;
 }
 
@@ -1308,7 +1385,7 @@ div.has-experience.active, div.rent.active {
     top: 160px;
 }
 
-@media (max-width: 767px){
+@media (max-width: 767px) {
     .reg-page-1-container {
         flex-wrap: wrap;
     }
@@ -1321,7 +1398,6 @@ div.has-experience.active, div.rent.active {
         min-height: unset;
     }
 }
-
 
 
 .PlanSuggestion__Container {
@@ -1394,7 +1470,7 @@ div.has-experience.active, div.rent.active {
 }
 
 
-@media (max-width: 767px){
+@media (max-width: 767px) {
     .PlanSuggestion__Container {
         flex-direction: column;
     }
@@ -1404,4 +1480,219 @@ div.has-experience.active, div.rent.active {
 .equipment-video {
     padding-right: 32px;
     margin-bottom: 32px;
+}
+
+
+.limit-height {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.exercise-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+}
+
+.exercise-tag {
+    background: #E8E8E8;
+    padding: 4px 8px;
+    border-radius: 16px;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+
+.disabled-overlay {
+    content: "";
+    font-size: 24px;
+    color: white;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: gainsboro;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.workout-creation-container .row {
+    background: rgba(255, 255, 255, 0.75);
+}
+
+
+.view-workout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    background: rgba(255, 255, 255, 0.75);
+    border-radius: 16px;
+    padding: 8px 16px;
+}
+
+.view-workout__main-info {
+    width: 100%;
+}
+
+.view-workout__main-info h1 {
+    text-align: center;
+    margin-top: 8px;
+}
+
+.view-workout__main-info .exercise-action-btn {
+    width: 100%;
+}
+
+.view-workout__actions {
+    margin-top: 16px;
+    text-align: center;
+}
+
+/* DIFFICULTY EVALUATION */
+.fitness-difficulty-eval button {
+    display: block;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.fitness-difficulty-eval button:nth-child(1) {
+    background: #6c757d;
+    border-color: #6c757d;
+}
+
+.fitness-difficulty-eval button:nth-child(2) {
+    background: #55866a;
+    border-color: #55866a;
+}
+
+.fitness-difficulty-eval button:nth-child(3) {
+    background: #28a745;
+    border-color: #28a745;
+}
+
+.fitness-difficulty-eval button:nth-child(4) {
+    background: #b7b81c;
+    border-color: #b7b81c;
+}
+
+.fitness-difficulty-eval button:nth-child(5) {
+    background: #ffc107;
+    border-color: #ffc107;
+}
+
+.fitness-difficulty-eval button.active {
+    border-color: #007bff;
+}
+
+.view-workout__helpful-content {
+    margin-top: 16px;
+    width: 100%;
+}
+
+.view-workout__exercise-list {
+    list-style-type: none;
+    background: #F0F0F0;
+    border-radius: 16px;
+    padding: 0;
+    width: 100%;
+}
+
+.view-workout__other-exercise-item {
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
+    line-height: 3;
+    padding: 0 16px;
+    font-size: 16px;
+}
+
+.view-workout__exercise-list li:not(:last-child) {
+    border-bottom: 1px solid gainsboro;
+}
+
+.view-workout__exercise-list li.past {
+    opacity: 0.5;
+}
+
+.view-workout__exercise-list li.past span {
+    text-decoration: line-through;
+}
+
+.view-workout__exercise-list li.current {
+    background: rgba(255, 193, 7, 0.5);
+}
+
+@media(min-width: 992px) {
+    .view-workout__main-info, .view-workout__helpful-content {
+        flex-basis: calc(50% - 8px);
+    }
+}
+
+
+/* Sets the containers height and width */
+.base-timer {
+    position: relative;
+    height: 50%;
+    width: 50%;
+    margin: auto;
+}
+
+/* Removes SVG styling that would hide the time label */
+.base-timer__circle {
+    fill: none;
+    stroke: none;
+}
+
+/* The SVG path that displays the timer's progress */
+.base-timer__path-elapsed {
+    stroke-width: 7px;
+    stroke: grey;
+}
+
+.base-timer__label {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+}
+
+.base-timer__path-remaining {
+    stroke-width: 7px;
+    stroke-linecap: round;
+    transform: rotate(90deg);
+    transform-origin: center;
+    transition: 1s linear all;
+    stroke: #28a745;
+}
+
+.base-timer__svg {
+    transform: scaleX(-1);
+}
+
+.container.main-page-container {
+    background: rgba(255, 255, 255, 0.8)
+}
+
+.form-group .select2-container--default .select2-selection--single {
+    min-width: unset !important;
+}
+
+.progression-chain-main-exercise-form {
+    display: flex;
+    align-items: last baseline;
+    gap: 8px;
+    margin-top: 32px;
+}
+
+.progression-chain-form .select2 {
+    max-width: 230px;
+}
+
+.progression-chain-main-exercise-form .select2 {
+    max-width: 200px;
 }

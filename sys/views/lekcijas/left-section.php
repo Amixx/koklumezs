@@ -12,7 +12,7 @@ if (isset($sortType)) {
     }
 }
 
-$titleText = $isFitnessSchool ? 'Other exercises in this workout' : 'New lessons';
+$titleText = 'New lessons';
 
 ?>
 

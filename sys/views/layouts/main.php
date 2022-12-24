@@ -46,7 +46,7 @@ $this->beginPage() ?>
         NavBar::end();
         ?>
 
-        <div class="container">
+        <div class="container main-page-container">
             <?= Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
             ]) ?>

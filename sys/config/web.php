@@ -27,6 +27,9 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'q6hzujS3q73rs42dJYgBWOpNGOOtXf9E',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -120,7 +123,16 @@ $config = [
                 'targetType'     => IMG_GIF | IMG_JPG | IMG_PNG | IMG_WBMP, // Target image formats ( bit-field )
                 'targetMinPixel' => 200         // Target image minimum pixel size
             ]
-        ]
+        ],
+        'fitness-workouts' => 'app\fitness\controllers\WorkoutController',
+        'fitness-exercises' => 'app\fitness\controllers\ExerciseController',
+        'fitness-templates' => 'app\fitness\controllers\TemplateController',
+        'fitness-student-exercises' => 'app\fitness\controllers\StudentExerciseController',
+        'fitness-exercise-videos' => 'app\fitness\controllers\ExerciseVideoController',
+        'fitness-tags' => 'app\fitness\controllers\TagController',
+        'fitness-progression-chains' => 'app\fitness\controllers\ProgressionChainController',
+        'client-data' => 'app\fitness\controllers\ClientDataController',
+        'weight-exercise-ability-ratios' => 'app\fitness\controllers\WeightExerciseAbilityRatioController',
     ],
 ];
 

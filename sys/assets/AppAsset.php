@@ -27,6 +27,7 @@ class AppAsset extends AssetBundle
     public $js = [
         'js/select2.js',
         'js/custom.js',
+        'js/workouts.js',
         'js/Youtube.min.js',
     ];
     public $depends = [

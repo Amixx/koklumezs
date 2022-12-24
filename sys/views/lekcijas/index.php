@@ -1,6 +1,5 @@
 <?php
 
-use app\models\Lecturesfiles;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
@@ -9,17 +8,9 @@ use app\helpers\ThumbnailHelper;
 $titleText = '';
 if (isset($type)) {
     if ($type == "new") {
-        if ($isFitnessSchool) {
-            $titleText = 'New workouts';
-        } else {
-            $titleText = 'New lessons';
-        }
+        $titleText = 'New lessons';
     } else if ($type == "favourite") {
-        if ($isFitnessSchool) {
-            $titleText = 'Favourite workouts';
-        } else {
-            $titleText = 'Favourite lessons';
-        }
+        $titleText = 'Favourite lessons';
     }
 }
 
@@ -48,9 +39,9 @@ $sortType = $sortType ?? 'DESC';
             <div class="col-md-5 col-xs-12">
                 <?= Html::label(Yii::t('app', 'Sorting of lessons') . ': ') ?>
                 <?= Html::dropDownList("sortType", $sortType, [
-                    0 => Yii::t('app',  'From hardest to easiest'),
-                    1 => Yii::t('app',  'From easiest to hardest'),
-                    2 => Yii::t('app',  'By assignment date'),
+                    0 => Yii::t('app', 'From hardest to easiest'),
+                    1 => Yii::t('app', 'From easiest to hardest'),
+                    2 => Yii::t('app', 'By assignment date'),
                 ], [
                     'id' => 'lessons-sorting-select'
                 ]) ?>
@@ -61,29 +52,20 @@ $sortType = $sortType ?? 'DESC';
         <?php
         if (count($models) == 0) { ?>
             <div class="col-md-6">
-                <h3><?= \Yii::t('app',  'No lessons') ?>!</h3>
+                <h3><?= \Yii::t('app', 'No lessons') ?>!</h3>
             </div>
-        <?php } else if (!isset($modelGroups) || !$modelGroups) { ?>
-            <?php foreach ($models as $model) {
-                $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->lecture->file, $videoThumb);
-            ?>
+        <?php } else {
+            foreach ($models as $model) {
+                $thumbStyle = ThumbnailHelper::getThumbnailStyle($model->lecture->file, $videoThumb); ?>
                 <div class="col-md-6 col-lg-3 text-center lecture-wrap">
-                    <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
+                    <a class="lecture-thumb"
+                       href="<?= Url::to(['lekcijas/lekcija', 'id' => $model->lecture->id]) ?>"
+                       style="<?= $thumbStyle ?>"
+                    ></a>
                     <?= $model->lecture->title ?>
                 </div>
             <?php }
-        } else { ?>
-            <?php foreach ($modelGroups as $date => $modelGroup) {
-                $firstLesson = $modelGroup[0];
-                $thumbStyle = ThumbnailHelper::getThumbnailStyle($firstLesson->lecture->file, $videoThumb);
-            ?>
-                <div class="col-md-6 col-lg-3 text-center lecture-wrap">
-                    <a class="lecture-thumb" href="<?= Url::to(['lekcijas/lekcija', 'id' => $firstLesson->lecture->id]) ?>" style="<?= $thumbStyle ?>"></a>
-                    <p><?= $date ?></p>
-                    <p><?= Yii::t('app', $isFitnessSchool ? 'First exercise' : 'First lesson') ?>: <?= $firstLesson->lecture->title ?></p>
-                </div>
-            <?php } ?>
-        <?php } ?>
+        } ?>
     </div>
     <?php
     if ($pages) {

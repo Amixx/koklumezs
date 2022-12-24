@@ -88,7 +88,11 @@ class CommentResponses extends \yii\db\ActiveRecord
 
     public static function getAllForUser()
     {
-        return static::find()->where(['author_id' => Yii::$app->user->identity->id])->joinWith('author')->joinWith('userlectureevaluation')->joinWith('userlectureevaluation.lecture');
+        return static::find()
+            ->where(['author_id' => Yii::$app->user->identity->id])
+            ->joinWith('author')
+            ->joinWith('userlectureevaluation')
+            ->joinWith('userlectureevaluation.lecture');
     }
 
     public static function getCommentResponses($id)

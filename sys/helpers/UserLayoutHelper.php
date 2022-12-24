@@ -87,30 +87,34 @@ class UserLayoutHelper extends LayoutHelper
     private function getUserTypeNavItems()
     {
         $userContext = Yii::$app->user->identity;
-        $hasStudents = $userContext->isTeacher()
-            ? count(Users::getStudentsWithoutPausesForSchool()) > 0
-            : false;
+        $hasStudents = $userContext->isTeacher() && count(Users::getStudentsWithoutPausesForSchool()) > 0;
         $isFitnessSchool = !$this->isAdmin && $userContext->getSchool()->is_fitness_school;
 
-        $data = [
-            'admin' => [
-                ['label' => 'Piešķiršana', 'url' => ['/assign'], 'active' =>  in_array(Yii::$app->controller->id, ['assign']),],
-                ['label' => 'Piešķirts', 'url' => ['/user-lectures'], 'active' =>  in_array(Yii::$app->controller->id, ['user-lectures']),],
-                ['label' => Yii::t('app',  'Lessons'), 'url' => ['/lectures'], 'active' =>  in_array(Yii::$app->controller->id, ['lectures']),],
-                ['label' => 'Faili', 'url' => ['/lecturesfiles'], 'active' =>  in_array(Yii::$app->controller->id, ['lecturesfiles']),],
-                ['label' => 'Parametri', 'url' => ['/difficulties'], 'active' =>  in_array(Yii::$app->controller->id, ['difficulties']),],
-                ['label' => Yii::t('app',  'Section visibility'), 'url' => ['/sections'], 'active' =>  in_array(Yii::$app->controller->id, ['sections']),],
-                ['label' => Yii::t('app',  'Evaluations'), 'url' => ['/evaluations'], 'active' =>  in_array(Yii::$app->controller->id, ['evaluations'])],
-                ['label' => 'Lietotāji', 'url' => ['/user'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
-                ['label' => 'Lietotāju vērtējumi', 'url' => ['/user-lecture-evaluations'], 'active' =>  in_array(Yii::$app->controller->id, ['user-lecture-evaluations'])],
-                ['label' => 'Izsūtītie e-pasti', 'url' => ['/sentlectures'], 'active' =>  in_array(Yii::$app->controller->id, ['sentlectures'])],
+        $fitnessTeacherMenu =
+            [
+                ['label' => 'GYM', 'url' => ['/assign'], 'active' =>  in_array(Yii::$app->controller->id, ['assign']),],
+                ['label' => '+', 'url' => ['/assign/userlectures'], 'active' =>  in_array(Yii::$app->controller->id, ['assign'])],
+                ['label' => Yii::t('app',  'Clients'), 'url' => ['/user'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
+                ['label' => '+', 'url' => ['/user/create'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
+                ['label' => Yii::t('app',  'Exercises'), 'url' => ['/fitness-exercises'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-exercises']),],
                 [
-                    'label' => Yii::t('app',  'Sent invoices'),
-                    'url' => ['/sent-invoices'],
-                    'active' =>  in_array(Yii::$app->controller->id, ['sent-invoices']),
+                    'label' => '+',
+                    'url' => ['/fitness-exercises/create'],
+                    'active' => in_array(Yii::$app->controller->id, ['fitness-exercises']),
+                    'linkOptions' => ['target' => '_blank']
                 ],
-            ],
-            'teacher' => [
+                ['label' => Yii::t('app',  'Templates'), 'url' => ['/fitness-templates'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-templates']),],
+                ['label' => '+', 'url' => ['/fitness-templates/create'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-templates']),],
+                ['label' => Yii::t('app',  'Tags'), 'url' => ['/fitness-tags'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-tags']),],
+                ['label' => '+', 'url' => ['/fitness-tags/create'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-tags']),],
+                ['label' => Yii::t('app',  'Progression chains'), 'url' => ['/fitness-progression-chains'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-progression-chains']),],
+                ['label' => '+', 'url' => ['/fitness-progression-chains/create'], 'active' =>  in_array(Yii::$app->controller->id, ['fitness-progression-chains']),],
+                ['label' => Yii::t('app',  'Settings'), 'url' => ['/school-settings'], 'active' =>  in_array(Yii::$app->controller->id, ['school-settings'])],
+                ['label' => Yii::t('app',  'WEAR'), 'url' => ['/weight-exercise-ability-ratios'], 'active' => in_array(Yii::$app->controller->id, ['weight-exercise-ability-ratios'])],
+            ];
+
+        $instrumentTeacherMenu =
+            [
                 ['label' => Yii::t('app',  'School'), 'url' => ['/assign'], 'active' =>  in_array(Yii::$app->controller->id, ['assign']),],
                 $hasStudents ? ['label' => '+', 'url' => ['/assign/userlectures'], 'active' =>  in_array(Yii::$app->controller->id, ['assign'])] : ['label' => '', 'url' => ['/assign']],
                 ['label' => Yii::t('app',  'Students'), 'url' => ['/user'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
@@ -139,7 +143,27 @@ class UserLayoutHelper extends LayoutHelper
                     'options' => ['class' => 'nav-item dropdown']
                 ],
                 ['label' => Yii::t('app',  'Settings'), 'url' => ['/school-settings'], 'active' =>  in_array(Yii::$app->controller->id, ['school-settings'])],
+            ];
+
+        $data = [
+            'admin' => [
+                ['label' => 'Piešķiršana', 'url' => ['/assign'], 'active' =>  in_array(Yii::$app->controller->id, ['assign']),],
+                ['label' => 'Piešķirts', 'url' => ['/user-lectures'], 'active' =>  in_array(Yii::$app->controller->id, ['user-lectures']),],
+                ['label' => Yii::t('app',  'Lessons'), 'url' => ['/lectures'], 'active' =>  in_array(Yii::$app->controller->id, ['lectures']),],
+                ['label' => 'Faili', 'url' => ['/lecturesfiles'], 'active' =>  in_array(Yii::$app->controller->id, ['lecturesfiles']),],
+                ['label' => 'Parametri', 'url' => ['/difficulties'], 'active' =>  in_array(Yii::$app->controller->id, ['difficulties']),],
+                ['label' => Yii::t('app',  'Section visibility'), 'url' => ['/sections'], 'active' =>  in_array(Yii::$app->controller->id, ['sections']),],
+                ['label' => Yii::t('app',  'Evaluations'), 'url' => ['/evaluations'], 'active' =>  in_array(Yii::$app->controller->id, ['evaluations'])],
+                ['label' => 'Lietotāji', 'url' => ['/user'], 'active' =>  in_array(Yii::$app->controller->id, ['user'])],
+                ['label' => 'Lietotāju vērtējumi', 'url' => ['/user-lecture-evaluations'], 'active' =>  in_array(Yii::$app->controller->id, ['user-lecture-evaluations'])],
+                ['label' => 'Izsūtītie e-pasti', 'url' => ['/sentlectures'], 'active' =>  in_array(Yii::$app->controller->id, ['sentlectures'])],
+                [
+                    'label' => Yii::t('app',  'Sent invoices'),
+                    'url' => ['/sent-invoices'],
+                    'active' =>  in_array(Yii::$app->controller->id, ['sent-invoices']),
+                ],
             ],
+            'teacher' => $isFitnessSchool ? $fitnessTeacherMenu : $instrumentTeacherMenu,
             'student' => [
                 [
                     'label' => Yii::t('app',  $isFitnessSchool ? 'Workouts' : 'Lessons'),

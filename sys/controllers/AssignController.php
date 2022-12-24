@@ -49,6 +49,8 @@ class AssignController extends Controller
     public function actionIndex()
     {
         $userContext = Yii::$app->user->identity;
+        $school = $userContext->getSchool();
+        $isFitnessSchool = $school->is_fitness_school;
 
         $options = [];
         if ($userContext->isTeacher()) {
@@ -85,6 +87,7 @@ class AssignController extends Controller
         $options['videoParam'] = $videoParam;
         $options['evaluations'] = $evaluations;
         $options['lastlectures'] = $lastUserlectures;
+        $options['isFitnessSchool'] = $isFitnessSchool;
 
         return $this->render('index', $options);
     }

@@ -15,7 +15,7 @@ class ThumbnailHelper
         $stylePrefix = "background-color: white; background-image: ";
         $style = $stylePrefix . "url($thumb)";
 
-        $fileIsYoutube = strpos($file, "youtube") !== false;
+        $fileIsYoutube = strpos($file, "youtu") !== false;
         if ($fileIsYoutube) return $style;
 
         $path_info = pathinfo($file);

@@ -15,6 +15,7 @@ class ChatRoom extends Widget
     public $css = [];
     public $js = [
         'js/custom.js',
+        'js/workouts.js',
     ];
     public $depends = [
         'yii\web\JqueryAsset',
