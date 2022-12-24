@@ -67,31 +67,6 @@ Vue.component('added-exercise', {
         },
     },
     data() {
-        if (this.tempExercise.exercise.is_pause) {
-            const pauseLengths = [
-                15,
-                30,
-                45,
-                60,
-                90,
-                120,
-                150,
-                180,
-                240,
-                300,
-                360,
-            ];
-            const pauseLengthOptions = pauseLengths.map(seconds => ({value: seconds, label: seconds}));
-            const selectedPauseLength = this.tempExercise.time_seconds
-                ? pauseLengthOptions.find(x => x.value === this.tempExercise.time_seconds)
-                : pauseLengthOptions[1];
-
-            return {
-                pauseLengthOptions: pauseLengthOptions,
-                selectedPauseLength: selectedPauseLength,
-            };
-        }
-
         return {
             weightPercentageOf1rm: null,
             oneRepMaxEstimate: null,
@@ -100,6 +75,33 @@ Vue.component('added-exercise', {
         }
     },
     computed: {
+        pauseData(){
+            if (this.tempExercise.exercise.is_pause) {
+                const pauseLengths = [
+                    15,
+                    30,
+                    45,
+                    60,
+                    90,
+                    120,
+                    150,
+                    180,
+                    240,
+                    300,
+                    360,
+                ];
+                const pauseLengthOptions = pauseLengths.map(seconds => ({value: seconds, label: seconds}));
+                const selectedPauseLength = this.tempExercise.time_seconds
+                    ? pauseLengthOptions.find(x => x.value === this.tempExercise.time_seconds)
+                    : pauseLengthOptions[1];
+
+                return {
+                    pauseLengthOptions: pauseLengthOptions,
+                    selectedPauseLength: selectedPauseLength,
+                };
+            }
+            return null
+        },
         specialVideoShownMessage() {
             if (!this.tempExercise.exercise.videos) return null;
 
@@ -322,8 +324,8 @@ Vue.component('added-exercise', {
                  <v-select
                     v-else-if="tempExercise.exercise.is_pause"
                     label="label"
-                    :options="pauseLengthOptions"
-                    v-model="selectedPauseLength"
+                    :options="pauseData.pauseLengthOptions"
+                    v-model="pauseData.selectedPauseLength"
                  ></v-select>
             </div>
         </td>
@@ -1699,7 +1701,7 @@ $(document).ready(function () {
                                         @end="onDragEnd">
                                             <added-exercise 
                                                  v-for="(workoutExercise, i) in workout.workoutExercises"
-                                                 :key="i"
+                                                 :key="workoutExercise.exercise.id + i"
                                                 :temp-exercise="workoutExercise"
                                                 :index="i"
                                                 :should-show-columns="shouldShowExerciseTableCols"
