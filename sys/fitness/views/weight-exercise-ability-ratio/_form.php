@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
                 <?= \Yii::t('app', 'Exercise 1') ?>
             </label>
             <select
-                    class="form-control all-exercise-select"
+                    class="form-control weight-exercise-select"
                     name="WeightExerciseAbilityRatio[exercise_id_1]"
                     aria-required="true"
                     aria-invalid="false">
@@ -29,7 +29,7 @@ use yii\widgets\ActiveForm;
                 <?= \Yii::t('app', 'Exercise 2') ?>
             </label>
             <select
-                    class="form-control all-exercise-select"
+                    class="form-control weight-exercise-select"
                     name="WeightExerciseAbilityRatio[exercise_id_2]"
                     aria-required="true"
                     aria-invalid="false">

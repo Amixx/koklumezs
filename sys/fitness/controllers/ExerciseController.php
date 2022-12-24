@@ -272,13 +272,16 @@ class ExerciseController extends Controller
         $get = Yii::$app->request->get();
         $exerciseNameSearchTerm = $get['term'];
 
-        $exercises = Exercise::find()
+        $query = Exercise::find()
             ->where([
                 'author_id' => Yii::$app->user->identity->id,
                 'is_archived' => false,
             ])
-            ->andWhere(['like', 'name', $exerciseNameSearchTerm])
-            ->limit(50)->asArray()->all();
+            ->andWhere(['like', 'name', $exerciseNameSearchTerm]);
+        if (isset($get['onlyWeight']) && $get['onlyWeight']) {
+            $query->andWhere(['has_weight' => true]);
+        }
+        $exercises = $query->limit(50)->asArray()->all();
         $select2Options = array_map(function ($exercise) {
             return [
                 'id' => $exercise['id'],

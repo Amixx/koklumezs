@@ -170,15 +170,23 @@ $(document).ready(function () {
     setupInsertProgressionChainExerciseButton();
 });
 
-function setupInterchangeableExerciseSelects() {
-    $('select#interchangeable-exercises, select.all-exercise-select').select2({
+function createSelect2Config(){
+    return {
         minimumInputLength: 3,
         ajax: {
             url: getUrl('/fitness-exercises/for-select'),
             delay: 250,
             dataType: 'json',
         },
-    });
+    }
+}
+
+function setupInterchangeableExerciseSelects() {
+    $('select#interchangeable-exercises').select2(createSelect2Config());
+
+    var weightExercisesConfig = createSelect2Config();
+    weightExercisesConfig.ajax.url = getUrl('/fitness-exercises/for-select' + '?onlyWeight=true');
+    $('select.weight-exercise-select').select2(weightExercisesConfig);
 }
 
 
